@@ -86,7 +86,8 @@ echo "-- log"
 tr -d '\r' < "$log" 2> /dev/null
 if [ -n "$tela" ]; then
     echo "-- tela $(basename "$tela")"
-    tr -d '\r' < "$tela" | sed 's/ *$//' | grep -a -v '^$' | head -25
+    # a tela e CP437: LC_ALL=C para o tr e o sed do macOS aceitarem os bytes
+    LC_ALL=C tr -d '\r' < "$tela" | LC_ALL=C sed 's/ *$//' | grep -a -v '^$' | head -25
 fi
 echo
 if [ "$falhas" -eq 0 ]; then

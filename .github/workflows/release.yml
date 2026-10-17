@@ -123,24 +123,25 @@ jobs:
           # pelo executavel do app: copia a V1 para ~/Library/Application Support e abre o lancador
           bash tools/fumaca.sh "$app"
 
-          # Pelo LaunchServices, como o duplo clique (open -n), com o mesmo roteiro da fumaca.
-          # Ainda nao provado no runner: se falhar, so avisa (checagem manual em .github/CI.md).
+          # Pelo LaunchServices, como o duplo clique (open -n), com o mesmo roteiro da fumaca:
+          # prova que o app abre o lancador, que as variaveis chegam e que o gerenciador e o
+          # CHAIN sobrevivem ao fim do processo principal do app. Com roteiro nao ha janela; a
+          # janela visivel nao da para conferir aqui (ver .github/CI.md).
           o="$RUNNER_TEMP/open"
           mkdir -p "$o/saida"
           printf '%s\n' "L{ENTER}{TELA laje}" > "$o/roteiro.txt"
           open -n --env "SISTRUT_ROTEIRO=$o/roteiro.txt" --env "SISTRUT_SAIDA=$o/saida/" \
-            --env "SISTRUT_LOG=$o/saida/log.txt" "$app" || true
+            --env "SISTRUT_LOG=$o/saida/log.txt" "$app"
+          # o RT45 grava o log com CRLF
           for _ in $(seq 1 60); do
-            tail -1 "$o/saida/log.txt" 2> /dev/null | grep -q 'LAJE: fim$' && break
+            tail -1 "$o/saida/log.txt" 2> /dev/null | tr -d '\r' | grep -q 'LAJE: fim$' && break
             sleep 1
           done
-          if tail -1 "$o/saida/log.txt" 2> /dev/null | grep -q 'LAJE: fim$'; then
-            echo "open -n: OK"
-            cat "$o/saida/log.txt"
-          else
-            echo "::warning::open -n do OpenStrut V1.app nao chegou a 'LAJE: fim' em 60 s (ver .github/CI.md, checagem manual)"
-            cat "$o/saida/log.txt" 2> /dev/null || echo "sem log"
+          cat "$o/saida/log.txt" 2> /dev/null || echo "sem log"
+          if ! tail -1 "$o/saida/log.txt" 2> /dev/null | tr -d '\r' | grep -q 'LAJE: fim$'; then
+            echo "open -n do OpenStrut V1.app nao chegou a 'LAJE: fim' em 60 s" >&2
             pkill -f "Application Support/OpenStrut/V1/" || true
+            exit 1
           fi
           hdiutil detach "$RUNNER_TEMP/dmg" || hdiutil detach -force "$RUNNER_TEMP/dmg"
 
