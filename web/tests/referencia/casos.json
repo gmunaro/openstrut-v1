@@ -1,0 +1,15 @@
+[
+  {"nome": "armacao_dim",    "exe": "ARMADURA", "roteiro": "tests/retraducao/armacao/dim.sufixo.txt",    "c": [["sistrut-game", "SISTRUT/EXEC40"], ["sistrut-game/SISTRUT.INI", "SISTRUT/SISTRUT.INI"]]},
+  {"nome": "armacao_dim2",   "exe": "ARMADURA", "roteiro": "tests/retraducao/armacao/dim2.sufixo.txt",   "c": [["sistrut-game", "SISTRUT/EXEC40"], ["sistrut-game/SISTRUT.INI", "SISTRUT/SISTRUT.INI"]]},
+  {"nome": "armacao_lista",  "exe": "ARMADURA", "roteiro": "tests/retraducao/armacao/lista.sufixo.txt",  "c": [["sistrut-game", "SISTRUT/EXEC40"], ["sistrut-game/SISTRUT.INI", "SISTRUT/SISTRUT.INI"]]},
+  {"nome": "armacao_menu",   "exe": "ARMADURA", "roteiro": "tests/retraducao/armacao/menu.sufixo.txt",   "c": [["sistrut-game", "SISTRUT/EXEC40"], ["sistrut-game/SISTRUT.INI", "SISTRUT/SISTRUT.INI"]]},
+  {"nome": "armacao_param",  "exe": "ARMADURA", "roteiro": "tests/retraducao/armacao/param.sufixo.txt",  "c": [["sistrut-game", "SISTRUT/EXEC40"], ["sistrut-game/SISTRUT.INI", "SISTRUT/SISTRUT.INI"]]},
+  {"nome": "armacao_secoes", "exe": "ARMADURA", "roteiro": "tests/retraducao/armacao/secoes.sufixo.txt", "c": [["sistrut-game", "SISTRUT/EXEC40"], ["sistrut-game/SISTRUT.INI", "SISTRUT/SISTRUT.INI"]]},
+  {"nome": "armacao_teclas", "exe": "ARMADURA", "roteiro": "tests/retraducao/armacao/teclas.sufixo.txt", "c": [["sistrut-game", "SISTRUT/EXEC40"], ["sistrut-game/SISTRUT.INI", "SISTRUT/SISTRUT.INI"]]},
+  {"nome": "armacao_uma",    "exe": "ARMADURA", "roteiro": "tests/retraducao/armacao/uma.sufixo.txt",    "c": [["sistrut-game", "SISTRUT/EXEC40"], ["sistrut-game/SISTRUT.INI", "SISTRUT/SISTRUT.INI"]]},
+  {"nome": "forma_edita",    "exe": "FORMA", "roteiro": "tests/retraducao/forma/edita.sufixo.txt",    "c": [["tests/retraducao/forma/ini", "SISTRUT/EXEC40"], ["tests/retraducao/forma/ini_sistrut/SISTRUT.INI", "SISTRUT/SISTRUT.INI"], ["tests/retraducao/forma/obra2", "."]]},
+  {"nome": "forma_imprime",  "exe": "FORMA", "roteiro": "tests/retraducao/forma/imprime.sufixo.txt",  "c": [["tests/retraducao/forma/ini", "SISTRUT/EXEC40"], ["tests/retraducao/forma/ini_sistrut/SISTRUT.INI", "SISTRUT/SISTRUT.INI"], ["tests/retraducao/forma/obra2", "."]]},
+  {"nome": "forma_montagem", "exe": "FORMA", "roteiro": "tests/retraducao/forma/montagem.sufixo.txt", "c": [["tests/retraducao/forma/ini", "SISTRUT/EXEC40"], ["tests/retraducao/forma/ini_sistrut/SISTRUT.INI", "SISTRUT/SISTRUT.INI"], ["tests/retraducao/forma/obra", "."]]},
+  {"nome": "forma_plota",    "exe": "FORMA", "roteiro": "tests/retraducao/forma/plota.sufixo.txt",    "c": [["tests/retraducao/forma/ini", "SISTRUT/EXEC40"], ["tests/retraducao/forma/ini_sistrut/SISTRUT.INI", "SISTRUT/SISTRUT.INI"], ["tests/retraducao/forma/obra2", "."]]},
+  {"nome": "forma_teclas",   "exe": "FORMA", "roteiro": "tests/retraducao/forma/teclas.sufixo.txt",   "c": [["tests/retraducao/forma/ini", "SISTRUT/EXEC40"], ["tests/retraducao/forma/ini_sistrut/SISTRUT.INI", "SISTRUT/SISTRUT.INI"], ["tests/retraducao/forma/obra", "."]]}
+]

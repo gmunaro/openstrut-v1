@@ -1,0 +1,11 @@
+{
+  "name": "openstrut-v1-web",
+  "private": true,
+  "description": "OpenStrut V1 no navegador: so as ferramentas de teste (o site e estatico, sem dependencias)",
+  "scripts": {
+    "paridade": "node tests/paridade_navegador.cjs"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.64.1"
+  }
+}

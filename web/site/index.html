@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>OpenStrut V1</title>
+<link rel="icon" href="data:,">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #1c1c1c; color: #ddd; font: 14px system-ui, sans-serif; display: flex; flex-direction: column; height: 100dvh; }
+  header { padding: 4px 8px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  header strong { margin-right: 6px; }
+  #estado { color: #9a9; flex: 1; min-width: 8em; }
+  main { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
+  #tela { background: #000; image-rendering: pixelated; outline: none; touch-action: manipulation;
+          width: min(100vw, calc((100dvh - var(--resto, 90px)) * 4 / 3)); aspect-ratio: 4 / 3; }
+  #tela:focus { box-shadow: 0 0 0 2px #557; }
+  button { font: inherit; background: #333; color: #ddd; border: 1px solid #555; border-radius: 4px; padding: 4px 8px; }
+  button:active { background: #555; }
+  #teclado { display: none; flex-wrap: wrap; gap: 3px; justify-content: center; padding: 4px; }
+  #teclado.visivel { display: flex; }
+  #teclado button { min-width: 2.6em; padding: 8px 4px; }
+  #entrada { position: absolute; left: -1000px; width: 10px; opacity: 0; }
+  footer { padding: 2px 8px; color: #888; font-size: 12px; }
+  .painel { position: fixed; inset: 0; background: rgba(0,0,0,.6); display: none; align-items: flex-start; justify-content: center; overflow: auto; z-index: 10; }
+  .painel.aberto { display: flex; }
+  .caixa { background: #262626; margin: 2vh auto; padding: 12px; border-radius: 6px; max-width: 900px; width: 96vw; }
+  .caixa h2 { margin: 0 0 8px; font-size: 16px; }
+  table { border-collapse: collapse; width: 100%; font: 13px ui-monospace, monospace; }
+  td { padding: 2px 6px; border-bottom: 1px solid #333; }
+  td.n { text-align: right; }
+  #paginas canvas { display: block; width: 100%; max-width: 850px; margin: 8px auto; box-shadow: 0 0 4px #000; }
+  @media print {
+    body > *:not(#painelImpressao) { display: none !important; }
+    #painelImpressao { position: static; display: block; background: none; }
+    #painelImpressao .caixa { background: none; padding: 0; margin: 0; width: auto; max-width: none; }
+    #painelImpressao .controles { display: none; }
+    #paginas canvas { box-shadow: none; margin: 0; width: 100%; page-break-after: always; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <strong>OpenStrut V1</strong>
+  <span id="estado">carregando...</span>
+  <button id="botaoArquivos">Arquivos</button>
+  <button id="botaoImpressao">Impressão</button>
+  <button id="botaoTeclado" title="Teclado com F1-F10, ESC e setas">Teclas</button>
+  <button id="recomecar" hidden>Recomeçar</button>
+</header>
+<main><canvas id="tela" width="640" height="400" tabindex="0"></canvas></main>
+<div id="teclado">
+  <button data-k="Escape">ESC</button>
+  <button data-k="F1">F1</button><button data-k="F2">F2</button><button data-k="F3">F3</button><button data-k="F4">F4</button><button data-k="F5">F5</button>
+  <button data-k="F6">F6</button><button data-k="F7">F7</button><button data-k="F8">F8</button><button data-k="F9">F9</button><button data-k="F10">F10</button>
+  <button data-k="ArrowLeft">←</button><button data-k="ArrowUp">↑</button><button data-k="ArrowDown">↓</button><button data-k="ArrowRight">→</button>
+  <button data-k="Tab">TAB</button><button data-k="Backspace">⌫</button><button data-k="Enter">ENTER</button>
+  <button id="botaoDigitar">abc</button>
+</div>
+<input id="entrada" autocomplete="off" autocapitalize="off" spellcheck="false">
+<footer>OpenStrut: engenharia reversa independente do SISTRUT 4.0 (1991). As obras ficam gravadas neste navegador. Não use os resultados em projeto real sem conferência de um engenheiro.</footer>
+
+<div class="painel" id="painelArquivos"><div class="caixa">
+  <h2>Arquivos do drive C:</h2>
+  <p>
+    <button id="exportar">Baixar tudo (.zip)</button>
+    Importar para <select id="pastaDestino"></select>
+    <button id="importar">Importar arquivos ou .zip</button>
+    <input type="file" id="arquivoImportado" multiple hidden>
+    <button id="limpar">Apagar obras e voltar à instalação</button>
+    <button class="fechar">Fechar</button>
+  </p>
+  <table id="listaArquivos"></table>
+</div></div>
+
+<div class="painel" id="painelImpressao"><div class="caixa">
+  <h2 class="controles">Impressora (o que o SISTRUT mandava para a LPT1)</h2>
+  <p class="controles">
+    <button id="imprimir">Imprimir</button>
+    <button id="baixar">Baixar .PRN</button>
+    <button id="limparImpressora">Limpar impressora</button>
+    <button class="fechar">Fechar</button>
+    <small>O .PRN é ESC/P da Epson: envie direto a uma impressora compatível (Windows: <code>copy /b IMPRESSORA.PRN \\maquina\impressora</code>).</small>
+  </p>
+  <div id="paginas"></div>
+</div></div>
+
+<script src="v1-nucleo.js"></script>
+<script src="zip.js"></script>
+<script src="impressora.js"></script>
+<script src="v1.js"></script>
+</body>
+</html>
