@@ -1,2 +1,5 @@
-# sem conversao de fim de linha: os .sh precisam de LF no Linux/Mac e os .BAS ficam como estao
+# sem conversao de fim de linha: os arquivos do DOS e os .BAS ficam como estao
 * -text
+# scripts de shell sempre com LF (o bash do Linux e do macOS nao aceita CRLF)
+*.sh text eol=lf
+pacote/macos/OpenStrut-V1 text eol=lf
