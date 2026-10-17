@@ -1,0 +1,6 @@
+# Caso retrad_frm_teclas: ON KEY do FORMA (F1 = BEEP, Esc volta ao menu de qualquer tela, F2 = RUN do gerenciador).
+# No menu (INPUT$) a tecla presa e engolida e o GOSUB roda depois da tecla seguinte, como no oraculo.
+{ESPERA escolha opcao}{PAUSA 2}{TELA f00_menu}{F1}x{PAUSA 3}{TELA f01_f1}
+1{ESPERA Arquivo de Lajes}{PAUSA 2}{TELA f02_laj}{ESC}{ENTER}{ESPERA escolha opcao}{PAUSA 3}{TELA f03_esc}
+1{ESPERA Arquivo de Lajes}{PAUSA 2}E2E{ENTER}{ESPERA Arquivo de Vigas}{PAUSA 2}{ESC}{ENTER}{ESPERA escolha opcao}{PAUSA 3}{TELA f04_esc_vigas}
+{F2}{ENTER}{ESPERA Configuracao|120}{PAUSA 3}{TELA f05_f2_gerenciador}

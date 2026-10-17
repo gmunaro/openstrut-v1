@@ -1,0 +1,11 @@
+# exe: LAJEGEOM
+# lajgeo_07_planta: menu 8 (ItemPlanta): LajContinuidade, grava <obra>_PLANTA.VET, Espera pede ENTER.
+# Base: roteiros/lajgeo_base.dados (4 lajes, 2x2).
+8
+{TELA p01_planta_gravada}
+{ENTER}
+{TELA p02_menu_apos_planta}
+9
+S
+{TELA p03_retorno}
+{ENTER}

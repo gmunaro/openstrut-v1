@@ -1,0 +1,3 @@
+# exe: PILAR
+# PILAR opcao 8 -> PILAREDI com obra nova "NOVAOBRA" (sem .COL): aviso de obra nova (ENTER), menu, L (lista vazia), ESC, F2 (PILAREDI), F2 (PILAR)
+{TELA og_abertura}{ENTER}{TELA og_menu}8{TELA og_obra}{BS}{BS}{BS}{BS}{BS}NOVAOBRA{ENTER}{TELA og_aviso}{ENTER}{TELA og_pil}L{TELA og_lista}{ESC}{TELA og_pil2}{F2}{TELA og_pil3}{F2}

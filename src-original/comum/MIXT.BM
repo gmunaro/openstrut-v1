@@ -1,0 +1,310 @@
+' ============================================================================
+'  MIXT.BM - modulo QuickBASIC MIXT do SISTRUT 4.0, comum a todos os EXE
+'  Retraduzido uma vez, do LAJEPROC (dump/LAJEPROC/02*.lift.txt). O MIXT tem o mesmo
+'  codigo e o mesmo leiaute em todos os 27 EXE (tools/retraduz.py, comparacao de
+'  index.json); muda so o segmento (2000h no LAJEPROC derivado, 3000h no ARMADURA...)
+'  e os enderecos DS das variaveis STATIC, que dependem do EXE.
+'  '@xxxx = deslocamento no modulo MIXT (no LAJEPROC derivado: 0x2xxxx).
+'  Variaveis: as STATIC do original viram locais das SUB STATIC; o comentario de cada
+'  SUB da o endereco DS delas no LAJEPROC.
+' ============================================================================
+
+' LINE INPUT de uma linha e separacao por virgulas em 2 a 6 textos (o ultimo leva o
+' resto da linha). Linha vazia: todos vazios. Usada para "B,H,d" etc.
+' LAJEPROC: linha$ = DS:1498, p1% = DS:149C.
+SUB MIXT_0049_Le2Campos (c1 AS STRING, c2 AS STRING) STATIC
+    RT_LINEINPUT "", linha$   '@0051
+    c1 = ""   '@0066
+    c2 = ""   '@0072
+    IF NOT (LEN(linha$) = 0) THEN GOTO L_0091   '@007e
+    GOTO L_00f4   '@008e
+    L_0091:
+    p1% = INSTR(1, linha$, ",")   '@0091
+    IF NOT (p1% = 0) THEN GOTO L_00be   '@00a5
+    c1 = linha$   '@00af
+    GOTO L_00f4   '@00bb
+    L_00be:
+    c1 = MID$(linha$, 1, p1% - 1)   '@00be
+    c2 = MID$(linha$, p1% + 1)   '@00d9
+    L_00f4:
+END SUB
+
+' LAJEPROC: linha$ = DS:149E, p1% = DS:14A2, p2% = DS:14A4.
+SUB MIXT_00ff_Le3Campos (c1 AS STRING, c2 AS STRING, c3 AS STRING) STATIC
+    RT_LINEINPUT "", linha$   '@0107
+    c1 = ""   '@011c
+    c2 = ""   '@0128
+    c3 = ""   '@0134
+    IF NOT (LEN(linha$) = 0) THEN GOTO L_0153   '@0140
+    GOTO L_0213   '@0150
+    L_0153:
+    p1% = INSTR(1, linha$, ",")   '@0153
+    IF NOT (p1% = 0) THEN GOTO L_0180   '@0167
+    c1 = linha$   '@0171
+    GOTO L_0213   '@017d
+    L_0180:
+    c1 = MID$(linha$, 1, p1% - 1)   '@0180
+    p2% = INSTR(p1% + 1, linha$, ",")   '@019b
+    IF NOT (p2% = 0) THEN GOTO L_01d8   '@01b0
+    c2 = MID$(linha$, p1% + 1)   '@01ba
+    GOTO L_0213   '@01d5
+    L_01d8:
+    c2 = MID$(linha$, p1% + 1, p2% - p1% - 1)   '@01d8
+    c3 = MID$(linha$, p2% + 1)   '@01f8
+    L_0213:
+END SUB
+
+' LAJEPROC: linha$ = DS:14A6, p1% = DS:14AA, p2% = DS:14AC, p3% = DS:14AE.
+SUB MIXT_021e_Le4Campos (c1 AS STRING, c2 AS STRING, c3 AS STRING, c4 AS STRING) STATIC
+    RT_LINEINPUT "", linha$   '@0226
+    c1 = ""   '@023b
+    c2 = ""   '@0247
+    c3 = ""   '@0253
+    c4 = ""   '@025f
+    IF NOT (LEN(linha$) = 0) THEN GOTO L_027e   '@026b
+    GOTO L_039b   '@027b
+    L_027e:
+    p1% = INSTR(1, linha$, ",")   '@027e
+    IF NOT (p1% = 0) THEN GOTO L_02ab   '@0292
+    c1 = linha$   '@029c
+    GOTO L_039b   '@02a8
+    L_02ab:
+    c1 = MID$(linha$, 1, p1% - 1)   '@02ab
+    p2% = INSTR(p1% + 1, linha$, ",")   '@02c6
+    IF NOT (p2% = 0) THEN GOTO L_0303   '@02db
+    c2 = MID$(linha$, p1% + 1)   '@02e5
+    GOTO L_039b   '@0300
+    L_0303:
+    c2 = MID$(linha$, p1% + 1, p2% - p1% - 1)   '@0303
+    p3% = INSTR(p2% + 1, linha$, ",")   '@0323
+    IF NOT (p3% = 0) THEN GOTO L_0360   '@0338
+    c3 = MID$(linha$, p2% + 1)   '@0342
+    GOTO L_039b   '@035d
+    L_0360:
+    c3 = MID$(linha$, p2% + 1, p3% - p2% - 1)   '@0360
+    c4 = MID$(linha$, p3% + 1)   '@0380
+    L_039b:
+END SUB
+
+' LAJEPROC: linha$ = DS:14B0, p1%..p4% = DS:14B4..14BA.
+SUB MIXT_03a6_Le5Campos (c1 AS STRING, c2 AS STRING, c3 AS STRING, c4 AS STRING, c5 AS STRING) STATIC
+    RT_LINEINPUT "", linha$   '@03ae
+    c1 = ""   '@03c3
+    c2 = ""   '@03cf
+    c3 = ""   '@03db
+    c4 = ""   '@03e7
+    c5 = ""   '@03f3
+    IF NOT (LEN(linha$) = 0) THEN GOTO L_0412   '@03ff
+    GOTO L_058c   '@040f
+    L_0412:
+    p1% = INSTR(1, linha$, ",")   '@0412
+    IF NOT (p1% = 0) THEN GOTO L_043f   '@0426
+    c1 = linha$   '@0430
+    GOTO L_058c   '@043c
+    L_043f:
+    c1 = MID$(linha$, 1, p1% - 1)   '@043f
+    p2% = INSTR(p1% + 1, linha$, ",")   '@045a
+    IF NOT (p2% = 0) THEN GOTO L_0497   '@046f
+    c2 = MID$(linha$, p1% + 1)   '@0479
+    GOTO L_058c   '@0494
+    L_0497:
+    c2 = MID$(linha$, p1% + 1, p2% - p1% - 1)   '@0497
+    p3% = INSTR(p2% + 1, linha$, ",")   '@04b7
+    IF NOT (p3% = 0) THEN GOTO L_04f4   '@04cc
+    c3 = MID$(linha$, p2% + 1)   '@04d6
+    GOTO L_058c   '@04f1
+    L_04f4:
+    c3 = MID$(linha$, p2% + 1, p3% - p2% - 1)   '@04f4
+    p4% = INSTR(p3% + 1, linha$, ",")   '@0514
+    IF NOT (p4% = 0) THEN GOTO L_0551   '@0529
+    c4 = MID$(linha$, p3% + 1)   '@0533
+    GOTO L_058c   '@054e
+    L_0551:
+    c4 = MID$(linha$, p3% + 1, p4% - p3% - 1)   '@0551
+    c5 = MID$(linha$, p4% + 1)   '@0571
+    L_058c:
+END SUB
+
+' LAJEPROC: linha$ = DS:14BC, p1%..p5% = DS:14C0..14C8.
+SUB MIXT_0597_Le6Campos (c1 AS STRING, c2 AS STRING, c3 AS STRING, c4 AS STRING, c5 AS STRING, c6 AS STRING) STATIC
+    RT_LINEINPUT "", linha$   '@059f
+    c1 = ""   '@05b4
+    c2 = ""   '@05c0
+    c3 = ""   '@05cc
+    c4 = ""   '@05d8
+    c5 = ""   '@05e4
+    c6 = ""   '@05f0
+    IF NOT (LEN(linha$) = 0) THEN GOTO L_060f   '@05fc
+    GOTO L_07e6   '@060c
+    L_060f:
+    p1% = INSTR(1, linha$, ",")   '@060f
+    IF NOT (p1% = 0) THEN GOTO L_063c   '@0623
+    c1 = linha$   '@062d
+    GOTO L_07e6   '@0639
+    L_063c:
+    c1 = MID$(linha$, 1, p1% - 1)   '@063c
+    p2% = INSTR(p1% + 1, linha$, ",")   '@0657
+    IF NOT (p2% = 0) THEN GOTO L_0694   '@066c
+    c2 = MID$(linha$, p1% + 1)   '@0676
+    GOTO L_07e6   '@0691
+    L_0694:
+    c2 = MID$(linha$, p1% + 1, p2% - p1% - 1)   '@0694
+    p3% = INSTR(p2% + 1, linha$, ",")   '@06b4
+    IF NOT (p3% = 0) THEN GOTO L_06f1   '@06c9
+    c3 = MID$(linha$, p2% + 1)   '@06d3
+    GOTO L_07e6   '@06ee
+    L_06f1:
+    c3 = MID$(linha$, p2% + 1, p3% - p2% - 1)   '@06f1
+    p4% = INSTR(p3% + 1, linha$, ",")   '@0711
+    IF NOT (p4% = 0) THEN GOTO L_074e   '@0726
+    c4 = MID$(linha$, p3% + 1)   '@0730
+    GOTO L_07e6   '@074b
+    L_074e:
+    c4 = MID$(linha$, p3% + 1, p4% - p3% - 1)   '@074e
+    p5% = INSTR(p4% + 1, linha$, ",")   '@076e
+    IF NOT (p5% = 0) THEN GOTO L_07ab   '@0783
+    c5 = MID$(linha$, p4% + 1)   '@078d
+    GOTO L_07e6   '@07a8
+    L_07ab:
+    c5 = MID$(linha$, p4% + 1, p5% - p4% - 1)   '@07ab
+    c6 = MID$(linha$, p5% + 1)   '@07cb
+    L_07e6:
+END SUB
+
+' Esvazia o buffer do teclado (chamada antes de cada pergunta).
+SUB MIXT_07f1_LimpaTeclado
+    DIM t AS STRING
+    L_07fa:
+    t = RT_INKEY$   '@07fa
+    IF LEN(t) <> 0 THEN GOTO L_07fa   '@0809
+END SUB
+
+' Terceiro argumento = o maior dos dois primeiros (o lift mostra "x = MAX(a, b)").
+SUB MIXT_082a_Maior (a AS SINGLE, b AS SINGLE, r AS SINGLE)
+    IF NOT (a > b) THEN GOTO L_085b   '@0832
+    r = a   '@084a
+    GOTO L_0869   '@0858
+    L_085b:
+    r = b   '@085b
+    L_0869:
+END SUB
+
+' Terceiro argumento = o menor dos dois primeiros.
+SUB MIXT_0877_Menor (a AS SINGLE, b AS SINGLE, r AS SINGLE)
+    IF NOT (a < b) THEN GOTO L_08a8   '@087f
+    r = a   '@0897
+    GOTO L_08b6   '@08a5
+    L_08a8:
+    r = b   '@08a8
+    L_08b6:
+END SUB
+
+' Escreve texto$ numa tela grafica com o canto em (x, y) em pixels: imprime em LOCATE 1,1,
+' captura com GET, restaura o canto e cola com PUT ... OR (ou XOR se texto$ comeca com "~").
+' placa$ = HER/CGA/EGA/VGA define o tamanho da tela e da letra.
+' LAJEPROC: ja$ = DS:14D2 (1a vez), fundo%() = DS:14E6, letras%() = DS:14F8, modo$ = DS:14CA,
+' s$ = DS:14CE, xmax = DS:14D6, ymax = DS:14DA, larg = DS:14DE, alt = DS:14E2; temporarios
+' dos MAX/MIN = DS:150A..156A.
+SUB MIXT_08c4_TextoGrafico (x AS SINGLE, y AS SINGLE, texto AS STRING, placa AS STRING) STATIC
+    ON ERROR GOTO MIXT_0030: RT_ERRO_MIXT = -1   '@08cc
+    IF NOT (ja! = 0.0) THEN GOTO L_0928   '@08d7
+    DIM fundo%(0 TO 1122)   '@08ec
+    DIM letras%(0 TO 1122)   '@0904
+    ja! = 1.0   '@091d
+    L_0928:
+    IF NOT (LEN(texto) = 0) THEN GOTO L_093a   '@0928
+    GOTO L_0db3   '@0937
+    L_093a:
+    modo$ = "OR"   '@093a
+    s$ = texto   '@0947
+    IF NOT (MID$(texto, 1, 1) = "~") THEN GOTO L_0996   '@0953
+    s$ = MID$(texto, 2)   '@096f
+    modo$ = "XOR"   '@0989
+    L_0996:
+    xmax! = 639.0   '@0997
+    ymax! = 199.0   '@09a3
+    alt! = 7.0   '@09af
+    larg! = 8.0   '@09bb
+    IF NOT (placa = "HER") THEN GOTO L_0a07   '@09c6
+    xmax! = 719.0   '@09d8
+    ymax! = 343.0   '@09e4
+    alt! = 13.0   '@09f0
+    larg! = 9.0   '@09fc
+    L_0a07:
+    ega% = (placa = "EGA")   '@0a07
+    IF NOT ((placa = "VGA" OR ega%) <> 0) THEN GOTO L_0a6a   '@0a25
+    xmax! = 639.0   '@0a3b
+    ymax! = 343.0   '@0a47
+    alt! = 13.0   '@0a53
+    larg! = 8.0   '@0a5f
+    L_0a6a:
+    IF NOT (y > ymax! OR (y <= 0.0 OR (x > xmax! OR FX##(LEN(s$)) * larg! + x <= 0.0))) THEN GOTO L_0aed   '@0a6b
+    GOTO L_0db3   '@0aea
+    L_0aed:
+    t1! = 40.0   '@0aed
+    t2! = LEN(s$)   '@0b02
+    CALL MIXT_0877_Menor(t1!, t2!, t3!)   '@0b17
+    GET (0, 0)-(CSNG(FX##(t3!) * larg!), alt!), fundo%   '@0b29
+    LOCATE 1, 1   '@0b5a
+    PRINT s$   '@0b6a
+    t4! = 0.0   '@0b74
+    t5! = -x   '@0b7f
+    CALL MIXT_082a_Maior(t4!, t5!, t6!)   '@0b8f
+    t7! = FX##(LEN(s$)) * larg! - 1.0   '@0ba0
+    t8! = FX##(xmax!) - x   '@0bd5
+    CALL MIXT_0877_Menor(t7!, t8!, t9!)   '@0be6
+    GET (t6!, 0.0)-(t9!, alt!), letras%   '@0bf7
+    PUT (0, 0), fundo%, PSET   '@0c1d acao 3 do B$GPUT (INFERIDO: 0=OR 1=AND 2=PRESET 3=PSET 4=XOR)
+    IF NOT (modo$ = "OR") THEN GOTO L_0d01   '@0c3b
+    t10! = 0.0   '@0c4e
+    CALL MIXT_082a_Maior(t10!, x, t11!)   '@0c59
+    CALL MIXT_0877_Menor(t11!, xmax!, t12!)   '@0c69
+    t13! = 1.0   '@0c7b
+    t14! = FX##(y) - alt! - 1.0   '@0c86
+    CALL MIXT_082a_Maior(t13!, t14!, t15!)   '@0c9d
+    t16! = FX##(ymax!) - alt! - 1.0   '@0caf
+    CALL MIXT_0877_Menor(t15!, t16!, t17!)   '@0cc4
+    PUT (t12!, t17!), letras%, OR   '@0cd5 acao 0
+    GOTO L_0db3   '@0cfe
+    L_0d01:
+    t18! = 0.0   '@0d02
+    CALL MIXT_082a_Maior(t18!, x, t19!)   '@0d0d
+    CALL MIXT_0877_Menor(t19!, xmax!, t20!)   '@0d1d
+    t21! = 1.0   '@0d2f
+    t22! = FX##(y) - alt! - 1.0   '@0d3a
+    CALL MIXT_082a_Maior(t21!, t22!, t23!)   '@0d51
+    t24! = FX##(ymax!) - alt! - 1.0   '@0d63
+    CALL MIXT_0877_Menor(t23!, t24!, t25!)   '@0d78
+    PUT (t20!, t25!), letras%, XOR   '@0d89 acao 4
+    L_0db3:
+    RT_REARMA_ERRO   ' o ON ERROR do MIXT vale so para o MIXT (ver RETRADUCAO.md)
+END SUB
+
+' Guarda (pagina=0) ou restaura a tela de texto: PCOPY entre paginas, ou, no Hercules,
+' copia dos 4000 bytes de B000:0000. LAJEPROC: ja = DS:156E, copia%() = DS:1572, i& = DS:1584.
+SUB MIXT_0dbe_GuardaTela (pagina AS SINGLE, destino AS SINGLE, placa AS STRING) STATIC
+    ON ERROR GOTO MIXT_0030: RT_ERRO_MIXT = -1   '@0dc6
+    IF NOT (placa <> "HER") THEN GOTO L_0e01   '@0dd0
+    PCOPY CINT(pagina), CINT(destino)   '@0de1
+    GOTO L_0f17   '@0dfe
+    L_0e01:
+    IF NOT (ja! = 0.0) THEN GOTO L_0e3b   '@0e02
+    DIM copia%(0 TO 4000)   '@0e17
+    ja! = 1.0   '@0e30
+    L_0e3b:
+    IF NOT (pagina = 0.0) THEN GOTO L_0eb6   '@0e3c
+    RT_DEFSEG &HB000   '@0e52
+    FOR i& = 0& TO 3999&   '@0e5b
+        copia%(i&) = PEEK(i&)   '@0e62
+    NEXT i&   '@0e85
+    RT_DEFSEG -1   '@0eae
+    GOTO L_0f17   '@0eb3
+    L_0eb6:
+    RT_DEFSEG &HB000   '@0eb6
+    FOR i& = 0& TO 3999&   '@0ebf
+        RT_POKE i&, copia%(i&)   '@0ec6
+    NEXT i&   '@0ee9
+    RT_DEFSEG -1   '@0f12
+    L_0f17:
+    RT_REARMA_ERRO
+END SUB

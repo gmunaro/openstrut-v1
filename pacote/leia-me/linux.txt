@@ -1,0 +1,42 @@
+OpenStrut V1 e V2 para Linux
+
+O OpenStrut V1 é uma reconstrução independente, por engenharia reversa, do
+SISTRUT 4.0 (1991). O projeto não tem vínculo com os autores do programa
+original.
+
+Requisitos: Linux de 64 bits (x64 ou arm64) com ambiente gráfico. Para a V2,
+Google Chrome, Chromium ou Microsoft Edge; sem nenhum deles, a V2 abre no
+navegador padrão. Não precisa de internet nem de sudo.
+
+INSTALAR
+Extraia o OpenStrut-linux-<arch>.tar.gz, entre na pasta OpenStrut e rode:
+  ./instalar.sh
+Os programas vão para ~/.local/share/openstrut e o menu de aplicativos ganha
+"OpenStrut V1" e "OpenStrut V2" (e a Área de Trabalho também, se existir).
+Se faltar alguma biblioteca para a V1, o instalador mostra o comando apt ou
+dnf que a instala. Para atualizar, rode o instalar.sh de um pacote mais novo;
+as obras e configurações são mantidas.
+
+OPENSTRUT V1
+Reconstrução do SISTRUT 4.0, pela NB-1/78. Abre numa janela própria e usa só o
+teclado, como o original. Alt+Enter alterna a tela cheia. As obras, os
+relatórios (.LST) e os desenhos (.DXF, .PLT) ficam em
+~/.local/share/openstrut/V1.
+
+OPENSTRUT V2
+Versão nova, pela NBR 6118:2023 ou pela NB-1/78. Abre numa janela própria.
+Salve as obras com o botão de salvar (arquivo .sistrut.json); o rascunho
+automático fica só neste computador. Obras da V1 entram por "Importar obra da
+V1". Ao fechar a janela, o programa encerra sozinho. Se ela abrir numa aba do
+navegador padrão, o programa fica no ar até você sair da sessão.
+
+DESINSTALAR
+  ~/.local/share/openstrut/desinstalar.sh
+Remove os programas e os atalhos. As obras da V1 e os dados da V2 continuam
+em ~/.local/share/openstrut até você apagar a pasta.
+
+PROBLEMAS
+- A V2 diz que a porta 41780 está ocupada: outro programa usa essa porta.
+  Feche-o ou reinicie o computador.
+- O atalho da Área de Trabalho não abre: clique com o botão direito nele e
+  escolha "Permitir iniciar".

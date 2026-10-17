@@ -1,0 +1,9 @@
+# exe: LAJEGEOM
+# rev5_laje_geo: sondagem de edicao (E) e Esc na lista de arquitetura.
+REV5LG{ENTER}
+2
+I{ENTER}{ENTER}{ENTER}{BS}{BS}{BS}{BS}4{ENTER}{BS}{BS}{BS}{BS}5{ENTER}{BS}{BS}{BS}{BS}10{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{TELA y01_L1}
+E{TELA y02_E_pede}
+{ENTER}{TELA y03_ENTER1}
+{ENTER}{TELA y04_ENTER2}
+{ESC}{TELA y05_ESC}

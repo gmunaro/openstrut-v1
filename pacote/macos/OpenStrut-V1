@@ -1,0 +1,45 @@
+#!/bin/bash
+# Executável do "OpenStrut V1.app". A V1 grava as obras na própria pasta e um .app
+# não deve ser gravado (fica em /Applications e é selado pela assinatura). Então,
+# na primeira execução e a cada versão nova, este script copia os programas e as
+# configurações de Contents/Resources/V1 para
+# ~/Library/Application Support/OpenStrut/V1, sem sobrescrever .INI, parametrizações
+# e obras, tira a quarentena da cópia e roda o OPENSTRUT de lá.
+set -u
+
+RECURSOS="$(cd "$(dirname "$0")/../Resources" && pwd)"
+DESTINO="$HOME/Library/Application Support/OpenStrut/V1"
+
+avisar() {
+    osascript -e 'on run argv' -e 'display alert "OpenStrut V1" message (item 1 of argv)' \
+        -e 'end run' "$1" > /dev/null 2>&1 || echo "$1" >&2
+}
+
+versao="$(cat "$RECURSOS/VERSAO")"
+if [ "$(cat "$DESTINO/.versao" 2> /dev/null)" != "$versao" ] || [ ! -x "$DESTINO/OPENSTRUT" ]; then
+    if ! mkdir -p "$DESTINO"; then
+        avisar "Não foi possível criar a pasta $DESTINO."
+        exit 1
+    fi
+    for f in "$RECURSOS"/V1/*; do
+        nome="${f##*/}"
+        case "$nome" in
+            *.*)
+                [ -e "$DESTINO/$nome" ] || cp "$f" "$DESTINO/"
+                ;;
+            *)
+                # apagar antes de copiar: sobrescrever um executável assinado no
+                # mesmo lugar faz o macOS matá-lo na próxima execução
+                rm -f "$DESTINO/$nome" && cp "$f" "$DESTINO/" && chmod 755 "$DESTINO/$nome"
+                ;;
+        esac || {
+            avisar "Não foi possível copiar $nome para $DESTINO."
+            exit 1
+        }
+    done
+    xattr -dr com.apple.quarantine "$DESTINO" 2> /dev/null || true
+    echo "$versao" > "$DESTINO/.versao"
+fi
+
+cd "$DESTINO" || exit 1
+exec ./OPENSTRUT

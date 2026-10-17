@@ -1,0 +1,25 @@
+// Typecheck da paridade contra os tipos da V2 de referência, num checkout da V2
+// (gmunaro/openstrut) com dependências instaladas, irmão deste repositório (../openstrut,
+// visto daqui como ../../openstrut). Na raiz deste repositório:
+//   node ../openstrut/node_modules/typescript/bin/tsc -p paridade
+// Outro lugar: troque os dois caminhos ../../openstrut abaixo (ver paridade/README.md).
+// `@v2/*` só aparece em `import type` (o Bun apaga em tempo de execução; a V2 que roda é
+// a de `--v2`). Os testes ficam de fora: importam `bun:test`, que não tem tipos aqui.
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "typeRoots": ["../../openstrut/node_modules/@types"],
+    "types": ["node"],
+    "paths": { "@v2/*": ["../../openstrut/src/*"] }
+  },
+  "include": ["comparar.ts", "lib/**/*.ts", "v2/**/*.ts", "original/**/*.ts"]
+}

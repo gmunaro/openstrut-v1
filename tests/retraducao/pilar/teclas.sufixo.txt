@@ -1,0 +1,14 @@
+# Sufixo (a partir do menu do PILAR): teclas do ON KEY. PILAREDI: F1 (BEEP), F2 (volta ao PILAR);
+# PILGEEDI: Esc num campo (BEEP e menu), F2 (volta ao PILAREDI); PIGRAEDI: F2 (volta ao PILAREDI);
+# PILAR: Esc (BEEP e menu), F1 (BEEP). Leitura por INPUT$(1): o original so atende o ON KEY quando o
+# INPUT$ recebe outra tecla (ver casos/teclas_laje_f2.txt), por isso {ENTER} depois de F1/F2.
+8{ESPERA MULTIPLOS ANDARES}{ESPERA escolha opcao}{PAUSA 2}{TELA k01}
+{F1}{PAUSA 2}{ENTER}{PAUSA 2}{TELA k02}
+2{ESPERA dados de Colunas}{ESPERA escolha opcao}{PAUSA 2}{TELA k03}
+1{ESPERA Nivel (1)}{PAUSA 1}{TELA k04}{ESC}{PAUSA 2}{TELA k05}{ENTER}{PAUSA 2}{TELA k06}
+{F2}{PAUSA 2}{ENTER}{ESPERA MULTIPLOS ANDARES}{ESPERA escolha opcao}{PAUSA 2}{TELA k07}
+6{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}{TELA k08}
+{F2}{PAUSA 2}{ENTER}{ESPERA MULTIPLOS ANDARES}{ESPERA escolha opcao}{PAUSA 2}{TELA k09}
+{F2}{PAUSA 2}{ENTER}{ESPERA Edificios de Multiplos}{ESPERA escolha opcao}{PAUSA 2}{TELA k10}
+1{ESPERA Fck}{PAUSA 1}{TELA k11}{ESC}{PAUSA 2}{TELA k12}{ENTER}{PAUSA 2}{TELA k13}
+{F1}{PAUSA 2}{ENTER}{PAUSA 2}{TELA k14}

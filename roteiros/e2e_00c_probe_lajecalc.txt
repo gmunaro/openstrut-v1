@@ -1,0 +1,3 @@
+# exe: LAJECALC
+# Sonda: LAJECALC rodado direto (sem passar pelo menu LAJE), para ver a primeira tela dele
+{TELA c00_inicio}{F2}{TELA c01_fim}

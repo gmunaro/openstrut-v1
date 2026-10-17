@@ -1,0 +1,5 @@
+# exe: SISTRUT
+# Obra E2E (com resultados do e2e_02). Menu LAJE, opcao 9: LAJEMONT.
+# LAJEMONT: telas de reacoes (tabela e totais), esquemas de vigas e pilares,
+# relatorio de vigas S (gera LST), indexacoes S, volta ao LAJE e sai.
+{TELA s01_menu}L{TELA l01_menu_laje}9{TELA m01_reacoes}{ENTER}{TELA m02_totais}{ENTER}{TELA m03_esq}{ENTER}{TELA m04_esq}{ENTER}{TELA m05_pergunta}S{TELA m06_pergunta2}{ENTER}{TELA m07_pos}{ENTER}{TELA l02_menu_pos_monta}{ENTER}{TELA l03_menu_fim}{F2}{TELA s02_menu}{F2}

@@ -1,0 +1,239 @@
+' ============================================================================
+'  SISPLOT.BM - desenho vetorial neutro (.VET) e exportacao HP-GL / DXF.
+'
+'  Todo modulo que produz desenho (LAJEPROC, FORMPLOT, DESENHO/DESEDITA,
+'  DESIMP, VPLOTA) grava um .VET; VPLOTA e FORMPLOT convertem para o
+'  equipamento (.PLT HP-GL) ou para CAD (.DXF R12). Formato em
+'  docs/formats/DADOS.md, secao VET.
+'
+'  .VET = arquivo sequencial QB (WRITE #), coordenadas em mm no papel:
+'    "SISTRUT40","VET",1,"<titulo>"
+'    "L",x1,y1,x2,y2,pena          linha
+'    "T",x,y,altura,angulo,pena,"texto"
+'    "C",x,y,raio,pena             circulo
+'    "F"                           fim
+'
+'  Uso: '$INCLUDE: '../common/SISPLOT.BM' no fim do modulo.
+' ============================================================================
+
+' Abre um .VET para gravacao e escreve o cabecalho. Retorna o numero do arquivo.
+FUNCTION VetAbre% (arq AS STRING, titulo AS STRING)
+    DIM f AS INTEGER
+    f = FREEFILE
+    OPEN arq FOR OUTPUT AS #f
+    WRITE #f, "SISTRUT40", "VET", 1, titulo
+    VetAbre% = f
+END FUNCTION
+
+' Grava uma linha de (x1,y1) a (x2,y2) mm com a pena dada.
+SUB VetLinha (f AS INTEGER, x1 AS DOUBLE, y1 AS DOUBLE, x2 AS DOUBLE, y2 AS DOUBLE, pena AS INTEGER)
+    WRITE #f, "L", x1, y1, x2, y2, pena
+END SUB
+
+' Grava um retangulo como 4 linhas.
+SUB VetRetangulo (f AS INTEGER, x1 AS DOUBLE, y1 AS DOUBLE, x2 AS DOUBLE, y2 AS DOUBLE, pena AS INTEGER)
+    VetLinha f, x1, y1, x2, y1, pena
+    VetLinha f, x2, y1, x2, y2, pena
+    VetLinha f, x2, y2, x1, y2, pena
+    VetLinha f, x1, y2, x1, y1, pena
+END SUB
+
+' Grava texto com altura (mm) e angulo (graus) a partir de (x,y) mm.
+SUB VetTexto (f AS INTEGER, x AS DOUBLE, y AS DOUBLE, altura AS DOUBLE, angulo AS DOUBLE, pena AS INTEGER, texto AS STRING)
+    WRITE #f, "T", x, y, altura, angulo, pena, texto
+END SUB
+
+' Grava um circulo de centro (x,y) e raio r (mm).
+SUB VetCirculo (f AS INTEGER, x AS DOUBLE, y AS DOUBLE, r AS DOUBLE, pena AS INTEGER)
+    WRITE #f, "C", x, y, r, pena
+END SUB
+
+' Fecha o .VET gravando o marcador de fim.
+SUB VetFecha (f AS INTEGER)
+    WRITE #f, "F"
+    CLOSE #f
+END SUB
+
+' Converte .VET em HP-GL (.PLT): 40 unidades de plotter por mm.
+' Retorna o numero de entidades convertidas, ou -1 se o .VET for invalido.
+FUNCTION VetParaHpgl% (arqVet AS STRING, arqPlt AS STRING)
+    DIM fi AS INTEGER, fo AS INTEGER, n AS INTEGER, penaAtual AS INTEGER
+    DIM tipo AS STRING, s1 AS STRING, s2 AS STRING, versao AS INTEGER, titulo AS STRING
+    DIM x1 AS DOUBLE, y1 AS DOUBLE, x2 AS DOUBLE, y2 AS DOUBLE, pena AS INTEGER
+    DIM alt AS DOUBLE, ang AS DOUBLE, texto AS STRING, r AS DOUBLE
+    fi = FREEFILE
+    OPEN arqVet FOR INPUT AS #fi
+    INPUT #fi, s1, s2, versao, titulo
+    IF s1 <> "SISTRUT40" OR s2 <> "VET" THEN CLOSE #fi: VetParaHpgl% = -1: EXIT FUNCTION
+    fo = FREEFILE
+    OPEN arqPlt FOR OUTPUT AS #fo
+    PRINT #fo, "IN;"
+    penaAtual = 0
+    DO WHILE NOT EOF(fi)
+        INPUT #fi, tipo
+        SELECT CASE tipo
+            CASE "L"
+                INPUT #fi, x1, y1, x2, y2, pena
+                GOSUB TrocaPena
+                PRINT #fo, "PU" + VetHp$(x1) + "," + VetHp$(y1) + ";PD" + VetHp$(x2) + "," + VetHp$(y2) + ";"
+                n = n + 1
+            CASE "T"
+                INPUT #fi, x1, y1, alt, ang, pena, texto
+                GOSUB TrocaPena
+                ' SI em cm: largura ~ 0.7 da altura
+                PRINT #fo, "DI" + VetNum$(COS(ang * 3.14159265358979# / 180#)) + "," + VetNum$(SIN(ang * 3.14159265358979# / 180#)) + ";"
+                PRINT #fo, "SI" + VetNum$(alt * 0.07#) + "," + VetNum$(alt * 0.1#) + ";"
+                PRINT #fo, "PU" + VetHp$(x1) + "," + VetHp$(y1) + ";LB" + texto + CHR$(3)
+                n = n + 1
+            CASE "C"
+                INPUT #fi, x1, y1, r, pena
+                GOSUB TrocaPena
+                PRINT #fo, "PU" + VetHp$(x1) + "," + VetHp$(y1) + ";CI" + VetHp$(r) + ";"
+                n = n + 1
+            CASE "F"
+                EXIT DO
+        END SELECT
+    LOOP
+    PRINT #fo, "PU;SP0;"
+    CLOSE #fo
+    CLOSE #fi
+    VetParaHpgl% = n
+    EXIT FUNCTION
+TrocaPena:
+    IF pena <> penaAtual THEN PRINT #fo, "SP" + LTRIM$(STR$(pena)) + ";": penaAtual = pena
+    RETURN
+END FUNCTION
+
+' Converte .VET em DXF R12 ASCII (so secao ENTITIES; camada = PENA<n>).
+' Retorna o numero de entidades convertidas, ou -1 se o .VET for invalido.
+FUNCTION VetParaDxf% (arqVet AS STRING, arqDxf AS STRING)
+    DIM fi AS INTEGER, fo AS INTEGER, n AS INTEGER
+    DIM tipo AS STRING, s1 AS STRING, s2 AS STRING, versao AS INTEGER, titulo AS STRING
+    DIM x1 AS DOUBLE, y1 AS DOUBLE, x2 AS DOUBLE, y2 AS DOUBLE, pena AS INTEGER
+    DIM alt AS DOUBLE, ang AS DOUBLE, texto AS STRING, r AS DOUBLE, camada AS STRING
+    fi = FREEFILE
+    OPEN arqVet FOR INPUT AS #fi
+    INPUT #fi, s1, s2, versao, titulo
+    IF s1 <> "SISTRUT40" OR s2 <> "VET" THEN CLOSE #fi: VetParaDxf% = -1: EXIT FUNCTION
+    fo = FREEFILE
+    OPEN arqDxf FOR OUTPUT AS #fo
+    PRINT #fo, "0": PRINT #fo, "SECTION": PRINT #fo, "2": PRINT #fo, "ENTITIES"
+    DO WHILE NOT EOF(fi)
+        INPUT #fi, tipo
+        SELECT CASE tipo
+            CASE "L"
+                INPUT #fi, x1, y1, x2, y2, pena
+                camada = "PENA" + LTRIM$(STR$(pena))
+                PRINT #fo, "0": PRINT #fo, "LINE": PRINT #fo, "8": PRINT #fo, camada
+                PRINT #fo, "10": PRINT #fo, VetNum$(x1): PRINT #fo, "20": PRINT #fo, VetNum$(y1)
+                PRINT #fo, "11": PRINT #fo, VetNum$(x2): PRINT #fo, "21": PRINT #fo, VetNum$(y2)
+                n = n + 1
+            CASE "T"
+                INPUT #fi, x1, y1, alt, ang, pena, texto
+                camada = "PENA" + LTRIM$(STR$(pena))
+                PRINT #fo, "0": PRINT #fo, "TEXT": PRINT #fo, "8": PRINT #fo, camada
+                PRINT #fo, "10": PRINT #fo, VetNum$(x1): PRINT #fo, "20": PRINT #fo, VetNum$(y1)
+                PRINT #fo, "40": PRINT #fo, VetNum$(alt): PRINT #fo, "1": PRINT #fo, texto
+                PRINT #fo, "50": PRINT #fo, VetNum$(ang)
+                n = n + 1
+            CASE "C"
+                INPUT #fi, x1, y1, r, pena
+                camada = "PENA" + LTRIM$(STR$(pena))
+                PRINT #fo, "0": PRINT #fo, "CIRCLE": PRINT #fo, "8": PRINT #fo, camada
+                PRINT #fo, "10": PRINT #fo, VetNum$(x1): PRINT #fo, "20": PRINT #fo, VetNum$(y1)
+                PRINT #fo, "40": PRINT #fo, VetNum$(r)
+                n = n + 1
+            CASE "F"
+                EXIT DO
+        END SELECT
+    LOOP
+    PRINT #fo, "0": PRINT #fo, "ENDSEC": PRINT #fo, "0": PRINT #fo, "EOF"
+    CLOSE #fo
+    CLOSE #fi
+    VetParaDxf% = n
+END FUNCTION
+
+' Mostra o .VET na tela grafica (SCREEN 12, 640x480) ajustado a janela.
+' Usa a cor da pena (1..15). Espera uma tecla. Retorna -1 se invalido.
+FUNCTION VetMostra% (arqVet AS STRING)
+    DIM fi AS INTEGER, tipo AS STRING, s1 AS STRING, s2 AS STRING, versao AS INTEGER, titulo AS STRING
+    DIM x1 AS DOUBLE, y1 AS DOUBLE, x2 AS DOUBLE, y2 AS DOUBLE, pena AS INTEGER
+    DIM alt AS DOUBLE, ang AS DOUBLE, texto AS STRING, r AS DOUBLE
+    DIM xmin AS DOUBLE, ymin AS DOUBLE, xmax AS DOUBLE, ymax AS DOUBLE, passo AS INTEGER, esc AS DOUBLE
+    xmin = 1E+30: ymin = 1E+30: xmax = -1E+30: ymax = -1E+30
+    FOR passo = 1 TO 2
+        fi = FREEFILE
+        OPEN arqVet FOR INPUT AS #fi
+        INPUT #fi, s1, s2, versao, titulo
+        IF s1 <> "SISTRUT40" OR s2 <> "VET" THEN CLOSE #fi: VetMostra% = -1: EXIT FUNCTION
+        IF passo = 2 THEN
+            IF xmax <= xmin OR ymax <= ymin THEN CLOSE #fi: VetMostra% = 0: EXIT FUNCTION
+            esc = 620# / (xmax - xmin)
+            IF 440# / (ymax - ymin) < esc THEN esc = 440# / (ymax - ymin)
+            SCREEN 12: CLS
+            LOCATE 1, 1: PRINT titulo;
+        END IF
+        DO WHILE NOT EOF(fi)
+            INPUT #fi, tipo
+            SELECT CASE tipo
+                CASE "L"
+                    INPUT #fi, x1, y1, x2, y2, pena
+                    IF passo = 1 THEN
+                        VetLimites x1, y1, xmin, ymin, xmax, ymax
+                        VetLimites x2, y2, xmin, ymin, xmax, ymax
+                    ELSE
+                        LINE (10 + (x1 - xmin) * esc, 470 - (y1 - ymin) * esc)-(10 + (x2 - xmin) * esc, 470 - (y2 - ymin) * esc), VetCor%(pena)
+                    END IF
+                CASE "T"
+                    INPUT #fi, x1, y1, alt, ang, pena, texto
+                    IF passo = 1 THEN
+                        VetLimites x1, y1, xmin, ymin, xmax, ymax
+                    ELSE
+                        COLOR VetCor%(pena)
+                        _PRINTSTRING (10 + (x1 - xmin) * esc, 470 - (y1 - ymin) * esc - 14), texto
+                    END IF
+                CASE "C"
+                    INPUT #fi, x1, y1, r, pena
+                    IF passo = 1 THEN
+                        VetLimites x1 - r, y1 - r, xmin, ymin, xmax, ymax
+                        VetLimites x1 + r, y1 + r, xmin, ymin, xmax, ymax
+                    ELSE
+                        CIRCLE (10 + (x1 - xmin) * esc, 470 - (y1 - ymin) * esc), r * esc, VetCor%(pena)
+                    END IF
+                CASE "F"
+                    EXIT DO
+            END SELECT
+        LOOP
+        CLOSE #fi
+    NEXT
+    DO: _LIMIT 30: LOOP WHILE TelaTecla$ = ""
+    SCREEN 0: WIDTH 80, 25
+    VetMostra% = 1
+END FUNCTION
+
+' Amplia o retangulo envolvente (xmin..xmax, ymin..ymax) para conter (x,y).
+SUB VetLimites (x AS DOUBLE, y AS DOUBLE, xmin AS DOUBLE, ymin AS DOUBLE, xmax AS DOUBLE, ymax AS DOUBLE)
+    IF x < xmin THEN xmin = x
+    IF x > xmax THEN xmax = x
+    IF y < ymin THEN ymin = y
+    IF y > ymax THEN ymax = y
+END SUB
+
+' Cor de tela para a pena (pena 0 ou > 15 vira branco).
+FUNCTION VetCor% (pena AS INTEGER)
+    IF pena < 1 OR pena > 15 THEN VetCor% = 15 ELSE VetCor% = pena
+END FUNCTION
+
+' Coordenada mm -> unidades HP-GL (40/mm), inteiro em texto.
+FUNCTION VetHp$ (mm AS DOUBLE)
+    VetHp$ = LTRIM$(STR$(CLNG(mm * 40#)))
+END FUNCTION
+
+' Numero em texto sem espaco inicial e com zero antes do ponto decimal.
+FUNCTION VetNum$ (v AS DOUBLE)
+    DIM s AS STRING
+    s = LTRIM$(STR$(v))
+    IF LEFT$(s, 1) = "." THEN s = "0" + s
+    IF LEFT$(s, 2) = "-." THEN s = "-0" + MID$(s, 2)
+    VetNum$ = s
+END FUNCTION

@@ -1,0 +1,5 @@
+# exe: ARMADURA
+# ARMADURA item 6 (INI). Processa POS 1 do _ARM.SEC (dados: SISTRUT.OBR e V10OBRA_ARM.SEC de viga_09).
+# Enter mantem I=1 e J=max. Uma tecla ao fim.
+P{ENTER}{ENTER}{TELA processa}{ENTER}
+{TELA fim}{F2}

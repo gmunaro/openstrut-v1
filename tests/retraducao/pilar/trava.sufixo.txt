@@ -1,0 +1,6 @@
+# Sufixo (a partir do menu do PILAR): PILAR 6, secao 20 x 40 (3 + 3 barras de 16 mm, 1 lateral por lado),
+# Nk 40 t, Mxk 2, Myk 1 tm, Lxe 4, Lye 6 m. O caso 1/2 da 'SITUACAO DE INSTABILIDADE'; no caso 2/2 o original
+# fica em 'Aguarde ...' sem fim (busca sem teto de iteracoes, U49-009) e a V1 tambem. O roteiro acaba ai. Sem obra.
+6{ESPERA Fck}{ENTER}{ESPERA Fyk}{ENTER}{ESPERA Tipo de Aco}{ENTER}{ESPERA tipo de secao}{PAUSA 2}1{ESPERA B(cm)}20,40,3{ENTER}{ESPERA borda superior}3{ENTER}{ESPERA borda inferior}3{ENTER}{ESPERA bordas laterais}1{ENTER}{ESPERA Di,Df}{PAUSA 1}{TELA q00}{ENTER}{ESPERA Bitola (mm)}16{ENTER}{ESPERA Outra Bitola}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA q01}{ENTER}
+{ESPERA Imprimo as verificacoes}S{ENTER}{ESPERA Secao comprimida}N{ENTER}{ESPERA Nk(t)}40{ENTER}{ESPERA Mxk(tm)}2{ENTER}{ESPERA Myk(tm)}1{ENTER}{ESPERA Lxe(m)}4{ENTER}{ESPERA Lye(m)}6{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA q02}{ENTER}
+{PAUSA 60}{TELA q03}

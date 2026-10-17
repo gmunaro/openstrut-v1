@@ -1,0 +1,8 @@
+# exe: VIGA
+# acab_05_viga_tabelas: correcoes de tela da VIGA (itens 1 e 2 do relatorio).
+# Tela uma1: colunas as-d ate a coluna 70 (nao passa de 80). Tela resumo: avisos
+# quebrados em ate 76 colunas e paginados. Base de teclas: viga_01_flux.txt.
+# Conferir em uma1.txt e resumo.txt. Saida esperada: 0.
+{TELA menu}3{ENTER}UMA1{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}SN{BS}20{ENTER}{BS}50{ENTER}{BS}4{ENTER}{BS}1{ENTER}N{TELA uma1_entrada}P2{ENTER}S{TELA uma1}{ENTER}
+7{TELA resumo}S{ENTER}{TELA resumo_fim}
+{TELA fim}{F2}

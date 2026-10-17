@@ -1,0 +1,27 @@
+# Sufixo (a partir do menu do LAJE): parametros e materiais alterados, e o calculo com eles.
+# Le E2E.LAJ; LAJE 7: P com arquivo .LAP inexistente, P/D com diretorio inexistente, itens 1 (CSE 1.5),
+# 5 (0, depois 25t), 4 (unidade 5) e volta de 4 e 5 ao padrao; LAJE 1: Fck 0 (recusado) e 0.2, unidade
+# 5 (recusada), Fyk -1 (recusado), aco tipo A;
+# LAJECALC 7: eficiencia 90 %, maxima relacao 0.1 (abaixo da minima) e ENTER; LAJECALC 3 e 5 com
+# impressao; LAJEPROC 1 e 5 (impressao); volta ao LAJE.
+{TELA l01}6{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}
+4{ESPERA *RETORNO*}{PAUSA 2}E2E{ENTER}{ESPERA Continuo}{PAUSA 1}
+{ENTER}{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}
+7{ESPERA LAJES EM REGIME}{ESPERA escolha opcao}{PAUSA 2}{TELA l02}
+7{ESPERA Correcao de Parametros}{ESPERA NAO}{PAUSA 1}{TELA r01}P{ENTER}{ESPERA Nome do Arquivo PARAMETRIZACAO}{PAUSA 1}{TELA r02}XYZ{ENTER}{ESPERA NAO EXISTE}{PAUSA 1}{TELA r03}
+{ENTER}{PAUSA 2}{TELA r04}{ENTER}{ESPERA Coeficientes de Seguranca}{PAUSA 1}{TELA r05}
+P{ENTER}{ESPERA Nome do Arquivo PARAMETRIZACAO}{PAUSA 1}D{ENTER}{ESPERA dos arquivos de Parametrizacao}{PAUSA 1}{TELA r06}\NAOHA{ENTER}{PAUSA 2}{TELA r07}
+{ENTER}{PAUSA 2}{TELA r08}{ENTER}{ESPERA Coeficientes de Seguranca}{PAUSA 1}{TELA r09}
+1,1.5{ENTER}{PAUSA 2}{TELA r10}5,0{ENTER}{PAUSA 2}{TELA r11}5,25t{ENTER}{PAUSA 2}{TELA r12}4,5{ENTER}{PAUSA 2}{TELA r13}
+5,1{ENTER}{PAUSA 2}4,t{ENTER}{PAUSA 2}{TELA r14}{ENTER}{ESPERA LAJES EM REGIME}{ESPERA escolha opcao}{PAUSA 2}{TELA l03}
+1{ESPERA Fck}{PAUSA 1}0{ENTER}{PAUSA 2}{TELA m00}0.2{ENTER}{ESPERA Unidade de grandeza}{PAUSA 1}{TELA m01}5{ENTER}{PAUSA 2}{TELA m01b}{ENTER}{ESPERA Multiplicador}{PAUSA 1}{ENTER}{ESPERA Fyk}{PAUSA 1}{TELA m02}-1{ENTER}{PAUSA 2}{TELA m02b}{ENTER}{ESPERA Tipo de Aco}{PAUSA 1}A{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA l04}
+3{ESPERA Calculo e Detalhamento}{ESPERA escolha opcao}{PAUSA 2}{TELA c01}
+7{ESPERA Correcao de Parametros}{ESPERA escolha opcao}{PAUSA 2}1{ESPERA Eficiencia da Armadura}{PAUSA 1}{TELA c02}90{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA c03}
+5{ESPERA Maxima Relacao}{PAUSA 1}0.1{ENTER}{PAUSA 2}{TELA c04}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA c05}8{ESPERA Calculo e Detalhamento}{ESPERA escolha opcao}{PAUSA 2}{TELA c06}
+3{ESPERA TODAS}{PAUSA 1}{ENTER}{ESPERA Imprimo Relatorio}{PAUSA 1}S{ENTER}{ESPERA Visualizo}{PAUSA 1}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{ENTER}{ESPERA para seguir}{PAUSA 1}{TELA c07}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA c08}
+5{ESPERA Momentos/Armaduras}{ESPERA TODAS}{PAUSA 1}{ENTER}{ESPERA Imprimo Relatorio}{PAUSA 1}S{ENTER}{ESPERA Visualizo}{PAUSA 1}{ENTER}{ESPERA Deseja Visualizar}{PAUSA 1}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{ENTER}{ESPERA para seguir}{PAUSA 1}{TELA c09}{ENTER}{ESPERA escolha opcao|180}{PAUSA 2}{TELA c10}
+8{ESPERA LAJES EM REGIME}{ESPERA escolha opcao}{PAUSA 2}{TELA l05}
+4{ESPERA Escolha de Armaduras}{ESPERA escolha opcao}{PAUSA 2}{TELA p01}
+1{ESPERA N/*S*}{PAUSA 1}{TELA p02}{ENTER}{ESPERA Escolha de Armaduras}{ESPERA escolha opcao}{PAUSA 2}{TELA p03}
+5{ESPERA *TODAS*}{PAUSA 1}{ENTER}{ESPERA Visualizo}{PAUSA 1}{ENTER}{ESPERA Ambas}{PAUSA 1}{TELA p04}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{ENTER}{ESPERA escolha opcao|400}{PAUSA 2}{TELA p05}
+6{ESPERA LAJES EM REGIME}{ESPERA escolha opcao}{PAUSA 2}{TELA l06}

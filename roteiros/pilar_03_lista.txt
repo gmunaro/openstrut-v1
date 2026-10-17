@@ -1,0 +1,6 @@
+# exe: PILAR
+# PILAR opcao 3 (lista das secoes): arquiva a secao 20x40 (Nk 60 tf) e depois lista
+# preambulo igual ao roteiro 01: "11{ENTER}" e a posicao 1; S + Enter (aviso de obra) + Enter sai da posicao
+{TELA p03_abertura}{ENTER}{TELA p03_menu}11{ENTER}20{ENTER}40{ENTER}4{ENTER}2{ENTER}2{ENTER}0{ENTER}8{ENTER}60{ENTER}1{ENTER}0.5{ENTER}3{ENTER}3{ENTER}S{ENTER}{ENTER}
+# menu: 3 = lista; a tela da lista espera uma tecla (ENTER); F2 fecha
+{TELA p03_lista}3{TELA p03_lista_fim}{ENTER}{F2}

@@ -1,0 +1,9 @@
+# exe: ARMADURA
+# ARMADURA item 7, parte 2: dados = _ARM.SEC gravado por C (roteiros/viga_12_corrige_as-*/, POS 1 Mk 7.5, campos calculados zerados).
+# P recalcula a POS 1 com Mk 7.5 (esperado M+ As=6.27 4x16; estribo inalterado, Vk 7.03: Est 8 c/11 asw=4.4).
+# {BS} apaga o padrao antes de digitar (EntradaTexto$ anexa ao padrao).
+
+# P (processar): I=1 e J=1 (Enter mantem os padroes); uma tecla ao fim
+P{ENTER}{ENTER}{TELA processa_pos_c}{ENTER}
+
+{TELA fim}{F2}

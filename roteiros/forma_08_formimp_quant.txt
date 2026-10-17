@@ -1,0 +1,6 @@
+# exe: FORMIMP
+# FORMIMP direto, quantitativos (tipo Q) e campo definido (D): obra FLUXO de forma_08_formimp_quant.dados.
+# Pe-direito 3 m (Enter, padrao); opcoes todas S (Enter); campo X 0 a 3.5 e Y 0 a 5.
+# Campo pega L1, vigas V1, V2, V3 e pilares P4 e P1 (Dentro% e teste de interseccao do bbox).
+# BS x12 limpa o padrao do campo numerico antes de digitar.
+{TELA pe}{ENTER}{TELA tipo}{BS}Q{ENTER}{TELA opcoes}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{TELA campo}{BS}D{ENTER}{TELA campo_x1}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}0{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}3.5{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}0{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}5{ENTER}{TELA relatorio}{ENTER}

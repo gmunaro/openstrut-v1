@@ -1,0 +1,8 @@
+# exe: PILAR
+# PILAR opcao 1 (arquivar secao): pilar 20x40, L=3 m, Nk=60 tf, Mxk=1 tf.m, Myk=0.5 tf.m, barras 2+2 de 16 mm
+# a abertura espera uma tecla antes do menu; "1" do menu abre Arquivar, "1{ENTER}" e a posicao 1
+# depois de "S" o programa avisa que a obra nao esta definida (uma tecla), Enter vazio sai da posicao, F2 fecha o menu
+{TELA p01_abertura}{ENTER}{TELA p01_menu}11{ENTER}
+{TELA p01_b}20{ENTER}40{ENTER}4{ENTER}2{ENTER}2{ENTER}0{ENTER}8{ENTER}
+{TELA p01_esf}60{ENTER}1{ENTER}0.5{ENTER}3{ENTER}3{ENTER}
+{TELA p01_conf}S{ENTER}{TELA p01_pos}{ENTER}{F2}

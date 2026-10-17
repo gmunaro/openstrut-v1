@@ -1,0 +1,13 @@
+# obra: obra2
+# Caso retrad_frm_imprime: opcao 3 (Impressao) sobre E2E.FRM gravado pelo original; FORMIMP: S (campo todo), E (escala 100),
+# T (textos, espessura das lajes = N), I (desenho em escala na impressora), C (copia da tela, versao C), Z (todo), F (volta ao FORMA).
+{ESPERA escolha opcao}{PAUSA 2}3{ESPERA Arquivo de Forma}{PAUSA 2}E2E{ENTER}{ESPERA Continuo com a}{PAUSA 2}{TELA c00_arquivos}{ENTER}
+{ESPERA Montagem de Impressao}{PAUSA 2}{TELA c01_resumo}{ENTER}{ESPERA Campo de Impressao|120}{PAUSA 3}{TELA c02_menu}
+S{ESPERA efine um campo}{PAUSA 2}{TELA c03_s}T{ESPERA Campo de Impressao}{PAUSA 3}{TELA c04_s_todo}
+E{ESPERA Escala do Desenho}{PAUSA 2}{TELA c05_escala}100{ENTER}{ESPERA folhas}{PAUSA 2}{TELA c06_escala100}{ENTER}{ESPERA Campo de Impressao}{PAUSA 3}
+T{ESPERA Nome das Lajes}{PAUSA 2}{ENTER}{ESPERA Espessura das Lajes}{PAUSA 1}N{ENTER}{ESPERA Nome das Vigas}{PAUSA 1}{ENTER}{ESPERA Secao das Vigas}{PAUSA 1}{ENTER}
+{ESPERA Nome dos Pilares}{PAUSA 1}{ENTER}{ESPERA Secao dos Pilares}{PAUSA 1}{ENTER}{ESPERA Cotas e Medidas}{PAUSA 2}{TELA c07_textos}{ENTER}{ESPERA Campo de Impressao}{PAUSA 3}
+I{ESPERA Sigo com a Impressao do Desenho}{PAUSA 2}{TELA c08_imprimir}{ENTER}{ESPERA Campo de Impressao|400}{PAUSA 3}{TELA c09_impresso}
+C{ESPERA Sigo com a Impressao da Tela}{PAUSA 2}{TELA c10_copia}{ENTER}{ESPERA Campo de Impressao|400}{PAUSA 3}{TELA c11_copiado}
+Z{ESPERA campo de desenho ampliado}{PAUSA 2}T{ESPERA Campo de Impressao}{PAUSA 3}{TELA c12_zoom_todo}
+F{ESPERA escolha opcao|120}{PAUSA 3}{TELA c13_menu_volta}

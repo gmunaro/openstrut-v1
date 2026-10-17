@@ -1,0 +1,59 @@
+# exe: LAJEGEOM
+# lajgeo_04_cargas: menu 6 (g e q por laje) e menu 3 (cargas linear/area e carga equivalente).
+# Base: roteiros/lajgeo_base.dados (4 lajes, g=0, q=0). Campo numerico vem com padrao 0: {BS} apaga o zero.
+# Sequencia: 6 (g 0.1 e q 0.15 em L1..L4); 3 (L1: linear 4 m x 0.5 tf/m, area 2 m2 x 0.3, U remove linear;
+# L2: area 20 m2 x 0.1); 6 (L1 de novo, g 0.1: sobrescreve o g que veio do menu 3); 3 (L1: area 1 m2 x 0.2).
+# Carga equivalente esperada = (tot linear + tot area) / (lx*ly), lx*ly = 20 m2.
+{TELA c4_01_menu6_inicial}
+6
+{TELA c4_02_menu6_tabela}
+E
+{BS}0.1{ENTER}{BS}0.15{ENTER}
+{DOWN}
+E
+{BS}0.1{ENTER}{BS}0.15{ENTER}
+{DOWN}
+E
+{BS}0.1{ENTER}{BS}0.15{ENTER}
+{DOWN}
+E
+{BS}0.1{ENTER}{BS}0.15{ENTER}
+{TELA c4_03_menu6_preenchido}
+F
+3
+{TELA c4_04_menu3_vazio}
+E
+L
+{BS}4{ENTER}{BS}0.5{ENTER}
+A
+{BS}2{ENTER}{BS}0.3{ENTER}
+{TELA c4_05_L1_linear_e_area}
+U
+L{ENTER}
+{TELA c4_06_L1_apos_U}
+F
+{DOWN}
+E
+A
+{BS}20{ENTER}{BS}0.1{ENTER}
+{TELA c4_07_L2_area}
+F
+{TELA c4_08_menu3_lista}
+F
+6
+E
+{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}0.1{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}0.15{ENTER}
+{TELA c4_09_menu6_L1_de_novo}
+F
+3
+E
+A
+{BS}1{ENTER}{BS}0.2{ENTER}
+{TELA c4_10_L1_area_extra}
+F
+{TELA c4_11_menu3_final}
+F
+9
+S
+{TELA c4_12_retorno}
+{ENTER}

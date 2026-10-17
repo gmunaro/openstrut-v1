@@ -1,0 +1,132 @@
+##### edita (oraculo: $ORACULO/runs/retrad_frm_edita-20261015-082726)
+OK     001_b00_frm
+OK     002_b01_arquivos
+OK     003_b02_resumo
+OK     004_b03_editor (imagem 640x200)
+OK     005_b04_p (imagem 640x200)
+OK     006_b05_p5 (imagem 640x200)
+OK     007_b06_px (imagem 640x200)
+OK     008_b07_pvert (imagem 640x200)
+OK     009_b08_pcoord (imagem 640x200)
+OK     010_b09_py (imagem 640x200)
+OK     011_b10_pconf (imagem 640x200)
+OK     012_b11_p_feito (imagem 640x200)
+OK     013_b12_v1 (imagem 640x200)
+OK     014_b13_v_aviso (imagem 640x200)
+OK     015_b14_g_alterado (imagem 640x200)
+OK     016_b15_redesenhado (imagem 640x200)
+OK     017_b15a_gravado (imagem 640x200)
+OK     018_b16_vfaces (imagem 640x200)
+OK     019_b17_vref (imagem 640x200)
+OK     020_b18_vy (imagem 640x200)
+OK     021_b19_vcoord (imagem 640x200)
+OK     022_b20_vconf (imagem 640x200)
+OK     023_b21_v_feito (imagem 640x200)
+OK     024_b22_textos (imagem 640x200)
+OK     025_b23_textos_todos (imagem 640x200)
+OK     026_b24_zoom (imagem 640x200)
+OK     027_b25_zoom_canto (imagem 640x200)
+OK     028_b26_zoom_feito (imagem 640x200)
+OK     029_b27_zoom_todo (imagem 640x200)
+OK     030_b28_cotas (imagem 640x200)
+OK     031_b29_elevacao (imagem 640x200)
+OK     032_b30_esc (imagem 640x200)
+OK     033_b31_s_alterado (imagem 640x200)
+OK     034_b32_menu_volta
+OK     impressora.prn (0 bytes iguais)
+
+35 iguais, 0 diferentes
+OK     obra/E2E.FRM (6151 bytes)
+##### imprime (oraculo: $ORACULO/runs/retrad_frm_imprime-20261015-083111)
+OK     001_c00_arquivos
+OK     002_c01_resumo
+OK     003_c02_menu (imagem 640x200)
+OK     004_c03_s (imagem 640x200)
+OK     005_c04_s_todo (imagem 640x200)
+OK     006_c05_escala (imagem 640x200)
+OK     007_c06_escala100 (imagem 640x200)
+OK     008_c07_textos (imagem 640x200)
+OK     009_c08_imprimir (imagem 640x200)
+OK     010_c09_impresso (imagem 640x200)
+OK     011_c10_copia (imagem 640x200)
+OK     012_c11_copiado (imagem 640x200)
+OK     013_c12_zoom_todo (imagem 640x200)
+OK     014_c13_menu_volta
+OK     impressora.prn (29120 bytes iguais)
+
+15 iguais, 0 diferentes
+##### montagem (oraculo: $ORACULO/runs/retrad_frm_montagem-20261015-082438)
+OK     001_a00_menu
+OK     002_a01_op5
+OK     003_a02_dir_laj
+OK     004_a03_dir_inval
+OK     005_a04_dir_vig
+OK     006_a05_dir_plt
+OK     007_a06_menu
+OK     008_a07_laj
+OK     009_a08_vig
+OK     010_a09_col
+OK     011_a10_resumo
+OK     012_a11_vigas
+OK     013_a12_viga_alt
+OK     014_a13_viga_volta
+OK     015_a14_nivel
+OK     016_a15_nivel_desce
+OK     017_a16_pilares
+OK     018_a17_pilar_alt
+OK     019_a18_editor (imagem 640x200)
+OK     020_a19_grava (imagem 640x200)
+OK     021_a20_grava_sem_nome (imagem 640x200)
+OK     022_a21_erro_drive (imagem 640x200)
+OK     023_a22_grava_e2e (imagem 640x200)
+OK     024_a23_gravado (imagem 640x200)
+OK     025_a24_f (imagem 640x200)
+OK     026_a25_fv (imagem 640x200)
+OK     027_a26_fv_feito (imagem 640x200)
+OK     028_a27_fp (imagem 640x200)
+OK     029_a28_fp_nao (imagem 640x200)
+OK     030_a29_f_retorna (imagem 640x200)
+OK     031_a30_bd (imagem 640x200)
+OK     032_a31_menu_volta
+OK     impressora.prn (0 bytes iguais)
+
+33 iguais, 0 diferentes
+OK     obra/E2E.FOK (3696 bytes)
+OK     obra/E2E.FOR (3696 bytes)
+OK     obra/E2E.FRM (6151 bytes)
+##### plota (oraculo: $ORACULO/runs/retrad_frm_plota-20261015-083913)
+OK     001_d01_resumo
+OK     002_d02_menu (imagem 640x200)
+OK     003_d03_s (imagem 640x200)
+OK     004_d04_param
+OK     005_d05_param_alt
+OK     006_d06_param_campo3
+OK     007_d06a_param_volta
+OK     008_d07_param_fim
+OK     009_d07a_menu (imagem 640x200)
+OK     010_d13_dxf (imagem 640x200)
+OK     011_d14_dxf_sigo (imagem 640x200)
+OK     012_d15_dxf_feito (imagem 640x200)
+OK     013_d17_textos (imagem 640x200)
+OK     014_d18_zoom_todo (imagem 640x200)
+OK     015_d19_detalhes (imagem 640x200)
+OK     016_d08_folha (imagem 640x200)
+OK     017_d09_posiciona (imagem 640x200)
+OK     018_d10_movido (imagem 640x200)
+OK     019_d11_erro_plot
+OK     020_d12_menu (imagem 640x200)
+OK     021_d20_apos_f
+OK     impressora.prn (0 bytes iguais)
+
+22 iguais, 0 diferentes
+OK     obra/E2E.DXF (51618 bytes)
+##### teclas (oraculo: $ORACULO/runs/retrad_frm_teclas-20261015-084414)
+OK     001_f00_menu
+OK     002_f01_f1
+OK     003_f02_laj
+OK     004_f03_esc
+OK     005_f04_esc_vigas
+OK     006_f05_f2_gerenciador
+OK     impressora.prn (0 bytes iguais)
+
+7 iguais, 0 diferentes

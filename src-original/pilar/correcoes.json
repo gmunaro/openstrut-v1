@@ -1,0 +1,64 @@
+{
+ "_leia": "Correcoes da familia PILAR lidas por tools/retraduz.py (somam-se as de CORRECOES). Chave = endereco da linha do lift; valor = linhas QB64 que substituem o comando, ou \"PROTECAO\" (comenta o comando). Aqui ficam so as marcas que desativam os trechos de verificacao de licenca do original.",
+ "PILAR": {
+  "0x105ea": [
+   "' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x10722": "PROTECAO",
+  "0x10730": "PROTECAO",
+  "0x1073e": "PROTECAO",
+  "0x1074c": "PROTECAO",
+  "0x50073": "PROTECAO",
+  "0x500e5": "PROTECAO",
+  "0x50157": "PROTECAO",
+  "0x501c9": "PROTECAO",
+  "0x5023b": [
+   "GOTO L_5025c   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x50252": "PROTECAO",
+  "0x5025c": "PROTECAO",
+  "0x50277": "PROTECAO",
+  "0x502a4": "PROTECAO",
+  "0x502b2": [
+   "GOTO L_502e0   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x502c9": "PROTECAO",
+  "0x502d1": "PROTECAO"
+ },
+ "PILAREDI": {
+  "0x1014e": [
+   "GOTO L_1019e   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x10165": "PROTECAO",
+  "0x10173": "PROTECAO",
+  "0x10181": "PROTECAO",
+  "0x1018f": "PROTECAO"
+ },
+ "PILGEEDI": {
+  "0x10175": [
+   "GOTO L_101c5   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x1018c": "PROTECAO",
+  "0x1019a": "PROTECAO",
+  "0x101a8": "PROTECAO",
+  "0x101b6": "PROTECAO"
+ },
+ "PIPROEDI": {
+  "0x10148": [
+   "GOTO L_10198   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x1015f": "PROTECAO",
+  "0x1016d": "PROTECAO",
+  "0x1017b": "PROTECAO",
+  "0x10189": "PROTECAO"
+ },
+ "PIGRAEDI": {
+  "0x10139": [
+   "GOTO L_10189   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x10150": "PROTECAO",
+  "0x1015e": "PROTECAO",
+  "0x1016c": "PROTECAO",
+  "0x1017a": "PROTECAO"
+ }
+}

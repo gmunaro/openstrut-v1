@@ -1,0 +1,3 @@
+# exe: LAJEPROC
+# LAJEPROC roteiro 04: E com N (nada escolhido, volta ao menu sem Espera), depois I (listagem sem ferros) e R.
+{TELA lp4_menu}E{TELA lp4_pergunta}{BS}N{ENTER}{TELA lp4_volta}I{TELA lp4_lst}{ENTER}R

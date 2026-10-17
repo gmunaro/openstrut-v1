@@ -1,0 +1,9 @@
+# exe: SISTRUT
+# Obra E2E (dados do e2e_10, com E2E.SEC). Menu DESENHO a partir do menu principal (D).
+# DESINIT: I -> pausa com ENTER (DsiPausa aceita ENTER ou ESC; uma pausa so, linha 101).
+# DESDIM: D -> nome V1 + ENTER -> ESC sai da navegacao do tramo 1 -> ENTER com nome vazio encerra (DimAcha% devolve 0).
+# DESGRAF: G -> qualquer tecla na tela de video (ENTER) -> V1 + ENTER -> uma tecla fecha o VET (VetMostra, SISPLOT.BM:30)
+# -> X ("Qualquer Tecla" de GrfDesenha, exporta DXF) -> ENTER com nome vazio encerra.
+# Na 1a tentativa (073927) o X foi consumido pelo VetMostra e o ENTER pelo "Qualquer Tecla": rc=3. Corrigido com {SPACE}.
+# Sem {BS}: os campos de nome sao vazios no inicio (EntradaTexto$ com "").
+{TELA s01_menu}D{TELA d01_menu_desenho}I{TELA d02_desinit_pausa}{ENTER}{TELA d03_menu_desenho}D{TELA d04_desdim_lista}V1{ENTER}{TELA d05_desdim_tramo1}{ESC}{TELA d06_desdim_lista}{ENTER}{TELA d07_menu_desenho}G{TELA g01_video}{ENTER}{TELA g02_lista}V1{ENTER}{TELA g03_vet}{SPACE}{TELA g03b_vet_qualquer}X{TELA g04_pos_dxf}{ENTER}{TELA d08_menu_desenho}{F2}{TELA s02_menu}{F2}

@@ -1,0 +1,25 @@
+# gerado
+build/
+roteiros/saida/
+tools/__pycache__/
+*.exe
+*.EXE
+*.log
+
+# material do software original (descompilação, binários, disquetes): nunca vai para o repositório
+decomp/
+ghidra_proj/
+unpacked/
+floppy/
+verify-docker/
+sistrut-game/*
+!sistrut-game/*.INI
+!sistrut-game/*.LAP
+!sistrut-game/*.PIP
+!sistrut-game/*.FOP
+!sistrut-game/*.DSP
+
+# rascunhos de revisão
+_rev5/
+roteiros/e2e_02_laje_calc.dados_contaminado_*/
+.claude/

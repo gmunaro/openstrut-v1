@@ -1,0 +1,20 @@
+# exe: VIGA
+# VIGA cenario corrige apoio (item 1 do coordenador): viga V10 cadastrada pela tela (2 tramos de 5 m,
+# apoios P1 P2 P3), depois o tramo 1 e corrigido para 8 m pela opcao 5 -> 1 -> 4. Grava o .VIG para
+# conferir o x dos apoios. Esperado: P1 0, P2 8, P3 13. Bug: P2 e P3 ficam em 5 e 10.
+
+# 1 (arquivar): obra V10OBRA; viga V10 com 2 tramos de 5 m; FIM da lista
+1{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}V10OBRA{ENTER}{TELA cad_obra}V10{ENTER}
+{BS}2{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{BS}20{ENTER}{BS}50{ENTER}
+{BS}5{ENTER}{BS}2{ENTER}N
+{BS}5{ENTER}{BS}2{ENTER}N
+P1{ENTER}P2{ENTER}P3{ENTER}{TELA cad_viga}S
+{ENTER}{TELA cad_fim}
+
+# 5 (correcoes) -> posicao 1 -> opcao 4 (comprimento) do tramo 1 -> 8 m -> sair da posicao -> FIM
+5{TELA corrige_menu}1{ENTER}{TELA corrige_pos1}4{TELA corrige_tramo}{BS}1{ENTER}{BS}8{ENTER}{TELA corrige_L8}8{ENTER}{TELA corrige_fim}
+
+# 6 -> 2 (gravar as vigas da memoria em V10OBRA.VIG) e retorno
+6{TELA disco_v10}2{ENTER}S{TELA gravar_v10}{ENTER}8
+
+{TELA fim_v10}{F2}

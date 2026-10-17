@@ -1,0 +1,10 @@
+{
+ "familia": "vplota",
+ "ini": "0x0dc0",
+ "fim": "0x0dc0",
+ "exes": [
+  "VPLOTA"
+ ],
+ "conflitos": [],
+ "vars": []
+}

@@ -1,0 +1,8 @@
+# exe: INSTALAR
+# acab_01_instalar: correcoes de tela e INI do INSTALAR.
+# Mesmo fluxo de sis_03 (destino relativo sis_inst\, monitor h, LPT 2, COM padrao).
+# Conferir em ins_relatorio.txt: nenhuma linha com texto na coluna 80 e
+# "Mantido (ja existe)" cabe na tela.
+# Conferir em sis_inst\SISTRUT.INI: sem linha "=ARQUIVO .BAT" vazia e com a linha
+# "PARAMETRIZADO EM:" (sem hash e sem FINAL DE PARAMETRIZACAO). Saida esperada: 0.
+{TELA ins_inicial}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}sis_inst\{TELA ins_destino_digitado}{ENTER}{TELA ins_origem_padrao}{ENTER}{TELA ins_monitor_pergunta}x{TELA ins_x_ignorada}h{TELA ins_lpt_pergunta}3{TELA ins_3_ignorada}2{TELA ins_com_pergunta}{ENTER}{TELA ins_relatorio}{SPACE}

@@ -1,0 +1,3 @@
+# exe: LAJEPROC
+# LAJEPROC roteiro 08: I (listagem) sem ter feito E, com caminho longo na Espera; M com linha vazia sai; R.
+{TELA lp8_menu}I{TELA lp8_lst}{ENTER}M{TELA lp8_num}{ENTER}R

@@ -1,0 +1,5 @@
+# exe: FORMIMP
+# FORMIMP direto, lista de elementos (tipo L): obra FLUXO de forma_05_formimp.dados.
+# Pe-direito 2.8 m; opcao 2 (espessura das lajes) desligada com N; campo todo (T, Enter).
+# Espera-se o LST com lajes L1 e L2, vigas V1..V5, pilares P1..P6 e o total.
+{TELA pe}{BS}2.8{ENTER}{TELA tipo}{ENTER}{TELA opcoes}{ENTER}{BS}N{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{TELA campo}{ENTER}{TELA relatorio}{ENTER}

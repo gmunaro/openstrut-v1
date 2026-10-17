@@ -1,0 +1,872 @@
+{
+ "familia": "pilar",
+ "ini": "0x0dc0",
+ "fim": "0x0f88",
+ "exes": [
+  "PILAR",
+  "PILAREDI",
+  "PILGEEDI",
+  "PIPROEDI",
+  "PIGRAEDI"
+ ],
+ "conflitos": [],
+ "vars": [
+  {
+   "nome": "V_0dc0",
+   "base": "V_0dc0",
+   "end": 3520,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PILGEEDI",
+    "PIPROEDI",
+    "PIGRAEDI"
+   ]
+  },
+  {
+   "nome": "V_0dc4",
+   "base": "V_0dc4",
+   "end": 3524,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PILGEEDI",
+    "PIGRAEDI"
+   ]
+  },
+  {
+   "nome": "V_0dc8",
+   "base": "V_0dc8",
+   "end": 3528,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PILGEEDI",
+    "PIPROEDI",
+    "PIGRAEDI"
+   ]
+  },
+  {
+   "nome": "V_0dcc",
+   "base": "V_0dcc",
+   "end": 3532,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PILGEEDI",
+    "PIPROEDI",
+    "PIGRAEDI"
+   ]
+  },
+  {
+   "nome": "V_0dd0",
+   "base": "V_0dd0",
+   "end": 3536,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAR"
+   ]
+  },
+  {
+   "nome": "V_0dd4",
+   "base": "V_0dd4",
+   "end": 3540,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAR"
+   ]
+  },
+  {
+   "nome": "V_0dd8",
+   "base": "V_0dd8",
+   "end": 3544,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PILGEEDI"
+   ]
+  },
+  {
+   "nome": "V_0ddc",
+   "base": "V_0ddc",
+   "end": 3548,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PILGEEDI",
+    "PIPROEDI"
+   ]
+  },
+  {
+   "nome": "V_0de0",
+   "base": "V_0de0",
+   "end": 3552,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PIGRAEDI"
+   ]
+  },
+  {
+   "nome": "V_0de4",
+   "base": "V_0de4",
+   "end": 3556,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PIPROEDI"
+   ]
+  },
+  {
+   "nome": "V_0de8",
+   "base": "V_0de8",
+   "end": 3560,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PIPROEDI"
+   ]
+  },
+  {
+   "nome": "V_0dec",
+   "base": "V_0dec",
+   "end": 3564,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PIGRAEDI"
+   ]
+  },
+  {
+   "nome": "V_0df0",
+   "base": "V_0df0",
+   "end": 3568,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PIGRAEDI"
+   ]
+  },
+  {
+   "nome": "V_0df4",
+   "base": "V_0df4",
+   "end": 3572,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PIGRAEDI"
+   ]
+  },
+  {
+   "nome": "V_0df8",
+   "base": "V_0df8",
+   "end": 3576,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PILGEEDI",
+    "PIGRAEDI"
+   ]
+  },
+  {
+   "nome": "V_0dfc",
+   "base": "V_0dfc",
+   "end": 3580,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PILGEEDI",
+    "PIGRAEDI"
+   ]
+  },
+  {
+   "nome": "V_0e00",
+   "base": "V_0e00",
+   "end": 3584,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PILGEEDI",
+    "PIPROEDI",
+    "PIGRAEDI"
+   ]
+  },
+  {
+   "nome": "V_0e04",
+   "base": "V_0e04",
+   "end": 3588,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0e08",
+   "base": "V_0e08",
+   "end": 3592,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PILGEEDI"
+   ]
+  },
+  {
+   "nome": "V_0e0c",
+   "base": "V_0e0c",
+   "end": 3596,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PILGEEDI"
+   ]
+  },
+  {
+   "nome": "V_0e10",
+   "base": "V_0e10",
+   "end": 3600,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PIPROEDI"
+   ]
+  },
+  {
+   "nome": "V_0e14",
+   "base": "V_0e14",
+   "end": 3604,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PIGRAEDI"
+   ]
+  },
+  {
+   "nome": "V_0e18",
+   "base": "V_0e18",
+   "end": 3608,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0e1c",
+   "base": "V_0e1c",
+   "end": 3612,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0e20",
+   "base": "V_0e20",
+   "end": 3616,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0e24",
+   "base": "V_0e24",
+   "end": 3620,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0e28",
+   "base": "V_0e28",
+   "end": 3624,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PIGRAEDI"
+   ]
+  },
+  {
+   "nome": "V_0e2c",
+   "base": "V_0e2c",
+   "end": 3628,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PIPROEDI",
+    "PIGRAEDI"
+   ]
+  },
+  {
+   "nome": "V_0e30",
+   "base": "V_0e30",
+   "end": 3632,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PIPROEDI"
+   ]
+  },
+  {
+   "nome": "V_0e34",
+   "base": "V_0e34",
+   "end": 3636,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PILGEEDI",
+    "PIGRAEDI"
+   ]
+  },
+  {
+   "nome": "V_0e38",
+   "base": "V_0e38",
+   "end": 3640,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILGEEDI",
+    "PIGRAEDI"
+   ]
+  },
+  {
+   "nome": "V_0e3c",
+   "base": "V_0e3c",
+   "end": 3644,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PILGEEDI",
+    "PIPROEDI",
+    "PIGRAEDI"
+   ]
+  },
+  {
+   "nome": "V_0e3e",
+   "base": "V_0e3e",
+   "end": 3646,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "PILAREDI",
+    "PILGEEDI",
+    "PIPROEDI",
+    "PIGRAEDI"
+   ]
+  },
+  {
+   "nome": "V_0e40",
+   "base": "V_0e40",
+   "end": 3648,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "PILAREDI",
+    "PIGRAEDI"
+   ]
+  },
+  {
+   "nome": "V_0e42",
+   "base": "V_0e42",
+   "end": 3650,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0e46",
+   "base": "V_0e46",
+   "end": 3654,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0e4a",
+   "base": "V_0e4a",
+   "end": 3658,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0e4e",
+   "base": "V_0e4e",
+   "end": 3662,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0e52",
+   "base": "V_0e52",
+   "end": 3666,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0e56",
+   "base": "V_0e56",
+   "end": 3670,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0e5a",
+   "base": "V_0e5a",
+   "end": 3674,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PIPROEDI"
+   ]
+  },
+  {
+   "nome": "V_0e5e",
+   "base": "V_0e5e",
+   "end": 3678,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0e62",
+   "base": "V_0e62",
+   "end": 3682,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0e66",
+   "base": "V_0e66",
+   "end": 3686,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PIGRAEDI"
+   ]
+  },
+  {
+   "nome": "V_0e6a",
+   "base": "V_0e6a",
+   "end": 3690,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PIGRAEDI"
+   ]
+  },
+  {
+   "nome": "V_0e6e",
+   "base": "V_0e6e",
+   "end": 3694,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0e72",
+   "base": "V_0e72",
+   "end": 3698,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0e76",
+   "base": "V_0e76",
+   "end": 3702,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0e7a",
+   "base": "V_0e7a",
+   "end": 3706,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0e7e",
+   "base": "V_0e7e",
+   "end": 3710,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PIGRAEDI"
+   ]
+  },
+  {
+   "nome": "V_0e82",
+   "base": "V_0e82",
+   "end": 3714,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0e86",
+   "base": "V_0e86",
+   "end": 3718,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0e8a",
+   "base": "V_0e8a",
+   "end": 3722,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAR",
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0e8e",
+   "base": "V_0e8e",
+   "end": 3726,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAREDI",
+    "PIPROEDI",
+    "PIGRAEDI"
+   ]
+  },
+  {
+   "nome": "V_0e92",
+   "base": "V_0e92",
+   "end": 3730,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0e96",
+   "base": "V_0e96",
+   "end": 3734,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0e9a",
+   "base": "V_0e9a",
+   "end": 3738,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0e9e",
+   "base": "V_0e9e",
+   "end": 3742,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0ea2",
+   "base": "V_0ea2",
+   "end": 3746,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0ea6",
+   "base": "V_0ea6",
+   "end": 3750,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0ea8",
+   "base": "V_0ea8",
+   "end": 3752,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAREDI",
+    "PIPROEDI"
+   ]
+  },
+  {
+   "nome": "V_0eac",
+   "base": "V_0eac",
+   "end": 3756,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAREDI",
+    "PIPROEDI"
+   ]
+  },
+  {
+   "nome": "V_0eb0",
+   "base": "V_0eb0",
+   "end": 3760,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0eb2",
+   "base": "V_0eb2",
+   "end": 3762,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0eb4",
+   "base": "V_0eb4",
+   "end": 3764,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0eb8",
+   "base": "V_0eb8",
+   "end": 3768,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0ebc",
+   "base": "V_0ebc",
+   "end": 3772,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0ec0",
+   "base": "V_0ec0",
+   "end": 3776,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0ec4",
+   "base": "V_0ec4",
+   "end": 3780,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0ec8",
+   "base": "V_0ec8",
+   "end": 3784,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "A_0ecc",
+   "base": "A_0ecc",
+   "end": 3788,
+   "suf": "!",
+   "nd": 1,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PIPROEDI"
+   ]
+  },
+  {
+   "nome": "A_0efa",
+   "base": "A_0efa",
+   "end": 3834,
+   "suf": "!",
+   "nd": 1,
+   "exes": [
+    "PILAR",
+    "PILAREDI",
+    "PIPROEDI"
+   ]
+  },
+  {
+   "nome": "A_0f28",
+   "base": "A_0f28",
+   "end": 3880,
+   "suf": "!",
+   "nd": 2,
+   "exes": [
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "A_0f56",
+   "base": "A_0f56",
+   "end": 3926,
+   "suf": "%",
+   "nd": 2,
+   "exes": [
+    "PILAREDI"
+   ]
+  },
+  {
+   "nome": "V_0f84",
+   "base": "V_0f84",
+   "end": 3972,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "PILAREDI",
+    "PIPROEDI"
+   ]
+  }
+ ]
+}

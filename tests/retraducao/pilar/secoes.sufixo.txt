@@ -1,0 +1,20 @@
+# Sufixo (a partir do menu do PILAR): caminho do caso caso_c_pilaredi ate o predimensionamento e, em vez da
+# secao retangular, secao circular (D = 25 cm) com dimensionamento impresso e depois poligonal de 4 vertices
+# (20 x 20, sentido horario como a tela pede) com dimensionamento impresso. Obra de partida: casos/caso_c_pilaredi.dados.
+{ESPERA PILARES DE CONCRETO}{ESPERA escolha opcao}{PAUSA 2}
+8{ESPERA MULTIPLOS ANDARES}{ESPERA escolha opcao}{PAUSA 2}{TELA e01_menu_pilaredi}
+2{ESPERA dados de Colunas}{ESPERA escolha opcao}{PAUSA 2}
+1{ESPERA Nivel (1)}0,FUND{ENTER}{ESPERA Nivel (2)}3,PAV1{ENTER}{ESPERA Nivel (3)}{ENTER}{ESPERA dados de Colunas}{ESPERA escolha opcao}{PAUSA 2}
+2{ESPERA Posicao}{ENTER}{ESPERA Nome da Obra}E2E{ENTER}{ESPERA Nome da Coluna}P   5{ENTER}{ESPERA Nivel inferior}1{ENTER}{ESPERA Nivel superior}2{ENTER}{ESPERA Dados Corretos}{ENTER}{ESPERA POSICAO 2}{PAUSA 1}{ENTER}{ESPERA dados de Colunas}{ESPERA escolha opcao}{PAUSA 2}
+5{ESPERA Arquivo Carregamento}E2E{ENTER}{ESPERA serao introduzidas}2{ENTER}{ESPERA Confirme Nivel}{ENTER}
+{ESPERA carga P   7}{PAUSA 1}A{ENTER}{ESPERA carga P   8}{PAUSA 1}A{ENTER}{ESPERA carga P   9}{PAUSA 1}A{ENTER}{ESPERA carga P   6}{PAUSA 1}A{ENTER}{ESPERA carga P   5}{PAUSA 1}S{ENTER}{ESPERA carga P   4}{PAUSA 1}A{ENTER}{ESPERA carga P   1}{PAUSA 1}A{ENTER}{ESPERA carga P   2}{PAUSA 1}A{ENTER}{ESPERA carga P   3}{PAUSA 1}A{ENTER}
+{ESPERA para encontra-los}{ENTER}{ESPERA Defino secao}N{ENTER}{ESPERA Posicionadas 1 Colunas}{ESPERA escolha opcao}{PAUSA 2}
+6{ESPERA Vinculos de extremidade}{ESPERA Nome da Coluna}{PAUSA 1}{TELA e02_travamentos}{ENTER}{ESPERA Posicionadas 1 Colunas}{ESPERA escolha opcao}{PAUSA 2}
+8{ESPERA MULTIPLOS ANDARES}{ESPERA escolha opcao}{PAUSA 2}
+1{ESPERA Fck}{ENTER}{ESPERA Fyk}{ENTER}{ESPERA Tipo de Aco}{ENTER}{ESPERA MULTIPLOS ANDARES}{ESPERA escolha opcao}{PAUSA 2}
+3{ESPERA Predimensionamento de Secao e}{ESPERA escolha opcao}{PAUSA 2}{TELA e03_menu_secoes}
+1{ESPERA serao Predimensionadas}{PAUSA 1}1{ENTER}{ESPERA tipo de secao}{PAUSA 2}{TELA e04_tipo_secao}
+2{ESPERA Diametro(cm)}{PAUSA 1}{TELA s01}25{ENTER}{ESPERA SECAO PROPOSTA}{PAUSA 2}{TELA s02}A{ESPERA 2  -  Dimensionamento da Armadura}{ESPERA escolha opcao}{PAUSA 2}
+2{ESPERA serao Dimensionadas}{PAUSA 1}1{ENTER}{ESPERA Vario a Armadura}{ENTER}{ESPERA Paro para Visualizacao}{ENTER}{ESPERA continuamente}{ENTER}{ESPERA Imprimo Relatorio}S{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{ENTER}{ESPERA ceita a Armadura proposta|180}{PAUSA 2}{TELA s03}A{ESPERA 2  -  Dimensionamento da Armadura}{ESPERA escolha opcao}{PAUSA 2}
+1{ESPERA serao Predimensionadas}{PAUSA 1}1{ENTER}{ESPERA Predimensiono a Coluna novamente}{PAUSA 1}{TELA s09}S{ENTER}{ESPERA tipo de secao}{PAUSA 2}3{ESPERA Numero de Vertices}{PAUSA 1}4{ENTER}{ESPERA Vertice 1}{PAUSA 1}{TELA s04}0,0{ENTER}{ESPERA Vertice 2}{PAUSA 1}0,20{ENTER}{ESPERA Vertice 3}{PAUSA 1}20,20{ENTER}{ESPERA Vertice 4}{PAUSA 1}20,0{ENTER}{ESPERA Deseja alterar as Coordenadas}{PAUSA 1}{TELA s05}{ENTER}{ESPERA Cood X}{PAUSA 1}{TELA s06}{ENTER}{ESPERA Deseja alterar as Coordenadas}{PAUSA 1}N{ENTER}{ESPERA SECAO PROPOSTA}{PAUSA 2}{TELA s07}A{ESPERA 2  -  Dimensionamento da Armadura}{ESPERA escolha opcao}{PAUSA 2}
+2{ESPERA serao Dimensionadas}{PAUSA 1}1{ENTER}{ESPERA Vario a Armadura}{ENTER}{ESPERA Paro para Visualizacao}{ENTER}{ESPERA continuamente}{ENTER}{ESPERA Imprimo Relatorio}S{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{ENTER}{ESPERA ceita a Armadura proposta|180}{PAUSA 2}{TELA s08}A{ESPERA 2  -  Dimensionamento da Armadura}{ESPERA escolha opcao}{PAUSA 2}

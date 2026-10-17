@@ -1,0 +1,18 @@
+# Caso vis: o mesmo detalhamento do det sem impressao, com parada para visualizacao no monitor (telas do DESDIM)
+# e o diagrama do DESGRAF em CGA (escala VIDEO). Sem desenho definitivo e sem CAD.
+1{ESPERA Nome da Obra}{PAUSA 2}E2E{ENTER}{ESPERA Listo as Vigas}{PAUSA 1}{ENTER}{ESPERA Continuo}{PAUSA 1}{ENTER}{ESPERA Todas as Vigas}{PAUSA 1}{ENTER}{ESPERA Processar Registros}{PAUSA 1}
+1{ENTER}{ESPERA Bw , Hw}{PAUSA 2}20,50,0,0{ENTER}{ESPERA Secoes Diferentes}{PAUSA 1}{ENTER}{ESPERA Retangular}{PAUSA 1}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{ENTER}
+{ESPERA Largura do Apoio 0}{PAUSA 1}20{ENTER}{ESPERA Tipo do Apoio}{PAUSA 1}{ENTER}{ESPERA Titulo}{PAUSA 1}P1{ENTER}{ESPERA orre}{PAUSA 1}{ENTER}
+{ESPERA Largura do Apoio 1}{PAUSA 1}20{ENTER}{ESPERA Tipo do Apoio}{PAUSA 1}{ENTER}{ESPERA Titulo}{PAUSA 1}P2{ENTER}{ESPERA orre}{PAUSA 1}{ENTER}
+{ESPERA Largura do Apoio 2}{PAUSA 1}20{ENTER}{ESPERA Tipo do Apoio}{PAUSA 1}{ENTER}{ESPERA Titulo}{PAUSA 1}P3{ENTER}{ESPERA orre}{PAUSA 1}{ENTER}
+{ESPERA Dados Corretos}{PAUSA 1}{ENTER}{ESPERA Vao Livre do Tramo 1}{PAUSA 1}380{ENTER}{ESPERA Vao Livre do Tramo 2}{PAUSA 1}380{ENTER}
+{ESPERA Superior dos Tramos}{PAUSA 1}{ENTER}{ESPERA Centraliza}{PAUSA 1}{ENTER}{ESPERA Lajes no Corte}{PAUSA 1}N{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{ENTER}
+{ESPERA Deseja Alterar}{PAUSA 1}{ENTER}{ESPERA esforcos S}{PAUSA 1}{ENTER}{ESPERA resultados de Armacao}{PAUSA 1}{ENTER}{ESPERA somente os diagramas}{PAUSA 1}S{ENTER}
+{ESPERA diagramas e a Armacao}{PAUSA 1}S{ENTER}{ESPERA VIDEO}{PAUSA 1}{ENTER}{ESPERA Altero a armadura}{PAUSA 1}{ENTER}{ESPERA Paro para}{PAUSA 1}S{ENTER}
+{ESPERA desenho definitivo}{PAUSA 1}{ENTER}{ESPERA Edito}{PAUSA 1}{ENTER}{ESPERA padrao CAD}{PAUSA 1}{ENTER}
+{ESPERA repeticoes *FIM*}{PAUSA 1}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{ENTER}{PAUSA 8}{TELA j01}
+{ENTER}{PAUSA 8}{TELA j02}
+{ENTER}{PAUSA 8}{TELA j03}
+{ENTER}{PAUSA 8}{TELA j04}
+{ENTER}{PAUSA 8}{TELA j05}
+{ENTER}{PAUSA 8}{TELA j06}

@@ -1,0 +1,398 @@
+' ============================================================================
+'  SISCOMUM.BM - implementacao da biblioteca comum (declaracoes em SISCOMUM.BI)
+'  Incluir no fim do programa, depois do codigo principal.
+' ============================================================================
+
+' Verifica se o arquivo existe. Devolve -1 (verdadeiro) ou 0.
+FUNCTION FileExists% (nome$)
+    IF _FILEEXISTS(nome$) THEN FileExists% = -1 ELSE FileExists% = 0
+END FUNCTION
+
+' Carrega o arquivo em ArqDados$. Aceita CRLF e LF e tira o padding 0x1A do fim.
+' Devolve o numero de linhas lidas, ou -1 se o arquivo nao existe.
+FUNCTION ArqLer% (arquivo$)
+    DIM txt$, f%, ipos&, fim&, linha$
+    txt$ = ""
+    IF FileExists%(arquivo$) = 0 THEN
+        ArqLer% = -1
+        EXIT FUNCTION
+    END IF
+    f% = FREEFILE
+    OPEN arquivo$ FOR BINARY AS #f%
+    txt$ = SPACE$(LOF(f%))
+    GET #f%, , txt$
+    CLOSE #f%
+    DO WHILE LEN(txt$) > 0
+        IF RIGHT$(txt$, 1) <> CHR$(26) AND RIGHT$(txt$, 1) <> CHR$(10) AND RIGHT$(txt$, 1) <> CHR$(13) THEN EXIT DO
+        txt$ = LEFT$(txt$, LEN(txt$) - 1)
+    LOOP
+    ArqQtd = 0
+    ipos& = 1
+    DO WHILE LEN(txt$) > 0 AND ArqQtd < ARQ_MAX
+        fim& = INSTR(ipos&, txt$, CHR$(10))
+        IF fim& = 0 THEN
+            linha$ = MID$(txt$, ipos&)
+        ELSE
+            linha$ = MID$(txt$, ipos&, fim& - ipos&)
+        END IF
+        IF RIGHT$(linha$, 1) = CHR$(13) THEN linha$ = LEFT$(linha$, LEN(linha$) - 1)
+        ArqQtd = ArqQtd + 1
+        ArqDados$(ArqQtd) = linha$
+        IF fim& = 0 THEN EXIT DO
+        ipos& = fim& + 1
+    LOOP
+    ArqLer% = ArqQtd
+END FUNCTION
+
+' Grava ArqDados$ em arquivo, uma linha por registro, com terminador CRLF.
+' Sobrescreve o arquivo; nao recria o padding 0x1A do DSP.
+SUB ArqGravar (arquivo$)
+    DIM t$, i%, f%
+    t$ = ""
+    FOR i% = 1 TO ArqQtd
+        t$ = t$ + ArqDados$(i%) + CHR$(13) + CHR$(10)
+    NEXT
+    f% = FREEFILE
+    OPEN arquivo$ FOR OUTPUT AS #f%
+    PRINT #f%, t$;
+    CLOSE #f%
+END SUB
+
+' Devolve a linha n (1 a ArqQtd) ou "" se fora da faixa.
+FUNCTION ArqLinha$ (n%)
+    IF n% >= 1 AND n% <= ArqQtd THEN ArqLinha$ = ArqDados$(n%)
+END FUNCTION
+
+' Troca o texto da linha n, se ela existir.
+SUB ArqDefinirLinha (n%, texto$)
+    IF n% >= 1 AND n% <= ArqQtd THEN ArqDados$(n%) = texto$
+END SUB
+
+' Procura texto$ em qualquer posicao da linha, a partir da linha depois+1.
+' Devolve o numero da linha achada ou 0.
+FUNCTION ArqAchaTexto% (texto$, depois%)
+    DIM i%
+    ArqAchaTexto% = 0
+    FOR i% = depois% + 1 TO ArqQtd
+        IF INSTR(ArqDados$(i%), texto$) > 0 THEN
+            ArqAchaTexto% = i%
+            EXIT FUNCTION
+        END IF
+    NEXT
+END FUNCTION
+
+' Procura uma linha igual a texto$ (sem espacos nas pontas), a partir da linha depois+1.
+' Devolve o numero da linha achada ou 0.
+FUNCTION ArqAchaExato% (texto$, depois%)
+    DIM i%, l$
+    ArqAchaExato% = 0
+    FOR i% = depois% + 1 TO ArqQtd
+        l$ = LTRIM$(RTRIM$(ArqDados$(i%)))
+        IF l$ = texto$ THEN
+            ArqAchaExato% = i%
+            EXIT FUNCTION
+        END IF
+    NEXT
+END FUNCTION
+
+' Valor antes do primeiro "=" da linha n, sem espacos. "" se nao houver "=".
+FUNCTION IniValor$ (n%)
+    DIM l$, p%
+    l$ = ArqLinha$(n%)
+    p% = INSTR(l$, "=")
+    IF p% = 0 THEN
+        IniValor$ = ""
+    ELSE
+        IniValor$ = LTRIM$(RTRIM$(LEFT$(l$, p% - 1)))
+    END IF
+END FUNCTION
+
+' Descricao depois do primeiro "=" da linha n, sem espacos nas pontas.
+FUNCTION IniDesc$ (n%)
+    DIM l$, p%
+    l$ = ArqLinha$(n%)
+    p% = INSTR(l$, "=")
+    IF p% = 0 THEN
+        IniDesc$ = ""
+    ELSE
+        IniDesc$ = LTRIM$(RTRIM$(MID$(l$, p% + 1)))
+    END IF
+END FUNCTION
+
+' Troca o valor da linha n e mantem o "=" e a descricao. Linha sem "=" nao muda.
+SUB IniDefinir (n%, valor$)
+    DIM l$, p%
+    l$ = ArqLinha$(n%)
+    p% = INSTR(l$, "=")
+    IF p% > 0 THEN ArqDefinirLinha n%, valor$ + MID$(l$, p%)
+END SUB
+
+' Diretorio de dados do modulo, com barra final, a partir do .INI carregado.
+' Aceita os dois formatos do original: "C=DRIVE DEFAULT DE DADOS" +
+' "\=DIRETORIO DEFAULT DE DADOS" (LAJE, VIGA, PILAR, ARMADURA) ou a 1a linha
+' "<dir>=DRIVE E DIRETORIO DEFAULT PARA OS ARQUIVOS DE ..." que nao seja de
+' parametrizacao (FORMA, DESENHO).
+' RECONSTRUCAO: se o diretorio configurado for a raiz de um disco (o default
+' "C:\" do original) ou nao existir, usa a pasta de trabalho (_CWD$):
+' no Windows atual um usuario comum nao grava na raiz do disco.
+FUNCTION IniDirDados$ ()
+    DIM d$, drive$, dir$, i%, k%
+    i% = ArqAchaTexto%("DRIVE DEFAULT DE DADOS", 0)
+    IF i% > 0 THEN
+        drive$ = IniValor$(i%)
+        i% = ArqAchaTexto%("DIRETORIO DEFAULT DE DADOS", 0)
+        IF i% > 0 THEN dir$ = IniValor$(i%)
+        d$ = drive$ + ":" + dir$
+    ELSE
+        k% = 0
+        DO
+            k% = ArqAchaTexto%("DRIVE E DIRETORIO DEFAULT PARA OS ARQUIVOS", k%)
+            IF k% = 0 THEN EXIT DO
+            IF INSTR(UCASE$(IniDesc$(k%)), "PARAMETRIZACAO") = 0 THEN d$ = IniValor$(k%): EXIT DO
+        LOOP
+    END IF
+    IniDirDados$ = DirUtilizavel$(d$)
+END FUNCTION
+
+' Normaliza um diretorio (barra final); raiz de disco, vazio ou inexistente
+' vira a pasta de trabalho.
+FUNCTION DirUtilizavel$ (d$)
+    DIM r$
+    r$ = d$
+    IF r$ <> "" AND RIGHT$(r$, 1) <> "\" AND RIGHT$(r$, 1) <> "/" THEN r$ = r$ + "\"
+    IF LEN(r$) <= 3 THEN r$ = ""
+    IF r$ <> "" THEN
+        IF NOT _DIREXISTS(r$) THEN r$ = ""
+    END IF
+    IF r$ = "" THEN
+        r$ = _CWD$
+        IF RIGHT$(r$, 1) <> "\" AND RIGHT$(r$, 1) <> "/" THEN r$ = r$ + "\"
+    END IF
+    DirUtilizavel$ = r$
+END FUNCTION
+
+' Drive e diretorio default dos arquivos de parametrizacao (valor da linha da descricao).
+' Devolve "" se a linha nao existir. Decisao em aberto: ver INI.md.
+FUNCTION IniDirParam$ ()
+    DIM i%
+    i% = ArqAchaTexto%("DRIVE E DIRETORIO DEFAULT PARA OS ARQUIVOS PARAMETRIZACAO", 0)
+    IF i% > 0 THEN IniDirParam$ = IniValor$(i%)
+END FUNCTION
+
+' Avalia um valor com CHR$(n) somados por "+", ex.: CHR$(27)+CHR$(50).
+' Partes que nao sao CHR$ entram como texto literal.
+FUNCTION ChrAvalia$ (expr$)
+    DIM k%, n%, tok$, saida$
+    saida$ = ""
+    n% = ParConta%(expr$, "+")
+    FOR k% = 1 TO n%
+        tok$ = ParToken$(expr$, "+", k%)
+        IF LEFT$(tok$, 5) = "CHR$(" AND RIGHT$(tok$, 1) = ")" THEN
+            saida$ = saida$ + CHR$(VAL(MID$(tok$, 6, LEN(tok$) - 6)))
+        ELSE
+            saida$ = saida$ + tok$
+        END IF
+    NEXT
+    ChrAvalia$ = saida$
+END FUNCTION
+
+' Devolve o k-esimo campo (a partir de 1) de texto$, separado por qualquer caractere de sep$.
+' Campos vazios sao ignorados e os espacos das pontas saem. "" se nao existir.
+FUNCTION ParToken$ (texto$, sep$, k%)
+    DIM i%, c$, atual$, cont%
+    atual$ = ""
+    cont% = 0
+    FOR i% = 1 TO LEN(texto$) + 1
+        IF i% > LEN(texto$) THEN
+            c$ = ""
+        ELSE
+            c$ = MID$(texto$, i%, 1)
+        END IF
+        IF c$ = "" OR INSTR(sep$, c$) > 0 THEN
+            atual$ = LTRIM$(RTRIM$(atual$))
+            IF atual$ <> "" THEN
+                cont% = cont% + 1
+                IF cont% = k% THEN
+                    ParToken$ = atual$
+                    EXIT FUNCTION
+                END IF
+            END IF
+            atual$ = ""
+        ELSE
+            atual$ = atual$ + c$
+        END IF
+    NEXT
+    ParToken$ = ""
+END FUNCTION
+
+' Quantidade de campos de texto$ pelos mesmos separadores de ParToken$.
+FUNCTION ParConta% (texto$, sep$)
+    DIM k%
+    k% = 0
+    DO WHILE ParToken$(texto$, sep$, k% + 1) <> ""
+        k% = k% + 1
+    LOOP
+    ParConta% = k%
+END FUNCTION
+
+' Formata valor com casas decimais (arredonda), sem PRINT USING.
+' Preenche a esquerda com espacos ate larg. Limite pratico: inteiros ate 15 digitos.
+FUNCTION FormataNumero$ (valor#, casas%, larg%)
+    DIM m#, v#, inteira#, frac#, s$, sinal$
+    m# = 10 ^ casas%
+    v# = INT(ABS(valor#) * m# + 0.5)
+    sinal$ = ""
+    IF valor# < 0 AND v# > 0 THEN sinal$ = "-"
+    inteira# = INT(v# / m#)
+    frac# = v# - inteira# * m#
+    s$ = LTRIM$(STR$(inteira#))
+    IF casas% > 0 THEN
+        s$ = s$ + "." + RIGHT$(STRING$(casas%, "0") + LTRIM$(STR$(frac#)), casas%)
+    END IF
+    s$ = sinal$ + s$
+    IF LEN(s$) < larg% THEN s$ = SPACE$(larg% - LEN(s$)) + s$
+    FormataNumero$ = s$
+END FUNCTION
+
+' Verdadeiro se txt$ e numero decimal: digitos, no maximo um ponto, sinal de menos so no inicio.
+FUNCTION NumeroValido% (txt$)
+    DIM i%, c$, pontos%, digitos%
+    NumeroValido% = 0
+    IF LEN(txt$) = 0 THEN EXIT FUNCTION
+    FOR i% = 1 TO LEN(txt$)
+        c$ = MID$(txt$, i%, 1)
+        IF INSTR("0123456789", c$) > 0 THEN
+            digitos% = digitos% + 1
+        ELSEIF c$ = "." THEN
+            pontos% = pontos% + 1
+        ELSEIF NOT (c$ = "-" AND i% = 1) THEN
+            EXIT FUNCTION
+        END IF
+    NEXT
+    NumeroValido% = (digitos% > 0 AND pontos% <= 1)
+END FUNCTION
+
+' Desenha moldura dupla (CP437) entre as linhas l1 e l2 e as colunas c1 e c2.
+SUB TelaMoldura (l1%, c1%, l2%, c2%)
+    DIM l%, larg%
+    larg% = c2% - c1% - 1
+    COLOR COR_TEXTO
+    LOCATE l1%, c1%
+    PRINT CHR$(201); STRING$(larg%, 205); CHR$(187);
+    FOR l% = l1% + 1 TO l2% - 1
+        LOCATE l%, c1%
+        PRINT CHR$(186); SPACE$(larg%); CHR$(186);
+    NEXT
+    LOCATE l2%, c1%
+    PRINT CHR$(200); STRING$(larg%, 205); CHR$(188);
+END SUB
+
+' Escreve um item de menu com a primeira letra em destaque.
+SUB TelaItemMenu (lin%, col%, texto$)
+    LOCATE lin%, col%
+    COLOR COR_DESTAQUE
+    PRINT LEFT$(texto$, 1);
+    COLOR COR_TEXTO
+    PRINT MID$(texto$, 2);
+END SUB
+
+' Escreve a linha de status (linha 25) em preto sobre cinza.
+SUB TelaStatus (texto$)
+    LOCATE 25, 1
+    COLOR COR_STATUS, COR_STATUS_FUNDO
+    PRINT LEFT$(texto$ + SPACE$(79), 79);
+    COLOR COR_TEXTO, 0
+END SUB
+
+' Escreve a mensagem de erro (linha 24) em branco sobre vermelho.
+SUB TelaErro (texto$)
+    LOCATE 24, 1
+    COLOR COR_ERRO, COR_ERRO_FUNDO
+    PRINT LEFT$(texto$ + SPACE$(79), 79);
+    COLOR COR_TEXTO, 0
+END SUB
+
+' Espera uma tecla e devolve o caractere (ou dois, para teclas estendidas).
+FUNCTION TeclaLer$ ()
+    DIM k$
+    DO
+        _LIMIT 30
+        k$ = TelaTecla$
+    LOOP UNTIL k$ <> ""
+    TeclaLer$ = k$
+END FUNCTION
+
+' Campo de texto de larg colunas na posicao lin/col. Enter confirma, Esc devolve padrao$.
+' Texto maior que o campo (ex.: caminho longo) rola: mostra o fim, onde o
+' cursor esta e onde Backspace apaga; nesse caso aceita ate 128 caracteres.
+FUNCTION EntradaTexto$ (lin%, col%, larg%, padrao$)
+    DIM s$, k$, vis$, ini%, lim%, c%
+    s$ = padrao$
+    lim% = larg%: IF LEN(padrao$) > lim% THEN lim% = 128
+    DO
+        LOCATE lin%, col%
+        COLOR COR_DESTAQUE
+        ini% = LEN(s$) - larg% + 2: IF ini% < 1 THEN ini% = 1
+        vis$ = MID$(s$, ini%)
+        PRINT LEFT$(vis$ + SPACE$(larg%), larg%);
+        c% = col% + LEN(vis$): IF c% > 80 THEN c% = 80
+        LOCATE lin%, c%
+        k$ = TeclaLer$
+        IF k$ = CHR$(13) THEN
+            EntradaTexto$ = s$
+            EXIT FUNCTION
+        ELSEIF k$ = CHR$(27) THEN
+            EntradaTexto$ = padrao$
+            EXIT FUNCTION
+        ELSEIF k$ = CHR$(8) THEN
+            IF LEN(s$) > 0 THEN s$ = LEFT$(s$, LEN(s$) - 1)
+        ELSEIF LEN(k$) = 1 AND k$ >= " " AND LEN(s$) < lim% THEN
+            s$ = s$ + k$
+        END IF
+    LOOP
+END FUNCTION
+
+' Campo numerico: repete ate o texto ser numero valido. Esc devolve padrao#.
+FUNCTION EntradaNumero# (lin%, col%, larg%, padrao#)
+    DIM t$
+    DO
+        t$ = EntradaTexto$(lin%, col%, larg%, LTRIM$(STR$(padrao#)))
+        IF NumeroValido%(t$) THEN
+            EntradaNumero# = VAL(t$)
+            EXIT FUNCTION
+        END IF
+        TelaErro "Numero invalido. Use digitos, um ponto e sinal de menos no inicio."
+    LOOP
+END FUNCTION
+
+' Caminho para mostrar em larg colunas: inteiro se couber, senao "..." e o
+' final (a parte que identifica a obra).
+FUNCTION DirCurto$ (d$, larg%)
+    IF larg% < 4 THEN DirCurto$ = "": EXIT FUNCTION
+    IF LEN(d$) <= larg% THEN DirCurto$ = d$ ELSE DirCurto$ = "..." + RIGHT$(d$, larg% - 3)
+END FUNCTION
+
+' Define o diretorio dos executaveis usado por RunSubmodulo. Garante a barra final.
+SUB ComumDirExecDefine (dir$)
+    DIM d$
+    d$ = dir$
+    IF RIGHT$(d$, 1) <> "\" AND RIGHT$(d$, 1) <> "/" THEN d$ = d$ + "\"
+    ComumDirExec$ = d$
+END SUB
+
+' Executa nome$.EXE do diretorio definido em ComumDirExecDefine (ou DIR_EXEC_PADRAO)
+' e espera terminar. Caminho entre aspas (aceita espacos). Se o executavel nao
+' existir, mostra "Modulo nao encontrado em <dir>" e volta.
+SUB RunSubmodulo (nome$)
+    DIM dir$, arq$
+    dir$ = ComumDirExec$
+    IF dir$ = "" THEN dir$ = DIR_EXEC_PADRAO
+    arq$ = dir$ + nome$ + ".EXE"
+    IF NOT _FILEEXISTS(arq$) THEN
+        TelaErro "Modulo nao encontrado em " + dir$ + " (" + nome$ + ")"
+        EXIT SUB
+    END IF
+    SHELL CHR$(34) + arq$ + CHR$(34)
+END SUB
+
+'$INCLUDE: '../common/SISTELA.BM'

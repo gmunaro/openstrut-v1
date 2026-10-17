@@ -1,0 +1,64 @@
+{
+ "_leia": "Correcoes da familia FORMA lidas por tools/retraduz.py (somam-se as de CORRECOES). Chave = endereco da linha do lift; valor = linhas QB64 que substituem o comando, ou \"PROTECAO\" (comenta o comando). Aqui ficam so as marcas que desativam os trechos de verificacao de licenca do original.",
+ "FORMA": {
+  "0x10734": [
+   "' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x1086c": "PROTECAO",
+  "0x1087a": "PROTECAO",
+  "0x10888": "PROTECAO",
+  "0x10896": "PROTECAO",
+  "0x30073": "PROTECAO",
+  "0x300e5": "PROTECAO",
+  "0x30157": "PROTECAO",
+  "0x301c9": "PROTECAO",
+  "0x3023b": [
+   "GOTO L_3025c   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x30252": "PROTECAO",
+  "0x3025c": "PROTECAO",
+  "0x30277": "PROTECAO",
+  "0x302a4": "PROTECAO",
+  "0x302b2": [
+   "GOTO L_302e0   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x302c9": "PROTECAO",
+  "0x302d1": "PROTECAO"
+ },
+ "FORMEDCA": {
+  "0x101d4": [
+   "GOTO L_10224   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x101eb": "PROTECAO",
+  "0x101f9": "PROTECAO",
+  "0x10207": "PROTECAO",
+  "0x10215": "PROTECAO"
+ },
+ "FORMIMP": {
+  "0x101a2": [
+   "GOTO L_101f2   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x101b9": "PROTECAO",
+  "0x101c7": "PROTECAO",
+  "0x101d5": "PROTECAO",
+  "0x101e3": "PROTECAO"
+ },
+ "FORMINIT": {
+  "0x1018e": [
+   "GOTO L_101de   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x101a5": "PROTECAO",
+  "0x101b3": "PROTECAO",
+  "0x101c1": "PROTECAO",
+  "0x101cf": "PROTECAO"
+ },
+ "FORMPLOT": {
+  "0x101b6": [
+   "GOTO L_10206   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x101cd": "PROTECAO",
+  "0x101db": "PROTECAO",
+  "0x101e9": "PROTECAO",
+  "0x101f7": "PROTECAO"
+ }
+}

@@ -1,0 +1,23 @@
+# VIGA opcao 1 (Arquivar Geometria): duas vigas novas na obra NOVA (V10: 1 tramo; V11: 2 tramos
+# engastados nas duas pontas, carga concentrada); opcao 6: cria NOVA.VIG (1), grava as posicoes
+# 1 A 2 (2), catalogo (4). O NOVA.VIG gravado e comparado byte a byte com o do original.
+# Depois, opcao 2 das duas vigas so na tela (sem impressora), parando para visualizacao, com diagramas.
+1{ESPERA Posicao *}{PAUSA 2}{TELA a00}{ENTER}{ESPERA Exemplo}{PAUSA 2}{TELA a01}NOVA{ENTER}{ESPERA Viga *FIM*}{PAUSA 2}{TELA a02}
+V10{ENTER}{ESPERA Numero de tramos}{PAUSA 1}1{ENTER}{ESPERA Balanco  esquerda}{PAUSA 1}{ENTER}{ESPERA Engaste  esquerda}{PAUSA 1}{ENTER}{ESPERA Inercia e constante}{PAUSA 1}{TELA a03}
+{ENTER}{ESPERA L 1}{PAUSA 1}{TELA a04}6{ENTER}{ESPERA divisoes de carga}{PAUSA 1}{ENTER}{ESPERA cargas totais}{PAUSA 1}{TELA a05}2,,0{ENTER}{ESPERA OBRA-NOVA}{PAUSA 3}{TELA a06_dados_v10}
+{ENTER}{ESPERA posicao 2}{PAUSA 2}{TELA a07}
+V11{ENTER}{ESPERA Numero de tramos}{PAUSA 1}2{ENTER}{ESPERA Balanco  esquerda}{PAUSA 1}{ENTER}{ESPERA Engaste  esquerda}{PAUSA 1}11{ENTER}{ESPERA Inercia e constante}{PAUSA 1}{ENTER}
+{ESPERA L 1}{PAUSA 1}4{ENTER}{ESPERA divisoes de carga}{PAUSA 1}{ENTER}{ESPERA cargas totais}{PAUSA 1}1.5,,0{ENTER}
+{ESPERA L 2}{PAUSA 1}5{ENTER}{ESPERA divisoes de carga}{PAUSA 1}2{ENTER}{ESPERA cargas totais}{PAUSA 1}1,2.5,2{ENTER}{ESPERA P 2}{PAUSA 1}{TELA a08}1,,0{ENTER}{ESPERA OBRA-NOVA}{PAUSA 3}{TELA a09_dados_v11}
+{ENTER}{ESPERA posicao 3}{PAUSA 2}{TELA a10}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA a11}
+4{ESPERA Qualquer Tecla}{PAUSA 2}{TELA a12_lista}{ENTER}{ESPERA escolha opcao}{PAUSA 2}
+6{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}{TELA g00}
+1{ESPERA NAO CRIAR}{PAUSA 2}NOVA{ENTER}{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}{TELA g01}
+2{ESPERA posicoes da memoria}{PAUSA 2}{TELA g02}1 A 2{ENTER}{ESPERA do Registro}{PAUSA 2}{TELA g03}1{ENTER}{ESPERA Dados Corretos}{PAUSA 2}{TELA g04}{ENTER}{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}{TELA g05}
+4{ESPERA Catalogar}{PAUSA 2}NOVA{ENTER}{ESPERA Qualquer Tecla}{PAUSA 2}{TELA g06_catalogo}{ENTER}{ESPERA Catalogar}{PAUSA 2}{ENTER}{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}
+8{ESPERA VIGAS CONTINUAS}{ESPERA escolha opcao}{PAUSA 2}{TELA m01}
+2{ESPERA Calcular posicoes}{PAUSA 2}1 A 2{ENTER}{ESPERA Imprimo os resultados}{PAUSA 1}{ENTER}{ESPERA Desenho diagramas}{PAUSA 1}S{ENTER}{ESPERA VIDEO}{PAUSA 1}{ENTER}
+{ESPERA Paro para visualizacao}{PAUSA 2}{TELA q00}S{ENTER}{ESPERA esquema estrutural}{PAUSA 2}{TELA q01}{ENTER}{ESPERA Dados Corretos}{PAUSA 2}{TELA q02}
+{ENTER}{ESPERA Continua}{PAUSA 3}{TELA q03_v10}{ENTER}{ESPERA Qualquer Tecla}{PAUSA 3}{TELA q04_v10}{ENTER}{PAUSA 20}{TELA q05_diagrama_v10}
+{ENTER}{ESPERA Continua}{PAUSA 3}{TELA q06_v11}{ENTER}{ESPERA Qualquer Tecla}{PAUSA 3}{TELA q07_v11}{ENTER}{PAUSA 20}{TELA q08_diagrama_v11}
+{ENTER}{ESPERA escolha opcao}{PAUSA 3}{TELA q09_menu}

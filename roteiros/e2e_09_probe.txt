@@ -1,0 +1,2 @@
+# exe: SISTRUT
+{TELA s01_menu}I{ENTER}{TELA p01_pilar}8{TELA p02_pilaredi_pede_obra}E2E{ENTER}{TELA p03_pilaredi_menu}A{TELA p04_pilgeedi}{F2}{TELA p05_fim}{F2}

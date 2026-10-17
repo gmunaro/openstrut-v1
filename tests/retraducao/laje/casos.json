@@ -1,0 +1,42 @@
+{
+ "piloto": [
+  "27 de 29 iguais (impressora 14.557 bytes iguais); os 2 diferentes são o FRE do LAJEGRAV (Kbytes livres). Oráculo retrad_lajeproc-20261015-082452",
+  true,
+  "tests/retraducao/lajeproc_e2e.sufixo.txt (oráculo retrad_lajeproc)"
+ ],
+ "calc": [
+  "34 de 34 iguais (impressora 3.916 bytes iguais, inclusive a hora)",
+  true,
+  "laje/calc.sufixo.txt"
+ ],
+ "calc2": [
+  "31 de 32 iguais (impressora 16.518 bytes iguais); o diferente (k06) é o trecho que pisca por TIMER no LAJECALC (0x32094..0x3227b), que segue o relógio real",
+  true,
+  "laje/calc2.sufixo.txt"
+ ],
+ "menus": [
+  "36 de 43 iguais; os 7 diferentes são o FRE do LAJEGRAV",
+  true,
+  "laje/menus.sufixo.txt"
+ ],
+ "param": [
+  "41 de 41 iguais (impressora 16.515 bytes iguais; Fck 0.2, aço A, CSE 1.5, eficiência 90 %, entradas recusadas)",
+  true,
+  "laje/param.sufixo.txt"
+ ],
+ "teclas": [
+  "13 de 14 iguais (Esc e F2 no LAJE, LAJEGRAV, LAJECALC, LAJEPROC e LAJEGEOM); o diferente é o FRE do LAJEGRAV",
+  true,
+  "laje/teclas.sufixo.txt"
+ ],
+ "geom": [
+  "13 de 16 iguais (impressora 85.670 bytes iguais); os 3 diferentes são o FRE do LAJEGRAV. E2E.LAJ e E2E.BAK iguais byte a byte",
+  true,
+  "laje/geom.sufixo.txt"
+ ],
+ "fluxo": [
+  "77 de 80 iguais, do LAJEGEOM ao LAJEPROC passando pelo LAJEMONT (impressora 36.131 bytes iguais); os 3 diferentes são o FRE do LAJEGRAV. E2E.LAJ, E2E.BAK, E2E.VIG e E2E.RLP iguais byte a byte",
+  true,
+  "laje/fluxo.sufixo.txt"
+ ]
+}

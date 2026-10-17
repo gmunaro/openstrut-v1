@@ -1,0 +1,25 @@
+  Definicao dos dados de Geometria do Painel
+  Obra - E2E   Dados em ...dist\roteiros\saida\e2e_01_laje_geo-20261012-071302\
+
+   A R Q U I T E T U R A
+  N  Nome           x0       y0       lx       ly        h  Bordos
+  1  L1           0.00     0.00     4.00     5.00    10.00  AAAA
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <I>nclui  <E>dita  <D>eleta  <V>isualiza  <F>im
+
+
+escolha opcao

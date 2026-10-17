@@ -1,0 +1,22 @@
+# Caso retrad_frm_montagem: menu do FORMA (tecla invalida, opcao 5, opcao 6 com pasta invalida),
+# opcao 1 (Montagem): arquivos E2E, resumo, vinculos de vigas/nivel/pilares com navegacao,
+# FORMINIT, editor FORMEDCA: G sem nome (erro), G E2E (grava E2E.FRM), F/V (gera .FOR), F/P, F/Retorna, B, D, S (volta ao FORMA).
+{ESPERA escolha opcao}{PAUSA 2}{TELA a00_menu}
+x{PAUSA 2}5{PAUSA 3}{TELA a01_op5}
+6{ESPERA arquivos de Lajes}{PAUSA 2}{TELA a02_dir_laj}123{ENTER}{PAUSA 3}{TELA a03_dir_inval}C:{ENTER}
+{ESPERA arquivos de Vigas}{PAUSA 2}{TELA a04_dir_vig}{ENTER}{ESPERA arquivos de Colunas}{ENTER}{ESPERA arquivos de Formas}{ENTER}
+{ESPERA (.FOP)}{ENTER}{ESPERA (.DXF)}{ENTER}{ESPERA (.PLT)}{PAUSA 2}{TELA a05_dir_plt}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA a06_menu}
+1{ESPERA Arquivo de Lajes}{PAUSA 2}{TELA a07_laj}E2E{ENTER}{ESPERA Arquivo de Vigas}{PAUSA 2}{TELA a08_vig}E2E{ENTER}
+{ESPERA Arquivo de Colunas}{PAUSA 2}{TELA a09_col}E2E{ENTER}{ESPERA Inicio a montagem}{PAUSA 2}{TELA a10_resumo}{ENTER}
+{ESPERA Viga Correspondente}{PAUSA 3}{TELA a11_vigas}{DOWN}{PAUSA 1}{DOWN}{PAUSA 1}6{PAUSA 2}{TELA a12_viga_alt}4{PAUSA 2}{TELA a13_viga_volta}{UP}{PAUSA 1}F
+{ESPERA Escolha o Nivel}{PAUSA 3}{TELA a14_nivel}2{PAUSA 2}{TELA a15_nivel_desce}8{PAUSA 2}F
+{ESPERA Pilar Correspondente}{PAUSA 3}{TELA a16_pilares}{DOWN}{PAUSA 1}6{PAUSA 2}{TELA a17_pilar_alt}4{PAUSA 2}{UP}{PAUSA 1}F
+{ESPERA edesenha|120}{PAUSA 3}{TELA a18_editor}
+G{ESPERA Gravacao dos dados da Forma}{PAUSA 2}{TELA a19_grava}{ENTER}{ESPERA Sigo com a gravacao}{PAUSA 2}{TELA a20_grava_sem_nome}{ENTER}
+{ESPERA VERIFIQUE}{PAUSA 2}{TELA a21_erro_drive}{ENTER}{ESPERA edesenha}{PAUSA 3}
+G{ESPERA Gravacao dos dados da Forma}{PAUSA 2}E2E{ENTER}{ESPERA Sigo com a gravacao}{PAUSA 2}{TELA a22_grava_e2e}{ENTER}{PAUSA 5}{TELA a23_gravado}
+F{ESPERA Desenho de Pilares}{PAUSA 2}{TELA a24_f}V{ESPERA Sigo com atualizacao}{PAUSA 2}{TELA a25_fv}S{ENTER}{ESPERA edesenha}{PAUSA 4}{TELA a26_fv_feito}
+F{ESPERA Desenho de Pilares}{PAUSA 2}P{ESPERA COTA BASICA}{PAUSA 2}{TELA a27_fp}{ENTER}{ESPERA AINDA NAO}{PAUSA 2}{TELA a28_fp_nao}{ENTER}{ESPERA edesenha}{PAUSA 3}
+F{ESPERA Desenho de Pilares}{PAUSA 2}{ENTER}{ESPERA edesenha}{PAUSA 3}{TELA a29_f_retorna}
+B{PAUSA 2}D{PAUSA 2}{TELA a30_bd}
+S{ESPERA escolha opcao|120}{PAUSA 3}{TELA a31_menu_volta}

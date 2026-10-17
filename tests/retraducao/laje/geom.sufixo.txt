@@ -1,0 +1,16 @@
+# Sufixo (a partir do menu do LAJE): LAJEGEOM 8 (relatorios na impressora) e LAJEGRAV 2 (gravacao)
+# sobre a obra E2E gravada pelo original, sem passar pelo LAJEMONT.
+# Le E2E.LAJ (LAJEGRAV 4), LAJE 2 -> LAJEGEOM 8 (descricao vazia, imprime), 9; LAJE 6 -> LAJEGRAV 2
+# (grava E2E.LAJ de novo), 3 (confere o numero de lajes gravadas), 7.
+{TELA l01}6{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}
+4{ESPERA *RETORNO*}{PAUSA 2}E2E{ENTER}{ESPERA Continuo}{PAUSA 1}
+{ENTER}{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}
+7{ESPERA LAJES EM REGIME}{ESPERA escolha opcao}{PAUSA 2}{TELA l02}
+2{ESPERA Posicionadas}{ESPERA escolha opcao}{PAUSA 2}{TELA g00}
+8{ESPERA Descricao do Pavimento}{PAUSA 1}{TELA g01}{ENTER}{ESPERA inicio da Impressao}{PAUSA 1}{TELA g02}S{ENTER}{ESPERA para seguir}{PAUSA 1}{TELA g03}
+{ENTER}{ESPERA escolha opcao|400}{PAUSA 2}{TELA g04}
+9{ESPERA LAJES EM REGIME}{ESPERA escolha opcao}{PAUSA 2}{TELA l03}
+6{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}{TELA w00}
+2{ESPERA Nome da Obra}{PAUSA 1}{TELA w01}{ENTER}{ESPERA Continuo}{PAUSA 1}{TELA w02}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA w03}
+3{ESPERA Pesquisar}{PAUSA 1}E2E{ENTER}{ESPERA Gravadas}{PAUSA 1}{TELA w04}{ENTER}{PAUSA 2}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA w05}
+7{ESPERA LAJES EM REGIME}{ESPERA escolha opcao}{PAUSA 2}{TELA l04}

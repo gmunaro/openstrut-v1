@@ -1,0 +1,20 @@
+# exe: SISEDIT
+# sis_02_editor: editor SISEDIT (EXE: SISEDIT). Abre PILAR.INI copiado para a
+# pasta de saida, edita, grava com outro nome (SISEDIT_TESTE.INI), testa Ler com
+# arquivo inexistente, F1 (ajuda), Fim com alteracao pendente (N/S) e sai. Saida esperada: 0.
+# Sem argumento na linha de comando: o programa pede o nome na tela de Ler.
+{TELA ed_pede_nome}PILAR.INI{ENTER}{TELA ed_lido}
+# edicao: {END} + texto no fim da linha 1; {DOWN}{HOME}{DEL} apaga o primeiro caractere da linha 2 e {HOME}\ devolve
+{END} TESTE{TELA ed_linha1}{DOWN}{HOME}{DEL}{TELA ed_del}{HOME}\{DOWN}{END}{ENTER}{BS}{TELA ed_enter_bs}
+# Deletar: primeiro cancela com N, depois confirma com Enter (padrao S)
+{ESC}D{TELA ed_deletar_pergunta}N{ESC}D{ENTER}{TELA ed_deletar_feito}
+# Incluir: primeiro cancela com N (linha nao muda), depois confirma com Enter (padrao S) e digita
+{ESC}IN{ESC}I{TELA ed_incluir_pergunta}{ENTER}{TELA ed_incluir_feito}TESTE=1{TELA ed_digitado}
+# Salvar com outro nome: apaga o padrao (9 letras de PILAR.INI) e grava SISEDIT_TESTE.INI
+{ESC}S{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}SISEDIT_TESTE.INI{ENTER}{TELA ed_salvo}
+# Ler: arquivo inexistente mostra erro e espera tecla; depois le VIGA.INI
+{ESC}LNAO_EXISTE.INI{ENTER}{TELA ed_ler_erro}{ENTER}{ESC}LVIGA.INI{ENTER}{TELA ed_lido_viga}
+# PgDn/PgUp, F1 (ajuda) e Enter para sair da ajuda
+{PGDN}{PGUP}{F1}{TELA ed_ajuda}{ENTER}
+# Fim com alteracao pendente: Enter nao confirma (padrao N); depois S sai
+X{ESC}F{TELA ed_fim_pergunta}{ENTER}{TELA ed_fim_nao}{ESC}FS

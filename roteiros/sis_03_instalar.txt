@@ -1,0 +1,6 @@
+# exe: INSTALAR
+# sis_03_instalar: implantacao (EXE: INSTALAR). Destino RELATIVO dentro da pasta
+# de saida (sis_inst\), apagando o padrao C:\SISTRUT\EXEC40\. Origem: Enter (padrao).
+# Monitor: x (invalida, ignorada) e depois h. LPT: 3 (invalida) e depois 2.
+# COM: Enter (padrao 1). Nunca C:\ aqui. Saida esperada: 0.
+{TELA ins_inicial}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}sis_inst\{TELA ins_destino_digitado}{ENTER}{TELA ins_origem_padrao}{ENTER}{TELA ins_monitor_pergunta}x{TELA ins_x_ignorada}h{TELA ins_lpt_pergunta}3{TELA ins_3_ignorada}2{TELA ins_com_pergunta}{ENTER}{TELA ins_relatorio}{SPACE}

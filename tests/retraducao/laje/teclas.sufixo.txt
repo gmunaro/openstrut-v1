@@ -1,0 +1,14 @@
+# Sufixo (a partir do menu do LAJE): teclas de ON KEY (Esc e F2) nos seis programas.
+# Como no oraculo (casos teclas_laje_f2/esc): a tecla presa vai seguida de ENTER, porque o QB so
+# atende o ON KEY quando a leitura termina. Le E2E.LAJ antes (LAJEGRAV 4).
+# LAJE: Esc no Fck volta ao menu. LAJEGRAV: F2 no menu volta ao LAJE. LAJECALC: Esc em "TODAS" volta
+# ao menu do LAJECALC, F2 no menu volta ao LAJE. LAJEPROC: Esc no "*FIM*" da modificacao, F2 no menu.
+# LAJEGEOM: Esc no nome da obra (item 2), F2 no menu.
+{TELA l01}1{ESPERA Concreto Fck}{PAUSA 2}{TELA t01_fck}{ESC}{PAUSA 2}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA t02_laje}
+6{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}4{ESPERA *RETORNO*}{PAUSA 2}E2E{ENTER}{ESPERA Continuo}{PAUSA 1}{ENTER}{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}{TELA t03_grav}
+{F2}{PAUSA 3}{ENTER}{ESPERA LAJES EM REGIME}{ESPERA escolha opcao}{PAUSA 2}{TELA t04_laje}
+3{ESPERA Calculo e Detalhamento}{ESPERA escolha opcao}{PAUSA 2}3{ESPERA TODAS}{PAUSA 1}{TELA t05_calc}{ESC}{PAUSA 2}{ENTER}{ESPERA Calculo e Detalhamento}{ESPERA escolha opcao}{PAUSA 2}{TELA t06_calc}
+{F2}{PAUSA 3}{ENTER}{ESPERA LAJES EM REGIME}{ESPERA escolha opcao}{PAUSA 2}{TELA t07_laje}
+4{ESPERA Escolha de Armaduras}{ESPERA escolha opcao}{PAUSA 2}4{ESPERA *FIM*}{PAUSA 1}{TELA t08_proc}{ESC}{PAUSA 2}{ENTER}{ESPERA Escolha de Armaduras}{ESPERA escolha opcao}{PAUSA 2}{TELA t09_proc}
+{F2}{PAUSA 3}{ENTER}{ESPERA LAJES EM REGIME}{ESPERA escolha opcao}{PAUSA 2}{TELA t10_laje}
+2{ESPERA Posicionadas}{ESPERA escolha opcao}{PAUSA 2}{TELA t11_geom}{F2}{PAUSA 3}{ENTER}{ESPERA LAJES EM REGIME}{ESPERA escolha opcao}{PAUSA 2}{TELA t12_laje}

@@ -1,0 +1,7 @@
+# exe: VIGA
+# rev5_viga_inval: vao 0 (cadastro) e carga P -1 (cadastro), depois correcao 4 (vao 0) e 5 (P -1).
+# Ordem de campos do cadastro (VIGA.BAS VigNova%): nome, 4 SimNao de balanco/engaste, Bw, h, L, P, concentradas, apoios.
+# Telas antes de F/S para ver o valor digitado; telas depois para ver o resultado.
+3{ENTER}UMA1{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}SN{BS}20{ENTER}{BS}50{ENTER}{BS}0{ENTER}{BS}1{ENTER}N{TELA a1_L0_antes_P2}P2{ENTER}S{TELA a2_L0_resultado}{ENTER}
+3{ENTER}UMA2{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}SN{BS}20{ENTER}{BS}50{ENTER}{BS}4{ENTER}{BS}-1{ENTER}N{TELA b1_Pneg_antes_P2}P2{ENTER}S{TELA b2_Pneg_resultado}{ENTER}
+5{TELA c0_corr_menu}1{ENTER}{TELA c1_pos1_menu}4{ENTER}{TELA c2_tramo_prompt}{ENTER}{TELA c3_comp_prompt}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}0{ENTER}{TELA c4_apos_L0}{ENTER}{TELA c5_apos_enter}5{ENTER}{TELA c6_tramo_5}{ENTER}{TELA c7_carga_prompt}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}-1{ENTER}{TELA c8_apos_Pneg}{ENTER}{TELA c9_apos_enter2}8{TELA d0_fim_pos}FIM{ENTER}{TELA d1_fim_corr}{F2}{TELA d2_fim}

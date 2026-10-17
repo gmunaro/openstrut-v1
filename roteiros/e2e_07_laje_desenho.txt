@@ -1,0 +1,5 @@
+# exe: SISTRUT
+# Obra E2E (dados do e2e_04). LAJEPROC: E (escolhe armaduras, S), depois P (positivo, modo T, tipo 1
+# padrao, dados S, previa) e N (negativo, modo T, tipo 2 padrao, dados S, previa); R volta ao menu da Laje.
+# A previa grafica sai com ENTER (SCREEN 0). Armaduras existem so na memoria: E tem que vir antes.
+{TELA s01_menu}L{TELA l01_menu_laje}4{TELA d01_proc_menu}E{ENTER}{ENTER}{TELA d02_escolha_fim}P{TELA d03_p_modo}{ENTER}{TELA d04_p_tipo}{ENTER}{ENTER}{TELA d05_p_vet}{ENTER}N{TELA d06_n_modo}{ENTER}{TELA d07_n_tipo}{ENTER}{ENTER}{TELA d08_n_vet}{ENTER}R{TELA l02_menu_pos_proc}{ENTER}{TELA l03_menu_fim}{F2}{TELA s02_menu}{F2}

@@ -1,0 +1,56 @@
+# exe: DESENHO
+# Item 7 (LACUNAS-V1): Porta-estribo, Iniciar, Notas e Corte da viga no DESEDCAO, obra FLUXO (semente).
+# V2 (negativo [247,1 ; 552,9]): P com S (padrao do .DSP): 2 phi 6,3 (ordem 2 do .DSP), traspasse 15 cm:
+#   tramo 1 de 0 a 400 - 152,9 + 15 = 262,1; tramo 2 de 137,9 a 350 = 212,1.
+# D 1 SIM e I SIM (Inicializacao de Ferragem Longitudinal): volta ao DcDetalha% (N1 de volta).
+# F (transversal): C tramo 1 phi 6,3 c/ 12; I SIM volta aos estribos do .SEC (5 c/ 18).
+# N: nota na forma (tramo 1, centro), nota na armadura (posicao 1), altera a nota do tramo 1.
+# Z: previa com as notas. V com N: nada; V com S: corte no tramo 1 a 200 cm da face.
+{TELA menu}
+S
+v2{ENTER}
+{TELA v2_antes}
+P
+{TELA porta_pergunta}
+{ENTER}
+{TELA porta_ok}
+D1{ENTER}{BS}SIM{ENTER}
+{TELA deletou_n1}
+I
+{TELA iniciar_long_pergunta}
+{BS}SIM{ENTER}
+{TELA iniciar_long_ok}
+F
+{TELA transv_antes}
+C{BS}1{ENTER}{BS}6.3{ENTER}{BS}12{ENTER}
+{TELA transv_alterado}
+I{BS}SIM{ENTER}
+{TELA transv_iniciado}
+N{BS}1{ENTER}C
+{TELA nota_texto}
+VER DETALHE 1{ENTER}
+N{ENTER}{BS}1{ENTER}DOBRAR NA OBRA{ENTER}
+N{BS}1{ENTER}C
+{TELA nota_altera}
+{BS}S{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}VER DETALHE A{ENTER}
+Z
+{TELA zoom_notas}
+{ENTER}
+{ENTER}
+VN
+{TELA corte_nao}
+VS{BS}1{ENTER}{BS}{BS}{BS}200{ENTER}
+{TELA corte_200}
+{ENTER}
+{ENTER}
+{TELA transv_volta}
+R
+{TELA long_final}
+{ESC}
+{TELA lista}
+{ENTER}
+{BS}SIM{ENTER}
+{TELA gravou}
+{ENTER}
+{TELA menu_volta}
+{F2}

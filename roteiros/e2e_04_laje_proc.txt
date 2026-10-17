@@ -1,0 +1,5 @@
+# exe: SISTRUT
+# Obra E2E (com resultados e montagem do e2e_03). Menu LAJE, opcao 4: LAJEPROC.
+# LAJEPROC: E (escolha automatica das armaduras de todas as lajes), I (impressao
+# do relatorio E2E_LAJEPROC.LST) e R (retorno ao LAJE). Depois F2 do LAJE e do SISTRUT.
+{TELA s01_menu}L{TELA l01_menu_laje}4{TELA p01_proc_menu}E{TELA p02_escolha_pergunta}{ENTER}{TELA p03_escolha_fim}{ENTER}{TELA p04_menu_pos_escolha}I{TELA p05_imp_fim}{ENTER}{TELA p06_menu_pos_imp}R{TELA l02_menu_pos_proc}{ENTER}{TELA l03_menu_fim}{F2}{TELA s02_menu}{F2}

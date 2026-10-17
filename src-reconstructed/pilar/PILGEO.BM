@@ -1,0 +1,12 @@
+' PILGEO.BM - geometria da secao retangular (PILAR). Biblioteca propria do modulo PILAR.
+' Entradas em cm; area em cm2; perimetro em cm.
+
+' Area da secao retangular: B x H.
+FUNCTION SecAreaRet# (b AS DOUBLE, h AS DOUBLE)
+    SecAreaRet# = b * h
+END FUNCTION
+
+' Perimetro da secao retangular: 2 x (B + H).
+FUNCTION SecPerimRet# (b AS DOUBLE, h AS DOUBLE)
+    SecPerimRet# = 2# * (b + h)
+END FUNCTION

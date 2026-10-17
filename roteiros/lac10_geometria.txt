@@ -1,0 +1,7 @@
+# exe: PILAR
+# lac10: area e perimetro impressos na geometria (pilar 20x40). Conta a mao: area 800 cm2, perimetro 120 cm.
+# mesma sequencia de pilar_01_arquivar.txt (opcao 1 Arquivar, posicao 1); a tela "lac10_geo" sai logo apos a geometria, antes dos esforcos
+{TELA lac10_abertura}{ENTER}{TELA lac10_menu}11{ENTER}
+{TELA lac10_b}20{ENTER}40{ENTER}4{ENTER}2{ENTER}2{ENTER}0{ENTER}8{ENTER}{TELA lac10_geo}
+60{ENTER}1{ENTER}0.5{ENTER}3{ENTER}3{ENTER}
+{TELA lac10_conf}S{ENTER}{TELA lac10_pos}{ENTER}{F2}

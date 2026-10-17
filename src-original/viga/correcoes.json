@@ -1,0 +1,53 @@
+{
+ "_leia": "Correcoes da familia VIGA lidas por tools/retraduz.py (somam-se as de CORRECOES). Chave = endereco da linha do lift; valor = linhas QB64 que substituem o comando, ou \"PROTECAO\" (comenta o comando). Aqui ficam so as marcas que desativam os trechos de verificacao de licenca do original. Os contornos PROVISORIO dos pedidos de tests/retraducao/viga/PEDIDOS-TRADUTOR.md (P1-P6, R1-R4, R8-R12) e as ESTATICA sairam em 15/10/2026: o tradutor e o RT45 atenderam.",
+ "VIGA": {
+  "0x105a0": [
+   "' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x106d8": "PROTECAO",
+  "0x106e6": "PROTECAO",
+  "0x106f4": "PROTECAO",
+  "0x10702": "PROTECAO",
+  "0x50073": "PROTECAO",
+  "0x500e5": "PROTECAO",
+  "0x50157": "PROTECAO",
+  "0x501c9": "PROTECAO",
+  "0x5023b": [
+   "GOTO L_5025c   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x50252": "PROTECAO",
+  "0x5025c": "PROTECAO",
+  "0x50277": "PROTECAO",
+  "0x502a4": "PROTECAO",
+  "0x502b2": [
+   "GOTO L_502e0   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x502c9": "PROTECAO",
+  "0x502d1": "PROTECAO"
+ },
+ "VPLOTA": {
+  "0x10478": [
+   "' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x105b0": "PROTECAO",
+  "0x105be": "PROTECAO",
+  "0x105cc": "PROTECAO",
+  "0x105da": "PROTECAO",
+  "0x60073": "PROTECAO",
+  "0x600e5": "PROTECAO",
+  "0x60157": "PROTECAO",
+  "0x601c9": "PROTECAO",
+  "0x6023b": [
+   "GOTO L_6025c   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x60252": "PROTECAO",
+  "0x6025c": "PROTECAO",
+  "0x60277": "PROTECAO",
+  "0x602a4": "PROTECAO",
+  "0x602b2": [
+   "GOTO L_602e0   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x602c9": "PROTECAO",
+  "0x602d1": "PROTECAO"
+ }
+}

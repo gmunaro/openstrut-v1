@@ -1,0 +1,5 @@
+# exe: PILAR
+# PILAREDI opcao M (Materiais), obra FLUXO, INI em MPa (grandeza 0,01). Fck 15, Fyk 500, tipo B.
+# Passo 1: Enter mantem os tres valores. Passo 2: regrava Fck 15, Fyk 500 e B com {BS} antes de cada campo.
+# Passo 3: tipo C -> aviso "valores invalidos" (Espera). Passo 4: volta para B. Depois ESC sai do PILAREDI.
+{TELA p11_abertura}{ENTER}{TELA p11_obra}8{TELA p11_obra2}{ENTER}M{TELA p11_mat}{ENTER}{ENTER}{ENTER}{TELA p11_after}M{TELA p11_mat2}{BS}{BS}15{ENTER}{BS}{BS}{BS}500{ENTER}{BS}B{ENTER}{TELA p11_regrava}M{TELA p11_mat3}{BS}{BS}15{ENTER}{BS}{BS}{BS}500{ENTER}{BS}C{ENTER}{TELA p11_invalido}{ENTER}M{TELA p11_mat4}{BS}{BS}15{ENTER}{BS}{BS}{BS}500{ENTER}{BS}B{ENTER}{TELA p11_fim}{ESC}{TELA p11_volta}{F2}

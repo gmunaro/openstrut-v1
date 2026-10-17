@@ -1,0 +1,9 @@
+# exe: DESENHO
+# acab_02_desinit: DESINIT pelo menu DESENHO (opcao I). Confere a tabela gravada:
+# linha "MEDIDAS EM CM ... Fck: 0.15 t/cm2" (zero a esquerda e unidade).
+# Saida esperada: 0.
+{TELA menu}
+I{TELA desinit}
+{ENTER}
+{TELA volta}
+{F2}

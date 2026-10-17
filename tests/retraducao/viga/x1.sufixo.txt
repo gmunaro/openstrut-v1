@@ -1,0 +1,23 @@
+# VIGA: cargas acidentais fornecidas (opcao 8: S, F) e carga indexada (reacao de outra viga). Opcao 1:
+# obra IDX, V20 (1 tramo) e V21 (2 tramos, carga concentrada *1.01 = reacao do apoio 1 da posicao 1),
+# com Pac/Fac de cada divisao; opcao 4 (vinculo de carga); opcao 2 (1 A 2: a V21 so e calculada depois
+# da V20, com a reacao transferida); opcao 6 cria e grava IDX.VIG; opcao 7 na IDX (aviso de carga indexada).
+8{ESPERA Correcao dos Parametros}{ESPERA Escolha opcao}{PAUSA 2}2{ESPERA Considero Cargas}{PAUSA 1}S{ENTER}{ESPERA ornecidas ou}{PAUSA 1}{ENTER}{ESPERA Escolha opcao}{PAUSA 2}{TELA p01}
+6{ESPERA VIGAS CONTINUAS}{ESPERA escolha opcao}{PAUSA 2}
+1{ESPERA Posicao *}{PAUSA 2}{ENTER}{ESPERA Exemplo}{PAUSA 2}IDX{ENTER}{ESPERA Viga *FIM*}{PAUSA 2}
+V20{ENTER}{ESPERA Numero de tramos}{PAUSA 1}1{ENTER}{ESPERA Balanco  esquerda}{PAUSA 1}{ENTER}{ESPERA Engaste  esquerda}{PAUSA 1}{ENTER}{ESPERA Inercia e constante}{PAUSA 1}{ENTER}
+{ESPERA L 1}{PAUSA 1}4{ENTER}{ESPERA divisoes de carga}{PAUSA 1}{ENTER}{ESPERA cargas totais}{PAUSA 1}1,,0{ENTER}{ESPERA cargas acidentais}{PAUSA 1}{TELA a01}0.3,0{ENTER}{ESPERA OBRA-IDX}{PAUSA 3}{TELA a02_dados_v20}{ENTER}{ESPERA posicao 2}{PAUSA 2}
+V21{ENTER}{ESPERA Numero de tramos}{PAUSA 1}2{ENTER}{ESPERA Balanco  esquerda}{PAUSA 1}{ENTER}{ESPERA Engaste  esquerda}{PAUSA 1}{ENTER}{ESPERA Inercia e constante}{PAUSA 1}{ENTER}
+{ESPERA L 1}{PAUSA 1}3{ENTER}{ESPERA divisoes de carga}{PAUSA 1}{ENTER}{ESPERA cargas totais}{PAUSA 1}1,,0{ENTER}{ESPERA cargas acidentais}{PAUSA 1}0.2,0{ENTER}
+{ESPERA L 2}{PAUSA 1}5{ENTER}{ESPERA divisoes de carga}{PAUSA 1}2{ENTER}{ESPERA cargas totais}{PAUSA 1}1,2.5,*1.01{ENTER}{ESPERA cargas acidentais}{PAUSA 1}{TELA a03}0.2,0.1{ENTER}{ESPERA VERIFIQUE CARGA}{PAUSA 1}{TELA a04_verifique}{ENTER}{ESPERA Pac 1}{PAUSA 1}0.2{ENTER}{ESPERA P 2}{PAUSA 1}{TELA a05}
+1,,0{ENTER}{ESPERA Pac 2}{PAUSA 1}0.2,0{ENTER}{ESPERA OBRA-IDX}{PAUSA 3}{TELA a06_dados_v21}{ENTER}{ESPERA posicao 3}{PAUSA 2}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA m02}
+4{ESPERA Qualquer Tecla}{PAUSA 2}{TELA l01_lista}{ENTER}{ESPERA escolha opcao}{PAUSA 2}
+2{ESPERA Calcular posicoes}{PAUSA 2}1 A 2{ENTER}{ESPERA Imprimo os resultados}{PAUSA 1}S{ENTER}{ESPERA Desenho diagramas}{PAUSA 1}{ENTER}{ESPERA esquema estrutural}{PAUSA 1}{ENTER}
+{ESPERA Dados Corretos}{PAUSA 1}{TELA q01}{ENTER}{ESPERA para seguir}{PAUSA 1}{TELA q02}{ENTER}{ESPERA escolha opcao|180}{PAUSA 3}{TELA q03_menu}
+6{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}1{ESPERA NAO CRIAR}{PAUSA 2}IDX{ENTER}{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}
+2{ESPERA posicoes da memoria}{PAUSA 2}1 A 2{ENTER}{ESPERA do Registro}{PAUSA 2}1{ENTER}{ESPERA Dados Corretos}{PAUSA 2}{ENTER}{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}{TELA g01}
+8{ESPERA VIGAS CONTINUAS}{ESPERA escolha opcao}{PAUSA 2}
+7{ESPERA Nome da Obra}{PAUSA 2}IDX{ENTER}{ESPERA Listo as Vigas}{PAUSA 1}{ENTER}{ESPERA Continuo}{PAUSA 1}{ENTER}{ESPERA Todas as Vigas}{PAUSA 1}S{ENTER}{ESPERA Apoio 0}{PAUSA 2}{TELA r01}1{ENTER}{ESPERA Apoio 1}{PAUSA 1}2{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA r02}{ENTER}{ESPERA Registro 2}{ESPERA Apoio 0}{PAUSA 2}{TELA r03}3{ENTER}{ESPERA Apoio 1}{PAUSA 1}*{ENTER}{ESPERA Apoio 2}{PAUSA 1}4{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA r04}
+{ENTER}{ESPERA Vigas Apoiadas}{PAUSA 2}{ENTER}{ESPERA Imprimo os Resultados}{PAUSA 1}S{ENTER}{ESPERA Diagrama de Esforcos}{PAUSA 1}{ENTER}{ESPERA esquema estrutural}{PAUSA 1}{ENTER}
+{ESPERA Dados Corretos}{PAUSA 1}{TELA r05}{ENTER}{ESPERA para seguir}{PAUSA 1}{TELA r06}{ENTER}{ESPERA GRAVO A SOMATORIA|180}{PAUSA 2}{TELA r07_reacoes}
+S{ENTER}{ESPERA escolha opcao}{PAUSA 3}{TELA r08_menu}

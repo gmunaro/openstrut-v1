@@ -1,0 +1,182 @@
+# Compila a V1 (QB64 PE) e roda os testes em Windows, Linux e macOS.
+# Tambem e chamado pelo release.yml (workflow_call) para gerar os executaveis
+# que vao nos pacotes. Detalhes e custo em .github/CI.md.
+name: build
+
+on:
+  push:
+    # tags ficam com o release.yml, que chama este workflow
+    branches: ["**"]
+    paths-ignore: ["docs/**", "**/*.md"]
+  pull_request:
+    paths-ignore: ["docs/**", "**/*.md"]
+  workflow_dispatch:
+    inputs:
+      roteiros:
+        description: "Rodar os roteiros de teclado tambem no Windows e no macOS (abrem janela)"
+        type: boolean
+        default: false
+  workflow_call:
+    inputs:
+      roteiros:
+        description: "Rodar os roteiros de teclado tambem no Windows e no macOS (abrem janela)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+# push e pull_request do mesmo branch caem no mesmo grupo: so o mais novo roda.
+# Tag e execucao manual nunca sao canceladas.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: ${{ github.event_name != 'workflow_dispatch' && !startsWith(github.ref, 'refs/tags/') }}
+
+env:
+  # Release oficial "4.7.0" do QB64 PE; a tag no GitHub e v4.7.0-GLFW.
+  QB64_VERSAO: 4.7.0-GLFW
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    name: build (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        # macOS custa ~10x o Linux: so entra na main, em tag (release) e em execucao manual.
+        # macos-13 ja foi retirado e macos-14 sai em 2/11/2026; macos-15 e o arm64
+        # (M1) e macos-15-intel e o x64.
+        os: ${{ fromJSON((github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch') && '["windows-latest","ubuntu-24.04","ubuntu-24.04-arm","macos-15","macos-15-intel"]' || '["windows-latest","ubuntu-24.04","ubuntu-24.04-arm"]') }}
+    runs-on: ${{ matrix.os }}
+    # Nao ha release do QB64 PE para Linux arm64; o pacote de Linux x64 e fonte
+    # C++ e deve compilar em aarch64, mas isso ainda nao foi provado. Tire esta
+    # linha quando o job ficar verde.
+    continue-on-error: ${{ matrix.os == 'ubuntu-24.04-arm' }}
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Plataforma e pasta do QB64
+        id: plat
+        run: |
+          os="$(echo "$RUNNER_OS" | tr '[:upper:]' '[:lower:]')"
+          arch="$(echo "$RUNNER_ARCH" | tr '[:upper:]' '[:lower:]')"
+          echo "plat=$os-$arch" >> "$GITHUB_OUTPUT"
+          if [ "$RUNNER_OS" = Windows ]; then
+            # o 7z da release tem a pasta qb64pe/ na raiz: fica em C:\qb64pe\qb64pe,
+            # o mesmo lugar que os scripts de tools/ usam por padrao no Windows
+            echo "cache=C:\\qb64pe" >> "$GITHUB_OUTPUT"
+            echo "QB64_DIR=/c/qb64pe/qb64pe" >> "$GITHUB_ENV"
+          else
+            echo "cache=$HOME/qb64pe" >> "$GITHUB_OUTPUT"
+            echo "QB64_DIR=$HOME/qb64pe" >> "$GITHUB_ENV"
+          fi
+
+      # Dependencias de compilacao (lista do setup_lnx.sh da release). Precisam
+      # estar presentes em todo build, nao so na instalacao: cada programa QB64
+      # e compilado e ligado contra X11/OpenGL/ALSA.
+      - name: Dependencias (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q --no-install-recommends \
+            build-essential x11-utils mesa-common-dev libglu1-mesa-dev libasound2-dev \
+            libpng-dev libcurl4-openssl-dev libx11-dev libxcursor-dev libxrandr-dev \
+            libxinerama-dev libxi-dev xvfb xauth
+
+      - name: Cache do QB64 PE
+        id: cache-qb64
+        uses: actions/cache/restore@v6
+        with:
+          path: ${{ steps.plat.outputs.cache }}
+          key: qb64pe-${{ env.QB64_VERSAO }}-${{ matrix.os }}
+
+      - name: Instalar QB64 PE (Windows)
+        if: runner.os == 'Windows' && steps.cache-qb64.outputs.cache-hit != 'true'
+        shell: pwsh
+        run: |
+          $url = "https://github.com/QB64-Phoenix-Edition/QB64pe/releases/download/v$env:QB64_VERSAO/qb64pe_win-x64-$env:QB64_VERSAO.7z"
+          $arq = Join-Path $env:RUNNER_TEMP "qb64pe.7z"
+          Invoke-WebRequest -Uri $url -OutFile $arq
+          7z x -y -oC:\qb64pe $arq | Out-Null
+          if (-not (Test-Path C:\qb64pe\qb64pe\qb64pe.exe)) { throw "qb64pe.exe nao encontrado depois de extrair" }
+
+      - name: Instalar QB64 PE (Linux)
+        if: runner.os == 'Linux' && steps.cache-qb64.outputs.cache-hit != 'true'
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/qb64pe.tar.gz" \
+            "https://github.com/QB64-Phoenix-Edition/QB64pe/releases/download/v$QB64_VERSAO/qb64pe_lnx-x64-$QB64_VERSAO.tar.gz"
+          tar -xzf "$RUNNER_TEMP/qb64pe.tar.gz" -C "$HOME"
+          # o setup grava um atalho em ~/.local/share/applications
+          mkdir -p "$HOME/.local/share/applications"
+          # argumento nao vazio: compila sem abrir a IDE
+          bash "$QB64_DIR/setup_lnx.sh" nao-abrir
+          test -x "$QB64_DIR/qb64pe"
+
+      - name: Instalar QB64 PE (macOS)
+        if: runner.os == 'macOS' && steps.cache-qb64.outputs.cache-hit != 'true'
+        run: |
+          # Xcode Command Line Tools ja vem na imagem do runner
+          clang++ --version
+          curl -fsSL -o "$RUNNER_TEMP/qb64pe.tar.gz" \
+            "https://github.com/QB64-Phoenix-Edition/QB64pe/releases/download/v$QB64_VERSAO/qb64pe_osx-$QB64_VERSAO.tar.gz"
+          tar -xzf "$RUNNER_TEMP/qb64pe.tar.gz" -C "$HOME"
+          # argumento nao vazio: compila sem abrir a IDE nem esperar tecla
+          bash "$QB64_DIR/setup_osx.command" nao-abrir
+          test -x "$QB64_DIR/qb64pe"
+
+      # Salva logo apos instalar, para o cache guardar a instalacao limpa (sem
+      # as sobras de compilacao do build).
+      - name: Salvar cache do QB64 PE
+        if: steps.cache-qb64.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: ${{ steps.plat.outputs.cache }}
+          key: ${{ steps.cache-qb64.outputs.cache-primary-key }}
+
+      - name: Compilar
+        run: bash tools/build.sh
+
+      - name: Testes (Linux, sob Xvfb)
+        if: runner.os == 'Linux'
+        run: xvfb-run -a bash tools/runtests.sh
+
+      - name: Testes
+        if: runner.os != 'Linux'
+        run: bash tools/runtests.sh
+
+      - name: Roteiros (Linux, sob Xvfb)
+        if: runner.os == 'Linux'
+        timeout-minutes: 30
+        run: xvfb-run -a -s "-screen 0 1280x1024x24" bash tools/roteiros.sh
+
+      - name: Roteiros
+        if: runner.os != 'Linux' && inputs.roteiros
+        timeout-minutes: 30
+        run: bash tools/roteiros.sh
+
+      - name: Logs dos roteiros
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: roteiros-${{ steps.plat.outputs.plat }}
+          path: |
+            roteiros/saida/**/*.log
+            roteiros/saida/**/*.txt
+          if-no-files-found: ignore
+          retention-days: 3
+
+      # tar preserva a permissao de execucao (zip do artifact nao preserva)
+      - name: Empacotar build
+        run: tar -czf "v1-build-${{ steps.plat.outputs.plat }}.tar.gz" -C build .
+
+      - name: Enviar build
+        uses: actions/upload-artifact@v7
+        with:
+          path: v1-build-${{ steps.plat.outputs.plat }}.tar.gz
+          archive: false
+          if-no-files-found: error
+          retention-days: 3

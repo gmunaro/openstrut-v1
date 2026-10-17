@@ -1,0 +1,3 @@
+# exe: SISTRUT
+# Menu principal: tela, informacoes, fim
+{TELA menu}{F1}{TELA info}x{F2}

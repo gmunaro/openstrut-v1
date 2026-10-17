@@ -1,0 +1,232 @@
+' ============================================================================
+'  CALCCA.BM - nucleo de calculo de concreto armado (NB-1/78), compartilhado
+'  por LAJE, VIGA, ARMADURA e PILAR.
+'
+'  RECONSTRUCAO FUNCIONAL: o binario original nao expoe as formulas. Aqui
+'  estao os procedimentos classicos da NB-1/78 com diagrama retangular
+'  (0,85 fcd em 0,8 x) para flexao simples e cisalhamento.
+'
+'  Unidades (as do SISTRUT): forcas em tf, comprimentos em cm,
+'  tensoes em tf/cm2, momentos em tf.cm. Ex.: Fck 0.15 tf/cm2 (15 MPa),
+'  Fyk 5.0 tf/cm2 (CA-50).
+'
+'  Uso: '$INCLUDE: '../common/CALCCA.BM' no fim do modulo (so FUNCTIONs).
+' ============================================================================
+
+' Modulo de elasticidade do aco (tf/cm2) e conversao tf/cm2 -> MPa.
+' (QB nao aceita CONST em .BM incluido depois do codigo; usar as funcoes.)
+FUNCTION CcaEs# ()
+    CcaEs# = 2100#
+END FUNCTION
+
+FUNCTION CcaMPa# (tfcm2 AS DOUBLE)
+    CcaMPa# = tfcm2 * 98.0665#
+END FUNCTION
+
+' Deformacao de calculo de escoamento do aco longitudinal (NB-1/78):
+' classe A eyd = fyd/Es; classe B eyd = fyd/Es + 0,002 (CcaAcoClasse%).
+FUNCTION CcaEpsYd# (fyd AS DOUBLE)
+    IF CcaAcoClasse%(-1) = 1 THEN
+        CcaEpsYd# = fyd / CcaEs# + 0.002#
+    ELSE
+        CcaEpsYd# = fyd / CcaEs#
+    END IF
+END FUNCTION
+
+' Tensao (tf/cm2, com o sinal de eps) do aco para a deformacao eps, pelo
+' diagrama de calculo da classe corrente (CcaAcoClasse%). Classe A:
+' bilinear, s = Es eps <= fyd. Classe B (NB-1/78): eps = s/Es ate 0,7 fyd;
+' eps = s/Es + 0,823 (s/fyd - 0,7)^5 entre 0,7 fyd e fyd; fyd a partir de
+' eps = fyd/Es + 0,002. O trecho curvo e invertido por bisseccao.
+FUNCTION CcaTensaoAco# (eps AS DOUBLE, fyd AS DOUBLE)
+    DIM e AS DOUBLE, sg AS DOUBLE, lo AS DOUBLE, hi AS DOUBLE, mid AS DOUBLE, k AS INTEGER
+    e = ABS(eps): sg = SGN(eps)
+    IF CcaAcoClasse%(-1) <> 1 THEN
+        IF e * CcaEs# >= fyd THEN CcaTensaoAco# = sg * fyd ELSE CcaTensaoAco# = sg * e * CcaEs#
+        EXIT FUNCTION
+    END IF
+    IF e * CcaEs# <= 0.7# * fyd THEN CcaTensaoAco# = sg * e * CcaEs#: EXIT FUNCTION
+    IF e >= CcaEpsYd#(fyd) THEN CcaTensaoAco# = sg * fyd: EXIT FUNCTION
+    lo = 0.7# * fyd: hi = fyd
+    FOR k = 1 TO 60
+        mid = (lo + hi) / 2#
+        IF mid / CcaEs# + 0.823# * (mid / fyd - 0.7#) ^ 5 < e THEN lo = mid ELSE hi = mid
+    NEXT
+    CcaTensaoAco# = sg * (lo + hi) / 2#
+END FUNCTION
+
+' Profundidade relativa limite x/d entre dominios 3 e 4 (ductilidade):
+' 0,0035 / (0,0035 + eyd), com eyd da classe do aco (CcaEpsYd#).
+' CA-50: classe A 0,628; classe B 0,462.
+FUNCTION CcaXdLim# (fyd AS DOUBLE)
+    CcaXdLim# = 0.0035# / (0.0035# + CcaEpsYd#(fyd))
+END FUNCTION
+
+' Linha neutra (cm) da secao retangular b x d sob momento de calculo md.
+' Retorna -1 se a secao nao resiste (precisa armadura dupla ou maior altura).
+FUNCTION CcaLinhaNeutra# (md AS DOUBLE, b AS DOUBLE, d AS DOUBLE, fcd AS DOUBLE, fyd AS DOUBLE)
+    DIM r AS DOUBLE, x AS DOUBLE
+    IF md <= 0 THEN CcaLinhaNeutra# = 0: EXIT FUNCTION
+    r = md / (0.425# * b * d * d * fcd)
+    IF r >= 1 THEN CcaLinhaNeutra# = -1: EXIT FUNCTION
+    x = 1.25# * d * (1 - SQR(1 - r))
+    IF x / d > CcaXdLim#(fyd) THEN CcaLinhaNeutra# = -1: EXIT FUNCTION
+    CcaLinhaNeutra# = x
+END FUNCTION
+
+' Armadura de tracao (cm2) para flexao simples, secao retangular.
+' md em tf.cm (ja majorado), b e d em cm. Retorna -1 se secao insuficiente.
+' A tensao do aco vem do diagrama da classe (CcaTensaoAco#) com
+' es = 0,0035 (d - x) / x; dentro do limite x/d (CcaXdLim#) ela e fyd.
+FUNCTION CcaAsFlexao# (md AS DOUBLE, b AS DOUBLE, d AS DOUBLE, fcd AS DOUBLE, fyd AS DOUBLE)
+    DIM x AS DOUBLE
+    x = CcaLinhaNeutra#(md, b, d, fcd, fyd)
+    IF x < 0 THEN CcaAsFlexao# = -1: EXIT FUNCTION
+    IF x = 0 THEN CcaAsFlexao# = 0: EXIT FUNCTION
+    CcaAsFlexao# = md / (CcaTensaoAco#(0.0035# * (d - x) / x, fyd) * (d - 0.4# * x))
+END FUNCTION
+
+' Momento resistente maximo (tf.cm) da secao sem armadura de compressao.
+FUNCTION CcaMdLim# (b AS DOUBLE, d AS DOUBLE, fcd AS DOUBLE, fyd AS DOUBLE)
+    DIM x AS DOUBLE
+    x = CcaXdLim#(fyd) * d
+    CcaMdLim# = 0.85# * fcd * b * 0.8# * x * (d - 0.4# * x)
+END FUNCTION
+
+' Armadura minima (cm2): taxa geometrica sobre b*h (ex.: 0.0015 lajes/vigas CA-50).
+FUNCTION CcaAsMin# (b AS DOUBLE, h AS DOUBLE, taxa AS DOUBLE)
+    CcaAsMin# = taxa * b * h
+END FUNCTION
+
+' Estribos verticais (cm2 por metro) para cortante de calculo vd (tf),
+' sem a taxa de armadura longitudinal: usa psi1 = 0,07 (minimo, a favor da
+' seguranca). Ver CcaAswEstriboRho#. Retorna -1 se a biela esmaga.
+FUNCTION CcaAswEstribo# (vd AS DOUBLE, bw AS DOUBLE, d AS DOUBLE, fck AS DOUBLE, fcd AS DOUBLE, fyd AS DOUBLE)
+    CcaAswEstribo# = CcaAswEstriboRho#(vd, bw, d, fck, fcd, fyd, 0#)
+END FUNCTION
+
+' Estribos verticais (cm2 por metro) para cortante de calculo vd (tf) com a
+' armadura longitudinal tracionada asl (cm2) na secao.
+' NB-1/78: twd = vd/(bw d); twu = min(0,25 fcd ; 4,5 MPa);
+'          tc = psi1 raiz(fck MPa), psi1 = 0,07 + 5 rho1 <= 0,14,
+'          rho1 = asl/(bw d); td = 1,15 twd - tc.
+' Retorna -1 se twd > twu (esmagamento da biela: aumentar secao).
+' Nao aplica armadura minima (ver CcaAswMin#).
+FUNCTION CcaAswEstriboRho# (vd AS DOUBLE, bw AS DOUBLE, d AS DOUBLE, fck AS DOUBLE, fcd AS DOUBLE, fyd AS DOUBLE, asl AS DOUBLE)
+    DIM twd AS DOUBLE, twu AS DOUBLE, tc AS DOUBLE, td AS DOUBLE, psi1 AS DOUBLE
+    twd = ABS(vd) / (bw * d)
+    twu = 0.25# * fcd
+    IF twu > 4.5# / 98.0665# THEN twu = 4.5# / 98.0665#
+    IF twd > twu THEN CcaAswEstriboRho# = -1: EXIT FUNCTION
+    psi1 = 0.07# + 5# * asl / (bw * d)
+    IF psi1 > 0.14# THEN psi1 = 0.14#
+    tc = psi1 * SQR(CcaMPa#(fck)) / 98.0665#
+    td = 1.15# * twd - tc
+    IF td < 0 THEN td = 0
+    CcaAswEstriboRho# = td * bw / fyd * 100#
+END FUNCTION
+
+' Estribo minimo (cm2/m): taxa * bw * 100 (NB-1/78: 0.0014 para CA-50/60).
+FUNCTION CcaAswMin# (bw AS DOUBLE, taxa AS DOUBLE)
+    CcaAswMin# = taxa * bw * 100#
+END FUNCTION
+
+' Taxa minima de estribos rho_w,min (NB-1/78) para o aco de fyk (tf/cm2):
+' 0,14% para CA-50 e CA-60. Usada por VIGCALC, ARMADURA e DESDIM.
+' RECONSTRUCAO: 0,25% para acos de fyk < 4,5 tf/cm2 (CA-25/32/40) nao foi
+' conferido no texto da NB-1/78; valor maior, a favor da seguranca.
+FUNCTION CcaRhoWMin# (fyk AS DOUBLE)
+    IF fyk < 4.5# THEN CcaRhoWMin# = 0.0025# ELSE CcaRhoWMin# = 0.0014#
+END FUNCTION
+
+' Area (cm2) de uma barra de diametro phi (mm).
+FUNCTION CcaAreaBarra# (phi AS DOUBLE)
+    CcaAreaBarra# = 3.14159265358979# * (phi / 10#) ^ 2 / 4#
+END FUNCTION
+
+' Bitola comercial (mm) de indice i = 1..9 (5; 6.3; 8; 10; 12.5; 16; 20; 25; 32).
+FUNCTION CcaBitola# (i AS INTEGER)
+    SELECT CASE i
+        CASE 1: CcaBitola# = 5
+        CASE 2: CcaBitola# = 6.3#
+        CASE 3: CcaBitola# = 8
+        CASE 4: CcaBitola# = 10
+        CASE 5: CcaBitola# = 12.5#
+        CASE 6: CcaBitola# = 16
+        CASE 7: CcaBitola# = 20
+        CASE 8: CcaBitola# = 25
+        CASE ELSE: CcaBitola# = 32
+    END SELECT
+END FUNCTION
+
+' Escolhe armadura distribuida (lajes/estribos) para asm (cm2/m):
+' menor bitola >= phiMin cujo espacamento cabe entre sMin e sMax (cm).
+' Devolve phi (mm) e s (cm, multiplo de 0.5 para baixo). phi = 0 se nao achou.
+SUB CcaEscolheMalha (asm AS DOUBLE, phiMin AS DOUBLE, sMin AS DOUBLE, sMax AS DOUBLE, phi AS DOUBLE, s AS DOUBLE)
+    DIM i AS INTEGER, sc AS DOUBLE
+    phi = 0: s = 0
+    FOR i = 1 TO 9
+        IF CcaBitola#(i) >= phiMin THEN
+            IF asm <= 0 THEN
+                sc = sMax
+            ELSE
+                sc = INT(CcaAreaBarra#(CcaBitola#(i)) * 100# / asm * 2#) / 2#
+            END IF
+            IF sc > sMax THEN sc = sMax
+            IF sc >= sMin THEN phi = CcaBitola#(i): s = sc: EXIT SUB
+        END IF
+    NEXT
+END SUB
+
+' Escolhe barras longitudinais (vigas/pilares) para asReq (cm2): menor numero de
+' barras (>= nMin) da menor bitola >= phiMin com n <= nMax. phi = 0 se nao achou.
+SUB CcaEscolheBarras (asReq AS DOUBLE, phiMin AS DOUBLE, nMin AS INTEGER, nMax AS INTEGER, phi AS DOUBLE, n AS INTEGER)
+    DIM i AS INTEGER, nc AS INTEGER
+    phi = 0: n = 0
+    FOR i = 1 TO 9
+        IF CcaBitola#(i) >= phiMin THEN
+            nc = -INT(-asReq / CcaAreaBarra#(CcaBitola#(i)))
+            IF nc < nMin THEN nc = nMin
+            IF nc <= nMax THEN phi = CcaBitola#(i): n = nc: EXIT SUB
+        END IF
+    NEXT
+END SUB
+
+' Largura (cm) de uma camada de n barras phi (mm) com espacamento livre
+' max(phi; 2 cm; 1,2 x brita 19 mm = 2,28 cm).
+FUNCTION CcaLarguraCamada# (n AS INTEGER, phi AS DOUBLE)
+    DIM esp AS DOUBLE
+    esp = phi / 10#: IF esp < 2.28# THEN esp = 2.28#
+    CcaLarguraCamada# = n * phi / 10# + (n - 1) * esp
+END FUNCTION
+
+' Escolhe barras (phi mm, n) para asReq (cm2) numa camada que caiba na
+' largura util bw - 2 (cobLat + 0,5) (cobLat = cobrimento lateral em cm,
+' 0,5 = estribo de 5 mm). Prefere a menor bitola >= 10 mm com n <= 8 que
+' cabe. Resultado em cabe%: 1 cabe; 0 nenhum arranjo cabe e foi escolhido o
+' mais estreito; -1 sem solucao (mais de 8 barras de 32 mm), phi = n = 0.
+SUB CcaEscolheBarrasBw (asReq AS DOUBLE, bw AS DOUBLE, cobLat AS DOUBLE, phi AS DOUBLE, n AS INTEGER, cabe AS INTEGER)
+    DIM i AS INTEGER, nc AS INTEGER, p AS DOUBLE, util AS DOUBLE, larg AS DOUBLE, melhor AS DOUBLE
+    phi = 0: n = 0: cabe = -1: melhor = 1E+30
+    util = bw - 2# * (cobLat + 0.5#)
+    FOR i = 4 TO 9
+        p = CcaBitola#(i)
+        nc = -INT(-asReq / CcaAreaBarra#(p))
+        IF nc < 2 THEN nc = 2
+        IF nc <= 8 THEN
+            larg = CcaLarguraCamada#(nc, p)
+            IF larg <= util THEN phi = p: n = nc: cabe = 1: EXIT SUB
+            IF larg < melhor THEN melhor = larg: phi = p: n = nc: cabe = 0
+        END IF
+    NEXT
+END SUB
+
+' Classe do aco longitudinal (NB-1/78): 0 = classe A (laminado a quente,
+' diagrama bilinear; padrao), 1 = classe B (encruado a frio). Valor guardado
+' entre chamadas: novo = 0 ou 1 define; novo = -1 so consulta. Os modulos
+' definem a partir do INI ("TIPO DE ACO" A/B); os calculos consultam.
+FUNCTION CcaAcoClasse% (novo AS INTEGER)
+    STATIC atual AS INTEGER
+    IF novo = 0 OR novo = 1 THEN atual = novo
+    CcaAcoClasse% = atual
+END FUNCTION

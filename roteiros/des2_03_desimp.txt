@@ -1,0 +1,11 @@
+# exe: DESIMP
+# DESIMP, obra FLUXO: lista de vigas, nome inexistente, desenho de V3 e V2,
+# Enter em branco abre a TABELA de aco, X grava o DXF da tabela.
+{TELA im_01_lista}v3{ENTER}
+{TELA im_02_v3}{SPACE}{SPACE}
+{TELA im_03_lista_volta}NAOEXISTE{ENTER}
+{TELA im_04_inexiste}{ENTER}
+{TELA im_05_lista_again}v2{ENTER}
+{TELA im_06_v2}{SPACE}{SPACE}
+{TELA im_07_lista_fim}{ENTER}
+{TELA im_08_tabela}X

@@ -1,0 +1,12 @@
+# Caso (b) da viga, com mais telas: VIGA opcao 7 (Processar com Resumo de cargas nos Pilares),
+# obra E2E (gravada pelo original no caso a), lista das vigas, todas as 6 vigas, apoios como
+# gerados, multiplicador 100%, resultados na impressora, sem diagrama e sem esquema, grava E2E.REP.
+{TELA v01_menu_viga}7{ESPERA Nome da Obra}{PAUSA 1}{TELA v02_nome_obra}E2E{ENTER}{ESPERA Listo as Vigas}{PAUSA 1}{TELA v03_listo}
+S{ENTER}{ESPERA Qualquer Tecla}{PAUSA 1}{TELA v04_lista}{ENTER}{ESPERA Relisto}{PAUSA 1}{TELA v05_relisto}
+{ENTER}{ESPERA Continuo}{PAUSA 1}{TELA v06_continuo}{ENTER}{ESPERA Todas as Vigas}{PAUSA 1}{TELA v07_todas}
+S{ENTER}{ESPERA Registro 1}{PAUSA 1}{TELA v08_reg1}{ENTER}{ESPERA Registro 2}{ENTER}{ESPERA Registro 3}{ENTER}
+{ESPERA Registro 4}{ENTER}{ESPERA Registro 5}{ENTER}{ESPERA Registro 6}{PAUSA 1}{TELA v09_reg6}{ENTER}
+{ESPERA Vigas Apoiadas}{PAUSA 1}{TELA v10_mult}{ENTER}{ESPERA Imprimo os Resultados}{PAUSA 1}{TELA v11_saida}
+S{ENTER}{ESPERA Diagrama de Esforcos}{ENTER}{ESPERA esquema estrutural}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA v12_corretos}
+{ENTER}{ESPERA para seguir}{PAUSA 1}{TELA v13_seguir}{ENTER}{ESPERA GRAVO A SOMATORIA|180}{PAUSA 1}{TELA v14_reacoes}
+S{ENTER}{ESPERA escolha opcao}{PAUSA 3}{TELA v15_menu_fim}

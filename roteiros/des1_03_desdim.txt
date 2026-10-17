@@ -1,0 +1,66 @@
+# exe: DESENHO
+# DESENHO > D (DESDIM): obra FLUXO (roteiros/des1_03_desdim.dados).
+# Lista de vigas (nome inexistente, minusculas, ENTER vazio para sair); tramos
+# (ENTER avanca, ESC volta a lista, tecla livre avanca); A com N/S, regioes P/E/D,
+# erros de tramo, regiao, bitola, quantidade e area; B com Bw/Hw, h<=4, bw<=0 e
+# momento alto. Sai pela lista (ENTER vazio) e por F2 no menu do DESENHO.
+{TELA menu}
+D{TELA lista}
+XX{ENTER}
+{TELA apos_xx}
+D
+v1{ENTER}
+{TELA tramo1}
+{ENTER}
+{TELA tramo2}
+{ESC}
+{TELA lista_esc}
+V1{ENTER}
+A{ESC}
+{TELA a_cancela}
+AN
+{TELA a_nao}
+AS{ENTER}
+{TELA a_tramo_zero}
+AS{BS}9{ENTER}
+{TELA a_tramo_fora}
+{ENTER}
+AS{BS}1{ENTER}X{ENTER}
+{TELA a_regiao_x}
+{ENTER}
+AS{BS}1{ENTER}P{ENTER}{BS}7{ENTER}
+{TELA a_bitola_7}
+{ENTER}
+AS{BS}1{ENTER}P{ENTER}{BS}5{ENTER}{BS}1{ENTER}
+{TELA a_insuf_p}
+{ENTER}
+AS{BS}1{ENTER}P{ENTER}{BS}5{ENTER}{ENTER}
+{TELA a_qtd_zero}
+{ENTER}
+AS{BS}1{ENTER}P{ENTER}{BS}16{ENTER}{BS}4{ENTER}
+{TELA a_ok_p}
+AS{BS}1{ENTER}D{ENTER}{BS}8{ENTER}{BS}1{ENTER}
+{TELA a_insuf_d}
+{ENTER}
+AS{BS}1{ENTER}d{ENTER}{BS}8{ENTER}{BS}2{ENTER}
+{TELA a_ok_d}
+AS{BS}1{ENTER}e{ENTER}{BS}10{ENTER}{BS}2{ENTER}
+{TELA a_ok_e}
+B{BS}{BS}{BS}{BS}12{ENTER}{BS}{BS}{BS}{BS}40{ENTER}
+{TELA b_ok}
+B{BS}{BS}{BS}{BS}12{ENTER}{BS}{BS}{BS}{BS}4{ENTER}
+{TELA b_h4}
+{ENTER}
+B{BS}{BS}{BS}{BS}0{ENTER}{ENTER}
+{TELA b_bw0}
+{ENTER}
+B{BS}{BS}{BS}{BS}6{ENTER}{BS}{BS}{BS}{BS}40{ENTER}
+{TELA b_bw6}
+{ENTER}
+N
+{TELA b_bw6_n}
+{ESC}
+{TELA lista_fim}
+{ENTER}
+{TELA menu_volta}
+{F2}

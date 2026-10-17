@@ -1,0 +1,82 @@
+{
+ "_leia": "Correcoes da familia DESENHO lidas por tools/retraduz.py (somam-se as de CORRECOES). Chave = endereco da linha do lift; valor = linhas QB64 que substituem o comando, ou \"PROTECAO\" (comenta o comando). Aqui ficam so as marcas que desativam os trechos de verificacao de licenca do original.",
+ "DESENHO": {
+  "0x10e5a": [
+   "' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x10f92": "PROTECAO",
+  "0x10fa0": "PROTECAO",
+  "0x10fae": "PROTECAO",
+  "0x10fbc": "PROTECAO",
+  "0x50073": "PROTECAO",
+  "0x500e5": "PROTECAO",
+  "0x50157": "PROTECAO",
+  "0x501c9": "PROTECAO",
+  "0x5023b": [
+   "GOTO L_5025c   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x50252": "PROTECAO",
+  "0x5025c": "PROTECAO",
+  "0x50277": "PROTECAO",
+  "0x502a4": "PROTECAO",
+  "0x502b2": [
+   "GOTO L_502e0   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x502c9": "PROTECAO",
+  "0x502d1": "PROTECAO"
+ },
+ "DESDIM": {
+  "0x101b4": [
+   "GOTO L_10204   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x101cb": "PROTECAO",
+  "0x101d9": "PROTECAO",
+  "0x101e7": "PROTECAO",
+  "0x101f5": "PROTECAO"
+ },
+ "DESEDITA": {
+  "0x10191": [
+   "GOTO L_101e1   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x101a8": "PROTECAO",
+  "0x101b6": "PROTECAO",
+  "0x101c4": "PROTECAO",
+  "0x101d2": "PROTECAO"
+ },
+ "DESGRAF": {
+  "0x10143": [
+   "GOTO L_10193   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x1015a": "PROTECAO",
+  "0x10168": "PROTECAO",
+  "0x10176": "PROTECAO",
+  "0x10184": "PROTECAO"
+ },
+ "DESIMP": {
+  "0x1015c": [
+   "GOTO L_101ac   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x10173": "PROTECAO",
+  "0x10181": "PROTECAO",
+  "0x1018f": "PROTECAO",
+  "0x1019d": "PROTECAO"
+ },
+ "DESINIT": {
+  "0x10152": [
+   "GOTO L_101a2   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x10169": "PROTECAO",
+  "0x10177": "PROTECAO",
+  "0x10185": "PROTECAO",
+  "0x10193": "PROTECAO"
+ },
+ "DESEDCAO": {
+  "0x1014d": [
+   "GOTO L_1019d   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x10164": "PROTECAO",
+  "0x10172": "PROTECAO",
+  "0x10180": "PROTECAO",
+  "0x1018e": "PROTECAO"
+ }
+}

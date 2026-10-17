@@ -1,0 +1,3 @@
+# exe: SISTRUT
+# Sonda 00e: tecla 3 do menu LAJE, dados limpos (sem roteiro.txt.pos/.log herdados)
+{TELA s01_menu}L{TELA l01_menu_laje}3{TELA x01_destino}{F2}{TELA s02_menu}{F2}

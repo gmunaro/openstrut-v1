@@ -1,0 +1,4 @@
+# exe: SISTRUT
+# rev5_pilar_inval: letra no campo numerico bx da coluna P7 no PILGEEDI. Base de obra em rev5_pilar_inval.dados (copia de e2e_09_pilar.dados).
+# Abertura e niveis copiados de e2e_09_pilar.txt. Depois do nome e da secao, A no bx.
+{TELA s01_menu}I{ENTER}8{ENTER}{ENTER}{TELA p01_pilaredi}A{TELA g01_pilgeedi}1{TELA g02_niveis}{BS}2{ENTER}PAV2{ENTER}{BS}6{ENTER}{BS}3{ENTER}PAV1{ENTER}{BS}3{ENTER}{BS}3{ENTER}{TELA g03_niveis_ok}2P7{ENTER}{ENTER}{TELA c01_antes_bx}{BS}A{TELA c02_bx_letra}{ENTER}{TELA c03_apos_bx}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{TELA c04_fim_coluna}{ESC}{TELA c05_esc}{F2}{TELA c06_F2}{F2}{TELA c07_fim}

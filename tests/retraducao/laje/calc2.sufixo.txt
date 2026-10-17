@@ -1,0 +1,24 @@
+# Sufixo (a partir do menu do LAJE): LAJECALC com outras condicoes de contorno e direcoes.
+# Le E2E.LAJ; continuidade: elimina toda (E,T) e engasta o primeiro trecho da L1 (I);
+# direcao: L1 a 90 graus (D) e relacao 1.5 na L2 (R); espessuras minimas com visualizacao;
+# momentos/armaduras com impressao e depois so com a visualizacao das armaduras (3); volta ao LAJE.
+{TELA l01}6{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}
+4{ESPERA *RETORNO*}{PAUSA 2}E2E{ENTER}{ESPERA Continuo}{PAUSA 1}
+{ENTER}{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}
+7{ESPERA LAJES EM REGIME}{ESPERA escolha opcao}{PAUSA 2}
+3{ESPERA Calculo e Detalhamento}{ESPERA escolha opcao}{PAUSA 2}{TELA k00}
+1{ESPERA C O N T I N U I D A D E}{PAUSA 2}{TELA k01}E{ESPERA <T>oda}{PAUSA 1}{TELA k02}T{ESPERA <E>limina}{PAUSA 2}{TELA k03}
+I{ESPERA Imposicao de Engastamento}{PAUSA 1}{TELA k04}1{ENTER}{ESPERA Considero}{PAUSA 2}{TELA k05}S{ENTER}{PAUSA 2}{TELA k06}
+{ENTER}{PAUSA 2}{ENTER}{PAUSA 2}{ENTER}{ESPERA <E>limina}{PAUSA 2}{TELA k07}
+F{ESPERA escolha opcao}{PAUSA 2}{TELA k08}
+2{ESPERA <F>im}{PAUSA 2}{TELA k10}D{ESPERA Alterar a Direcao}{PAUSA 1}1{ENTER}{ESPERA Nova Direcao}{PAUSA 1}{TELA k11}
+90{ENTER}{PAUSA 3}{TELA k12}{ENTER}{ESPERA <F>im}{PAUSA 2}{TELA k13}
+R{ESPERA Alterar a Relacao}{PAUSA 1}2{ENTER}{ESPERA Nova Relacao}{PAUSA 1}{TELA k14}1.5{ENTER}{PAUSA 3}{TELA k15}
+{ENTER}{ESPERA <F>im}{PAUSA 2}{TELA k16}F{ESPERA escolha opcao}{PAUSA 2}{TELA k17}
+3{ESPERA TODAS}{PAUSA 1}{ENTER}{ESPERA Imprimo Relatorio}{PAUSA 1}S{ENTER}{ESPERA Visualizo}{PAUSA 1}S{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA k18}
+{ENTER}{ESPERA para seguir}{PAUSA 1}{TELA k19}{ENTER}{PAUSA 5}{TELA k20}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA k21}
+5{ESPERA Momentos/Armaduras}{ESPERA TODAS}{PAUSA 1}{ENTER}{ESPERA Imprimo Relatorio}{PAUSA 1}S{ENTER}{ESPERA Visualizo}{PAUSA 1}{ENTER}{ESPERA Deseja Visualizar}{PAUSA 1}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA k22}
+{ENTER}{ESPERA para seguir}{PAUSA 1}{TELA k23}{ENTER}{ESPERA escolha opcao|180}{PAUSA 2}{TELA k24}
+5{ESPERA Momentos/Armaduras}{ESPERA TODAS}{PAUSA 1}{ENTER}{ESPERA Imprimo Relatorio}{PAUSA 1}N{ENTER}{ESPERA Visualizo}{PAUSA 1}S{ENTER}{ESPERA <I>solada}{PAUSA 1}{TELA k25}{ENTER}{ESPERA Deseja Visualizar}{PAUSA 1}3{ESPERA Dados Corretos}{PAUSA 1}{TELA k26}
+{ENTER}{ESPERA Qualquer Tecla}{PAUSA 1}{TELA k27_tabela}{ENTER}{PAUSA 5}{TELA k28_painel}{ENTER}{ESPERA escolha opcao|180}{PAUSA 2}{TELA k29}
+8{ESPERA LAJES EM REGIME}{ESPERA escolha opcao}{PAUSA 2}{TELA l03}

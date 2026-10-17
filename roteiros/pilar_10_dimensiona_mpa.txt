@@ -1,0 +1,5 @@
+# exe: PILAR
+# PILAREDI opcao S (Dimensiona), obra FLUXO, coluna 1 (P4 20x30), INI com Fck 15 e Fyk 500 em MPa (grandeza 0,01), N = 100 tf
+# {BS} apaga o padrao (1) do campo numerico do nivel; sem ele o campo vira "11" e o nivel e ignorado.
+# Ver pilar_09_dimensiona.txt: a armadura e o detalhe devem coincidir com os do roteiro 09
+{TELA p10_abertura}{ENTER}{TELA p10_obra}8{TELA p10_obra2}{ENTER}S{TELA p10_pos}1{ENTER}{TELA p10_dim}N{TELA p10_detpos}{BS}1{ENTER}{TELA p10_det}{ENTER}{TELA p10_volta}{ESC}{TELA p10_fim}{F2}{F2}

@@ -1,0 +1,7 @@
+# exe: VPLOTA
+# VPLOTA, obra FLUXO. Item 4 (RESUMO GERAL DA FOLHA): sessao 1 do des2_05 ate a tela de resumo.
+# A obra FLUXO tem uma folha (FLUXO_F1) e uma so viga na lista ("1 FLUXO_V.VET"); o ENTER da lista
+# seleciona a viga e leva ao prompt "Gravo o conjunto ... S/N". O S grava o AVF e mostra o resumo.
+# Depois do resumo, um Enter; no menu do resultado, C e S cancelam as montagens e o F2 sai.
+1N{ENTER}{TELA lac04_01_obra}{ENTER}{TELA lac04_02_grava_avf}S{TELA lac04_03_resumo_f1}{ENTER}{TELA lac04_04_apos_resumo}C{TELA lac04_05_cancela}S
+{F2}

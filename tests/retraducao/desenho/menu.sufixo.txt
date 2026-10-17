@@ -1,0 +1,13 @@
+# Caso menu (a partir do menu do DESENHO), obra E2E ja detalhada pelo original (E2E.SEC/.FOR/.TAB do caso det).
+# Tecla invalida; F1 (bipa) e Esc (volta ao menu) com a tecla seguinte; item 5 (parametros, sem alterar);
+# item 6 (drive e diretorios, ENTER nos quatro); item 3 (listagem de todas as vigas); item 4 (resumo de
+# ferragem, impresso); item 2 (editadas: sem nome volta); Esc na pergunta do item 1; F2 volta ao gerenciador.
+{TELA m00}x{PAUSA 2}{TELA m01}{F1}{ENTER}{PAUSA 2}{TELA m02}{ESC}{ENTER}{PAUSA 3}{TELA m03}
+5{ESPERA item , VALOR}{PAUSA 1}{TELA p01}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA p02}
+6{ESPERA Vigas (.VIG}{PAUSA 1}{TELA a01}{ENTER}{ESPERA Editadas (.EDV)}{PAUSA 1}{TELA a02}{ENTER}{ESPERA (.DSP)}{PAUSA 1}{TELA a03}{ENTER}{ESPERA (.DXF}{PAUSA 1}{TELA a04}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA a05}
+3{ESPERA Nome da Obra}{PAUSA 2}{TELA l01}E2E{ENTER}{ESPERA serao listadas}{PAUSA 1}{TELA l02}S{ENTER}{PAUSA 6}{TELA l03}{ENTER}{PAUSA 6}{TELA l04}{ENTER}{PAUSA 6}{TELA l05}{ENTER}{PAUSA 6}{TELA l06}{ENTER}{PAUSA 6}{TELA l07}{ENTER}{PAUSA 6}{TELA l08}{ENTER}{PAUSA 6}{TELA l09}{ENTER}{PAUSA 6}{TELA l10}
+{ESPERA escolha opcao}{PAUSA 2}{TELA l11}
+4{ESPERA Nome da Obra}{PAUSA 2}{TELA r01}E2E{ENTER}{ESPERA a anular}{PAUSA 2}{TELA r02}{ENTER}{ESPERA Resumo Geral}{PAUSA 2}{TELA r03}S{ENTER}{ESPERA para seguir}{PAUSA 2}{TELA r03b}{ENTER}{ESPERA Qualquer Tecla}{PAUSA 3}{TELA r04}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA r05}
+2{ESPERA Nome da Obra}{PAUSA 2}{TELA e01}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA e02}
+1{ESPERA Nome da Obra}{PAUSA 2}{TELA x01}{ESC}{ENTER}{PAUSA 4}{TELA x02}
+{F2}{ENTER}{ESPERA Configuracao|60}{PAUSA 2}{TELA s01}

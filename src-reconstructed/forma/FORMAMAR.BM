@@ -1,0 +1,60 @@
+' ============================================================================
+'  FORMAMAR.BM - geometria da amarracao de pilares e vigas na forma (FORMEDCA).
+'  Sem tela e sem I/O. Testado em tests/T_FORMAMAR.BAS.
+'
+'  Num sentido (X ou Y), um elemento e um intervalo: centro e dimensao.
+'  "lado" escolhe o ponto do intervalo que e amarrado ou que serve de
+'  referencia: -1 face esquerda (X) ou inferior (Y), 0 centro ou eixo,
+'  +1 face direita (X) ou superior (Y).
+'  Unidade livre, a mesma em todos os argumentos: quem chama converte
+'  (FORMEDCA trabalha em m; bx, by e bw vem em cm e sao divididos por 100).
+' ============================================================================
+
+' Coordenada do lado `lado` de um elemento com esse centro e essa dimensao.
+FUNCTION FaFace# (centro AS DOUBLE, dimensao AS DOUBLE, lado AS INTEGER)
+    FaFace# = centro + lado * dimensao / 2
+END FUNCTION
+
+' Centro que poe o lado `lado` do elemento na coordenada alvo.
+FUNCTION FaCentro# (alvo AS DOUBLE, dimensao AS DOUBLE, lado AS INTEGER)
+    FaCentro# = alvo - lado * dimensao / 2
+END FUNCTION
+
+' Coordenada alvo a partir da referencia: ref + dist * cos(ang), ang em graus
+' a partir do sentido amarrado (0 = a distancia inteira no sentido).
+' RECONSTRUCAO: o EXE pede "Xref , + - Dist , Angulo"; a projecao pelo
+' cosseno e inferida (o calculo do original nao foi decodificado).
+FUNCTION FaAlvo# (ref AS DOUBLE, dist AS DOUBLE, ang AS DOUBLE)
+    FaAlvo# = ref + dist * COS(ang * 3.14159265358979# / 180)
+END FUNCTION
+
+' Lado de um ponto do pilar no sentido s (1 = X, 2 = Y). k = 0 e o centro;
+' 1..4 sao os vertices: 1 inferior esquerdo, 2 inferior direito,
+' 3 superior direito, 4 superior esquerdo.
+FUNCTION FaLadoVertice% (k AS INTEGER, s AS INTEGER)
+    FaLadoVertice% = 0
+    IF k < 1 OR k > 4 THEN EXIT FUNCTION
+    IF s = 1 THEN
+        IF k = 1 OR k = 4 THEN FaLadoVertice% = -1 ELSE FaLadoVertice% = 1
+    ELSE
+        IF k <= 2 THEN FaLadoVertice% = -1 ELSE FaLadoVertice% = 1
+    END IF
+END FUNCTION
+
+' Move so a face `lado` (-1 ou +1) para alvo; a face oposta fica onde esta.
+' Atualiza centro e dimensao (largura positiva: se alvo passar da outra face,
+' as faces trocam de papel).
+SUB FaMoveFace (centro AS DOUBLE, dimensao AS DOUBLE, lado AS INTEGER, alvo AS DOUBLE)
+    DIM outra AS DOUBLE
+    outra = FaFace#(centro, dimensao, -lado)
+    centro = (alvo + outra) / 2
+    dimensao = ABS(alvo - outra)
+END SUB
+
+' Sentido em que as faces de uma viga reta (x1,y1)-(x2,y2) sao amarradas:
+' 1 = X (viga vertical), 2 = Y (viga horizontal), 0 = inclinada ou sem comprimento.
+FUNCTION FaSentidoViga% (x1 AS DOUBLE, y1 AS DOUBLE, x2 AS DOUBLE, y2 AS DOUBLE)
+    FaSentidoViga% = 0
+    IF ABS(x2 - x1) < 0.000001 AND ABS(y2 - y1) >= 0.000001 THEN FaSentidoViga% = 1
+    IF ABS(y2 - y1) < 0.000001 AND ABS(x2 - x1) >= 0.000001 THEN FaSentidoViga% = 2
+END FUNCTION

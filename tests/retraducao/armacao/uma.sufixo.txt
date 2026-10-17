@@ -1,0 +1,27 @@
+# Sufixo (a partir do menu do ARMADURA): 4 Calculo de uma Secao. Retangular 20x50 sem impressao
+# (tabelas de Mk e Vk tela a tela); circular com Fck 0.2 (Fyk 0 recusado) impressa; Te impressa;
+# trapezoidal com Bsup menor que Binf e aco A impressa; triangular invertida impressa;
+# "Dados Corretos" = N; saida pelo tipo (F = FIM).
+{ESTAVEL 10}
+4{ESPERA Processamento de uma Secao}{ESPERA Fck}{PAUSA 1}{TELA u01}{ENTER}{ESPERA Fyk}{PAUSA 1}{TELA u02}{ENTER}{ESPERA Tipo de Aco}{PAUSA 1}{TELA u03}
+{ENTER}{ESPERA Escolha o tipo}{PAUSA 1}{TELA u04}
+R{ESPERA RETORNO}{PAUSA 1}20,50{ENTER}{ESPERA Bf(cm)}{PAUSA 1}{ENTER}{ESPERA Flexao}{PAUSA 1}{ENTER}{ESPERA Cisalhamento}{PAUSA 1}{ENTER}{ESPERA Imprimo}{PAUSA 1}{TELA u05}
+{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA u06}{ENTER}{PAUSA 4}{ESPERA dc+50fi|120}{TELA u07}{ENTER}{PAUSA 4}{ESPERA dc+50fi|120}{TELA u08}
+{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA a01}
+4{ESPERA Processamento de uma Secao}{ESPERA Fck}{PAUSA 1}0.2{ENTER}{ESPERA Fyk}{PAUSA 1}0{ENTER}{PAUSA 2}{TELA u09}{ENTER}{ESPERA Tipo de Aco}{PAUSA 1}
+{ENTER}{ESPERA Escolha o tipo}{PAUSA 1}C{ESPERA RETORNO}{PAUSA 1}50,45{ENTER}{ESPERA Flexao}{PAUSA 1}{ENTER}{ESPERA Cisalhamento}{PAUSA 1}
+{ENTER}{ESPERA Imprimo}{PAUSA 1}S{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA u10}{ENTER}{ESPERA escolha opcao|180}{PAUSA 2}{TELA a02}
+4{ESPERA Processamento de uma Secao}{ESPERA Fck}{PAUSA 1}{ENTER}{ESPERA Fyk}{PAUSA 1}{ENTER}{ESPERA Tipo de Aco}{PAUSA 1}{ENTER}{ESPERA Escolha o tipo}{PAUSA 1}
+R{ESPERA RETORNO}{PAUSA 1}15,60,55{ENTER}{ESPERA Bf(cm)}{PAUSA 1}60,10{ENTER}{ESPERA Flexao}{PAUSA 1}12.5,16,20{ENTER}{ESPERA Cisalhamento}{PAUSA 1}
+{ENTER}{ESPERA Imprimo}{PAUSA 1}S{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{ENTER}{ESPERA escolha opcao|180}{PAUSA 2}{TELA a03}
+4{ESPERA Processamento de uma Secao}{ESPERA Fck}{PAUSA 1}{ENTER}{ESPERA Fyk}{PAUSA 1}{ENTER}{ESPERA Tipo de Aco}{PAUSA 1}a{ENTER}{ESPERA Escolha o tipo}{PAUSA 1}
+Z{ESPERA RETORNO}{PAUSA 1}40,20,60{ENTER}{ESPERA Flexao}{PAUSA 1}{ENTER}{ESPERA Cisalhamento}{PAUSA 1}
+{ENTER}{ESPERA Imprimo}{PAUSA 1}S{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{ENTER}{ESPERA escolha opcao|180}{PAUSA 2}{TELA a04}
+4{ESPERA Processamento de uma Secao}{ESPERA Fck}{PAUSA 1}{ENTER}{ESPERA Fyk}{PAUSA 1}{ENTER}{ESPERA Tipo de Aco}{PAUSA 1}b{ENTER}{ESPERA Escolha o tipo}{PAUSA 1}
+I{ESPERA RETORNO}{PAUSA 1}30,60,55{ENTER}{ESPERA Flexao}{PAUSA 1}{ENTER}{ESPERA Cisalhamento}{PAUSA 1}
+{ENTER}{ESPERA Imprimo}{PAUSA 1}S{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{ENTER}{ESPERA escolha opcao|180}{PAUSA 2}{TELA a05}
+4{ESPERA Processamento de uma Secao}{ESPERA Fck}{PAUSA 1}{ENTER}{ESPERA Fyk}{PAUSA 1}{ENTER}{ESPERA Tipo de Aco}{PAUSA 1}{ENTER}{ESPERA Escolha o tipo}{PAUSA 1}
+T{ESPERA RETORNO}{PAUSA 1}30,60{ENTER}{ESPERA Flexao}{PAUSA 1}{ENTER}{ESPERA Cisalhamento}{PAUSA 1}
+{ENTER}{ESPERA Imprimo}{PAUSA 1}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}N{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA a06}
+4{ESPERA Processamento de uma Secao}{ESPERA Fck}{PAUSA 1}{ENTER}{ESPERA Fyk}{PAUSA 1}{ENTER}{ESPERA Tipo de Aco}{PAUSA 1}{ENTER}{ESPERA Escolha o tipo}{PAUSA 1}
+F{ESPERA escolha opcao}{PAUSA 2}{TELA a07}

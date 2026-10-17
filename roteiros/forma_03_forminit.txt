@@ -1,0 +1,6 @@
+# exe: FORMINIT
+# FORMINIT direto, sem menu: obra FLUXO de forma_03_forminit.dados.
+# O programa grava <obra>.FIN e chama o FORMEDCA (encadeamento do original);
+# S sai do FORMEDCA sem gravar.
+{TELA init_inicio}
+{TELA init_formedca}S

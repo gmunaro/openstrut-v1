@@ -1,0 +1,33 @@
+# exe: VIGA
+# VIGA cenario (item 3 do coordenador): viga V17 com 17 tramos sem balanco (18 apoios). Antes da correcao,
+# o laco de apoios passava da linha 25 (LOCATE fora da tela). Agora os apoios viram de bloco em linha 10.
+# Esperado: sem erro; .VIG com 18 apoios, x = 0,5,...,85 (tramos de 5 m), y = 0.
+
+# 1 (arquivar): obra V10OBRA (padrao apagado com 8 BS); viga V17; 17 tramos sem balanco e sem engaste
+1{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}V10OBRA{ENTER}{TELA cad_obra}V17{ENTER}
+{BS}17{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{BS}20{ENTER}{BS}50{ENTER}
+{BS}5{ENTER}{BS}2{ENTER}N
+{BS}5{ENTER}{BS}2{ENTER}N
+{BS}5{ENTER}{BS}2{ENTER}N
+{BS}5{ENTER}{BS}2{ENTER}N
+{BS}5{ENTER}{BS}2{ENTER}N
+{BS}5{ENTER}{BS}2{ENTER}N
+{BS}5{ENTER}{BS}2{ENTER}N
+{BS}5{ENTER}{BS}2{ENTER}N
+{BS}5{ENTER}{BS}2{ENTER}N
+{BS}5{ENTER}{BS}2{ENTER}N
+{BS}5{ENTER}{BS}2{ENTER}N
+{BS}5{ENTER}{BS}2{ENTER}N
+{BS}5{ENTER}{BS}2{ENTER}N
+{BS}5{ENTER}{BS}2{ENTER}N
+{BS}5{ENTER}{BS}2{ENTER}N
+{BS}5{ENTER}{BS}2{ENTER}N
+{BS}5{ENTER}{BS}2{ENTER}N
+P1{ENTER}P2{ENTER}P3{ENTER}P4{ENTER}P5{ENTER}P6{ENTER}P7{ENTER}P8{ENTER}P9{ENTER}P10{ENTER}P11{ENTER}P12{ENTER}P13{ENTER}
+{TELA apoio_14}P14{ENTER}P15{ENTER}P16{ENTER}P17{ENTER}P18{ENTER}{TELA cad_viga}S
+{ENTER}{TELA cad_fim}
+
+# 6 -> 2 (gravar as vigas da memoria em V10OBRA.VIG, sobrescrevendo) e retorno
+6{TELA disco_v17}2{ENTER}S{TELA gravar_v17}{ENTER}8
+
+{TELA fim_v17}{F2}

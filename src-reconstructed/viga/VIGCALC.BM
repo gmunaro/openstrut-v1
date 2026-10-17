@@ -1,0 +1,341 @@
+' ============================================================================
+'  VIGCALC.BM - viga continua: analise, envoltoria e dimensionamento (NB-1/78)
+'  Sem I/O de tela. Usado por VIGA.BAS; testado em tests/T_VIGCALC.BAS.
+'
+'  RECONSTRUCAO FUNCIONAL: o binario original nao expoe as formulas.
+'  - Analise: metodo dos deslocamentos (rotacoes nos apoios), EI constante
+'    na viga, apoios verticais indeslocaveis; balancos nas extremidades
+'    (apoio "-") entram como momento conhecido no apoio vizinho; engaste nas
+'    extremidades (apoio "ENG") tem rotacao nula (sem grau de liberdade).
+'  - Envoltoria: permanente (qPerm + peso proprio + cargas concentradas) em
+'    todos os tramos, mais a acidental de cada tramo somada so quando
+'    desfavoravel (superposicao).
+'  - Dimensionamento: CALCCA.BM (flexao e estribos) e ARMCALC.BM (armadura
+'    dupla quando a armadura simples nao basta, ate As + As' = 4% Ac).
+'
+'  Unidades: m, tf, tf/m, tf.m; secao (bw, h, d) em cm; areas em cm2.
+'  Convencao de momento: positivo traciona embaixo.
+'  Requer SISDADOS.BI (Vig, VigApo, VigTra, VigCon), CALCCA.BM e ARMCALC.BM.
+' ============================================================================
+
+' Momento fletor (tf.m) a x m do inicio do tramo global ti, para o caso de
+' carga: q distribuida (tf/m), momento m0 e cortante v0 no inicio, e
+' cargas concentradas do tramo se comConc for verdadeiro.
+FUNCTION VcMomentoX# (ti AS INTEGER, q AS DOUBLE, m0 AS DOUBLE, v0 AS DOUBLE, x AS DOUBLE, comConc AS INTEGER)
+    DIM m AS DOUBLE, c AS INTEGER, a AS DOUBLE
+    m = m0 + v0 * x - q * x * x / 2
+    IF comConc THEN
+        FOR c = 0 TO VigTra(ti).nConc - 1
+            a = VigCon(VigTra(ti).iCon + c).a
+            IF x > a THEN m = m - VigCon(VigTra(ti).iCon + c).P * (x - a)
+        NEXT
+    END IF
+    VcMomentoX# = m
+END FUNCTION
+
+' Soma das cargas concentradas do tramo e seu momento em relacao ao fim do
+' tramo (sumP tf, sumPb tf.m, com b = L - a) e ao inicio (sumPa).
+SUB VcConcSomas (ti AS INTEGER, sumP AS DOUBLE, sumPa AS DOUBLE, sumPb AS DOUBLE)
+    DIM c AS INTEGER, a AS DOUBLE, P AS DOUBLE
+    sumP = 0: sumPa = 0: sumPb = 0
+    FOR c = 0 TO VigTra(ti).nConc - 1
+        a = VigCon(VigTra(ti).iCon + c).a: P = VigCon(VigTra(ti).iCon + c).P
+        sumP = sumP + P: sumPa = sumPa + P * a: sumPb = sumPb + P * (VigTra(ti).vao - a)
+    NEXT
+END SUB
+
+' Resolve um caso de carga da viga v. caso = 0: permanente (qPerm + pp +
+' concentradas); caso = t: so a acidental do tramo t. Devolve por tramo t
+' (1..nTramos): q(t) aplicada, momento m0(t) e cortante v0(t) no inicio,
+' momento mL(t) no fim. Retorna 0 se a viga e instavel.
+FUNCTION VcCaso% (v AS INTEGER, caso AS INTEGER, pp AS DOUBLE, q() AS DOUBLE, m0() AS DOUBLE, v0() AS DOUBLE, mL() AS DOUBLE)
+    DIM nT AS INTEGER, t AS INTEGER, ti AS INTEGER, j AS INTEGER, i AS INTEGER, k AS INTEGER, nd AS INTEGER
+    DIM cantE AS INTEGER, cantD AS INTEGER, L AS DOUBLE, fab AS DOUBLE, fba AS DOUBLE, kk AS DOUBLE
+    DIM sumP AS DOUBLE, sumPa AS DOUBLE, sumPb AS DOUBLE, a AS DOUBLE, b AS DOUBLE, P AS DOUBLE, c AS INTEGER
+    DIM fator AS DOUBLE, comConc AS INTEGER, temEng AS INTEGER
+    nT = Vig(v).nTramos
+    cantE = (RTRIM$(VigApo(Vig(v).iApo).nome) = "-")
+    cantD = (RTRIM$(VigApo(Vig(v).iApo + nT).nome) = "-")
+    IF nT = 1 AND cantE AND cantD THEN EXIT FUNCTION
+    ' estabilidade: pelo menos 2 apoios reais (nao "-"), ou 1 engaste
+    c = 0
+    FOR t = 0 TO nT
+        IF RTRIM$(VigApo(Vig(v).iApo + t).nome) <> "-" THEN c = c + 1
+        IF VcEngaste%(v, t) THEN temEng = -1
+    NEXT
+    IF c < 2 AND NOT temEng THEN EXIT FUNCTION
+    ' apoio "-" so pode estar nas extremidades
+    FOR t = 1 TO nT - 1
+        IF RTRIM$(VigApo(Vig(v).iApo + t).nome) = "-" THEN EXIT FUNCTION
+    NEXT
+    comConc = (caso = 0)
+    FOR t = 1 TO nT
+        ti = Vig(v).iTra + t - 1
+        IF caso = 0 THEN q(t) = VigTra(ti).qPerm + pp ELSE q(t) = 0
+        IF caso = t THEN q(t) = VigTra(ti).qAcid
+    NEXT
+    ' graus de liberdade: rotacao em cada no extremo de tramo interno; no
+    ' engastado fica com dof = 0 (rotacao nula: th(0) = 0 nunca e resolvido)
+    DIM dof(1 TO nT + 1) AS INTEGER, mab(1 TO nT) AS DOUBLE, mba(1 TO nT) AS DOUBLE
+    FOR t = 1 TO nT
+        IF NOT ((t = 1 AND cantE) OR (t = nT AND cantD)) THEN
+            IF dof(t) = 0 AND NOT VcEngaste%(v, t - 1) THEN nd = nd + 1: dof(t) = nd
+            IF dof(t + 1) = 0 AND NOT VcEngaste%(v, t) THEN nd = nd + 1: dof(t + 1) = nd
+        END IF
+    NEXT
+    DIM kg(0 TO nd + 1, 0 TO nd + 1) AS DOUBLE, rhs(0 TO nd + 1) AS DOUBLE, th(0 TO nd + 1) AS DOUBLE
+    ' momentos de engastamento perfeito (horario positivo na barra)
+    FOR t = 1 TO nT
+        ti = Vig(v).iTra + t - 1: L = VigTra(ti).vao
+        IF (t = 1 AND cantE) OR (t = nT AND cantD) THEN
+            CALL VcConcSomas(ti, sumP, sumPa, sumPb)
+            IF comConc = 0 THEN sumP = 0: sumPa = 0: sumPb = 0
+            IF t = 1 AND cantE THEN
+                mba(t) = q(t) * L * L / 2 + sumPb: mab(t) = 0
+                IF dof(t + 1) THEN rhs(dof(t + 1)) = rhs(dof(t + 1)) - mba(t)
+            ELSE
+                mab(t) = -(q(t) * L * L / 2 + sumPa): mba(t) = 0
+                IF dof(t) THEN rhs(dof(t)) = rhs(dof(t)) - mab(t)
+            END IF
+        ELSE
+            fab = -q(t) * L * L / 12: fba = q(t) * L * L / 12
+            IF comConc THEN
+                FOR c = 0 TO VigTra(ti).nConc - 1
+                    a = VigCon(VigTra(ti).iCon + c).a: P = VigCon(VigTra(ti).iCon + c).P: b = L - a
+                    fab = fab - P * a * b * b / (L * L): fba = fba + P * a * a * b / (L * L)
+                NEXT
+            END IF
+            mab(t) = fab: mba(t) = fba
+            kk = 2 / L
+            i = dof(t): j = dof(t + 1)
+            kg(i, i) = kg(i, i) + 2 * kk: kg(i, j) = kg(i, j) + kk
+            kg(j, i) = kg(j, i) + kk: kg(j, j) = kg(j, j) + 2 * kk
+            rhs(i) = rhs(i) - fab: rhs(j) = rhs(j) - fba
+        END IF
+    NEXT
+    ' eliminacao de Gauss (matriz simetrica positiva definida)
+    FOR k = 1 TO nd
+        FOR i = k + 1 TO nd
+            IF kg(i, k) <> 0 THEN
+                fator = kg(i, k) / kg(k, k)
+                FOR j = k TO nd
+                    kg(i, j) = kg(i, j) - fator * kg(k, j)
+                NEXT
+                rhs(i) = rhs(i) - fator * rhs(k)
+            END IF
+        NEXT
+    NEXT
+    FOR k = nd TO 1 STEP -1
+        th(k) = rhs(k)
+        FOR j = k + 1 TO nd
+            th(k) = th(k) - kg(k, j) * th(j)
+        NEXT
+        th(k) = th(k) / kg(k, k)
+    NEXT
+    ' momentos de extremidade, depois fletores e cortantes
+    FOR t = 1 TO nT
+        ti = Vig(v).iTra + t - 1: L = VigTra(ti).vao
+        IF NOT ((t = 1 AND cantE) OR (t = nT AND cantD)) THEN
+            kk = 2 / L
+            mab(t) = mab(t) + kk * (2 * th(dof(t)) + th(dof(t + 1)))
+            mba(t) = mba(t) + kk * (th(dof(t)) + 2 * th(dof(t + 1)))
+        END IF
+        m0(t) = mab(t): mL(t) = -mba(t)
+        CALL VcConcSomas(ti, sumP, sumPa, sumPb)
+        IF comConc = 0 THEN sumP = 0: sumPa = 0: sumPb = 0
+        IF t = 1 AND cantE THEN
+            m0(t) = 0: v0(t) = 0
+        ELSE
+            v0(t) = (mL(t) - m0(t) + q(t) * L * L / 2 + sumPb) / L
+        END IF
+    NEXT
+    VcCaso% = -1
+END FUNCTION
+
+' Apoio k (0..nTramos) da viga v e engaste: "ENG" numa extremidade.
+FUNCTION VcEngaste% (v AS INTEGER, k AS INTEGER)
+    IF k <> 0 AND k <> Vig(v).nTramos THEN EXIT FUNCTION
+    VcEngaste% = (UCASE$(RTRIM$(VigApo(Vig(v).iApo + k).nome)) = "ENG")
+END FUNCTION
+
+' Analisa a viga v: envoltoria de momentos e cortantes por tramo (grava
+' mPos, mNegEsq, mNegDir, vEsq, vDir em VigTra) e reacoes maximas por apoio
+' em reac(1..nTramos+1) (tf). incluiPP soma o peso proprio bw*h*2,5 tf/m3.
+' Retorna 0 (e msg$) se a viga for instavel. Com sucesso msg$ fica vazio ou
+' traz avisos (ex.: "ENG" num apoio interno, tratado como apoio continuo).
+FUNCTION VcAnalisa% (v AS INTEGER, incluiPP AS INTEGER, reac() AS DOUBLE, msg AS STRING)
+    CONST NPT = 50
+    DIM nT AS INTEGER, t AS INTEGER, ti AS INTEGER, c AS INTEGER, k AS INTEGER, pp AS DOUBLE, L AS DOUBLE
+    DIM x AS DOUBLE, m AS DOUBLE, mmax AS DOUBLE, vv AS DOUBLE, sumP AS DOUBLE, sumPa AS DOUBLE, sumPb AS DOUBLE
+    nT = Vig(v).nTramos
+    IF incluiPP THEN pp = Vig(v).bw * Vig(v).h / 10000# * 2.5#
+    DIM q(0 TO nT, 1 TO nT) AS DOUBLE, m0(0 TO nT, 1 TO nT) AS DOUBLE, v0(0 TO nT, 1 TO nT) AS DOUBLE, mL(0 TO nT, 1 TO nT) AS DOUBLE
+    DIM qa(1 TO nT) AS DOUBLE, m0a(1 TO nT) AS DOUBLE, v0a(1 TO nT) AS DOUBLE, mLa(1 TO nT) AS DOUBLE
+    DIM mx(0 TO nT, 1 TO nT, 0 TO NPT) AS DOUBLE, vE(0 TO nT, 1 TO nT) AS DOUBLE, vD(0 TO nT, 1 TO nT) AS DOUBLE
+    msg = ""
+    FOR c = 0 TO nT
+        IF VcCaso%(v, c, pp, qa(), m0a(), v0a(), mLa()) = 0 THEN msg = "Viga instavel: sao necessarios 2 apoios e balancos so nas extremidades": EXIT FUNCTION
+        FOR t = 1 TO nT
+            ti = Vig(v).iTra + t - 1: L = VigTra(ti).vao
+            FOR k = 0 TO NPT
+                mx(c, t, k) = VcMomentoX#(ti, qa(t), m0a(t), v0a(t), L * k / NPT, c = 0)
+            NEXT
+            mx(c, t, NPT) = mLa(t)
+            CALL VcConcSomas(ti, sumP, sumPa, sumPb)
+            IF c <> 0 THEN sumP = 0
+            vE(c, t) = v0a(t)
+            vD(c, t) = v0a(t) - qa(t) * L - sumP
+        NEXT
+    NEXT
+    ' envoltoria
+    FOR t = 1 TO nT
+        ti = Vig(v).iTra + t - 1
+        mmax = 0
+        FOR k = 0 TO NPT
+            m = mx(0, t, k)
+            FOR c = 1 TO nT
+                IF mx(c, t, k) > 0 THEN m = m + mx(c, t, k)
+            NEXT
+            IF m > mmax THEN mmax = m
+        NEXT
+        VigTra(ti).mPos = mmax
+        VigTra(ti).mNegEsq = VcEnvMin#(mx(), nT, t, 0)
+        VigTra(ti).mNegDir = VcEnvMin#(mx(), nT, t, NPT)
+        ' cortantes: modulo maximo em cada extremidade
+        vv = ABS(vE(0, t))
+        FOR c = 1 TO nT
+            IF SGN(vE(c, t)) = SGN(vE(0, t)) OR vE(0, t) = 0 THEN vv = vv + ABS(vE(c, t))
+        NEXT
+        VigTra(ti).vEsq = vv
+        vv = ABS(vD(0, t))
+        FOR c = 1 TO nT
+            IF SGN(vD(c, t)) = SGN(vD(0, t)) OR vD(0, t) = 0 THEN vv = vv + ABS(vD(c, t))
+        NEXT
+        VigTra(ti).vDir = vv
+    NEXT
+    ' reacoes: R(k) = cortante a esquerda do tramo k - cortante no fim do tramo k-1
+    FOR k = 1 TO nT + 1
+        reac(k) = 0
+        FOR c = 0 TO nT
+            vv = 0
+            IF k <= nT THEN vv = vv + vE(c, k)
+            IF k >= 2 THEN vv = vv - vD(c, k - 1)
+            IF c = 0 OR vv > 0 THEN reac(k) = reac(k) + vv
+        NEXT
+    NEXT
+    ' engaste so vale nas extremidades (VcEngaste%): no meio vira apoio continuo
+    FOR k = 1 TO nT - 1
+        IF UCASE$(RTRIM$(VigApo(Vig(v).iApo + k).nome)) = "ENG" THEN
+            msg = msg + RTRIM$(Vig(v).nome) + ": ENG no apoio interno" + STR$(k + 1) + " tratado como apoio continuo (engaste so nas extremidades). "
+        END IF
+    NEXT
+    VcAnalisa% = -1
+END FUNCTION
+
+' Menor momento (mais negativo) da envoltoria no ponto k do tramo t.
+FUNCTION VcEnvMin# (mx() AS DOUBLE, nT AS INTEGER, t AS INTEGER, k AS INTEGER)
+    DIM c AS INTEGER, m AS DOUBLE
+    m = mx(0, t, k)
+    FOR c = 1 TO nT
+        IF mx(c, t, k) < 0 THEN m = m + mx(c, t, k)
+    NEXT
+    IF m > -0.000001 THEN m = 0  ' residuo numerico em apoio rotulado
+    VcEnvMin# = m
+END FUNCTION
+
+' Dimensiona os tramos da viga v ja analisada (VcAnalisa%): armaduras
+' positiva e negativas, barras, estribos (2 ramos). d = h - cob (cm).
+' Grava os resultados em VigTra e Vig(v).d; os avisos sao acrescentados a
+' msg$ (que pode trazer os avisos de VcAnalisa%).
+' Armadura dupla: a tracionada total vai para as*; a comprimida As' nao tem
+' campo no .SEC (contrato DADOS.md) e sai so no aviso de msg$.
+' Estribo minimo: rho_w,min da NB-1/78 (CcaRhoWMin#).
+SUB VcDimensiona (v AS INTEGER, fck AS DOUBLE, fyk AS DOUBLE, gf AS DOUBLE, gc AS DOUBLE, gs AS DOUBLE, cob AS DOUBLE, msg AS STRING)
+    DIM t AS INTEGER, ti AS INTEGER, bw AS DOUBLE, h AS DOUBLE, d AS DOUBLE, fcd AS DOUBLE, fyd AS DOUBLE
+    DIM amin AS DOUBLE, aswmin AS DOUBLE, asw AS DOUBLE, phi AS DOUBLE, s AS DOUBLE, n AS INTEGER, smax AS DOUBLE
+    DIM aslP AS DOUBLE, aslE AS DOUBLE, aslD AS DOUBLE, pre AS STRING
+    bw = Vig(v).bw: h = Vig(v).h: d = h - cob: Vig(v).d = d
+    fcd = fck / gc: fyd = fyk / gs
+    amin = CcaAsMin#(bw, h, 0.0015#): aswmin = CcaAswMin#(bw, CcaRhoWMin#(fyk))
+    smax = 0.5# * d: IF smax > 30 THEN smax = 30
+    FOR t = 1 TO Vig(v).nTramos
+        ti = Vig(v).iTra + t - 1
+        pre = RTRIM$(Vig(v).nome) + " tramo" + STR$(t)
+        VigTra(ti).asPos = VcAsMin#(gf * VigTra(ti).mPos * 100#, bw, h, d, fcd, fyd, amin, aslP)
+        VigTra(ti).asNegEsq = VcAsMin#(-gf * VigTra(ti).mNegEsq * 100#, bw, h, d, fcd, fyd, amin, aslE)
+        VigTra(ti).asNegDir = VcAsMin#(-gf * VigTra(ti).mNegDir * 100#, bw, h, d, fcd, fyd, amin, aslD)
+        IF VigTra(ti).asPos < 0 OR VigTra(ti).asNegEsq < 0 OR VigTra(ti).asNegDir < 0 THEN
+            msg = msg + pre + ": secao insuficiente a flexao. "
+        END IF
+        IF aslP > 0 THEN msg = msg + pre + ": armadura dupla no M+, As' =" + STR$(CLNG(aslP * 100) / 100) + " cm2 em cima (nao gravada no .SEC). "
+        IF aslE > 0 THEN msg = msg + pre + ": armadura dupla no M- esq, As' =" + STR$(CLNG(aslE * 100) / 100) + " cm2 embaixo (nao gravada no .SEC). "
+        IF aslD > 0 THEN msg = msg + pre + ": armadura dupla no M- dir, As' =" + STR$(CLNG(aslD * 100) / 100) + " cm2 embaixo (nao gravada no .SEC). "
+        VcEscolheBarras VigTra(ti).asPos, bw, cob, phi, n, msg, RTRIM$(Vig(v).nome), t: VigTra(ti).phiPos = phi: VigTra(ti).nPos = n
+        IF VigTra(ti).mNegEsq < 0 THEN VcEscolheBarras VigTra(ti).asNegEsq, bw, cob, phi, n, msg, RTRIM$(Vig(v).nome), t ELSE phi = 0: n = 0
+        VigTra(ti).phiNegEsq = phi: VigTra(ti).nNegEsq = n
+        IF VigTra(ti).mNegDir < 0 THEN VcEscolheBarras VigTra(ti).asNegDir, bw, cob, phi, n, msg, RTRIM$(Vig(v).nome), t ELSE phi = 0: n = 0
+        VigTra(ti).phiNegDir = phi: VigTra(ti).nNegDir = n
+        VigTra(ti).aswEsq = VcAswMin#(gf * VigTra(ti).vEsq, bw, d, fck, fcd, fyd, aswmin, VcAsLong#(VigTra(ti).asPos, VigTra(ti).asNegEsq))
+        VigTra(ti).aswDir = VcAswMin#(gf * VigTra(ti).vDir, bw, d, fck, fcd, fyd, aswmin, VcAsLong#(VigTra(ti).asPos, VigTra(ti).asNegDir))
+        IF VigTra(ti).aswEsq < 0 OR VigTra(ti).aswDir < 0 THEN
+            msg = msg + RTRIM$(Vig(v).nome) + " tramo" + STR$(t) + ": biela comprimida esmagada, aumente a secao. "
+        END IF
+        asw = VigTra(ti).aswEsq: IF VigTra(ti).aswDir > asw THEN asw = VigTra(ti).aswDir
+        CcaEscolheMalha asw / 2, 5, 7, smax, phi, s
+        VigTra(ti).phiEst = phi: VigTra(ti).sEst = s
+    NEXT
+END SUB
+
+' Flexao com minimo: md em tf.cm (<= 0 devolve 0). Quando a armadura
+' simples nao basta, usa armadura dupla (ArmAsDupla#, d' = 3,5 cm como
+' ARM_DL/DIM_DL de ARMADURA e DESDIM) e devolve em asl a comprimida As'.
+' -1 (secao insuficiente) se As + As' passa de 4% de Ac (ArmAsMax#).
+FUNCTION VcAsMin# (md AS DOUBLE, bw AS DOUBLE, h AS DOUBLE, d AS DOUBLE, fcd AS DOUBLE, fyd AS DOUBLE, amin AS DOUBLE, asl AS DOUBLE)
+    DIM a AS DOUBLE
+    asl = 0
+    IF md <= 0 THEN VcAsMin# = 0: EXIT FUNCTION
+    a = CcaAsFlexao#(md, bw, d, fcd, fyd)
+    IF a < 0 THEN
+        a = ArmAsDupla#(md, bw, d, 3.5#, fcd, fyd)
+        asl = ArmAsLinha#(md, bw, d, 3.5#, fcd, fyd)
+        IF a < 0 OR asl < 0 THEN asl = 0: VcAsMin# = -1: EXIT FUNCTION
+        IF a + asl > ArmAsMax#(bw, h) THEN asl = 0: VcAsMin# = -1: EXIT FUNCTION
+    END IF
+    IF a < amin THEN a = amin
+    VcAsMin# = a
+END FUNCTION
+
+' Estribos com minimo (cm2/m), com a armadura longitudinal asl (cm2) da
+' secao entrando no tc (psi1); -1 se a biela esmaga.
+FUNCTION VcAswMin# (vd AS DOUBLE, bw AS DOUBLE, d AS DOUBLE, fck AS DOUBLE, fcd AS DOUBLE, fyd AS DOUBLE, aswmin AS DOUBLE, asl AS DOUBLE)
+    DIM a AS DOUBLE
+    a = CcaAswEstriboRho#(vd, bw, d, fck, fcd, fyd, asl)
+    IF a < 0 THEN VcAswMin# = -1: EXIT FUNCTION
+    IF a < aswmin THEN a = aswmin
+    VcAswMin# = a
+END FUNCTION
+
+' Armadura longitudinal tracionada na extremidade (cm2) para o tc: a menor
+' entre a parcela da positiva que chega ao apoio e a negativa disponivel
+' (a favor da seguranca); -1 vira 0.
+' RECONSTRUCAO: chega ao apoio 1/3 da positiva do vao quando nao ha momento
+' negativo e 1/4 quando ha (regra atribuida a NB-1/78 por fontes secundarias;
+' texto da norma nao conferido). Usar a positiva inteira superestimava o tc.
+FUNCTION VcAsLong# (asPos AS DOUBLE, asNeg AS DOUBLE)
+    DIM a AS DOUBLE
+    IF asNeg > 0 THEN a = asPos / 4# ELSE a = asPos / 3#
+    IF asNeg > 0 AND (asNeg < a OR a <= 0) THEN a = asNeg
+    IF a < 0 THEN a = 0
+    VcAsLong# = a
+END FUNCTION
+
+' Escolhe barras para asReq que caibam na alma bw (CcaEscolheBarrasBw, com
+' cobrimento lateral de 2 cm) e acrescenta a msg$ o aviso quando nao cabem
+' numa camada ou quando nao ha arranjo possivel.
+SUB VcEscolheBarras (asReq AS DOUBLE, bw AS DOUBLE, cob AS DOUBLE, phi AS DOUBLE, n AS INTEGER, msg AS STRING, nome AS STRING, t AS INTEGER)
+    DIM cabe AS INTEGER
+    ' RECONSTRUCAO: cob (= h - d) nao e o cobrimento lateral; usa 2 cm (NB-1/78, vigas)
+    CcaEscolheBarrasBw asReq, bw, 2#, phi, n, cabe
+    IF cabe = 0 THEN msg = msg + nome + " tramo" + STR$(t) + ": barras nao cabem em uma camada (bw =" + STR$(bw) + "). "
+    IF cabe = -1 THEN msg = msg + nome + " tramo" + STR$(t) + ": armadura acima de 8 barras de 32 mm, aumente a secao. "
+END SUB

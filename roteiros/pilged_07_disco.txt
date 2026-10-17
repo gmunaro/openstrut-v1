@@ -1,0 +1,13 @@
+# exe: PIGRAEDI
+# pilged_07_disco: PIGRAEDI item 6 (espaco em disco), a partir da obra FLUXO.
+# Fixture: roteiros/pilged_07_disco.dados (copia de roteiros/semente).
+# Item 6 agora mostra aviso "Opcao nao disponivel nesta reconstrucao" (RECONSTRUCAO).
+# Esperado: aviso aparece na linha 24/25, ENTER sai do aviso, R sai do modulo.
+
+{TELA q0_menu}
+
+# Item 6: aviso de opcao indisponivel
+6{TELA q1_opcao6_aviso}{ENTER}
+
+# Retorno ao menu principal
+{TELA q2_antes_de_sair}R

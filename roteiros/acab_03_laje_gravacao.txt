@@ -1,0 +1,8 @@
+# exe: LAJE
+# acab_03_laje_gravacao: opcao 6 (Gravacao e Leitura) do menu LAJE entra em LAJEGRAV,
+# mostra o menu dele; 7 devolve ao LAJEGRAV-ENTER; o LAJE pede ESC/ENTER (Espera de Chama);
+# F2 sai do LAJE. Nao grava nada.
+# Saida esperada: 0.
+6{TELA gr_menu}
+7{TELA gr_volta}{ENTER}{ENTER}{TELA gr_laje}
+{F2}

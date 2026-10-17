@@ -1,0 +1,15 @@
+# exe: VPLOTA
+# VPLOTA, obra FLUXO (dados: FLUXO_V, FLUXO_V2, FLUXO_V3). Roteiro 1 de 2: sessoes 1 e 3.
+# {BS} apaga o padrao antes de digitar: EntradaTexto$/EntradaNumero# concatenam ao padrao.
+# Sessao 1: opcao 1 sem alterar parametrizacoes. Obra inexistente, depois FLUXO; lista 3,1,2.
+# Depois: V (previa), S (DXF + PLT com equipamento 6 = HP DraftPro), C (cancelar, volta ao menu).
+{TELA vp_01_menu}1N{TELA vp_02_obra_pede}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}OUTRA{ENTER}
+{TELA vp_03_volta_menu}1N{TELA vp_04_obra_pede_flux}{ENTER}{TELA vp_05_lista}3,1,2{ENTER}
+{TELA vp_06_grava_avf}S{TELA vp_07_folhas}{ENTER}{TELA vp_08_resultado_v}V{TELA vp_09_previa_f1}{SPACE}{TELA vp_10_previa_f2}{SPACE}{TELA vp_11_previa_f3}{SPACE}{SPACE}
+{TELA vp_12_resultado_pos_v}S{TELA vp_13_confirma_seguir}S{TELA vp_14_equipamento}{BS}6{ENTER}{TELA vp_15_pos_plot}{ENTER}
+{TELA vp_16_resultado_pos_s}C{TELA vp_17_cancela}S
+# Sessao 3: opcao 3 (recuperar AVF da sessao 1): nome inexistente, nome em branco, depois FLUXO. Sai com F2.
+3{TELA vp_30_recupera_pede}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}NAOEXISTE{ENTER}
+3{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{ENTER}{TELA vp_31_recupera_vazio}
+3{TELA vp_32_recupera_pede_flux}{ENTER}{ENTER}{TELA vp_33_recupera_resultado}C{TELA vp_34_recupera_cancela}S
+{F2}

@@ -1,0 +1,47 @@
+# exe: PILGEEDI
+# pilged_01_geometria: PILGEEDI itens 1, 2 e 7 e R, a partir da obra FLUXO
+# (roteiros/pilged_01_geometria.dados = copia de roteiros/semente).
+# Campos de texto: a digitacao acrescenta ao padrao; {BS} apaga o padrao.
+# Espera (aviso) so sai com ESC ou Enter: cada aviso leva um {ENTER} a mais.
+# Obra FLUXO: 1 nivel (TERREO, cota 3, pe 3), 6 colunas (P4 P1 P5 P6 P2 P3).
+
+{TELA p0_menu}
+# ESC no menu principal: o laco ignora a tecla
+{ESC}{TELA p1_esc_ignorado}
+
+# Item 1: trocar o numero de niveis com colunas arquivadas deve bloquear (2 niveis)
+1{BS}2{ENTER}{TELA p2_nivel_bloqueado}{ENTER}
+
+# Item 1: numero de niveis fora da faixa (0)
+1{BS}0{ENTER}{TELA p3_nivel_fora}{ENTER}
+
+# Item 1: cota com letra (x) recusada e repetida; mantem 1 nivel
+1{ENTER}{ENTER}{BS}x{ENTER}{TELA p4_cota_invalida}{ENTER}{ENTER}{ENTER}{TELA p5_nivel_ok}
+
+# Item 1: cota valida 3.2 (pe-direito fica 3)
+1{ENTER}{ENTER}{BS}3.2{ENTER}{ENTER}{TELA p5b_cota_32}
+
+# Item 2: sem nome sai ao menu (Enter vazio)
+2{ENTER}{TELA p5c_nome_vazio}
+
+# Item 2: nome de coluna ja existente (P4)
+2P4{ENTER}{TELA p6_nome_repetido}{ENTER}
+
+# Item 2: secao invalida (X)
+2P7{ENTER}{BS}X{ENTER}{TELA p7_secao_invalida}{ENTER}
+
+# Item 2: coluna P7 retangular bx 20, by 30, x 1.5, y 4, nivel 1 a 1; S confirma
+2P7{ENTER}{ENTER}{ENTER}{BS}{BS}30{ENTER}{BS}1.5{ENTER}{BS}4{ENTER}{ENTER}{ENTER}{TELA p8_arquivada}{ENTER}{ENTER}
+
+# Item 2: faixa invalida (nivel superior 2 com nivel inferior 1)
+2P8{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{BS}2{ENTER}{TELA p9_faixa_invalida}{ENTER}
+
+# Item 2: dados corretos = N; a coluna P9 nao pode ser arquivada
+2P9{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}N{TELA p10_cancelada}
+
+# Item 7: impressao sem geometria (N) e com geometria (S, o LST final)
+7N{TELA p11a_impressao_N}{ENTER}
+7S{TELA p11_impressao}{ENTER}
+
+# Retorno ao menu principal (grava o .COL se houve alteracao)
+{TELA p12_antes_de_sair}R

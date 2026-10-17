@@ -1,0 +1,472 @@
+' ============================================================================
+'  LAJCALC.BM - calculo de lajes retangulares "em regime de ruptura" (NB-1/78)
+'  Sem I/O de tela. Usado por LAJECALC.BAS; testado em tests/T_LAJCALC.BAS.
+'
+'  RECONSTRUCAO FUNCIONAL: o binario original nao expoe as formulas.
+'  - Momentos: charneiras plasticas (Johansen), armadura isotropa ou
+'    ortotropa (afinidade, mu = my/mx por laje), com vaos reduzidos pelos
+'    engastes (i = Mneg/Mpos do .LAP).
+'  - Cortante: twd da maior reacao contra twu1 de laje sem estribos (aviso).
+'  - Reacoes: processo das areas da NB-1/78 (45 graus entre bordos iguais,
+'    60 graus a partir do engastado), integrado numericamente.
+'  - Flecha: faixas de Marcus/Grashof, secao bruta, Ec secante NB-1/78.
+'
+'  Unidades: m, tf, tf/m2, tf.m/m; espessura h e flecha em cm;
+'  fck/fyk em tf/cm2; areas de aco em cm2/m.
+'  Bordos: string de 4 letras na ordem esquerdo(1) inferior(2) direito(3)
+'  superior(4); A apoiado, E engastado, L livre. Bordos 1 e 3 limitam lx.
+'
+'  Requer CALCCA.BM (CcaAsFlexao#, CcaAsMin#) e SISDADOS.BI (Laj()).
+' ============================================================================
+
+' Coeficiente i = Mneg/Mpos do bordo (iE se engastado, 0 se apoiado/livre).
+FUNCTION LcCoefI# (bordo AS STRING, iE AS DOUBLE)
+    IF UCASE$(bordo) = "E" THEN LcCoefI# = iE ELSE LcCoefI# = 0
+END FUNCTION
+
+' Classifica a laje: "C" cruz, "UX" uma direcao vencendo lx, "UY" vencendo ly,
+' "BX"/"BY" balanco vencendo lx/ly, "" combinacao de bordos nao suportada.
+FUNCTION LcTipo$ (lx AS DOUBLE, ly AS DOUBLE, bordos AS STRING)
+    DIM b AS STRING, nL AS INTEGER, k AS INTEGER, kE AS INTEGER
+    b = UCASE$(bordos)
+    FOR k = 1 TO 4
+        IF MID$(b, k, 1) = "L" THEN nL = nL + 1 ELSE kE = k
+    NEXT
+    SELECT CASE nL
+        CASE 0
+            IF ly / lx > 2 THEN
+                LcTipo$ = "UX"
+            ELSEIF ly / lx < 0.5 THEN
+                LcTipo$ = "UY"
+            ELSE
+                LcTipo$ = "C"
+            END IF
+        CASE 1
+            ' vence o vao entre os dois bordos adjacentes ao livre
+            IF MID$(b, 1, 1) = "L" OR MID$(b, 3, 1) = "L" THEN LcTipo$ = "UY" ELSE LcTipo$ = "UX"
+        CASE 3
+            IF MID$(b, kE, 1) = "E" THEN
+                IF kE = 1 OR kE = 3 THEN LcTipo$ = "BX" ELSE LcTipo$ = "BY"
+            END IF
+    END SELECT
+    ' RECONSTRUCAO: 2 bordos livres ou balanco sem engaste nao sao tratados
+END FUNCTION
+
+' Vao que governa flecha e espessura (m): menor vao em cruz, vao da direcao
+' armada em uma direcao, 2x o balanco (regra usual para balancos).
+FUNCTION LcVaoRef# (lx AS DOUBLE, ly AS DOUBLE, tipo AS STRING)
+    SELECT CASE tipo
+        CASE "UX": LcVaoRef# = lx
+        CASE "UY": LcVaoRef# = ly
+        CASE "BX": LcVaoRef# = 2 * lx
+        CASE "BY": LcVaoRef# = 2 * ly
+        CASE ELSE
+            IF lx < ly THEN LcVaoRef# = lx ELSE LcVaoRef# = ly
+    END SELECT
+END FUNCTION
+
+' Momentos (tf.m/m) para carga p (tf/m2): positivos mx (armadura paralela a x)
+' e my, negativos x1..x4 por bordo. tipo$ recebe LcTipo$ ("" = nao suportada).
+' Laje isotropa (mu = 1); ver LcMomentosOrto.
+SUB LcMomentos (lx AS DOUBLE, ly AS DOUBLE, bordos AS STRING, iE AS DOUBLE, p AS DOUBLE, mx AS DOUBLE, my AS DOUBLE, x1 AS DOUBLE, x2 AS DOUBLE, x3 AS DOUBLE, x4 AS DOUBLE, tipo AS STRING)
+    LcMomentosOrto lx, ly, bordos, iE, 1#, p, mx, my, x1, x2, x3, x4, tipo
+END SUB
+
+' Igual a LcMomentos com armadura ortotropa nas lajes em cruz: mu = my/mx
+' (momento resistente em y = mu vezes o de x; negativos em y = i mu mx).
+' Teorema da afinidade de Johansen: a laje ortotropa equivale a isotropa de
+' momento mx com os vaos em y divididos por raiz(mu), mesma carga por area.
+' Lajes numa direcao e balancos ignoram mu.
+SUB LcMomentosOrto (lx AS DOUBLE, ly AS DOUBLE, bordos AS STRING, iE AS DOUBLE, mu AS DOUBLE, p AS DOUBLE, mx AS DOUBLE, my AS DOUBLE, x1 AS DOUBLE, x2 AS DOUBLE, x3 AS DOUBLE, x4 AS DOUBLE, tipo AS STRING)
+    DIM i1 AS DOUBLE, i2 AS DOUBLE, i3 AS DOUBLE, i4 AS DOUBLE, u AS DOUBLE
+    DIM lxr AS DOUBLE, lyr AS DOUBLE, a AS DOUBLE, b AS DOUBLE, m AS DOUBLE
+    u = mu
+    IF u <= 0 THEN u = 1#
+    i1 = LcCoefI#(MID$(bordos, 1, 1), iE): i2 = LcCoefI#(MID$(bordos, 2, 1), iE)
+    i3 = LcCoefI#(MID$(bordos, 3, 1), iE): i4 = LcCoefI#(MID$(bordos, 4, 1), iE)
+    lxr = 2 * lx / (SQR(1 + i1) + SQR(1 + i3))
+    lyr = 2 * ly / (SQR(1 + i2) + SQR(1 + i4))
+    mx = 0: my = 0: x1 = 0: x2 = 0: x3 = 0: x4 = 0
+    tipo = LcTipo$(lx, ly, bordos)
+    SELECT CASE tipo
+        CASE "C"
+            ' Johansen: m = p a^2/24 (raiz(3 + (a/b)^2) - a/b)^2 na laje afim
+            lyr = lyr / SQR(u)
+            IF lxr < lyr THEN a = lxr: b = lyr ELSE a = lyr: b = lxr
+            m = p * a * a / 24 * (SQR(3 + (a / b) ^ 2) - a / b) ^ 2
+            mx = m: my = u * m
+            x1 = i1 * mx: x2 = i2 * my: x3 = i3 * mx: x4 = i4 * my
+        CASE "UX"
+            m = p * lxr * lxr / 8
+            mx = m: x1 = i1 * m: x3 = i3 * m
+        CASE "UY"
+            m = p * lyr * lyr / 8
+            my = m: x2 = i2 * m: x4 = i4 * m
+        CASE "BX"
+            IF UCASE$(MID$(bordos, 1, 1)) = "E" THEN x1 = p * lx * lx / 2 ELSE x3 = p * lx * lx / 2
+        CASE "BY"
+            IF UCASE$(MID$(bordos, 2, 1)) = "E" THEN x2 = p * ly * ly / 2 ELSE x4 = p * ly * ly / 2
+    END SELECT
+END SUB
+
+' Reacoes de apoio (tf/m) nos 4 bordos pelo processo das areas: cada ponto
+' carrega o bordo de menor distancia/peso (peso raiz(3) engastado, 1 apoiado,
+' quase 0 livre), o que reproduz 45/60 graus. Malha de 300 x 300.
+SUB LcReacoes (lx AS DOUBLE, ly AS DOUBLE, bordos AS STRING, p AS DOUBLE, r1 AS DOUBLE, r2 AS DOUBLE, r3 AS DOUBLE, r4 AS DOUBLE)
+    CONST NMALHA = 300
+    DIM w(1 TO 4) AS DOUBLE, ar(1 TO 4) AS DOUBLE, d(1 TO 4) AS DOUBLE
+    DIM ix AS INTEGER, iy AS INTEGER, k AS INTEGER, kmin AS INTEGER
+    DIM xc AS DOUBLE, yc AS DOUBLE, dx AS DOUBLE, dy AS DOUBLE, best AS DOUBLE
+    FOR k = 1 TO 4
+        SELECT CASE UCASE$(MID$(bordos, k, 1))
+            CASE "E": w(k) = SQR(3)
+            CASE "L": w(k) = 1E-09
+            CASE ELSE: w(k) = 1
+        END SELECT
+    NEXT
+    dx = lx / NMALHA: dy = ly / NMALHA
+    FOR ix = 1 TO NMALHA
+        xc = (ix - 0.5) * dx
+        FOR iy = 1 TO NMALHA
+            yc = (iy - 0.5) * dy
+            d(1) = xc: d(2) = yc: d(3) = lx - xc: d(4) = ly - yc
+            kmin = 1: best = d(1) / w(1)
+            FOR k = 2 TO 4
+                IF d(k) / w(k) < best THEN best = d(k) / w(k): kmin = k
+            NEXT
+            ar(kmin) = ar(kmin) + dx * dy
+        NEXT
+    NEXT
+    r1 = p * ar(1) / ly: r2 = p * ar(2) / lx: r3 = p * ar(3) / ly: r4 = p * ar(4) / lx
+END SUB
+
+' Modulo de elasticidade secante do concreto (tf/m2) para fck em tf/cm2:
+' Ec = 0,9 * 6600 * raiz(fck + 3,5) MPa (NB-1/78).
+FUNCTION LcModuloE# (fck AS DOUBLE)
+    LcModuloE# = 0.9# * 6600# * SQR(fck * 98.0665# + 3.5#) * 1000# / 9.80665#
+END FUNCTION
+
+' Coeficiente da flecha de uma faixa (base 384): 5 apoiada-apoiada,
+' 2 apoiada-engastada, 1 engastada-engastada.
+FUNCTION LcCoefFaixa# (b1 AS STRING, b2 AS STRING)
+    DIM nE AS INTEGER
+    IF UCASE$(b1) = "E" THEN nE = nE + 1
+    IF UCASE$(b2) = "E" THEN nE = nE + 1
+    SELECT CASE nE
+        CASE 0: LcCoefFaixa# = 5
+        CASE 1: LcCoefFaixa# = 2
+        CASE ELSE: LcCoefFaixa# = 1
+    END SELECT
+END FUNCTION
+
+' Flecha elastica (cm) para carga p (tf/m2) e espessura h (cm), secao bruta.
+' Em cruz a carga e repartida entre as faixas pela igualdade das flechas
+' no centro (Marcus/Grashof). Retorna -1 para tipo nao suportado.
+FUNCTION LcFlecha# (lx AS DOUBLE, ly AS DOUBLE, bordos AS STRING, p AS DOUBLE, h AS DOUBLE, fck AS DOUBLE)
+    DIM ei AS DOUBLE, cx AS DOUBLE, cy AS DOUBLE, kx AS DOUBLE, f AS DOUBLE, tipo AS STRING
+    ei = LcModuloE#(fck) * (h / 100#) ^ 3 / 12#
+    cx = LcCoefFaixa#(MID$(bordos, 1, 1), MID$(bordos, 3, 1))
+    cy = LcCoefFaixa#(MID$(bordos, 2, 1), MID$(bordos, 4, 1))
+    tipo = LcTipo$(lx, ly, bordos)
+    SELECT CASE tipo
+        CASE "C"
+            kx = cy * ly ^ 4 / (cx * lx ^ 4 + cy * ly ^ 4)
+            f = cx * kx * p * lx ^ 4 / (384# * ei)
+        CASE "UX": f = cx * p * lx ^ 4 / (384# * ei)
+        CASE "UY": f = cy * p * ly ^ 4 / (384# * ei)
+        CASE "BX": f = p * lx ^ 4 / (8# * ei)
+        CASE "BY": f = p * ly ^ 4 / (8# * ei)
+        CASE ELSE: LcFlecha# = -1: EXIT FUNCTION
+    END SELECT
+    LcFlecha# = f * 100#
+END FUNCTION
+
+' Fator de fluencia (1 + phi) aplicado a flecha da carga permanente.
+' LcFluencia#(v) com v > 0 define o fator; LcFluencia#(0) devolve o atual
+' (padrao 1 = sem deformacao lenta). O LAJECALC define pelo .LAP.
+' RECONSTRUCAO: a NB-1/78 manda considerar a deformacao lenta; o valor de
+' phi do original nao aparece no binario.
+FUNCTION LcFluencia# (v AS DOUBLE)
+    STATIC f AS DOUBLE
+    IF v > 0 THEN f = v
+    IF f <= 0 THEN f = 1
+    LcFluencia# = f
+END FUNCTION
+
+' Menor espessura inteira (cm) a partir de hmin que atende flecha total
+' <= vao/relTot e flecha acidental <= vao/relAcid. Peso proprio = h * dens.
+' A parcela permanente da flecha total e multiplicada por LcFluencia#.
+' Retorna -1 se nem 60 cm atende ou o tipo nao e suportado.
+FUNCTION LcEspessura# (lx AS DOUBLE, ly AS DOUBLE, bordos AS STRING, g AS DOUBLE, q AS DOUBLE, dens AS DOUBLE, fck AS DOUBLE, hmin AS DOUBLE, relTot AS DOUBLE, relAcid AS DOUBLE)
+    DIM h AS DOUBLE, vao AS DOUBLE, ft AS DOUBLE, fa AS DOUBLE, tipo AS STRING
+    tipo = LcTipo$(lx, ly, bordos)
+    IF tipo = "" THEN LcEspessura# = -1: EXIT FUNCTION
+    vao = LcVaoRef#(lx, ly, tipo) * 100#
+    FOR h = INT(hmin + 0.999) TO 60
+        ft = LcFlecha#(lx, ly, bordos, h / 100# * dens + g, h, fck) * LcFluencia#(0) + LcFlecha#(lx, ly, bordos, q, h, fck)
+        fa = LcFlecha#(lx, ly, bordos, q, h, fck)
+        IF ft <= vao / relTot AND fa <= vao / relAcid THEN LcEspessura# = h: EXIT FUNCTION
+    NEXT
+    LcEspessura# = -1
+END FUNCTION
+
+' Momento negativo compatibilizado entre duas lajes continuas:
+' max((Xa + Xb)/2 ; 0,8 max(Xa, Xb)).
+FUNCTION LcCompatibiliza# (xa AS DOUBLE, xb AS DOUBLE)
+    DIM mx AS DOUBLE, med AS DOUBLE
+    IF xa > xb THEN mx = xa ELSE mx = xb
+    med = (xa + xb) / 2
+    IF 0.8# * mx > med THEN LcCompatibiliza# = 0.8# * mx ELSE LcCompatibiliza# = med
+END FUNCTION
+
+' Area de aco (cm2/m) para momento caracteristico m (tf.m/m) na laje de
+' espessura h (cm) e altura util d (cm), com minimo taxa*100*h.
+' Retorna -1 se a secao nao resiste.
+' Com LcLinhaNeutra# < 100 % tambem retorna -1 quando x/d passa de LcXdMax#.
+FUNCTION LcAs# (m AS DOUBLE, h AS DOUBLE, d AS DOUBLE, gf AS DOUBLE, fcd AS DOUBLE, fyd AS DOUBLE, taxa AS DOUBLE)
+    DIM a AS DOUBLE, amin AS DOUBLE
+    IF m <= 0 THEN LcAs# = 0: EXIT FUNCTION
+    IF LcLinhaNeutra#(0) < 100# THEN
+        IF LcXd#(m, d, gf, fcd) > LcXdMax#(fyd) THEN LcAs# = -1: EXIT FUNCTION
+    END IF
+    a = CcaAsFlexao#(gf * m * 100#, 100#, d, fcd, fyd)
+    IF a < 0 THEN LcAs# = -1: EXIT FUNCTION
+    amin = CcaAsMin#(100#, h, taxa)
+    IF a < amin THEN a = amin
+    LcAs# = a
+END FUNCTION
+
+' "PORCENTAGEM UTILIZADA DA LINHA NEUTRA" do .LAP (%): a maior linha neutra
+' admitida e essa fracao da do limite dos dominios 3/4 (armadura simples).
+' LcLinhaNeutra#(v) com v > 0 define; LcLinhaNeutra#(0) devolve (padrao 100).
+FUNCTION LcLinhaNeutra# (v AS DOUBLE)
+    STATIC pct AS DOUBLE
+    IF v > 0 THEN pct = v
+    IF pct <= 0 THEN pct = 100#
+    LcLinhaNeutra# = pct
+END FUNCTION
+
+' Maior x/d admitido nas lajes: LcLinhaNeutra# % de CcaXdLim# (classe do aco).
+FUNCTION LcXdMax# (fyd AS DOUBLE)
+    LcXdMax# = LcLinhaNeutra#(0) / 100# * CcaXdLim#(fyd)
+END FUNCTION
+
+' x/d da faixa de 1 m (diagrama retangular, armadura simples) para o momento
+' caracteristico m (tf.m/m), sem o limite dos dominios. -1 se nem x = 1,25 d
+' resiste.
+FUNCTION LcXd# (m AS DOUBLE, d AS DOUBLE, gf AS DOUBLE, fcd AS DOUBLE)
+    DIM r AS DOUBLE
+    IF m <= 0 THEN LcXd# = 0: EXIT FUNCTION
+    r = gf * m * 100# / (0.425# * 100# * d * d * fcd)
+    IF r >= 1 THEN LcXd# = -1: EXIT FUNCTION
+    LcXd# = 1.25# * (1 - SQR(1 - r))
+END FUNCTION
+
+' Relacao de ortotropia mu = my/mx da laje i (LcMomentosOrto) usada por
+' LcCalculaTodas. LcMu#(i, v) com v > 0 define; LcMu#(i, 0) devolve
+' (padrao 1 = isotropa). O LAJECALC define pela tela de direcao da armadura.
+FUNCTION LcMu# (i AS INTEGER, v AS DOUBLE)
+    STATIC mu(1 TO DAD_MAXLAJ) AS DOUBLE
+    IF i < 1 OR i > DAD_MAXLAJ THEN LcMu# = 1#: EXIT FUNCTION
+    IF v > 0 THEN mu(i) = v
+    IF mu(i) <= 0 THEN mu(i) = 1#
+    LcMu# = mu(i)
+END FUNCTION
+
+' Secao mais solicitada da laje (sem compatibilizacao): maior momento mc
+' (tf.m/m) entre positivos e negativos; neg = -1 se ele e negativo.
+SUB LcMomentoCritico (lx AS DOUBLE, ly AS DOUBLE, bordos AS STRING, iE AS DOUBLE, mu AS DOUBLE, p AS DOUBLE, mc AS DOUBLE, neg AS INTEGER)
+    DIM mx AS DOUBLE, my AS DOUBLE, x(1 TO 4) AS DOUBLE, t AS STRING, k AS INTEGER
+    LcMomentosOrto lx, ly, bordos, iE, mu, p, mx, my, x(1), x(2), x(3), x(4), t
+    mc = mx: neg = 0
+    IF my > mc THEN mc = my
+    FOR k = 1 TO 4
+        IF x(k) > mc THEN mc = x(k): neg = -1
+    NEXT
+END SUB
+
+' Tensao de cisalhamento de calculo (tf/cm2) na faixa de 1 m junto ao apoio:
+' twd = gf r / (bw d), bw = 100 cm, r = reacao do bordo (tf/m), d em cm.
+FUNCTION LcTauWd# (r AS DOUBLE, d AS DOUBLE, gf AS DOUBLE)
+    LcTauWd# = gf * r / (100# * d)
+END FUNCTION
+
+' Limite twu1 (tf/cm2) da laje sem armadura transversal: psi4 raiz(fck MPa).
+' RECONSTRUCAO: a expressao de psi4 da NB-1/78 (item das lajes) nao foi
+' confirmada; usa-se psi4 = 0,07, o menor psi1 das vigas (CcaAswEstriboRho#),
+' a favor da seguranca. So gera aviso; as armaduras nao mudam.
+FUNCTION LcTauWu1# (fck AS DOUBLE)
+    LcTauWu1# = 0.07# * SQR(CcaMPa#(fck)) / 98.0665#
+END FUNCTION
+
+' Token k (1..) de s separado por "/" (nomes das vigas de apoio).
+FUNCTION LcViga$ (s AS STRING, k AS INTEGER)
+    DIM i AS INTEGER, p AS INTEGER, q AS INTEGER
+    p = 1
+    FOR i = 1 TO k - 1
+        q = INSTR(p, s, "/")
+        IF q = 0 THEN EXIT FUNCTION
+        p = q + 1
+    NEXT
+    q = INSTR(p, s, "/")
+    IF q = 0 THEN LcViga$ = RTRIM$(MID$(s, p)) ELSE LcViga$ = RTRIM$(MID$(s, p, q - p))
+END FUNCTION
+
+' Calcula todas as lajes Laj(1..LajQtd): espessura (se h = 0), cargas,
+' momentos, compatibilizacao dos negativos entre lajes que compartilham
+' viga em bordo engastado, reacoes, flecha e armaduras. Preenche os campos
+' de resultado e temRes. msg$ acumula avisos ("" se tudo ok).
+' Parametros: fck/fyk tf/cm2; gf/gc/gs coeficientes; cob/acresc cm;
+' hmin cm; relTot/relAcid (vao/flecha); iE = Mneg/Mpos; taxaPos/taxaNeg
+' fracoes (0.0015); dens tf/m3. Tambem usa LcMu# (ortotropia por laje),
+' LcLinhaNeutra# (limite de x/d), LcFluencia# e a classe do aco de CALCCA;
+' avisa (sem mudar armaduras) quando twd > twu1 (LcTauWu1#).
+SUB LcCalculaTodas (fck AS DOUBLE, fyk AS DOUBLE, gf AS DOUBLE, gc AS DOUBLE, gs AS DOUBLE, cob AS DOUBLE, acresc AS DOUBLE, hmin AS DOUBLE, relTot AS DOUBLE, relAcid AS DOUBLE, iE AS DOUBLE, taxaPos AS DOUBLE, taxaNeg AS DOUBLE, dens AS DOUBLE, msg AS STRING)
+    DIM i AS INTEGER, j AS INTEGER, k AS INTEGER, kk AS INTEGER, tipo AS STRING, nome AS STRING
+    DIM fcd AS DOUBLE, fyd AS DOUBLE, d AS DOUBLE, h AS DOUBLE, xc AS DOUBLE, v AS STRING, dx AS DOUBLE
+    DIM xn(1 TO DAD_MAXLAJ, 1 TO 4) AS DOUBLE, xf(1 TO DAD_MAXLAJ, 1 TO 4) AS DOUBLE
+    DIM tp(1 TO DAD_MAXLAJ) AS STRING, achou AS INTEGER
+    fcd = fck / gc: fyd = fyk / gs
+    msg = ""
+    FOR i = 1 TO LajQtd
+        nome = RTRIM$(Laj(i).nome)
+        tipo = LcTipo$(Laj(i).lx, Laj(i).ly, Laj(i).bordos)
+        tp(i) = tipo
+        Laj(i).temRes = 0
+        IF tipo = "" THEN
+            msg = msg + nome + ": Configuracao de bordos nao suportada. "
+            ' sem calculo: nao deixa valores antigos entrarem na compatibilizacao
+            Laj(i).mx = 0: Laj(i).my = 0: Laj(i).x1 = 0: Laj(i).x2 = 0: Laj(i).x3 = 0: Laj(i).x4 = 0
+        ELSE
+            IF Laj(i).h <= 0 THEN
+                h = LcEspessura#(Laj(i).lx, Laj(i).ly, Laj(i).bordos, Laj(i).g, Laj(i).q, dens, fck, hmin, relTot, relAcid)
+                IF h < 0 THEN
+                    msg = msg + nome + ": espessura acima de 60 cm. ": h = 60
+                END IF
+                Laj(i).h = h
+            END IF
+            Laj(i).p = Laj(i).h / 100# * dens + Laj(i).g + Laj(i).q
+            LcMomentosOrto Laj(i).lx, Laj(i).ly, Laj(i).bordos, iE, LcMu#(i, 0), Laj(i).p, Laj(i).mx, Laj(i).my, Laj(i).x1, Laj(i).x2, Laj(i).x3, Laj(i).x4, tipo
+            LcReacoes Laj(i).lx, Laj(i).ly, Laj(i).bordos, Laj(i).p, Laj(i).r1, Laj(i).r2, Laj(i).r3, Laj(i).r4
+            Laj(i).flecha = LcFlecha#(Laj(i).lx, Laj(i).ly, Laj(i).bordos, Laj(i).p - Laj(i).q, Laj(i).h, fck) * LcFluencia#(0) + LcFlecha#(Laj(i).lx, Laj(i).ly, Laj(i).bordos, Laj(i).q, Laj(i).h, fck)
+            Laj(i).temRes = -1
+        END IF
+        xn(i, 1) = Laj(i).x1: xn(i, 2) = Laj(i).x2: xn(i, 3) = Laj(i).x3: xn(i, 4) = Laj(i).x4
+        FOR k = 1 TO 4: xf(i, k) = xn(i, k): NEXT
+    NEXT
+    ' compatibilizacao: bordos E OPOSTOS (esq x dir, inf x sup) de lajes
+    ' diferentes, com a mesma viga e trechos que se sobrepoem. Com varios
+    ' vizinhos vale o maior valor compatibilizado. Balanco (BX/BY) nao e
+    ' redistribuido: e isostatico, a laje vizinha recebe o momento do balanco.
+    FOR i = 1 TO LajQtd
+        IF Laj(i).temRes THEN
+            FOR k = 1 TO 4
+                IF UCASE$(MID$(Laj(i).bordos, k, 1)) = "E" THEN
+                    v = LcViga$(Laj(i).vigas, k)
+                    IF v <> "" AND v <> "-" THEN
+                        IF k <= 2 THEN kk = k + 2 ELSE kk = k - 2
+                        achou = 0
+                        FOR j = 1 TO LajQtd
+                            IF j <> i AND Laj(j).temRes THEN
+                                IF UCASE$(MID$(Laj(j).bordos, kk, 1)) = "E" AND LcViga$(Laj(j).vigas, kk) = v AND LcSobrepoe%(i, k, j, kk) THEN
+                                    IF LEFT$(tp(i), 1) = "B" THEN
+                                        xc = xn(i, k)
+                                    ELSEIF LEFT$(tp(j), 1) = "B" THEN
+                                        xc = xn(j, kk)
+                                    ELSE
+                                        xc = LcCompatibiliza#(xn(i, k), xn(j, kk))
+                                    END IF
+                                    IF achou = 0 OR xc > xf(i, k) THEN xf(i, k) = xc
+                                    achou = -1
+                                END IF
+                            END IF
+                        NEXT
+                    END IF
+                END IF
+            NEXT
+        END IF
+    NEXT
+    ' simetria: os dois lados da mesma viga ficam com o mesmo valor (o maior)
+    FOR i = 1 TO LajQtd
+        IF Laj(i).temRes THEN
+            FOR k = 1 TO 4
+                IF UCASE$(MID$(Laj(i).bordos, k, 1)) = "E" THEN
+                    v = LcViga$(Laj(i).vigas, k)
+                    IF k <= 2 THEN kk = k + 2 ELSE kk = k - 2
+                    FOR j = 1 TO LajQtd
+                        IF j <> i AND Laj(j).temRes THEN
+                            IF UCASE$(MID$(Laj(j).bordos, kk, 1)) = "E" AND LcViga$(Laj(j).vigas, kk) = v AND LcSobrepoe%(i, k, j, kk) THEN
+                                IF xf(j, kk) > xf(i, k) THEN xf(i, k) = xf(j, kk) ELSE xf(j, kk) = xf(i, k)
+                            END IF
+                        END IF
+                    NEXT
+                END IF
+            NEXT
+        END IF
+    NEXT
+    ' aplica os negativos finais e corrige o positivo da mesma direcao com
+    ' metade da reducao do negativo (equilibrio do vao)
+    FOR i = 1 TO LajQtd
+        IF Laj(i).temRes THEN
+            FOR k = 1 TO 4
+                dx = xn(i, k) - xf(i, k)
+                IF dx > 0 AND LEFT$(tp(i), 1) <> "B" THEN
+                    IF k = 1 OR k = 3 THEN Laj(i).mx = Laj(i).mx + dx / 2 ELSE Laj(i).my = Laj(i).my + dx / 2
+                END IF
+            NEXT
+            Laj(i).x1 = xf(i, 1): Laj(i).x2 = xf(i, 2): Laj(i).x3 = xf(i, 3): Laj(i).x4 = xf(i, 4)
+        END IF
+    NEXT
+    FOR i = 1 TO LajQtd
+        IF Laj(i).temRes THEN
+            d = Laj(i).h - cob - acresc
+            Laj(i).asx = LcAs#(Laj(i).mx, Laj(i).h, d, gf, fcd, fyd, taxaPos)
+            Laj(i).asy = LcAs#(Laj(i).my, Laj(i).h, d, gf, fcd, fyd, taxaPos)
+            ' armadura de distribuicao nas lajes armadas numa direcao:
+            ' >= 1/5 da principal e >= 0,9 cm2/m (NB-1/78)
+            IF tp(i) = "UX" AND Laj(i).asx >= 0 THEN Laj(i).asy = LcMaior#(Laj(i).asx / 5#, 0.9#)
+            IF tp(i) = "UY" AND Laj(i).asy >= 0 THEN Laj(i).asx = LcMaior#(Laj(i).asy / 5#, 0.9#)
+            Laj(i).as1 = LcAs#(Laj(i).x1, Laj(i).h, d, gf, fcd, fyd, taxaNeg)
+            Laj(i).as2 = LcAs#(Laj(i).x2, Laj(i).h, d, gf, fcd, fyd, taxaNeg)
+            Laj(i).as3 = LcAs#(Laj(i).x3, Laj(i).h, d, gf, fcd, fyd, taxaNeg)
+            Laj(i).as4 = LcAs#(Laj(i).x4, Laj(i).h, d, gf, fcd, fyd, taxaNeg)
+            IF Laj(i).asx < 0 OR Laj(i).asy < 0 OR Laj(i).as1 < 0 OR Laj(i).as2 < 0 OR Laj(i).as3 < 0 OR Laj(i).as4 < 0 THEN
+                msg = msg + RTRIM$(Laj(i).nome) + ": Secao insuficiente, aumente a espessura"
+                IF LcLinhaNeutra#(0) < 100# THEN msg = msg + " (x/d > " + LTRIM$(STR$(LcLinhaNeutra#(0))) + "% do limite 3/4)"
+                msg = msg + ". "
+            END IF
+            ' cortante sem estribos: twd com a maior reacao do processo das areas
+            IF LcTauWd#(LcMaior#(LcMaior#(Laj(i).r1, Laj(i).r2), LcMaior#(Laj(i).r3, Laj(i).r4)), d, gf) > LcTauWu1#(fck) THEN
+                msg = msg + RTRIM$(Laj(i).nome) + ": Cortante twd > twu1, laje sem estribos, aumente a espessura. "
+            END IF
+        END IF
+    NEXT
+END SUB
+
+' Maior de dois valores.
+FUNCTION LcMaior# (a AS DOUBLE, b AS DOUBLE)
+    IF a > b THEN LcMaior# = a ELSE LcMaior# = b
+END FUNCTION
+
+' Verdadeiro se o bordo k da laje i e o bordo kk da laje j estao na mesma
+' linha e se sobrepoem em mais de 1 mm (continuidade fisica).
+FUNCTION LcSobrepoe% (i AS INTEGER, k AS INTEGER, j AS INTEGER, kk AS INTEGER)
+    DIM ci AS DOUBLE, cj AS DOUBLE, a1 AS DOUBLE, a2 AS DOUBLE, b1 AS DOUBLE, b2 AS DOUBLE, lo AS DOUBLE, hi AS DOUBLE
+    LcBordoGeom i, k, ci, a1, a2
+    LcBordoGeom j, kk, cj, b1, b2
+    IF ABS(ci - cj) > 0.001 THEN EXIT FUNCTION
+    IF a1 > b1 THEN lo = a1 ELSE lo = b1
+    IF a2 < b2 THEN hi = a2 ELSE hi = b2
+    IF hi - lo > 0.001 THEN LcSobrepoe% = -1
+END FUNCTION
+
+' Linha do bordo k da laje i: coordenada c (x se vertical, y se horizontal)
+' e extensao s1..s2 ao longo dela (m).
+SUB LcBordoGeom (i AS INTEGER, k AS INTEGER, c AS DOUBLE, s1 AS DOUBLE, s2 AS DOUBLE)
+    SELECT CASE k
+        CASE 1: c = Laj(i).x0: s1 = Laj(i).y0: s2 = Laj(i).y0 + Laj(i).ly
+        CASE 2: c = Laj(i).y0: s1 = Laj(i).x0: s2 = Laj(i).x0 + Laj(i).lx
+        CASE 3: c = Laj(i).x0 + Laj(i).lx: s1 = Laj(i).y0: s2 = Laj(i).y0 + Laj(i).ly
+        CASE ELSE: c = Laj(i).y0 + Laj(i).ly: s1 = Laj(i).x0: s2 = Laj(i).x0 + Laj(i).lx
+    END SELECT
+END SUB

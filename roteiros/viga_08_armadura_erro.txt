@@ -1,0 +1,18 @@
+# exe: ARMADURA
+# ARMADURA item 4 (nao gravar resultado invalido). Obra V10OBRA (roteiros/viga_08_armadura_erro.dados: so SISTRUT.OBR).
+# POS 1: B 20, H 50, d 46, Mk 7,03, Vk 7,03 (valida). POS 2: d 3 (invalida: ArmFlexao -1).
+# P com I=1 J=2: esperado "Secoes NAO gravadas: 1 erro(s)" e _ARM.SEC sem As calculado em POS 1.
+# {BS} apaga o padrao antes de digitar (EntradaTexto$ anexa ao padrao).
+
+# M (materiais): 5 campos confirmados com Enter; uma tecla ao fim
+{TELA menu}M{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{TELA materiais}{ENTER}
+
+# A (arquivar): POS 1 valida com S; POS 2 com d 3 com S; ESC sai do laco de A
+A{TELA arquivar}1{BS}20{ENTER}{BS}50{ENTER}{BS}46{ENTER}{BS}7.03{ENTER}{BS}7.03{ENTER}{TELA arquivar_pos1}S
+1{BS}20{ENTER}{BS}50{ENTER}{BS}3{ENTER}{BS}7.03{ENTER}{BS}7.03{ENTER}{TELA arquivar_pos2}S
+{ESC}
+
+# P (processar): I=1 e J=2 (Enter mantem os padroes); aviso de erro com uma tecla ao fim
+P{ENTER}{ENTER}{TELA processa_erro}{ENTER}
+
+{TELA fim}{F2}

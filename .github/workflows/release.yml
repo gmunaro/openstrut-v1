@@ -1,0 +1,199 @@
+# Gera os pacotes do OpenStrut (V1 + V2) para Windows, Linux e macOS e, em
+# tag v*, publica numa GitHub Release deste repositorio. Detalhes em .github/CI.md.
+#
+# Os pontos marcados com "# AJUSTAR:" chamam scripts de pacote/ cuja interface
+# ainda nao esta fechada; o comando escrito e o provavel.
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      v2_ref:
+        description: "Branch, tag ou commit da V2 (gmunaro/openstrut); vazio = branch padrao"
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  # Mesmo build do CI, com macOS incluido (tag e execucao manual sempre incluem).
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      roteiros: false
+
+  v2:
+    name: build da V2
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      # AJUSTAR: se gmunaro/openstrut for privado, passe um token com leitura nele
+      # (ex.: token: ${{ secrets.V2_TOKEN }}); o GITHUB_TOKEN so le este repositorio.
+      - uses: actions/checkout@v7
+        with:
+          repository: gmunaro/openstrut
+          ref: ${{ inputs.v2_ref }}
+          path: v2
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: v2/package.json
+
+      - name: Dependencias
+        working-directory: v2
+        run: bun install --frozen-lockfile
+
+      # AJUSTAR: o vite.config.ts da V2 nao define base hoje (padrao "/"). Se
+      # passar a definir (ex.: para GitHub Pages), confirme que --base=/ chega ao
+      # "vite build", que e o ultimo comando do script build.
+      - name: Build (base "/")
+        working-directory: v2
+        run: bun run build --base=/
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: v2-dist
+          path: v2/dist
+          if-no-files-found: error
+          retention-days: 3
+
+  pacote:
+    name: pacote (${{ matrix.plat }})
+    needs: [build, v2]
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: windows-latest, plat: windows-x64, arch: x64, alvo: windows-x64, arquivo: OpenStrut-Setup-windows-x64.exe }
+          - { os: ubuntu-24.04, plat: linux-x64, arch: x64, alvo: linux-x64, arquivo: OpenStrut-linux-x64.tar.gz }
+          - { os: ubuntu-24.04-arm, plat: linux-arm64, arch: arm64, alvo: linux-arm64, arquivo: OpenStrut-linux-arm64.tar.gz }
+          - { os: macos-15, plat: macos-arm64, arch: arm64, alvo: darwin-arm64, arquivo: OpenStrut-macos-arm64.dmg }
+          - { os: macos-15-intel, plat: macos-x64, arch: x64, alvo: darwin-x64, arquivo: OpenStrut-macos-x64.dmg }
+    runs-on: ${{ matrix.os }}
+    # o build de Linux arm64 ainda e experimental (ver build.yml)
+    continue-on-error: ${{ matrix.plat == 'linux-arm64' }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      # Entradas e saida dos scripts de pacote/ (ver pacote/comum.sh). $PWD no
+      # formato do bash, para funcionar tambem no Git Bash do Windows.
+      - name: Versao e pastas
+        run: |
+          {
+            echo "V1_DIR=$PWD/v1-build"
+            echo "V2_DIST=$PWD/v2-dist"
+            echo "SAIDA=$PWD/pacote-saida"
+          } >> "$GITHUB_ENV"
+          if [ "$GITHUB_REF_TYPE" = tag ]; then
+            echo "VERSAO=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
+          else
+            echo "VERSAO=0.0.0-dev.$GITHUB_RUN_NUMBER" >> "$GITHUB_ENV"
+          fi
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: v1-build-${{ matrix.plat }}.tar.gz
+          path: v1-artifact
+
+      # caminho relativo: o tar do Git Bash le "D:\..." como host remoto
+      - name: Extrair build da V1
+        run: |
+          mkdir -p v1-build
+          tar -xzf "v1-artifact/v1-build-${{ matrix.plat }}.tar.gz" -C v1-build
+          ls -la v1-build
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: v2-dist
+          path: v2-dist
+
+      # AJUSTAR: troque por bun-version-file: pacote/lancador/package.json quando
+      # esse arquivo existir na main (fixa a versao do Bun do lancador).
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Inno Setup (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          # A imagem windows-latest ja traz o Inno Setup 6; o choco so roda se sumir.
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) {
+            choco install innosetup -y --no-progress
+          }
+          if (-not (Test-Path $iscc)) { throw "ISCC.exe nao encontrado em $iscc" }
+          # barras normais: o empacotar.sh roda no Git Bash
+          "ISCC=$($iscc -replace '\\', '/')" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      # AJUSTAR: o rascunho de pacote/<so>/empacotar.sh ja chama
+      # lancador/compilar.sh; se ficar assim, apague este step. Se o lancador
+      # tiver dependencias, rode antes: (cd pacote/lancador && bun install --frozen-lockfile)
+      - name: Lancador da V2
+        run: |
+          mkdir -p lancador-saida
+          bash pacote/lancador/compilar.sh ${{ matrix.alvo }} "$PWD/lancador-saida/OpenStrut-V2${{ runner.os == 'Windows' && '.exe' || '' }}"
+
+      # AJUSTAR: interface provavel (opcoes de pacote/comum.sh); le V1_DIR, V2_DIST,
+      # SAIDA e VERSAO do ambiente. Gera $SAIDA/OpenStrut-Setup-windows-x64.exe.
+      - name: Pacote (Windows)
+        if: runner.os == 'Windows'
+        run: bash pacote/windows/empacotar.sh --arch ${{ matrix.arch }}
+
+      # AJUSTAR: interface provavel; gera $SAIDA/OpenStrut-linux-<arch>.tar.gz.
+      - name: Pacote (Linux)
+        if: runner.os == 'Linux'
+        run: bash pacote/linux/empacotar.sh --arch ${{ matrix.arch }}
+
+      # AJUSTAR: interface provavel; gera $SAIDA/OpenStrut-macos-<arch>.dmg.
+      - name: Pacote (macOS)
+        if: runner.os == 'macOS'
+        run: bash pacote/macos/empacotar.sh --arch ${{ matrix.arch }}
+
+      - uses: actions/upload-artifact@v7
+        with:
+          path: pacote-saida/${{ matrix.arquivo }}
+          archive: false
+          if-no-files-found: error
+          retention-days: 5
+
+  publicar:
+    name: publicar release
+    needs: pacote
+    # so publica em tag; execucao manual a partir de um branch deixa os pacotes
+    # apenas como artifacts do run
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: OpenStrut-*
+          path: pacotes
+          merge-multiple: true
+
+      - name: Criar ou atualizar a release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          ls -la pacotes
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            gh release upload "$TAG" pacotes/* --clobber
+          else
+            pre=()
+            # v1.2.0-rc1 e afins saem como pre-release
+            case "$TAG" in *-*) pre=(--prerelease) ;; esac
+            gh release create "$TAG" pacotes/* --verify-tag --generate-notes --title "OpenStrut $TAG" "${pre[@]}"
+          fi

@@ -1,0 +1,11 @@
+# exe: SISTRUT
+# e2e_02_laje_calc: obra E2E (copia de e2e_01_laje_geo). Menu SISTRUT -> L -> 3 (Continuidade / Espessura / Dimensionamento = LAJECALC).
+# LAJECALC: "OBRA #" ENTER (padrao E2E); "Dados Corretos" ENTER (padrao S).
+# E = espessura minima de todas as lajes; M = momentos e armaduras (visao 1, todas, sem impressao, com visualizacao);
+# O = otimizacao dos negativos (todas); R = sai do LAJECALC e grava o .LAJ (Alterado).
+# ENTER: paginas do RelMostra, erros e o Espera do LAJE. ENTER no menu do LAJECALC e ignorado.
+{TELA s01_menu}L{TELA l01_menu_laje}3{TELA c01_obra}{ENTER}{TELA c02_dados}{ENTER}{TELA c03_menu_calc}
+E{ENTER}N{TELA e01_esp_pergunta}S{ENTER}{ENTER}{ENTER}{TELA e02_esp_fim}
+M{ENTER}1TNS{ENTER}{ENTER}{ENTER}{TELA m01_mom_fim}
+O{TELA o00_opcao}T{ENTER}{ENTER}{ENTER}{TELA o01_otim_fim}
+R{ENTER}{ENTER}{TELA l02_menu_pos_calc}{F2}{TELA s02_menu}{F2}

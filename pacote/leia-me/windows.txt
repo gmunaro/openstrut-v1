@@ -1,0 +1,44 @@
+OpenStrut V1 e V2 para Windows
+
+O OpenStrut V1 é uma reconstrução independente, por engenharia reversa, do
+SISTRUT 4.0 (1991). O projeto não tem vínculo com os autores do programa
+original.
+
+Requisitos: Windows 10 (versão 1809 ou mais nova) ou 11, de 64 bits. Para a
+V2, Microsoft Edge ou Google Chrome (o Edge já vem no Windows). Não precisa de
+internet nem de administrador.
+
+INSTALAR
+Dê dois cliques em OpenStrut-Setup-windows-x64.exe e siga o assistente.
+Se o Windows mostrar "O Windows protegeu o computador", clique em "Mais
+informações" e depois em "Executar assim mesmo". O aviso aparece porque o
+instalador não tem assinatura digital.
+Ao terminar, a área de trabalho e o menu Iniciar terão os atalhos
+"OpenStrut V1" e "OpenStrut V2".
+
+Os programas ficam em %LOCALAPPDATA%\Programs\OpenStrut. Para atualizar, rode
+um instalador mais novo; as obras e configurações são mantidas.
+
+OPENSTRUT V1
+Reconstrução do SISTRUT 4.0, pela NB-1/78. Usa só o teclado, como o original.
+Alt+Enter alterna a tela cheia. As obras, os relatórios (.LST) e os desenhos
+(.DXF, .PLT) ficam na pasta do programa; o menu Iniciar tem o atalho "Pasta
+das obras da V1".
+
+OPENSTRUT V2
+Versão nova, pela NBR 6118:2023 ou pela NB-1/78. Abre numa janela própria.
+Salve as obras com o botão de salvar (arquivo .sistrut.json); o rascunho
+automático fica só neste computador. Obras da V1 entram por "Importar obra da
+V1". Ao fechar a janela, o programa encerra sozinho.
+
+DESINSTALAR
+Configurações > Aplicativos > OpenStrut V1 e V2 > Desinstalar, ou menu Iniciar
+> OpenStrut > Desinstalar OpenStrut. As obras da V1 e os dados da V2 continuam
+em %LOCALAPPDATA%\Programs\OpenStrut até você apagar a pasta.
+
+PROBLEMAS
+- A V2 diz que a porta 41780 está ocupada: outro programa usa essa porta.
+  Feche-o ou reinicie o computador.
+- O antivírus bloqueou um dos programas: libere a pasta
+  %LOCALAPPDATA%\Programs\OpenStrut. Programas sem assinatura digital costumam
+  ser barrados.

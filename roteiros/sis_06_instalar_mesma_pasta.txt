@@ -1,0 +1,6 @@
+# exe: INSTALAR
+# sis_06_instalar_mesma_pasta: destino igual a origem (EXE: INSTALAR).
+# Destino "." (pasta de saida do roteiro). Origem: Enter (padrao = _CWD$, que e
+# a mesma pasta). Deve recusar com "Destino igual a origem" e nao copiar nem apagar.
+# Monitor: h. LPT: 2. COM: Enter (padrao 1). Saida esperada: 0.
+{TELA ins6_inicial}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}.{TELA ins6_destino_digitado}{ENTER}{TELA ins6_origem_padrao}{ENTER}h2{ENTER}{TELA ins6_recusa}{SPACE}

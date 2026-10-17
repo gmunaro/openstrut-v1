@@ -1,0 +1,9 @@
+# modulo: VPLOTA
+# VPLOTA opcao 1: caminhos sem arquivo novo. Registro 9 inexistente (nem V9__E2E.DXF nem R9__E2E.DXF:
+# DADOS INCORRETOS), registros '1 A 1'; <A>lterar (sem mudar parametros), montagem de novo com a
+# confirmacao de cada registro (S, sim aceito), <C>ancelar
+# (confirma S) e volta ao menu; opcao 1 de novo ate o nome da obra vazio (RETORNO).
+{TELA c00}1{ESPERA Deseja alterar}{PAUSA 2}{ENTER}{ESPERA Nome da Obra}{PAUSA 2}E2E{ENTER}{ESPERA Numero dos Registros}{PAUSA 2}{TELA c01}
+9{ENTER}{ESPERA DADOS INCORRETOS|60}{PAUSA 2}{TELA c02}{ENTER}{PAUSA 3}{TELA c03}1 A 1{ENTER}{ESPERA isualizar a disposicao|300}{PAUSA 2}{TELA c04}
+A{ESPERA Deseja alterar|60}{PAUSA 2}{TELA c05}{ENTER}{ESPERA Confirme a escolha|300}{PAUSA 2}{TELA c05b}S{ESPERA isualizar a disposicao|300}{PAUSA 2}{TELA c06}C{ESPERA Confirme o cancelamento}{PAUSA 2}{TELA c07}S{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA c08}
+1{ESPERA Deseja alterar}{PAUSA 2}{ENTER}{ESPERA Nome da Obra}{PAUSA 2}{TELA c09}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA c10}

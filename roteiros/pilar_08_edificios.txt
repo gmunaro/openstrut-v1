@@ -1,0 +1,3 @@
+# exe: PILAR
+# PILAR opcao 8 (ChamaPILAREDI): abre PILAREDI com a obra FLUXO da semente, Enter mantem o nome, ESC volta ao menu de PILAR, F2 sai
+{TELA p08_abertura}{ENTER}{TELA p08_menu}8{TELA p08_obra}{ENTER}{TELA p08_pilaredi}{ESC}{TELA p08_volta}{F2}

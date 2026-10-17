@@ -1,0 +1,14 @@
+# exe: ARMADURA
+# ARMADURA item 7 (ItemCorrige zera As). Obra V10OBRA; dados: roteiros/viga_12_corrige_as.dados
+# (SISTRUT.OBR e V10OBRA_ARM.SEC sem armadura calculada, POS 1 = B 20, H 50, d 46, Mk 7,03, Vk 7,03).
+# P calcula As (esperado M+ As=5.79 3x16). C troca Mk para 7.5 na POS 1 e sai com FIM (grava).
+# Sem novo P: o _ARM.SEC gravado deve ter asPos, phiPos, nPos, asNegEsq, aswEsq, phiEst e sEst zerados
+# e Mk 7.5. {BS} apaga o padrao antes de digitar (EntradaTexto$ anexa ao padrao).
+
+# P (processar): I=1 e J=1 (Enter mantem os padroes); uma tecla ao fim
+P{ENTER}{ENTER}{TELA processa}{ENTER}
+
+# C (correcao): posicao 1; item 4 (Mk); novo valor 7.5; posicao 0 (FIM) grava; aviso "reprocesse com P" aguarda tecla
+C{BS}1{ENTER}{BS}4{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}7.5{ENTER}{BS}0{ENTER}{TELA corrige_fim}{ENTER}{ENTER}
+
+{TELA fim}{F2}

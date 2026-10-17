@@ -1,0 +1,5 @@
+# exe: PILAR
+# PILAREDI opcao L (Lista das Colunas) e correcao de uma coluna, obra FLUXO (semente). INI padrao em tf/cm2.
+# Posicao 1 (P4, TERREO): secao R mantida (ENTER); lex do nivel 1 de 3 para 3.2; ley mantida. Depois sai com ENTER/ESC.
+# {BS} antes de cada campo numerico que muda; ENTER no campo sem alteracao mantem o valor.
+{TELA l_abertura}{ENTER}{TELA l_obra}8{TELA l_obra2}{ENTER}L{TELA l_lista}{BS}1{ENTER}{TELA l_edita}{ENTER}{TELA l_nivel}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}3.2{ENTER}{ENTER}{TELA l_depois}{ENTER}{TELA l_lista2}{ENTER}{TELA l_fim}{ESC}{TELA l_menu}{F2}

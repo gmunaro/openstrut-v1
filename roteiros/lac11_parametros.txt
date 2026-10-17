@@ -1,0 +1,7 @@
+# exe: VPLOTA
+# VPLOTA, obra FLUXO. Item 11 (parametrizacao da folha): grupo "Area de Plotagem e Bordas".
+# Sessao 1 do lac04 ate o menu do resultado; A abre a ParmTela. Largura da folha 841 -> 800.
+# Enter nas demais linhas mantem o valor. Depois de gravar, a segunda ParmTela mostra 800 (lido do VPLOTA.INI).
+# N no prompt "Gravo o conjunto" nao regrava o AVF. C e S cancelam as montagens; F2 sai.
+1N{ENTER}{TELA lac11_01_obra}{ENTER}{TELA lac11_02_grava_avf}S{TELA lac11_03_resumo_f1}{ENTER}{TELA lac11_04_apos_resumo}A{TELA lac11_05_parm_tela}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}800{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{TELA lac11_05b_parm_campo8}{ENTER}{TELA lac11_06_confirma_arranjo}N{TELA lac11_07_resumo_800}{ENTER}{TELA lac11_08_menu_resultado}A{TELA lac11_09_parm_relida}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{TELA lac11_10_confirma_arranjo2}N{TELA lac11_11_resumo_2}{ENTER}{TELA lac11_12_menu_final}C{TELA lac11_13_cancela}S
+{F2}

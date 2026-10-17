@@ -1,0 +1,5 @@
+# exe: PILAR
+# PILAR opcao 5 (materiais): fck 15 MPa, fyk 500 MPa (CA-50), tipo B; multiplicador 0.01 (MPa -> tf/cm2)
+# Enter mantem o valor mostrado; depois reabre a tela para conferir os valores gravados em memoria
+{TELA p05_abertura}{ENTER}{TELA p05_menu}5{TELA p05_mat}15{ENTER}500{ENTER}B{ENTER}0.01{ENTER}
+{TELA p05_mat2}5{TELA p05_mat3}{ENTER}{ENTER}{ENTER}{ENTER}{TELA p05_menu2}{F2}

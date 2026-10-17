@@ -1,0 +1,532 @@
+##### a1 (oraculo: $ORACULO/runs/retrad_viga_a1-20261015-065711)
+OK     001_a00
+OK     002_a01
+OK     003_a02
+OK     004_a03
+OK     005_a04
+OK     006_a05
+OK     007_a06_dados_v10
+OK     008_a07
+OK     009_a08
+OK     010_a09_dados_v11
+OK     011_a10
+OK     012_a11
+OK     013_a12_lista
+OK     014_g00
+OK     015_g01
+OK     016_g02
+OK     017_g03
+OK     018_g04
+OK     019_g05
+OK     020_g06_catalogo
+OK     021_m01
+OK     022_q00
+OK     023_q01
+OK     024_q02
+OK     025_q03_v10
+OK     026_q04_v10
+OK     027_q05_diagrama_v10 (imagem 640x200)
+OK     028_q06_v11
+OK     029_q07_v11
+OK     030_q08_diagrama_v11 (imagem 640x200)
+OK     031_q09_menu
+OK     impressora.prn (0 bytes iguais)
+
+32 iguais, 0 diferentes
+OK     obra/NOVA.VIG (2565 bytes)
+obra: 1 iguais, 0 diferentes
+##### b (oraculo: $ORACULO/runs/retrad_viga_b-20261015-065524)
+OK     001_v01_menu_viga
+OK     002_v02_nome_obra
+OK     003_v03_listo
+OK     004_v04_lista
+OK     005_v05_relisto
+OK     006_v06_continuo
+OK     007_v07_todas
+OK     008_v08_reg1
+OK     009_v09_reg6
+OK     010_v10_mult
+OK     011_v11_saida
+OK     012_v12_corretos
+OK     013_v13_seguir
+OK     014_v14_reacoes
+OK     015_v15_menu_fim
+OK     impressora.prn (10353 bytes iguais)
+
+16 iguais, 0 diferentes
+OK     obra/E2E.REP (878 bytes)
+obra: 1 iguais, 0 diferentes
+##### c1 (oraculo: $ORACULO/runs/retrad_viga_c1-20261015-065711)
+OK     001_p00
+OK     002_p01
+OK     003_p02
+OK     004_p03
+OK     005_p04
+OK     006_p05
+OK     007_p06
+OK     008_p07
+OK     009_p08
+OK     010_m01
+OK     011_e01
+OK     012_e02
+OK     013_e03
+OK     014_e04_dados
+OK     015_e05
+OK     016_e06_diagrama (imagem 640x200)
+OK     017_e07_menu
+OK     018_r00
+OK     019_r01
+OK     020_r02
+OK     021_r03
+OK     022_r04
+OK     023_r05
+OK     024_r06
+OK     025_r07
+OK     026_r08
+OK     027_r09
+OK     028_r10
+OK     029_r11
+OK     030_r12_v2
+OK     031_r13_v2
+OK     032_r14_v4
+OK     033_r15_v4
+OK     034_r16_v5
+OK     035_r17_v5
+OK     036_r18_reacoes
+OK     037_r19_menu
+OK     impressora.prn (2512 bytes iguais)
+
+38 iguais, 0 diferentes
+OK     obra/E2E.REP (607 bytes)
+OK     obra/E2E.VIG (5985 bytes)
+obra: 2 iguais, 0 diferentes
+##### k1 (oraculo: $ORACULO/runs/retrad_viga_k1-20261015-070028)
+OK     001_k00
+OK     002_k01
+OK     003_k02
+OK     004_k03
+OK     005_k04
+OK     006_k05
+OK     007_k06
+OK     008_k07_gerenciador
+OK     impressora.prn (0 bytes iguais)
+
+9 iguais, 0 diferentes
+obra: 0 iguais, 0 diferentes
+##### m1 (oraculo: $ORACULO/runs/retrad_viga_m1-20261015-065716)
+OK     001_m00
+OK     002_m01
+OK     003_p00
+OK     004_p01
+OK     005_p02
+OK     006_p03
+OK     007_p04
+OK     008_p05
+OK     009_p06
+OK     010_p07
+OK     011_p08
+OK     012_p09
+OK     013_p10
+OK     014_p11
+OK     015_m02
+OK     016_g00
+OK     017_g01
+OK     018_g02
+OK     019_g03
+OK     020_g04
+OK     021_g05
+OK     022_g06
+OK     023_g07
+OK     024_g08
+OK     025_g09
+OK     026_g10
+OK     027_g11
+OK     028_g12
+OK     029_g13
+OK     030_g14
+OK     031_g15
+OK     032_g16
+OK     033_g17
+OK     034_g18
+OK     035_m03
+OK     036_l01
+OK     037_l02
+OK     038_c00
+OK     039_c01
+OK     040_c02
+OK     041_c03
+OK     042_c04
+OK     043_c05
+OK     044_c06
+OK     045_c07
+OK     046_c08
+OK     047_c09
+OK     048_c10
+OK     049_c11
+OK     050_c12
+OK     051_c13
+OK     052_c14
+OK     053_c15
+OK     054_c16
+OK     055_c17
+OK     056_c18
+OK     057_m04
+OK     impressora.prn (0 bytes iguais)
+
+58 iguais, 0 diferentes
+obra: 0 iguais, 0 diferentes
+##### p2 (oraculo: $ORACULO/runs/retrad_viga_p2-20261015-065716)
+OK     001_m00
+OK     002_q00
+OK     003_q01
+OK     004_q02
+OK     005_q03
+OK     006_q04
+OK     007_q05
+OK     008_q06_esquema_v1 (imagem 640x200)
+OK     009_q07_diagrama_v1 (imagem 640x200)
+OK     010_q08_esquema_v2 (imagem 640x200)
+OK     011_q09_diagrama_v2 (imagem 640x200)
+OK     012_q10_menu
+OK     impressora.prn (2962 bytes iguais)
+
+13 iguais, 0 diferentes
+obra: 0 iguais, 0 diferentes
+##### p3 (oraculo: $ORACULO/runs/retrad_viga_p3-20261015-070028)
+OK     001_e00
+OK     002_e01
+OK     003_e02
+OK     004_e03
+OK     005_e04
+OK     006_e05
+OK     007_e06
+OK     008_e07
+OK     009_e08
+OK     010_e09
+OK     011_e10
+OK     012_e11
+OK     013_e12
+OK     014_e13
+OK     015_e14_colocacao_errada
+OK     016_e15
+OK     017_e16
+OK     018_e17
+OK     019_e18
+OK     020_e19
+OK     021_e20
+OK     022_e21
+OK     023_e22
+OK     024_e23
+OK     025_e24
+OK     026_e25
+OK     027_e26
+OK     028_e27
+OK     029_e28
+OK     030_e29_dados
+OK     031_e30
+OK     032_e31
+OK     033_e32
+OK     034_e33
+OK     035_e34
+OK     036_e35_menu
+OK     impressora.prn (27288 bytes iguais)
+
+37 iguais, 0 diferentes
+obra: 0 iguais, 0 diferentes
+##### v1 (oraculo: $ORACULO/runs/retrad_viga_v1-20261015-065524)
+OK     001_v00
+OK     002_v01
+OK     003_v02
+OK     004_v03
+OK     005_v04
+OK     006_v05
+OK     007_v06
+OK     008_v07
+OK     009_v08
+OK     010_v09
+OK     011_v10
+OK     012_v11
+OK     013_v12
+OK     014_v13
+OK     015_v14
+OK     016_v15
+OK     017_v16
+OK     018_v17
+OK     019_v18
+OK     020_v19
+OK     impressora.prn (0 bytes iguais)
+
+21 iguais, 0 diferentes
+OK     obra/SISTRUT\EXEC40\VPLOTA.INI (1394 bytes)
+obra: 1 iguais, 0 diferentes
+##### vpl_avf1 (oraculo: $ORACULO/runs/retrad_vpl_avf1-20261015-065525)
+OK     001_a00
+OK     002_a01
+OK     003_a02
+OK     004_a03
+OK     005_a04
+OK     006_a05
+OK     007_a06 (imagem 640x200)
+OK     008_a07 (imagem 640x200)
+OK     009_a08
+OK     010_a09
+OK     011_a10
+OK     012_a11
+OK     013_a12
+OK     impressora.prn (0 bytes iguais)
+
+14 iguais, 0 diferentes
+OK     obra/FV1_E2E.PLT (8360 bytes)
+obra: 1 iguais, 0 diferentes
+##### vpl_dxf1 (oraculo: $ORACULO/runs/retrad_vpl_dxf1-20261015-082445)
+OK     001_d00
+OK     002_d01
+OK     003_d02
+OK     004_d03
+OK     005_d04
+OK     006_d05
+OK     007_d06
+OK     008_d07
+OK     impressora.prn (0 bytes iguais)
+
+9 iguais, 0 diferentes
+OK     obra/FV1_E2E.DXF (21439 bytes)
+obra: 1 iguais, 0 diferentes
+##### vpl_dxf2 (oraculo: $ORACULO/runs/retrad_vpl_dxf2-20261015-082445)
+OK     001_d00
+OK     002_d01
+OK     003_d02
+OK     004_d03
+OK     005_d04
+OK     006_d05
+OK     007_d06 (imagem 640x200)
+OK     008_d07 (imagem 640x200)
+OK     009_d08 (imagem 640x200)
+OK     010_d09 (imagem 640x200)
+OK     011_d10
+OK     012_d11
+OK     impressora.prn (0 bytes iguais)
+
+13 iguais, 0 diferentes
+OK     obra/FV1_E2E.DXF (21945 bytes)
+obra: 1 iguais, 0 diferentes
+##### vpl_dxf3 (oraculo: $ORACULO/runs/retrad_vpl_dxf3-20261015-082445)
+OK     001_c00
+OK     002_c01
+OK     003_c02
+OK     004_c03
+OK     005_c04
+OK     006_c05
+OK     007_c05b
+OK     008_c06
+OK     009_c07
+OK     010_c08
+OK     011_c09
+OK     012_c10
+OK     impressora.prn (0 bytes iguais)
+
+13 iguais, 0 diferentes
+obra: 0 iguais, 0 diferentes
+##### vpl_edv1 (oraculo: $ORACULO/runs/retrad_vpl_edv1-20261015-065339)
+OK     001_e00
+OK     002_e01
+OK     003_e02
+OK     004_e03
+OK     005_e04
+OK     006_e05
+OK     007_e06
+OK     008_e07
+OK     009_e08
+OK     010_e09
+OK     011_e10
+OK     012_e11
+OK     013_e12
+OK     014_e13
+OK     015_e14
+OK     016_e15
+OK     017_e16
+OK     018_e17
+OK     impressora.prn (0 bytes iguais)
+
+19 iguais, 0 diferentes
+OK     obra/E2E.AVF (340 bytes)
+OK     obra/FV1_E2E.PLT (8360 bytes)
+obra: 2 iguais, 0 diferentes
+##### vpl_edv2 (oraculo: $ORACULO/runs/retrad_vpl_edv2-20261015-065345)
+OK     001_e00
+OK     002_e01
+OK     003_e02
+OK     004_e03
+OK     005_e04
+OK     006_e05
+OK     007_e06
+OK     008_e07
+OK     009_e08
+OK     010_e09
+OK     011_e10
+OK     012_e11
+OK     013_e12
+OK     014_e13
+OK     015_e14
+OK     016_e14b
+OK     017_e15
+OK     018_e16
+OK     019_e17
+OK     impressora.prn (0 bytes iguais)
+
+20 iguais, 0 diferentes
+OK     obra/E2E.AVF (340 bytes)
+OK     obra/FV1_E2E.PLT (9987 bytes)
+obra: 2 iguais, 0 diferentes
+##### vpl_edv3 (oraculo: $ORACULO/runs/retrad_vpl_edv3-20261015-065340)
+OK     001_e00
+OK     002_e01
+OK     003_e02
+OK     004_e03
+OK     005_e04
+OK     006_e05
+OK     007_e06
+OK     008_e07
+OK     009_e08
+OK     010_e09
+OK     011_e10
+OK     012_e11
+OK     013_e12
+OK     014_e13
+OK     015_e14
+OK     016_e15
+OK     017_e16
+OK     018_e17
+OK     impressora.prn (0 bytes iguais)
+
+19 iguais, 0 diferentes
+OK     obra/E2E.AVF (340 bytes)
+OK     obra/FV1_E2E.PLT (8360 bytes)
+obra: 2 iguais, 0 diferentes
+##### vpl_edv4 (oraculo: $ORACULO/runs/retrad_vpl_edv4-20261015-065340)
+OK     001_e00
+OK     002_e01
+OK     003_e02
+OK     004_e03
+OK     005_e04
+OK     006_e05
+OK     007_e06
+OK     008_e07
+OK     009_e08
+OK     010_e09
+OK     011_e10
+OK     012_e11
+OK     013_e12
+OK     014_e13
+OK     015_e14
+OK     016_e15
+OK     017_e16
+OK     018_e17
+OK     impressora.prn (0 bytes iguais)
+
+19 iguais, 0 diferentes
+OK     obra/E2E.AVF (340 bytes)
+OK     obra/FV1_E2E.PLT (10203 bytes)
+obra: 2 iguais, 0 diferentes
+##### vpl_edv5 (oraculo: $ORACULO/runs/retrad_vpl_edv5-20261015-065340)
+OK     001_e00
+OK     002_e01
+OK     003_e02
+OK     004_e03
+OK     005_e04
+OK     006_e05
+OK     007_e06
+OK     008_e07
+OK     009_e08
+OK     010_e09
+OK     011_e10
+OK     012_e11
+OK     013_e12
+OK     014_e13
+OK     015_e14
+OK     016_e15
+OK     017_e16
+OK     018_e16b
+OK     019_e17
+OK     impressora.prn (0 bytes iguais)
+
+20 iguais, 0 diferentes
+OK     obra/E2E.AVF (340 bytes)
+OK     obra/FV1_E2E.PLT (115 bytes)
+obra: 2 iguais, 0 diferentes
+##### vpl_edv6 (oraculo: $ORACULO/runs/retrad_vpl_edv6-20261015-065525)
+OK     001_e00
+OK     002_e01
+OK     003_e02
+OK     004_e03
+OK     005_e04
+OK     006_e05
+OK     007_e06
+OK     008_e07
+OK     009_e08
+OK     010_e09
+OK     011_e10
+OK     012_e11
+OK     013_e12
+OK     014_e13
+OK     015_e15
+OK     016_e16
+OK     017_e17
+OK     impressora.prn (8344 bytes iguais)
+
+18 iguais, 0 diferentes
+OK     obra/E2E.AVF (340 bytes)
+obra: 1 iguais, 0 diferentes
+##### vpl_edv7 (oraculo: $ORACULO/runs/retrad_vpl_edv7-20261015-065525)
+OK     001_e00
+OK     002_e01
+OK     003_e02
+OK     004_e03
+OK     005_e04
+OK     006_e05
+OK     007_e06
+OK     008_e07
+OK     009_e08
+OK     010_e09
+OK     011_e10
+OK     012_e11
+OK     013_e12
+OK     014_e13
+OK     015_e14
+OK     016_e15
+OK     017_e16
+OK     018_e17
+OK     impressora.prn (0 bytes iguais)
+
+19 iguais, 0 diferentes
+OK     obra/E2E.AVF (340 bytes)
+OK     obra/FV1_E2E.PLT (9412 bytes)
+obra: 2 iguais, 0 diferentes
+##### x1 (oraculo: $ORACULO/runs/retrad_viga_x1-20261015-065711)
+OK     001_p01
+OK     002_a01
+OK     003_a02_dados_v20
+OK     004_a03
+OK     005_a04_verifique
+OK     006_a05
+OK     007_a06_dados_v21
+OK     008_m02
+OK     009_l01_lista
+OK     010_q01
+OK     011_q02
+OK     012_q03_menu
+OK     013_g01
+OK     014_r01
+OK     015_r02
+OK     016_r03
+OK     017_r04
+OK     018_r05
+OK     019_r06
+OK     020_r07_reacoes
+OK     021_r08_menu
+OK     impressora.prn (8205 bytes iguais)
+
+22 iguais, 0 diferentes
+OK     obra/IDX.REP (444 bytes)
+OK     obra/IDX.VIG (2565 bytes)
+obra: 2 iguais, 0 diferentes

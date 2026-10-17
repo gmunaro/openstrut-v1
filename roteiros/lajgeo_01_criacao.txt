@@ -1,0 +1,30 @@
+# exe: LAJEGEOM
+# lajgeo_01_criacao: obra TESTE do zero pela LAJEGEOM.
+# Grade 2x2 de lajes, vaos 4 m (x) x 5 m (y), h 10 cm, g 0.1, q 0.15.
+# Layout: L1 (0,0)  L2 (4,0)  L3 (0,5)  L4 (4,5).
+# Sem obra corrente na pasta de saida: o programa pede o nome da obra.
+# EntradaTexto$ nao limpa o padrao: {BS} apaga um caractere, Enter confirma.
+# Ordem dos campos: nome, x0, y0, lx, ly, h, bordos. Bordos: L1 entra EEEE (sem
+# vizinho volta a A); L2..L4 aceitam o padrao AAAA e a continuidade marca E.
+TESTE{ENTER}
+{TELA c01_menu_inicial}
+2
+{TELA c02_tabela_vazia}
+I
+{ENTER}{ENTER}{ENTER}{BS}4{ENTER}{BS}5{ENTER}{BS}10{ENTER}{BS}{BS}{BS}{BS}EEEE{ENTER}
+I
+{ENTER}{BS}4{ENTER}{ENTER}{BS}4{ENTER}{BS}5{ENTER}{BS}10{ENTER}{ENTER}
+I
+{ENTER}{ENTER}{BS}5{ENTER}{BS}4{ENTER}{BS}5{ENTER}{BS}10{ENTER}{ENTER}
+I
+{ENTER}{BS}4{ENTER}{BS}5{ENTER}{BS}4{ENTER}{BS}5{ENTER}{BS}10{ENTER}{ENTER}
+{TELA c03_tabela_4_lajes}
+F
+{TELA c04_menu_apos_lajes}
+7
+{TELA c05_menu_vigas}
+F
+9
+S
+{TELA c06_retorno}
+{ENTER}

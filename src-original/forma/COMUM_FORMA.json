@@ -1,0 +1,1652 @@
+{
+ "familia": "forma",
+ "ini": "0x0dc0",
+ "fim": "0x1866",
+ "exes": [
+  "FORMA",
+  "FORMEDCA",
+  "FORMIMP",
+  "FORMINIT",
+  "FORMPLOT"
+ ],
+ "conflitos": [],
+ "vars": [
+  {
+   "nome": "V_0dc0",
+   "base": "V_0dc0",
+   "end": 3520,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_0dc4",
+   "base": "V_0dc4",
+   "end": 3524,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "V_0dc8",
+   "base": "V_0dc8",
+   "end": 3528,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_0dcc",
+   "base": "V_0dcc",
+   "end": 3532,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_0dd0",
+   "base": "V_0dd0",
+   "end": 3536,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "V_0dd4",
+   "base": "V_0dd4",
+   "end": 3540,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "V_0df4",
+   "base": "V_0df4",
+   "end": 3572,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "V_0df8",
+   "base": "V_0df8",
+   "end": 3576,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMIMP"
+   ]
+  },
+  {
+   "nome": "V_0dfc",
+   "base": "V_0dfc",
+   "end": 3580,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMIMP"
+   ]
+  },
+  {
+   "nome": "V_0e00",
+   "base": "V_0e00",
+   "end": 3584,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMIMP"
+   ]
+  },
+  {
+   "nome": "V_0e04",
+   "base": "V_0e04",
+   "end": 3588,
+   "suf": "#",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_0e0c",
+   "base": "V_0e0c",
+   "end": 3596,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_0e10",
+   "base": "V_0e10",
+   "end": 3600,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_0e14",
+   "base": "V_0e14",
+   "end": 3604,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMINIT"
+   ]
+  },
+  {
+   "nome": "V_0e18",
+   "base": "V_0e18",
+   "end": 3608,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_0e1c",
+   "base": "V_0e1c",
+   "end": 3612,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_0e20",
+   "base": "V_0e20",
+   "end": 3616,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "V_0e22",
+   "base": "V_0e22",
+   "end": 3618,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_0e26",
+   "base": "V_0e26",
+   "end": 3622,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA"
+   ]
+  },
+  {
+   "nome": "V_0e2a",
+   "base": "V_0e2a",
+   "end": 3626,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA"
+   ]
+  },
+  {
+   "nome": "V_0e2e",
+   "base": "V_0e2e",
+   "end": 3630,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA"
+   ]
+  },
+  {
+   "nome": "V_0e32",
+   "base": "V_0e32",
+   "end": 3634,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_0e36",
+   "base": "V_0e36",
+   "end": 3638,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "V_0e3a",
+   "base": "V_0e3a",
+   "end": 3642,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_0e3e",
+   "base": "V_0e3e",
+   "end": 3646,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA"
+   ]
+  },
+  {
+   "nome": "V_0e42",
+   "base": "V_0e42",
+   "end": 3650,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA"
+   ]
+  },
+  {
+   "nome": "V_0e46",
+   "base": "V_0e46",
+   "end": 3654,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA"
+   ]
+  },
+  {
+   "nome": "V_0e4a",
+   "base": "V_0e4a",
+   "end": 3658,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_0e4e",
+   "base": "V_0e4e",
+   "end": 3662,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA"
+   ]
+  },
+  {
+   "nome": "V_0e52",
+   "base": "V_0e52",
+   "end": 3666,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_0e56",
+   "base": "V_0e56",
+   "end": 3670,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "V_0e58",
+   "base": "V_0e58",
+   "end": 3672,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "V_0e5a",
+   "base": "V_0e5a",
+   "end": 3674,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "V_0e5c",
+   "base": "V_0e5c",
+   "end": 3676,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "V_0e5e",
+   "base": "V_0e5e",
+   "end": 3678,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "V_0e60",
+   "base": "V_0e60",
+   "end": 3680,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "V_0e62",
+   "base": "V_0e62",
+   "end": 3682,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "V_0e64",
+   "base": "V_0e64",
+   "end": 3684,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "V_0e66",
+   "base": "V_0e66",
+   "end": 3686,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "V_0e68",
+   "base": "V_0e68",
+   "end": 3688,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_0e6c",
+   "base": "V_0e6c",
+   "end": 3692,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_0e70",
+   "base": "V_0e70",
+   "end": 3696,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "V_0e74",
+   "base": "V_0e74",
+   "end": 3700,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "A_0e78",
+   "base": "A_0e78",
+   "end": 3704,
+   "suf": "!",
+   "nd": 2,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "A_0ea6",
+   "base": "A_0ea6",
+   "end": 3750,
+   "suf": "!",
+   "nd": 2,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "A_0ed4",
+   "base": "A_0ed4",
+   "end": 3796,
+   "suf": "!",
+   "nd": 2,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "A_0f02",
+   "base": "A_0f02",
+   "end": 3842,
+   "suf": "!",
+   "nd": 2,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "A_0f30",
+   "base": "A_0f30",
+   "end": 3888,
+   "suf": "%",
+   "nd": 2,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "A_0f5e",
+   "base": "A_0f5e",
+   "end": 3934,
+   "suf": "!",
+   "nd": 2,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "A_0f8c",
+   "base": "A_0f8c",
+   "end": 3980,
+   "suf": "%",
+   "nd": 2,
+   "exes": [
+    "FORMA",
+    "FORMINIT"
+   ]
+  },
+  {
+   "nome": "A_0fba",
+   "base": "A_0fba",
+   "end": 4026,
+   "suf": "$",
+   "nd": 1,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMINIT"
+   ]
+  },
+  {
+   "nome": "A_0fe8",
+   "base": "A_0fe8",
+   "end": 4072,
+   "suf": "!",
+   "nd": 2,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMINIT"
+   ]
+  },
+  {
+   "nome": "A_1016",
+   "base": "A_1016",
+   "end": 4118,
+   "suf": "$",
+   "nd": 1,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "A_1044",
+   "base": "A_1044",
+   "end": 4164,
+   "suf": "%",
+   "nd": 2,
+   "exes": [
+    "FORMA",
+    "FORMINIT"
+   ]
+  },
+  {
+   "nome": "A_1072",
+   "base": "A_1072",
+   "end": 4210,
+   "suf": "%",
+   "nd": 2,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "V_10a0",
+   "base": "V_10a0",
+   "end": 4256,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "A_10a2",
+   "base": "A_10a2",
+   "end": 4258,
+   "suf": "!",
+   "nd": 2,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "V_10fe",
+   "base": "V_10fe",
+   "end": 4350,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "V_115c",
+   "base": "V_115c",
+   "end": 4444,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "A_115e",
+   "base": "A_115e",
+   "end": 4446,
+   "suf": "!",
+   "nd": 2,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_11a4",
+   "base": "V_11a4",
+   "end": 4516,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_11b8",
+   "base": "V_11b8",
+   "end": 4536,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_11bc",
+   "base": "V_11bc",
+   "end": 4540,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_11c0",
+   "base": "V_11c0",
+   "end": 4544,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_11c4",
+   "base": "V_11c4",
+   "end": 4548,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_11c8",
+   "base": "V_11c8",
+   "end": 4552,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_11cc",
+   "base": "V_11cc",
+   "end": 4556,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_11d0",
+   "base": "V_11d0",
+   "end": 4560,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMINIT"
+   ]
+  },
+  {
+   "nome": "V_11d4",
+   "base": "V_11d4",
+   "end": 4564,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_11d8",
+   "base": "V_11d8",
+   "end": 4568,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_11dc",
+   "base": "V_11dc",
+   "end": 4572,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_11e0",
+   "base": "V_11e0",
+   "end": 4576,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA"
+   ]
+  },
+  {
+   "nome": "V_11e4",
+   "base": "V_11e4",
+   "end": 4580,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_11ec",
+   "base": "V_11ec",
+   "end": 4588,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "A_1200",
+   "base": "A_1200",
+   "end": 4608,
+   "suf": "!",
+   "nd": 3,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "A_122e",
+   "base": "A_122e",
+   "end": 4654,
+   "suf": "$",
+   "nd": 1,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "A_125c",
+   "base": "A_125c",
+   "end": 4700,
+   "suf": "!",
+   "nd": 2,
+   "exes": [
+    "FORMEDCA"
+   ]
+  },
+  {
+   "nome": "A_128a",
+   "base": "A_128a",
+   "end": 4746,
+   "suf": "$",
+   "nd": 1,
+   "exes": [
+    "FORMEDCA"
+   ]
+  },
+  {
+   "nome": "A_12b8",
+   "base": "A_12b8",
+   "end": 4792,
+   "suf": "!",
+   "nd": 2,
+   "exes": [
+    "FORMEDCA"
+   ]
+  },
+  {
+   "nome": "A_12e6",
+   "base": "A_12e6",
+   "end": 4838,
+   "suf": "!",
+   "nd": 1,
+   "exes": [
+    "FORMEDCA"
+   ]
+  },
+  {
+   "nome": "A_1314",
+   "base": "A_1314",
+   "end": 4884,
+   "suf": "!",
+   "nd": 1,
+   "exes": [
+    "FORMEDCA"
+   ]
+  },
+  {
+   "nome": "A_1370",
+   "base": "A_1370",
+   "end": 4976,
+   "suf": "%",
+   "nd": 2,
+   "exes": [
+    "FORMEDCA"
+   ]
+  },
+  {
+   "nome": "V_139e",
+   "base": "V_139e",
+   "end": 5022,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "V_13a0",
+   "base": "V_13a0",
+   "end": 5024,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "V_13a2",
+   "base": "V_13a2",
+   "end": 5026,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "V_13a6",
+   "base": "V_13a6",
+   "end": 5030,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "V_13aa",
+   "base": "V_13aa",
+   "end": 5034,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_13ac",
+   "base": "V_13ac",
+   "end": 5036,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "A_13b0",
+   "base": "A_13b0",
+   "end": 5040,
+   "suf": "!",
+   "nd": 1,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "A_13de",
+   "base": "A_13de",
+   "end": 5086,
+   "suf": "$",
+   "nd": 1,
+   "exes": [
+    "FORMA",
+    "FORMEDCA"
+   ]
+  },
+  {
+   "nome": "A_140c",
+   "base": "A_140c",
+   "end": 5132,
+   "suf": "%",
+   "nd": 2,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "A_143a",
+   "base": "A_143a",
+   "end": 5178,
+   "suf": "$",
+   "nd": 1,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "A_1468",
+   "base": "A_1468",
+   "end": 5224,
+   "suf": "%",
+   "nd": 2,
+   "exes": [
+    "FORMA"
+   ]
+  },
+  {
+   "nome": "A_1496",
+   "base": "A_1496",
+   "end": 5270,
+   "suf": "%",
+   "nd": 3,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "A_14c4",
+   "base": "A_14c4",
+   "end": 5316,
+   "suf": "%",
+   "nd": 3,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_1524",
+   "base": "V_1524",
+   "end": 5412,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_1528",
+   "base": "V_1528",
+   "end": 5416,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_152c",
+   "base": "V_152c",
+   "end": 5420,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_1530",
+   "base": "V_1530",
+   "end": 5424,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_1532",
+   "base": "V_1532",
+   "end": 5426,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_1534",
+   "base": "V_1534",
+   "end": 5428,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_1536",
+   "base": "V_1536",
+   "end": 5430,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_1538",
+   "base": "V_1538",
+   "end": 5432,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_153a",
+   "base": "V_153a",
+   "end": 5434,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_153c",
+   "base": "V_153c",
+   "end": 5436,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_153e",
+   "base": "V_153e",
+   "end": 5438,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_1542",
+   "base": "V_1542",
+   "end": 5442,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_1546",
+   "base": "V_1546",
+   "end": 5446,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_154a",
+   "base": "V_154a",
+   "end": 5450,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_154e",
+   "base": "V_154e",
+   "end": 5454,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_1552",
+   "base": "V_1552",
+   "end": 5458,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_1556",
+   "base": "V_1556",
+   "end": 5462,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMIMP",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_155a",
+   "base": "V_155a",
+   "end": 5466,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMIMP",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_155e",
+   "base": "V_155e",
+   "end": 5470,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMIMP",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_1562",
+   "base": "V_1562",
+   "end": 5474,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMIMP",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_1566",
+   "base": "V_1566",
+   "end": 5478,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMIMP",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_156a",
+   "base": "V_156a",
+   "end": 5482,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMIMP",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_156e",
+   "base": "V_156e",
+   "end": 5486,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMIMP",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_1572",
+   "base": "V_1572",
+   "end": 5490,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_1576",
+   "base": "V_1576",
+   "end": 5494,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_157a",
+   "base": "V_157a",
+   "end": 5498,
+   "suf": "$",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "A_157e",
+   "base": "A_157e",
+   "end": 5502,
+   "suf": "%",
+   "nd": 1,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "A_15ac",
+   "base": "A_15ac",
+   "end": 5548,
+   "suf": "%",
+   "nd": 1,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "A_15da",
+   "base": "A_15da",
+   "end": 5594,
+   "suf": "!",
+   "nd": 2,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "A_1608",
+   "base": "A_1608",
+   "end": 5640,
+   "suf": "!",
+   "nd": 2,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMINIT"
+   ]
+  },
+  {
+   "nome": "A_1636",
+   "base": "A_1636",
+   "end": 5686,
+   "suf": "!",
+   "nd": 2,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMINIT"
+   ]
+  },
+  {
+   "nome": "A_1664",
+   "base": "A_1664",
+   "end": 5732,
+   "suf": "!",
+   "nd": 2,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "A_1692",
+   "base": "A_1692",
+   "end": 5778,
+   "suf": "!",
+   "nd": 2,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "A_16c0",
+   "base": "A_16c0",
+   "end": 5824,
+   "suf": "!",
+   "nd": 2,
+   "exes": [
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "A_16ee",
+   "base": "A_16ee",
+   "end": 5870,
+   "suf": "!",
+   "nd": 2,
+   "exes": [
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "A_171c",
+   "base": "A_171c",
+   "end": 5916,
+   "suf": "%",
+   "nd": 3,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMINIT"
+   ]
+  },
+  {
+   "nome": "A_174a",
+   "base": "A_174a",
+   "end": 5962,
+   "suf": "%",
+   "nd": 2,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "A_1778",
+   "base": "A_1778",
+   "end": 6008,
+   "suf": "%",
+   "nd": 2,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "A_17a6",
+   "base": "A_17a6",
+   "end": 6054,
+   "suf": "%",
+   "nd": 2,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "A_17d4",
+   "base": "A_17d4",
+   "end": 6100,
+   "suf": "!",
+   "nd": 2,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_1802",
+   "base": "V_1802",
+   "end": 6146,
+   "suf": "%",
+   "nd": 0,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMINIT",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "A_1804",
+   "base": "A_1804",
+   "end": 6148,
+   "suf": "!",
+   "nd": 2,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "A_1832",
+   "base": "A_1832",
+   "end": 6194,
+   "suf": "%",
+   "nd": 2,
+   "exes": [
+    "FORMA",
+    "FORMEDCA",
+    "FORMIMP",
+    "FORMPLOT"
+   ]
+  },
+  {
+   "nome": "V_1860",
+   "base": "V_1860",
+   "end": 6240,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMEDCA"
+   ]
+  },
+  {
+   "nome": "V_1864",
+   "base": "V_1864",
+   "end": 6244,
+   "suf": "!",
+   "nd": 0,
+   "exes": [
+    "FORMEDCA"
+   ]
+  }
+ ]
+}

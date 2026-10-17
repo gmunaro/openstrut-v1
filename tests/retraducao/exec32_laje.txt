@@ -1,0 +1,3 @@
+# Teste do RT_ACHA_EXE (RT45): <Ins> troca a pasta para C:\SISTRUT\EXEC32\ (nao instalada);
+# Laje + Enter da erro 53 e "Erro de Operacao" mesmo com LAJE.exe na pasta da V1.
+{ESPERA Configuracao|60}{TELA m00}{INS}{TELA x01}L{TELA x02}{ENTER}{TELA x03_erro}

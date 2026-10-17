@@ -1,0 +1,13 @@
+# exe: ARMADURA
+# ARMADURA item 5 (confirmacao so S/N). Obra V10OBRA (viga_09_armadura_sn.dados: so SISTRUT.OBR).
+# Cadastro 1: POS 1 valida; a confirmacao recebe X (deve ser ignorada) e depois S (grava POS 1).
+# Cadastro 2: POS 2 valida; a confirmacao recebe N (deve cancelar, sem POS 2).
+# Esperado: _ARM.SEC com somente POS 1; a tecla X nao cadastra nada.
+# {BS} apaga o padrao antes de digitar (EntradaTexto$ anexa ao padrao).
+
+# A (arquivar): POS 1 com X ignorado e S; POS 2 com N; ESC sai do laco de A
+A{TELA arquivar}1{BS}20{ENTER}{BS}50{ENTER}{BS}46{ENTER}{BS}7.03{ENTER}{BS}7.03{ENTER}{TELA confirma_x}X{TELA x_ignorado}S
+1{BS}20{ENTER}{BS}50{ENTER}{BS}40{ENTER}{BS}7.03{ENTER}{BS}7.03{ENTER}{TELA confirma_n}N
+{ESC}
+
+{TELA fim}{F2}

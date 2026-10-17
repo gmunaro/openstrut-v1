@@ -1,0 +1,39 @@
+OK     001_l01
+DIFERE 002_g00:
+   linha 14 oráculo: '                   5  -  Acesso ao DOS ( 466 Kbytes livres )'
+           V1     : '                   5  -  Acesso ao DOS ( 292 Kbytes livres )'
+   linha 26 oráculo: '(realce 14)                    5  -  Acesso ao  OS ( 466 Kbytes livres )'
+           V1     : '(realce 14)                    5  -  Acesso ao  OS ( 292 Kbytes livres )'
+OK     003_g01
+OK     004_g02
+DIFERE 005_g03:
+   linha 14 oráculo: '                   5  -  Acesso ao DOS ( 412 Kbytes livres )'
+           V1     : '                   5  -  Acesso ao DOS ( 292 Kbytes livres )'
+   linha 26 oráculo: '(realce 14)                    5  -  Acesso ao  OS ( 412 Kbytes livres )'
+           V1     : '(realce 14)                    5  -  Acesso ao  OS ( 292 Kbytes livres )'
+OK     006_l02
+OK     007_p01
+OK     008_a01
+OK     009_a02
+OK     010_m00
+OK     011_m01
+OK     012_m02
+OK     013_m03
+OK     014_m04
+OK     015_m05
+OK     016_m06
+OK     017_m07
+OK     018_m08
+OK     019_m09
+OK     020_m10
+OK     021_m11
+OK     022_d00
+OK     023_d01
+OK     024_d02_desenho (imagem 640x200)
+OK     025_d03
+OK     026_i01
+OK     027_i02
+OK     028_l03
+OK     impressora.prn (14557 bytes iguais)
+
+27 iguais, 2 diferentes

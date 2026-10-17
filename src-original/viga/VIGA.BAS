@@ -1,0 +1,9145 @@
+' ============================================================================
+'  VIGA - OpenStrut V1: engenharia reversa independente do SISTRUT 4.0 (1991),
+'  retraduzido do original para QB64 PE. Textos de marca: src-original/marca.json.
+'  Gerado por tools/retraduz.py a partir de dump/VIGA/*.lift.txt (fora do repositorio).
+'  sha256 do EXE original: cc68366109b90530c2a9fb7e6ac6422c7b65971edda2c8bbc1ee5d35cbfa0ae7
+'  Cada comando termina com '@xxxxx = endereco linear do comando no EXE derivado
+'  (prep/, modulos realinhados a 64 KB); os nomes V_/A_xxxx sao enderecos DS:xxxx.
+'  Convencoes: docs/RETRADUCAO.md. Correcoes a mao: tools/retraduz.py CORRECOES e <familia>/correcoes.json.
+' ============================================================================
+'$INCLUDE: '../comum/RT45.BI'
+'$INCLUDE: '../comum/RT45GFX.BI'
+'$INCLUDE: 'COMUM_VIGA.BI'
+
+' ---- variaveis do VIGA fora do COMMON (DS do programa)
+REDIM SHARED A_0e26!(-32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_0e54!(-32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_0e82!(-32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_0eb0!(-32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_0ede!(-32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_0f0c%(-32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_0f3a%(-32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_0f68!(-32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_0f96!(-32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_0fc4!(-32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_0ff2!(-32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_1020!(-32768 TO -32768, -32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_1052%(-32768 TO -32768, -32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_1086$(-32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_10b4%(-32768 TO -32768, -32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_10e2%(-32768 TO -32768, -32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_1110%(-32768 TO -32768, -32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_113e!(-32768 TO -32768, -32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_116c!(-32768 TO -32768, -32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_119a!(-32768 TO -32768, -32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_11c8!(-32768 TO -32768, -32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_11f6!(-32768 TO -32768, -32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_1224!(-32768 TO -32768, -32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_1252!(-32768 TO -32768, -32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_1280!(-32768 TO -32768, -32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_16be%(-32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_16d0$(-32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_16e2$(-32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_1718!(-32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_172a!(-32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_18b0!(-32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_18c2!(-32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_18d4!(-32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_18e6!(-32768 TO -32768, -32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_18fc!(-32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_190e!(-32768 TO -32768, -32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_1924!(-32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_1936!(-32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_1948!(-32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_195a!(-32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_196c!(-32768 TO -32768, -32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+REDIM SHARED A_1982!(-32768 TO -32768, -32768 TO -32768)   ' matriz dinamica: ainda nao dimensionada
+DIM SHARED V_0dc0!
+DIM SHARED V_0dc4!
+DIM SHARED V_0dc8!
+DIM SHARED V_0dcc$
+DIM SHARED V_0dd0$
+DIM SHARED V_0dd4$
+DIM SHARED V_0dd8$
+DIM SHARED V_0ddc$
+DIM SHARED V_0de0!
+DIM SHARED V_0de4!
+DIM SHARED V_0de8$
+DIM SHARED V_0dec$
+DIM SHARED V_0df0$
+DIM SHARED V_0df4$
+DIM SHARED V_0df8$
+DIM SHARED V_0dfc$
+DIM SHARED V_0e00$
+DIM SHARED V_0e04$
+DIM SHARED V_0e08%
+DIM SHARED V_0e0a%
+DIM SHARED V_0e0c%
+DIM SHARED V_0e0e%
+DIM SHARED V_0e10%
+DIM SHARED V_0e12%
+DIM SHARED V_0e14!
+DIM SHARED V_0e18!
+DIM SHARED V_0e1c!
+DIM SHARED V_0e20%
+DIM SHARED V_0e22%
+DIM SHARED V_0e24%
+DIM SHARED V_104e!
+DIM SHARED V_1080!
+DIM SHARED V_1084%
+DIM SHARED V_12ae$
+DIM SHARED V_12b2$
+DIM SHARED V_12b6$
+DIM SHARED V_12ba$
+DIM SHARED V_12c2$
+DIM SHARED V_12c6$
+DIM SHARED V_12ca$
+DIM SHARED V_12ce$
+DIM SHARED V_12d2%
+DIM SHARED V_12d4$
+DIM SHARED V_12d8$
+DIM SHARED V_12dc$
+DIM SHARED V_12e0$
+DIM SHARED V_12e4$
+DIM SHARED V_12e8$
+DIM SHARED V_12ec!
+DIM SHARED V_12f0$
+DIM SHARED V_12f4$
+DIM SHARED V_12f8$
+DIM SHARED V_130c$
+DIM SHARED V_1311%
+DIM SHARED V_1313%
+DIM SHARED V_1315%
+DIM SHARED V_1317%
+DIM SHARED V_1319%
+DIM SHARED V_131b%
+DIM SHARED V_131d%
+DIM SHARED V_131f!
+DIM SHARED V_1323!
+DIM SHARED V_1327%
+DIM SHARED V_1329%
+DIM SHARED V_132b!
+DIM SHARED V_132f!
+DIM SHARED V_1333%
+DIM SHARED V_1335%
+DIM SHARED V_1337!
+DIM SHARED V_133b!
+DIM SHARED V_133f%
+DIM SHARED V_1341%
+DIM SHARED V_1343!
+DIM SHARED V_1347!
+DIM SHARED V_134b%
+DIM SHARED V_134d%
+DIM SHARED V_134f!
+DIM SHARED V_1353!
+DIM SHARED V_1357%
+DIM SHARED V_1359%
+DIM SHARED V_135b!
+DIM SHARED V_135f!
+DIM SHARED V_1363%
+DIM SHARED V_1365%
+DIM SHARED V_1367!
+DIM SHARED V_136b!
+DIM SHARED V_136f%
+DIM SHARED V_1371%
+DIM SHARED V_1373!
+DIM SHARED V_1377!
+DIM SHARED V_137b%
+DIM SHARED V_137d%
+DIM SHARED V_137f!
+DIM SHARED V_1383!
+DIM SHARED V_1387%
+DIM SHARED V_1389%
+DIM SHARED V_138b!
+DIM SHARED V_138f!
+DIM SHARED V_1393%
+DIM SHARED V_1395%
+DIM SHARED V_1397!
+DIM SHARED V_139b!
+DIM SHARED V_139f%
+DIM SHARED V_13a1%
+DIM SHARED V_13a3!
+DIM SHARED V_13a7!
+DIM SHARED V_13ab%
+DIM SHARED V_13ad%
+DIM SHARED V_13af!
+DIM SHARED V_13b3!
+DIM SHARED V_13b7%
+DIM SHARED V_13b9%
+DIM SHARED V_13bb!
+DIM SHARED V_13bf!
+DIM SHARED V_13cf!
+DIM SHARED V_13d3!
+DIM SHARED V_13d7!
+DIM SHARED V_13db!
+DIM SHARED V_13df!
+DIM SHARED V_13e3!
+DIM SHARED V_13e7!
+DIM SHARED V_13eb!
+DIM SHARED V_13ef!
+DIM SHARED V_13f3!
+DIM SHARED V_13f7!
+DIM SHARED V_13fb!
+DIM SHARED V_13ff!
+DIM SHARED V_1403!
+DIM SHARED V_1407!
+DIM SHARED V_140b!
+DIM SHARED V_140f!
+DIM SHARED V_1413!
+DIM SHARED V_1417!
+DIM SHARED V_141b!
+DIM SHARED V_141f!
+DIM SHARED V_1423!
+DIM SHARED V_1427!
+DIM SHARED V_142b!
+DIM SHARED V_142f!
+DIM SHARED V_1433!
+DIM SHARED V_1437!
+DIM SHARED V_143b!
+DIM SHARED V_143f!
+DIM SHARED V_1443!
+DIM SHARED V_1447!
+DIM SHARED V_144b!
+DIM SHARED V_144f!
+DIM SHARED V_1453!
+DIM SHARED V_1457!
+DIM SHARED V_145b!
+DIM SHARED V_145f!
+DIM SHARED V_1463!
+DIM SHARED V_1467!
+DIM SHARED V_146b!
+DIM SHARED V_146f!
+DIM SHARED V_1473!
+DIM SHARED V_1477!
+DIM SHARED V_147b!
+DIM SHARED V_147f!
+DIM SHARED V_1483!
+DIM SHARED V_1487!
+DIM SHARED V_148b!
+DIM SHARED V_148f!
+DIM SHARED V_1493!
+DIM SHARED V_1497!
+DIM SHARED V_149b!
+DIM SHARED V_149f!
+DIM SHARED V_14a3!
+DIM SHARED V_14a7!
+DIM SHARED V_14ab!
+DIM SHARED V_14af!
+DIM SHARED V_14b3!
+DIM SHARED V_14b7!
+DIM SHARED V_14bb!
+DIM SHARED V_14bf!
+DIM SHARED V_14c3!
+DIM SHARED V_14c7!
+DIM SHARED V_14cb!
+DIM SHARED V_14cf!
+DIM SHARED V_14d3!
+DIM SHARED V_14d7!
+DIM SHARED V_14db!
+DIM SHARED V_14df!
+DIM SHARED V_14e3!
+DIM SHARED V_14e7!
+DIM SHARED V_14eb!
+DIM SHARED V_14ef!
+DIM SHARED V_14f3!
+DIM SHARED V_14f7!
+DIM SHARED V_14fb!
+DIM SHARED V_14ff!
+DIM SHARED V_1503!
+DIM SHARED V_1507!
+DIM SHARED V_150b!
+DIM SHARED V_150f!
+DIM SHARED V_1513!
+DIM SHARED V_1517!
+DIM SHARED V_151b!
+DIM SHARED V_151f!
+DIM SHARED V_1523!
+DIM SHARED V_1527!
+DIM SHARED V_152b!
+DIM SHARED V_152f!
+DIM SHARED V_1533!
+DIM SHARED V_1537!
+DIM SHARED V_153b!
+DIM SHARED V_153f!
+DIM SHARED V_1543!
+DIM SHARED V_1547!
+DIM SHARED V_154b!
+DIM SHARED V_154f!
+DIM SHARED V_1553!
+DIM SHARED V_1557!
+DIM SHARED V_155b!
+DIM SHARED V_155f!
+DIM SHARED V_1563!
+DIM SHARED V_1567!
+DIM SHARED V_156b!
+DIM SHARED V_156f!
+DIM SHARED V_1573!
+DIM SHARED V_1577!
+DIM SHARED V_157b!
+DIM SHARED V_157f!
+DIM SHARED V_1583!
+DIM SHARED V_1587!
+DIM SHARED V_158b!
+DIM SHARED V_158f!
+DIM SHARED V_1593!
+DIM SHARED V_1597!
+DIM SHARED V_159b!
+DIM SHARED V_159f!
+DIM SHARED V_15a3!
+DIM SHARED V_15a7!
+DIM SHARED V_15ab!
+DIM SHARED V_15af!
+DIM SHARED V_15b3!
+DIM SHARED V_15b7!
+DIM SHARED V_15bb!
+DIM SHARED V_15bf!
+DIM SHARED V_15c3!
+DIM SHARED V_15c7!
+DIM SHARED V_15cb!
+DIM SHARED V_15cf!
+DIM SHARED V_15d3!
+DIM SHARED V_15d7!
+DIM SHARED V_15db!
+DIM SHARED V_15df!
+DIM SHARED V_15e3!
+DIM SHARED V_15e7!
+DIM SHARED V_15eb!
+DIM SHARED V_15ef!
+DIM SHARED V_15f3!
+DIM SHARED V_15f7!
+DIM SHARED V_15fb!
+DIM SHARED V_15ff!
+DIM SHARED V_1603!
+DIM SHARED V_1607!
+DIM SHARED V_160b!
+DIM SHARED V_160f!
+DIM SHARED V_1613!
+DIM SHARED V_1617!
+DIM SHARED V_161b!
+DIM SHARED V_161f!
+DIM SHARED V_1623!
+DIM SHARED V_1627!
+DIM SHARED V_162b!
+DIM SHARED V_162f!
+DIM SHARED V_1633!
+DIM SHARED V_1637!
+DIM SHARED V_163b!
+DIM SHARED V_163f!
+DIM SHARED V_1656$
+DIM SHARED V_165a$
+DIM SHARED V_165e$
+DIM SHARED V_166a!
+DIM SHARED V_166e!
+DIM SHARED V_1672!
+DIM SHARED V_1676!
+DIM SHARED V_167a!
+DIM SHARED V_167e!
+DIM SHARED V_1682!
+DIM SHARED V_1686!
+DIM SHARED V_168a!
+DIM SHARED V_169e!
+DIM SHARED V_16a6!
+DIM SHARED V_16aa!
+DIM SHARED V_16ae!
+DIM SHARED V_16b2!
+DIM SHARED V_16b6%
+DIM SHARED V_16ba%
+DIM SHARED V_16bc%
+DIM SHARED V_16f4!
+DIM SHARED V_16f8!
+DIM SHARED V_16fc!
+DIM SHARED V_1700!
+DIM SHARED V_1704!
+DIM SHARED V_1708!
+DIM SHARED V_170c!
+DIM SHARED V_1710!
+DIM SHARED V_1714!
+DIM SHARED V_173c!
+DIM SHARED V_1740!
+DIM SHARED V_1744!
+DIM SHARED V_1748$
+DIM SHARED V_174c!
+DIM SHARED V_1750!
+DIM SHARED V_1754!
+DIM SHARED V_1758!
+DIM SHARED V_175c!
+DIM SHARED V_1760!
+DIM SHARED V_1764!
+DIM SHARED V_1768!
+DIM SHARED V_176c$
+DIM SHARED V_1770!
+DIM SHARED V_1774%
+DIM SHARED V_1776!
+DIM SHARED V_177a!
+DIM SHARED V_177e!
+DIM SHARED V_1782!
+DIM SHARED V_1786!
+DIM SHARED V_178a!
+DIM SHARED V_178e!
+DIM SHARED V_1792!
+DIM SHARED V_1796!
+DIM SHARED V_179a!
+DIM SHARED V_179e!
+DIM SHARED V_17a2!
+DIM SHARED V_17a6!
+DIM SHARED V_17aa!
+DIM SHARED V_17ae!
+DIM SHARED V_17b2!
+DIM SHARED V_17b6!
+DIM SHARED V_17ba!
+DIM SHARED V_17be!
+DIM SHARED V_17c2!
+DIM SHARED V_17c6!
+DIM SHARED V_17ca!
+DIM SHARED V_17ce!
+DIM SHARED V_17d2!
+DIM SHARED V_17d6!
+DIM SHARED V_17da!
+DIM SHARED V_17de!
+DIM SHARED V_17e2!
+DIM SHARED V_17e6!
+DIM SHARED V_17ea!
+DIM SHARED V_17ee!
+DIM SHARED V_17f2!
+DIM SHARED V_17f6!
+DIM SHARED V_17fa!
+DIM SHARED V_17fe!
+DIM SHARED V_1802!
+DIM SHARED V_180c%
+DIM SHARED V_180e%
+DIM SHARED V_1810%
+DIM SHARED V_1812%
+DIM SHARED V_1814!
+DIM SHARED V_1818!
+DIM SHARED V_181c!
+DIM SHARED V_1820!
+DIM SHARED V_1824!
+DIM SHARED V_1828!
+DIM SHARED V_1832!
+DIM SHARED V_1836!
+DIM SHARED V_183a!
+DIM SHARED V_183e!
+DIM SHARED V_1842!
+DIM SHARED V_1846!
+DIM SHARED V_184a!
+DIM SHARED V_185a!
+DIM SHARED V_1862!
+DIM SHARED V_1866$
+DIM SHARED V_186a!
+DIM SHARED V_186e!
+DIM SHARED V_1872!
+DIM SHARED V_1876!
+DIM SHARED V_187a!
+DIM SHARED V_187e!
+DIM SHARED V_1882!
+DIM SHARED V_1886!
+DIM SHARED V_188a!
+DIM SHARED V_188e!
+DIM SHARED V_1892!
+DIM SHARED V_1896!
+DIM SHARED V_189a!
+DIM SHARED V_189e!
+DIM SHARED V_18a2!
+DIM SHARED V_18a6!
+DIM SHARED V_1998!
+DIM SHARED V_199c!
+DIM SHARED V_1afc!
+DIM SHARED V_1bf0!
+DIM SHARED V_1bf4!
+DIM SHARED V_1bf8!
+DIM SHARED V_1bfc!
+DIM SHARED V_1c00!
+DIM SHARED V_1c04!
+DIM SHARED V_1c08!
+DIM SHARED V_1c0c!
+DIM SHARED V_1c10!
+DIM SHARED V_1c14%
+DIM SHARED V_1c16%
+DIM SHARED V_1c18!
+DIM SHARED V_1c1c%
+DIM SHARED V_1c1e%
+DIM SHARED V_1c20%
+DIM SHARED V_1c22%
+DIM SHARED V_1c24%
+DIM SHARED V_1c26%
+DIM SHARED V_1c28%
+DIM SHARED V_1c2a%
+DIM SHARED V_1c2c%
+DIM SHARED V_1c2e%
+DIM SHARED V_1c30!
+DIM SHARED V_1c34%
+DIM SHARED V_1c36%
+DIM SHARED V_1c38%
+DIM SHARED V_1c3a%
+DIM SHARED V_1c3c%
+DIM SHARED V_1c3e%
+DIM SHARED V_1c40%
+DIM SHARED V_1c42%
+DIM SHARED V_1c44%
+DIM SHARED V_1c46!
+DIM SHARED V_1c4a%
+DIM SHARED V_1c4c%
+DIM SHARED V_1c4e%
+DIM SHARED V_1c50%
+DIM SHARED V_1c52%
+DIM SHARED V_1c54!
+DIM SHARED V_1c58%
+DIM SHARED V_1c5a%
+DIM SHARED V_1c5c%
+DIM SHARED V_1c5e!
+DIM SHARED V_1c62!
+DIM SHARED V_1c66!
+DIM SHARED V_1c6a!
+DIM SHARED V_1d70$
+DIM SHARED ST_19a0!(0 TO 15)   ' matriz estatica em DS:19A0 (elementos de indice constante sao V_ no lift)
+DIM SHARED ST_19e0!(0 TO 14)   ' matriz estatica em DS:19E0 (elementos de indice constante sao V_ no lift)
+DIM SHARED ST_1a1c!(0 TO 13)   ' matriz estatica em DS:1A1C (elementos de indice constante sao V_ no lift)
+DIM SHARED ST_1a54!(0 TO 13)   ' matriz estatica em DS:1A54 (elementos de indice constante sao V_ no lift)
+DIM SHARED ST_1a8c!(0 TO 27)   ' matriz estatica em DS:1A8C (elementos de indice constante sao V_ no lift)
+DIM SHARED ST_1b00!(0 TO 9)   ' matriz estatica em DS:1B00 (elementos de indice constante sao V_ no lift)
+DIM SHARED ST_1b28!(0 TO 9)   ' matriz estatica em DS:1B28 (elementos de indice constante sao V_ no lift)
+DIM SHARED ST_1b50!(0 TO 9)   ' matriz estatica em DS:1B50 (elementos de indice constante sao V_ no lift)
+DIM SHARED ST_1b78!(0 TO 19)   ' matriz estatica em DS:1B78 (elementos de indice constante sao V_ no lift)
+DIM SHARED RG_12F8 AS STRING * 855   ' registro de GET/PUT # em DS:12F8
+
+ON ERROR GOTO RT_ERRO_FATAL   ' erro sem tratador do programa: RT_ERRO_SEM_TRATADOR (RT45)
+RT_INICIO "VIGA"
+' ---- M_VIGA @0x10030  (010030_M_VIGA.lift.txt; evidence_id (assembly): ev_55ed05093a67d6d18d8770a5d05d7c764fd4292f9d1213ac2d21083f66a7689a)
+' @10030 inicio do programa (B$?EVT)
+RT_CLEAR   '@10143 (CLEAR zera as variaveis do programa e do COMMON, nao o estado do RT45)
+REDIM A_16be%(0 TO 1)   '@10155
+REDIM A_16d0$(0 TO 1)   '@10172
+REDIM A_16e2$(0 TO 1)   '@1018f
+ON ERROR GOTO L_11121
+RT_ONERR = &H11121   '@101a7
+GOSUB L_11161   '@101b6
+CALL S_50042   '@101c3
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_0e18! = 1.0   '@101cd DS:1d80
+V_12c2$ = "N"   '@101de DS:1d84
+V_12ca$ = "F"   '@101f0 DS:1d8a
+V_12d2% = 30   '@10202
+V_12c6$ = "N"   '@1020d DS:1d84
+V_12ce$ = "E"   '@1021f DS:1d90
+V_0dd8$ = "m"   '@10231 DS:1d96
+V_0ddc$ = "t"   '@10243 DS:1d9c
+V_0de0! = 1.0   '@10255 DS:1d80
+V_0de4! = 1.0   '@10266 DS:1d80
+V_0df4$ = "\"   '@10277 DS:1da2
+V_0dc0! = 15.0   '@10289 DS:1da8
+V_0dc4! = 1.0   '@1029a DS:1d80
+V_0dc8! = 15.0   '@102ab DS:1da8
+V_0e20% = 200   '@102bc
+V_0e22% = 150   '@102c7
+V_0e24% = 80   '@102d2
+V_166e! = 1.0   '@102dd DS:1d80
+L_102f4:
+IF NOT (ENVIRON$(RT_CINT%(FX##(V_166e!))) <> "") THEN GOTO L_10396   '@102f5 DS:1dac
+IF NOT (RT_INSTR%((1), (ENVIRON$(RT_CINT%(FX##(V_166e!)))), ("COMSPEC")) > 0) THEN GOTO L_10377   '@10313 DS:1db0
+V_0df0$ = RT_MID$((ENVIRON$(RT_CINT%(FX##(V_166e!)))), (9), (1))   '@1033d
+GOTO L_10396   '@1036a
+L_10377:
+V_166e! = FX##(V_166e!) + 1.0   '@10377 DS:1d80
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_102f4   '@1038d
+L_10396:
+V_12d4$ = CHR$(27) + CHR$(50)   '@10396
+V_12d8$ = CHR$(27) + CHR$(48)   '@103be
+V_12dc$ = CHR$(27) + CHR$(78) + CHR$(6)   '@103e6
+V_12e0$ = CHR$(27) + CHR$(79)   '@1041e
+V_0df8$ = V_0df0$   '@10446
+L_BP0c% = (V_0df8$ = "A")   '@10458 DS:1dbc
+IF NOT ((V_0df8$ = "B" OR L_BP0c%) <> 0) THEN GOTO L_104b6   '@1047d DS:1dc2
+V_0df8$ = V_0df8$ + ":\"   '@10492 DS:1dc8
+GOTO L_104d7   '@104ae
+L_104b6:
+V_0df8$ = V_0df8$ + ":\SISTRUT\EXEC40\"   '@104b6 DS:1dce
+L_104d7:
+V_0dcc$ = "CGA"   '@104d7 DS:1de4
+V_0dd0$ = "LPT1:"   '@104e9 DS:1dec
+V_0dd4$ = "COM1:"   '@104fb DS:1df6
+V_1676! = 1.0   '@1050d DS:1d80
+V_12ae$ = ""   '@1051e DS:1dac
+L_10536:
+IF NOT (V_1676! < 18.0) THEN GOTO L_105a0   '@10537 DS:1e00
+V_12ae$ = V_12ae$ + CHR$(SCREEN(4, RT_CINT%(FX##(V_1676!))))   '@1054c
+V_1676! = FX##(V_1676!) + 1.0   '@10582 DS:1d80
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_10536   '@10598
+L_105a0:
+' PROTECAO: verificacao de licenca do original desativada
+V_1676! = 1.0   '@105b7 DS:1d80
+V_12ae$ = ""   '@105c8 DS:1dac
+L_105e0:
+IF NOT (V_1676! < 40.0) THEN GOTO L_1064a   '@105e1 DS:1e1a
+V_12ae$ = V_12ae$ + CHR$(SCREEN(5, RT_CINT%(FX##(V_1676!))))   '@105f6
+V_1676! = FX##(V_1676!) + 1.0   '@1062c DS:1d80
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_105e0   '@10642
+L_1064a:
+V_0df8$ = RTRIM$(RT_MID2$((V_12ae$), (17)))   '@1064a
+V_0dcc$ = RT_MID$((V_12ae$), (1), (3))   '@10670
+V_0dd0$ = RT_MID$((V_12ae$), (4), (5))   '@10690
+V_0dd4$ = RT_MID$((V_12ae$), (10), (5))   '@106b0
+GOTO L_10711   '@106d0
+L_106d8:
+' PROTECAO (removido)
+' PROTECAO (removido)
+' PROTECAO (removido)
+' PROTECAO (removido)
+L_10711:
+L_10716:   ' entrada vinda de 010f51_F_10f51
+ON ERROR GOTO L_10fc1
+RT_ONERR = &H10fc1   '@1071b
+OPEN RT_ARQ$(V_0df8$ + "VIGA.INI") FOR INPUT AS #1   '@1072a DS:1e74,1e7a
+LINE INPUT #1, V_12ae$   '@1074e DS:1dac
+V_0df0$ = RT_MID$((V_12ae$), (1), (RT_INSTR%((1), (V_12ae$), ("=")) - 1))   '@10771 DS:1e86
+LINE INPUT #1, V_12ae$   '@1079d DS:1dac
+V_0df4$ = RT_MID$((V_12ae$), (1), (RT_INSTR%((1), (V_12ae$), ("=")) - 1))   '@107c0 DS:1e86
+IF NOT (RT_MID$((V_0df4$), (1), (1)) <> "\") THEN GOTO L_1082a   '@107ec DS:1da2
+V_0df4$ = "\" + V_0df4$   '@1080e DS:1da2
+L_1082a:
+L_BP0c% = (LEN(V_0df4$) > 1)   '@1082a
+IF NOT ((RT_RIGHT$((V_0df4$), (1)) <> "\" AND L_BP0c%) <> 0) THEN GOTO L_10887   '@1084c DS:1da2
+V_0df4$ = V_0df4$ + "\"   '@1086b DS:1da2
+L_10887:
+LINE INPUT #1, V_12ae$   '@10887 DS:1dac
+V_0dd8$ = RT_MID$((V_12ae$), (1), (RT_INSTR%((1), (V_12ae$), ("=")) - 1))   '@108aa DS:1e86
+LINE INPUT #1, V_12ae$   '@108d6 DS:1dac
+V_0ddc$ = RT_MID$((V_12ae$), (1), (RT_INSTR%((1), (V_12ae$), ("=")) - 1))   '@108f9 DS:1e86
+LINE INPUT #1, V_12ae$   '@10925 DS:1dac
+V_0de0! = VAL(V_12ae$)   '@10948
+LINE INPUT #1, V_12ae$   '@10962 DS:1dac
+V_0de4! = VAL(V_12ae$)   '@10985
+LINE INPUT #1, V_12ae$   '@1099f DS:1dac
+V_16f4! = FX##(VAL(V_12ae$)) / 100.0#   '@109c2 DS:1e8c
+V_16f8! = 15.0   '@109e2 DS:1da8
+CALL MIXT_0877_Menor(V_16f4!, V_16f8!, V_16fc!)   '@109ed
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_0e18! = V_16fc!   '@109ff
+LINE INPUT #1, V_12ae$   '@10a0a DS:1dac
+V_12c2$ = RT_MID$((V_12ae$), (1), (1))   '@10a2d
+LINE INPUT #1, V_12ae$   '@10a4a DS:1dac
+V_12ca$ = RT_MID$((V_12ae$), (1), (1))   '@10a6d
+LINE INPUT #1, V_12ae$   '@10a8a DS:1dac
+V_1700! = 4.0   '@10aad DS:1e94
+V_1704! = 96.0   '@10abf DS:1e98
+V_1708! = VAL(V_12ae$)   '@10aca
+CALL MIXT_0877_Menor(V_1704!, V_1708!, V_170c!)   '@10adf
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+CALL MIXT_082a_Maior(V_1700!, V_170c!, V_1710!)   '@10af0
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_12d2% = RT_CINT%(FX##(V_1710!))   '@10b02
+LINE INPUT #1, V_12ae$   '@10b0e DS:1dac
+V_12c6$ = RT_MID$((V_12ae$), (1), (1))   '@10b31
+LINE INPUT #1, V_12ae$   '@10b4e DS:1dac
+V_12ce$ = RT_MID$((V_12ae$), (1), (1))   '@10b71
+LINE INPUT #1, V_12ae$   '@10b8e DS:1dac
+V_0e20% = RT_CINT%(FX##(VAL(V_12ae$)))   '@10bb1
+LINE INPUT #1, V_12ae$   '@10bcc DS:1dac
+V_0e22% = RT_CINT%(FX##(VAL(V_12ae$)))   '@10bef
+LINE INPUT #1, V_12ae$   '@10c0a DS:1dac
+V_0e24% = RT_CINT%(FX##(VAL(V_12ae$)))   '@10c2d
+LINE INPUT #1, V_12ae$   '@10c48 DS:1dac
+V_12d4$ = RT_MID$((V_12ae$), (1), (RT_INSTR%((1), (V_12ae$), ("=")) - 1))   '@10c6b DS:1e86
+LINE INPUT #1, V_12ae$   '@10c97 DS:1dac
+V_12d8$ = RT_MID$((V_12ae$), (1), (RT_INSTR%((1), (V_12ae$), ("=")) - 1))   '@10cba DS:1e86
+LINE INPUT #1, V_12ae$   '@10ce6 DS:1dac
+V_12dc$ = RT_MID$((V_12ae$), (1), (RT_INSTR%((1), (V_12ae$), ("=")) - 1))   '@10d09 DS:1e86
+LINE INPUT #1, V_12ae$   '@10d35 DS:1dac
+V_12e0$ = RT_MID$((V_12ae$), (1), (RT_INSTR%((1), (V_12ae$), ("=")) - 1))   '@10d58 DS:1e86
+CLOSE #1   '@10d84
+ON ERROR GOTO L_11121
+RT_ONERR = &H11121   '@10d93
+V_12ae$ = V_12d4$   '@10da2
+GOSUB L_11042   '@10db4
+V_12d4$ = V_12b2$   '@10dc1
+V_12ae$ = V_12d8$   '@10dd3
+GOSUB L_11042   '@10de5
+V_12d8$ = V_12b2$   '@10df2
+V_12ae$ = V_12dc$   '@10e04
+GOSUB L_11042   '@10e16
+V_12dc$ = V_12b2$   '@10e23
+V_12ae$ = V_12e0$   '@10e35
+GOSUB L_11042   '@10e47
+V_12e0$ = V_12b2$   '@10e54
+L_10e6b:   ' entrada vinda de 010f51_F_10f51
+V_0de8$ = V_0df0$   '@10e70
+V_0dec$ = V_0df4$   '@10e82
+L_BP0c% = (V_0de8$ <> "A")   '@10e94 DS:1dbc
+IF NOT ((V_0de8$ <> "B" AND L_BP0c%) <> 0) THEN GOTO L_10f1a   '@10eb9 DS:1dc2
+L_BP0c% = (LEN(V_0dec$) > 1)   '@10ece DS:1e9c
+CHDIR RT_ARQ$(V_0de8$ + ":" + RT_LEFT$((V_0dec$), (LEN(V_0dec$) + L_BP0c%)))   '@10efb
+L_10f1a:
+ON ERROR GOTO L_10f56
+RT_ONERR = &H10f56   '@10f1a
+PCOPY 0, 1   '@10f29
+ON ERROR GOTO L_11121
+RT_ONERR = &H11121   '@10f3a
+GOTO L_1157a   '@10f49
+' ---- F_10f51 @0x10f51  (010f51_F_10f51.lift.txt; evidence_id (assembly): ev_5fed3d3610ecd83b60c74616f184635d87e1aa355a275bf8ebf13baaa47f59a5)
+L_10f56:   ' entrada vinda de 010030_M_VIGA
+ON ERROR GOTO L_11121
+RT_ONERR = &H11121   '@10f5b
+V_0dcc$ = "HER"   '@10f6a DS:1ea2
+V_0dc0! = 14.0   '@10f7c DS:1eaa
+V_0dc4! = 0.0   '@10f8d DS:1eae
+V_0dc8! = 9.0   '@10f9e DS:1eb2
+RESUME L_1157a   '@10faf
+L_10fc1:   ' entrada vinda de 010030_M_VIGA
+CLOSE #1   '@10fc6
+IF NOT (RT_INSTR%((1), ("CDEF"), (RT_MID$((V_0df8$), (1), (1)))) > 0) THEN GOTO L_11021   '@10fd5 DS:1eb6
+V_0df8$ = "A:\"   '@10ffd DS:1ebe
+RESUME L_10716   '@1100f
+L_11021:
+ON ERROR GOTO L_11121
+RT_ONERR = &H11121   '@11021
+RESUME L_10e6b   '@11030
+L_11042:   ' sub-rotina (alvo de GOSUB); entrada vinda de 010030_M_VIGA
+V_1676! = 0.0   '@11047 DS:1eae
+V_12b2$ = ""   '@11058 DS:1dac
+L_11070:
+IF NOT (RT_INSTR%((RT_CINT%(FX##(V_1676!) + 1.0)), (V_12ae$), ("(")) > 0) THEN GOTO L_11112   '@11071 DS:1d80,1ec6
+V_1676! = RT_INSTR%((RT_CINT%(FX##(V_1676!) + 1.0)), (V_12ae$), ("(")) + 1   '@11094 DS:1d80,1ec6
+V_12b2$ = V_12b2$ + CHR$(RT_CINT%(FX##(VAL(RT_MID2$((V_12ae$), (RT_CINT%(FX##(V_1676!))))))))   '@110c3
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_11070   '@1110a
+L_11112:
+RETURN   '@11112
+L_11121:   ' entrada vinda de 010030_M_VIGA, 019377_F_19377, 01aa98_F_1aa98
+RESUME L_11138   '@11126
+L_11138:
+GOSUB L_11161   '@1113d
+CALL S_24e64   '@1114a
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+GOTO L_118ec   '@11154
+' ---- F_1115c @0x1115c  (01115c_F_1115c.lift.txt; evidence_id (assembly): ev_d801cd252e580fc96414da802032270c3c071c3c23d65ff3240c2f3602e97b26)
+L_11161:   ' sub-rotina (alvo de GOSUB); entrada vinda de 010030_M_VIGA, 010f51_F_10f51
+FOR V_1714! = 1.0 TO 10.0   '@11166 DS:1d80,1ecc
+ON KEY(RT_CINT%(FX##(V_1714!))) GOSUB L_11407
+RT_ONKEY RT_CINT%(FX##(V_1714!)), 1   '@11174
+KEY(RT_CINT%(FX##(V_1714!))) ON
+RT_KEYESTADO RT_CINT%(FX##(V_1714!)), 1   '@1118e
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+NEXT V_1714!   '@111a3 DS:1d80,1ecc
+KEY 15, CHR$(12) + CHR$(83)
+RT_KEYDEF 15, CHR$(12) + CHR$(83)   '@111cc
+KEY 16, CHR$(44) + CHR$(83)
+RT_KEYDEF 16, CHR$(44) + CHR$(83)   '@111f4
+KEY 17, CHR$(76) + CHR$(83)
+RT_KEYDEF 17, CHR$(76) + CHR$(83)   '@1121c
+KEY 18, CHR$(108) + CHR$(83)
+RT_KEYDEF 18, CHR$(108) + CHR$(83)   '@11244
+FOR V_1714! = 15.0 TO 18.0   '@1126c DS:1d80,1da8,1e00
+ON KEY(RT_CINT%(FX##(V_1714!))) GOSUB L_11432
+RT_ONKEY RT_CINT%(FX##(V_1714!)), 2   '@1127a
+KEY(RT_CINT%(FX##(V_1714!))) ON
+RT_KEYESTADO RT_CINT%(FX##(V_1714!)), 1   '@11294
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+NEXT V_1714!   '@112a9 DS:1d80,1e00
+ON KEY(2) GOSUB L_11432
+RT_ONKEY 2, 2   '@112d2
+KEY(2) ON
+RT_KEYESTADO 2, 1   '@112e5
+KEY 19, CHR$(32) + CHR$(1)
+RT_KEYDEF 19, CHR$(32) + CHR$(1)   '@112f3
+KEY 20, CHR$(64) + CHR$(1)
+RT_KEYDEF 20, CHR$(64) + CHR$(1)   '@1131b
+KEY 21, CHR$(96) + CHR$(1)
+RT_KEYDEF 21, CHR$(96) + CHR$(1)   '@11343
+KEY 22, CHR$(0) + CHR$(1)
+RT_KEYDEF 22, CHR$(0) + CHR$(1)   '@1136b
+FOR V_1714! = 19.0 TO 22.0   '@11392 DS:1d80,1ed0,1ed4
+ON KEY(RT_CINT%(FX##(V_1714!))) GOSUB L_1154c
+RT_ONKEY RT_CINT%(FX##(V_1714!)), 3   '@113a0
+KEY(RT_CINT%(FX##(V_1714!))) ON
+RT_KEYESTADO RT_CINT%(FX##(V_1714!)), 1   '@113ba
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+NEXT V_1714!   '@113cf DS:1d80,1ed4
+RETURN   '@113f8
+L_11407:
+BEEP   '@1140c
+GOSUB L_11161   '@11416
+RETURN   '@11423
+L_11432:
+RT_SCREEN 0   '@11437
+RT_VIEWPRINT 1, 25   '@1144c
+COLOR 7, 0, 0   '@1145e
+RT_CLS 0   '@11482
+PRINT " Aguarde ..."   '@1148f DS:1ed8
+PRINT ""   '@1149d DS:1dac
+PRINT " Retorno ao Modulo Gerenciador"   '@114ab DS:1ee8
+ON ERROR GOTO L_114fc
+RT_ONERR = &H114fc   '@114b9
+RT_RUN RT_MID$((V_0df8$), (1), (LEN(V_0df8$) - 7)) + "SISTRUT"   '@114c8 DS:1f0a
+L_114fc:
+PRINT " Modulo nao encontrado em "; RT_MID$((V_0df8$), (1), (LEN(V_0df8$) - 7))   '@11501 DS:1f16
+PRINT " Termino da Utilizacao do Sistema OpenStrut Obrigado .."   '@1152f DS:1e38
+RT_FIM   '@1153d (END: o QB64 pede tecla no END; RT_FIM fecha como o BRUN45)
+L_1154c:
+BEEP   '@11551
+GOSUB L_11161   '@1155b
+RETURN L_118ec   '@11572
+' ---- FUN_1000_157a @0x1157a  (01157a_FUN_1000_157a.lift.txt; evidence_id (assembly): ev_ef247cc4e2db4ad9a11321a7e51718eb475ff174786690a5b8a994667b752d05)
+L_1157a:   ' entrada vinda de 010030_M_VIGA, 010f51_F_10f51
+REDIM A_1718!(0 TO V_0e24%)   '@1157f
+REDIM A_172a!(0 TO V_0e24%)   '@1159c
+REDIM A_1052%(-32768 TO -32768, -32768 TO -32768)   '@115b9
+REDIM A_1086$(-32768 TO -32768)   '@115c7
+REDIM A_10b4%(-32768 TO -32768, -32768 TO -32768)   '@115d0
+REDIM A_10e2%(-32768 TO -32768, -32768 TO -32768)   '@115d9
+REDIM A_1110%(-32768 TO -32768, -32768 TO -32768)   '@115e2
+REDIM A_113e!(-32768 TO -32768, -32768 TO -32768)   '@115eb
+REDIM A_116c!(-32768 TO -32768, -32768 TO -32768)   '@115f4
+REDIM A_119a!(-32768 TO -32768, -32768 TO -32768)   '@115fd
+REDIM A_1224!(-32768 TO -32768, -32768 TO -32768)   '@11606
+REDIM A_11c8!(-32768 TO -32768, -32768 TO -32768)   '@1160f
+REDIM A_11f6!(-32768 TO -32768, -32768 TO -32768)   '@11618
+REDIM A_1252!(-32768 TO -32768, -32768 TO -32768)   '@11621
+REDIM A_1280!(-32768 TO -32768, -32768 TO -32768)   '@1162a
+REDIM A_16be%(-32768 TO -32768)   '@11633
+V_1686! = RT_FREN&(-1)   '@1163c
+V_173c! = FX##(V_0e20%) / 1.0   '@11656 DS:1d80
+V_1740! = (FX##(V_1686!) - 30720.0) / 918.0 - 1.0   '@11670 DS:1f34,1f38,1f3c
+CALL MIXT_0877_Menor(V_173c!, V_1740!, V_1744!)   '@1168a
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_0e14! = INT(FX##(V_1744!))   '@1169c
+REDIM A_1052%(0 TO V_0e22%, 0 TO 12)   '@116ae
+REDIM A_1086$(0 TO CINT(V_0e14!))   '@116d0
+REDIM A_10b4%(0 TO CINT(V_0e14!), 0 TO 4)   '@116f4
+REDIM A_10e2%(0 TO CINT(V_0e14!), 0 TO 13)   '@1171f
+REDIM A_1110%(0 TO CINT(V_0e14!), 0 TO 13)   '@1174a
+REDIM A_113e!(0 TO CINT(V_0e14!), 0 TO 13)   '@11775
+REDIM A_116c!(0 TO CINT(V_0e14!), 0 TO 13)   '@117a0
+REDIM A_119a!(0 TO CINT(V_0e14!), 0 TO 30)   '@117cb
+REDIM A_1224!(0 TO CINT(V_0e14!), 0 TO 30)   '@117f6
+REDIM A_11c8!(0 TO CINT(V_0e14!), 0 TO 30)   '@1181c
+REDIM A_11f6!(0 TO CINT(V_0e14!), 0 TO 30)   '@11847
+REDIM A_1252!(0 TO CINT(V_0e14!), 0 TO 30)   '@11872
+REDIM A_1280!(0 TO CINT(V_0e14!), 0 TO 1)   '@11898
+REDIM A_16be%(0 TO CINT(V_0e14!))   '@118c3
+L_118ec:   ' entrada vinda de 010f51_F_10f51, 01115c_F_1115c, 01297b_F_1297b, 015049_F_15049, 015d8a_F_15d8a, 01698d_FUN_1000_698d, 0179bb_F_179bb, 019377_F_19377
+RT_SCREEN 0   '@118f1
+RT_VIEWPRINT 1, 25   '@11906
+COLOR 7, RT_CINT%(FX##(V_0dc4!)), RT_CINT%(FX##(V_0dc4!))   '@11918
+RT_CLOSE   '@1194c (CLOSE sem numero: nao fecha a impressora (LPT1) do LPRINT)
+RT_CLS 0   '@11959
+COLOR 11   '@11966
+PRINT RT_STRINGC$((80), (219))   '@1197c
+PRINT "   VIGAS CONTINUAS"   '@11994 DS:1f40
+PRINT "   OpenStrut  eng. reversa independente do"   '@119a2 DS:1f56
+PRINT "   SISTRUT 4.0 (1991), sem vinculo oficial"   '@119b0 DS:1f84
+PRINT "   Versao 4.0   "; V_1d70$   '@119be DS:1fb2
+PRINT RT_STRINGC$((80), (219))   '@119d5
+COLOR 7   '@119ed
+LOCATE 8, 20   '@11a03
+PRINT "1  -  ";   '@11a21 DS:1fc6
+COLOR RT_CINT%(FX##(V_0dc8!))   '@11a2f
+PRINT "A";   '@11a4c DS:1dbc
+COLOR 7   '@11a5a
+PRINT "rquivar Geometria das Vigas"   '@11a70 DS:1fd0
+LOCATE 10, 20   '@11a7e
+PRINT "2  -  ";   '@11a9c DS:1ff0
+COLOR RT_CINT%(FX##(V_0dc8!))   '@11aaa
+PRINT "P";   '@11ac7 DS:1ffa
+COLOR 7   '@11ad5
+PRINT "rocessar Vigas arquivadas"   '@11aeb DS:2000
+LOCATE 12, 20   '@11af9
+PRINT "3  -  Processar ";   '@11b17 DS:201e
+COLOR RT_CINT%(FX##(V_0dc8!))   '@11b25
+PRINT "u";   '@11b42 DS:2032
+COLOR 7   '@11b50
+PRINT "ma Viga"   '@11b66 DS:2038
+LOCATE 14, 20   '@11b74
+PRINT "4  -  ";   '@11b92 DS:2044
+COLOR RT_CINT%(FX##(V_0dc8!))   '@11ba0
+PRINT "L";   '@11bbd DS:204e
+COLOR 7   '@11bcb
+PRINT "ista das Vigas Arquivadas"   '@11be1 DS:2054
+LOCATE 16, 20   '@11bef
+PRINT "5  -  ";   '@11c0d DS:2072
+COLOR RT_CINT%(FX##(V_0dc8!))   '@11c1b
+PRINT "C";   '@11c38 DS:207c
+COLOR 7   '@11c46
+PRINT "orrecoes dos dados"   '@11c5c DS:2082
+LOCATE 18, 20   '@11c6a
+PRINT "6  -  ";   '@11c88 DS:2098
+COLOR RT_CINT%(FX##(V_0dc8!))   '@11c96
+PRINT "G";   '@11cb3 DS:20a2
+COLOR 7   '@11cc1
+PRINT "ravacao e Leitura de Vigas"   '@11cd7 DS:20a8
+LOCATE 20, 20   '@11ce5
+PRINT "7  -  Processar com ";   '@11d03 DS:20c6
+COLOR RT_CINT%(FX##(V_0dc8!))   '@11d11
+PRINT "R";   '@11d2e DS:20de
+COLOR 7   '@11d3c
+PRINT "esumo de cargas nos Pilares"   '@11d52 DS:20e4
+LOCATE 22, 20   '@11d60
+PRINT "8  -  ";   '@11d7e DS:2104
+COLOR RT_CINT%(FX##(V_0dc8!))   '@11d8c
+PRINT "V";   '@11da9 DS:210e
+COLOR 7   '@11db7
+PRINT "isualizar / Alterar Parametrizacoes"   '@11dcd DS:2114
+LOCATE 24, 60   '@11ddb
+COLOR RT_CINT%(FX##(V_0dc0!)), 3   '@11df9
+PRINT " <F2> = Fim "   '@11e1e DS:213c
+L_11e31:
+COLOR RT_CINT%(FX##(V_0dc0!)), RT_CINT%(FX##(V_0dc4!))   '@11e36
+LOCATE 24, 20   '@11e62
+PRINT "escolha opcao ";   '@11e80 DS:214c
+CALL MIXT_07f1_LimpaTeclado   '@11e8e
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_12ae$ = RT_INPUT$(1)   '@11e98
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_1686! = RT_FRE&("")   '@11eb4 DS:1dac
+COLOR 7   '@11ece
+V_1748$ = V_12ae$   '@11ee4
+IF NOT (V_1748$ <> "1") THEN GOTO L_11f31   '@11ef6 DS:215e
+IF NOT (V_1748$ <> "A") THEN GOTO L_11f31   '@11f0d DS:1dbc
+IF NOT (V_1748$ = "a") THEN GOTO L_11f41   '@11f1f DS:2164
+L_11f31:
+GOTO L_1216f   '@11f31
+L_11f41:
+IF NOT (V_1748$ <> "2") THEN GOTO L_11f77   '@11f41 DS:216a
+IF NOT (V_1748$ <> "P") THEN GOTO L_11f77   '@11f53 DS:1ffa
+IF NOT (V_1748$ = "p") THEN GOTO L_11f87   '@11f65 DS:2170
+L_11f77:
+GOTO L_14dcd   '@11f77
+L_11f87:
+IF NOT (V_1748$ <> "3") THEN GOTO L_11fbd   '@11f87 DS:2176
+IF NOT (V_1748$ <> "U") THEN GOTO L_11fbd   '@11f99 DS:217c
+IF NOT (V_1748$ = "u") THEN GOTO L_11fcd   '@11fab DS:2032
+L_11fbd:
+GOTO L_16290   '@11fbd
+L_11fcd:
+IF NOT (V_1748$ <> "4") THEN GOTO L_12003   '@11fcd DS:2182
+IF NOT (V_1748$ <> "L") THEN GOTO L_12003   '@11fdf DS:204e
+IF NOT (V_1748$ = "l") THEN GOTO L_1201d   '@11ff1 DS:2188
+L_12003:
+CALL S_282eb   '@12003
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_118ec   '@1200d
+L_1201d:
+IF NOT (V_1748$ <> "5") THEN GOTO L_12053   '@1201d DS:218e
+IF NOT (V_1748$ <> "C") THEN GOTO L_12053   '@1202f DS:207c
+IF NOT (V_1748$ = "c") THEN GOTO L_1206d   '@12041 DS:2194
+L_12053:
+CALL S_201eb   '@12053
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_118ec   '@1205d
+L_1206d:
+IF NOT (V_1748$ <> "6") THEN GOTO L_120a3   '@1206d DS:219a
+IF NOT (V_1748$ <> "G") THEN GOTO L_120a3   '@1207f DS:20a2
+IF NOT (V_1748$ = "g") THEN GOTO L_120bd   '@12091 DS:21a0
+L_120a3:
+CALL S_3091d   '@120a3
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_118ec   '@120ad
+L_120bd:
+IF NOT (V_1748$ <> "7") THEN GOTO L_120f3   '@120bd DS:21a6
+IF NOT (V_1748$ <> "R") THEN GOTO L_120f3   '@120cf DS:20de
+IF NOT (V_1748$ = "r") THEN GOTO L_12103   '@120e1 DS:21ac
+L_120f3:
+GOTO L_1698d   '@120f3
+L_12103:
+IF NOT (V_1748$ <> "8") THEN GOTO L_12139   '@12103 DS:21b2
+IF NOT (V_1748$ <> "V") THEN GOTO L_12139   '@12115 DS:210e
+IF NOT (V_1748$ = "v") THEN GOTO L_12153   '@12127 DS:21b8
+L_12139:
+CALL S_28871   '@12139
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_118ec   '@12143
+L_12153:
+BEEP   '@12153
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_11e31   '@1215d
+L_1216f:
+RT_VIEWPRINT 1, 25   '@12174
+COLOR RT_CINT%(FX##(V_0dc0!)), RT_CINT%(FX##(V_0dc4!))   '@12186
+RT_CLS 2   '@121b2
+PRINT RT_STRINGC$((80), (205))   '@121c0
+PRINT " Arquivo de Vigas Continuas"   '@121d8 DS:21be
+PRINT " Numero maximo de posicoes - "; V_0e14!;   '@121e6 DS:21de
+IF NOT (V_0e12% = 0) THEN GOTO L_12226   '@12201
+PRINT ""   '@12210 DS:1dac
+GOTO L_1224f   '@1221e
+L_12226:
+PRINT "    posicionadas"; V_0e12%; "Vigas da Obra "; V_0e04$   '@12226 DS:2200,2214
+L_1224f:
+PRINT RT_STRINGC$((80), (205))   '@1224f
+L_12267:
+RT_VIEWPRINT 6, 25   '@1226c
+RT_CLS 2   '@1227e
+COLOR 7   '@1228c
+PRINT " Posicao *";   '@122a2 DS:2226
+COLOR RT_CINT%(FX##(V_0dc0!))   '@122b0
+PRINT V_0e12% + 1;   '@122cd
+COLOR 7   '@122dc
+PRINT "*";   '@122f2 DS:2234
+CALL MIXT_07f1_LimpaTeclado   '@12300
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT " ", V_12ae$   '@1230a DS:223a
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_1672! = VAL(V_12ae$)   '@12324
+IF NOT (LEN(V_12ae$) = 0) THEN GOTO L_12368   '@1233e
+V_1672! = V_0e12% + 1   '@12353
+L_12368:
+IF NOT (V_1672! > V_0e14! OR (V_0e12% + 1 < V_1672! OR V_1672! < 1.0)) THEN GOTO L_123d0   '@12368 DS:1d80
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_12267   '@123c8
+L_123d0:
+IF NOT (V_1672! = 1.0) THEN GOTO L_126c2   '@123d0 DS:1d80
+COLOR 3   '@123eb
+LOCATE 10, 1   '@12401
+PRINT " Atencao !!!"   '@1241c DS:2240
+PRINT " Para o Nome da OBRA, recomendamos que seja dado de maneira a identificar"   '@1242a DS:2250
+PRINT " primeiro o Pavimento e depois a Obra ."   '@12438 DS:229e
+PRINT " Exemplo:  sub2-MAK , tipo-312 , tipITU1 , cob-FMU , maq-O115"   '@12446 DS:22ca
+PRINT " Para alterar o nome da Obra rearquive a posicao 1"   '@12454 DS:230c
+L_12462:
+LOCATE 7, 1   '@12467
+COLOR RT_CINT%(FX##(V_0dc0!))   '@12482
+PRINT " Obra";   '@1249f DS:2342
+COLOR 3   '@124ad
+PRINT RT_TAB$(15); ""; CHR$(27); "maximo 8 caracteres"   '@124c3 DS:1dac,234c
+COLOR RT_CINT%(FX##(V_0dc0!))   '@124f2
+LOCATE 7, 7   '@1250f
+CALL MIXT_07f1_LimpaTeclado   '@1252d
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT "", V_0e04$   '@12537 DS:1dac
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+L_BP0c% = (LEN(V_0e04$) = 0)   '@12551 DS:2364
+L_BP0e% = VAL(V_0e04$) > 0.0# OR L_BP0c%   '@12573
+L_BP10% = LEN(V_0e04$) > 8 OR L_BP0e%   '@12596
+L_BP12% = INSTR(V_0e04$, " ") > 0 OR L_BP10%   '@125b2 DS:223a
+L_BP14% = INSTR(V_0e04$, ".") > 0 OR L_BP12%   '@125cd DS:236c
+L_BP16% = INSTR(V_0e04$, "\") > 0 OR L_BP14%   '@125e8 DS:1da2
+IF NOT ((INSTR(V_0e04$, "/") > 0 OR L_BP16%) <> 0) THEN GOTO L_1262c   '@12603 DS:2372
+BEEP   '@1261a
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_12462   '@12624
+L_1262c:
+IF NOT (V_0e12% > 0) THEN GOTO L_126bd   '@1262c
+LOCATE 7, 14   '@1263b
+COLOR RT_CINT%(FX##(V_0dc0!))   '@12659
+RT_LINEINPUT "   Mantenho as Vigas arquivadas em memoria   NAO/*S* ", V_12ae$   '@12676 DS:2378
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF NOT (UCASE$(V_12ae$) = "NAO") THEN GOTO L_126b8   '@12690 DS:23b2
+V_0e12% = 0   '@126ad
+L_126b8:
+L_126bd:
+L_126c2:
+RT_VIEWPRINT 6, 25   '@126c7
+RT_CLS 2   '@126d9
+COLOR RT_CINT%(FX##(V_0dc0!))   '@126e7
+PRINT " ( posicao"; V_1672!; ")"   '@12704 DS:23ba,23c8
+PRINT " Obra "; V_0e04$   '@12728 DS:23ce
+V_0e00$ = V_0e04$   '@1273f
+COLOR 7   '@12751
+RT_VIEWPRINT 8, 25   '@12767
+V_16bc% = 30   '@12779
+GOSUB L_1297b   '@12784
+IF NOT (V_0dfc$ = "FIM") THEN GOTO L_127b0   '@12791 DS:23d8
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_118ec   '@127a8
+L_127b0:
+V_174c! = 0.0   '@127b0 DS:1eae
+V_1750! = 1.0   '@127c2 DS:1d80
+CALL MIXT_0dbe_GuardaTela(V_174c!, V_1750!, V_0dcc$)   '@127cd
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_VIEWPRINT 1, 25   '@127de
+COLOR RT_CINT%(FX##(V_0dc0!)), RT_CINT%(4.0 * FX##(V_0dc4!))   '@127f0 DS:1e94
+V_0e1c! = 2.0   '@12821 DS:23e0
+CALL S_29ab7   '@12832
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+PRINT ""   '@1283c DS:1dac
+LOCATE , 15   '@1284a
+CALL MIXT_07f1_LimpaTeclado   '@12863
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT " Dados Corretos N/*S* ", V_12ae$   '@1286d DS:23e4
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+COLOR 7, RT_CINT%(FX##(V_0dc4!))   '@12887
+V_1754! = 1.0   '@128ac DS:1d80
+V_1758! = 0.0   '@128be DS:1eae
+CALL MIXT_0dbe_GuardaTela(V_1754!, V_1758!, V_0dcc$)   '@128c9
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF NOT (UCASE$(V_12ae$) = "N") THEN GOTO L_128ff   '@128da DS:1d84
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_126c2   '@128f7
+L_128ff:
+CALL S_33991(V_1672!)   '@128ff
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF NOT (V_0e12% < V_1672!) THEN GOTO L_1293d   '@1290d
+V_0e12% = RT_CINT%(FX##(V_1672!))   '@1292b
+L_1293d:
+V_1672! = FX##(V_1672!) + 1.0   '@1293d DS:1d80
+RT_VIEWPRINT 5, 25   '@12953
+RT_CLS 2   '@12965
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_126c2   '@12973
+' ---- F_1297b @0x1297b  (01297b_F_1297b.lift.txt; evidence_id (assembly): ev_30b24433551f39d132cc17f3e15224afbf3d997842f247696b50d2fd6f7d71a9)
+L_1297b:   ' sub-rotina (alvo de GOSUB); entrada vinda de 01157a_FUN_1000_157a, 015d8a_F_15d8a
+RT_CLS 2   '@12980
+COLOR RT_CINT%(FX##(V_0dc0!))   '@1298e
+PRINT " Viga *FIM* ";   '@129ab DS:23fe
+COLOR 3   '@129b9
+PRINT RT_TAB$(34); ""; CHR$(27); "maximo 20 caracteres"   '@129cf DS:1dac,240e
+COLOR RT_CINT%(FX##(V_0dc0!))   '@129fe
+LOCATE CSRLIN - 1, 14   '@12a1b
+CALL MIXT_07f1_LimpaTeclado   '@12a3c
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT "", V_0dfc$   '@12a46 DS:1dac
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF NOT (LEN(V_0dfc$) = 0) THEN GOTO L_12a91   '@12a60
+V_0dfc$ = "FIM"   '@12a75 DS:23d8
+RETURN   '@12a87
+L_12a91:
+COLOR 7   '@12a96
+LOCATE 10, 1   '@12aac
+CALL MIXT_07f1_LimpaTeclado   '@12ac7
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT " Numero de tramos sem balanco ", V_12ae$   '@12ad1 DS:2426
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_0e08% = RT_CINT%(FX##(VAL(V_12ae$)))   '@12aeb
+IF NOT (V_0e08% > 12 OR V_0e08% < 0) THEN GOTO L_12b3c   '@12b06
+BEEP   '@12b2a
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_12a91   '@12b34
+L_12b3c:
+LOCATE 11, 1   '@12b41
+PRINT " Balanco  esquerda(";   '@12b5c DS:2448
+COLOR RT_CINT%(FX##(V_0dc0!))   '@12b6a
+PRINT "10";   '@12b87 DS:2460
+COLOR 7   '@12b95
+PRINT ")  direita(";   '@12bab DS:2466
+COLOR RT_CINT%(FX##(V_0dc0!))   '@12bb9
+PRINT "01";   '@12bd6 DS:2476
+COLOR 7   '@12be4
+PRINT ")  ambos(";   '@12bfa DS:247c
+COLOR RT_CINT%(FX##(V_0dc0!))   '@12c08
+PRINT "11";   '@12c25 DS:248a
+COLOR 7   '@12c33
+RT_LINEINPUT ")  *NAO* ", V_12ae$   '@12c49 DS:2490
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF NOT (LEN(V_12ae$) = 0) THEN GOTO L_12c96   '@12c63
+V_0e0a% = 0   '@12c78
+V_0e0c% = 0   '@12c83
+GOTO L_12d35   '@12c8e
+L_12c96:
+V_0e0a% = RT_CINT%(FX##(VAL(RT_MID$((V_12ae$), (1), (1)))))   '@12c96
+V_0e0c% = RT_CINT%(FX##(VAL(RT_MID$((V_12ae$), (2), (1)))))   '@12cbc
+IF NOT (V_0e0c% <> 0 AND V_0e0c% <> 1 OR V_0e0a% <> 0 AND V_0e0a% <> 1) THEN GOTO L_12d35   '@12ce5
+BEEP   '@12d23
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_12b3c   '@12d2d
+L_12d35:
+LOCATE 12, 1   '@12d3a
+PRINT " Engaste  esquerda(";   '@12d55 DS:249e
+COLOR RT_CINT%(FX##(V_0dc0!))   '@12d63
+PRINT "10";   '@12d80 DS:2460
+COLOR 7   '@12d8e
+PRINT ")  direita(";   '@12da4 DS:2466
+COLOR RT_CINT%(FX##(V_0dc0!))   '@12db2
+PRINT "01";   '@12dcf DS:2476
+COLOR 7   '@12ddd
+PRINT ")  ambos(";   '@12df3 DS:247c
+COLOR RT_CINT%(FX##(V_0dc0!))   '@12e01
+PRINT "11";   '@12e1e DS:248a
+COLOR 7   '@12e2c
+RT_LINEINPUT ")  *NAO* ", V_12ae$   '@12e42 DS:2490
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF NOT (LEN(V_12ae$) = 0) THEN GOTO L_12e8f   '@12e5c
+V_0e0e% = 0   '@12e71
+V_0e10% = 0   '@12e7c
+GOTO L_12f2e   '@12e87
+L_12e8f:
+V_0e0e% = RT_CINT%(FX##(VAL(RT_MID$((V_12ae$), (1), (1)))))   '@12e8f
+V_0e10% = RT_CINT%(FX##(VAL(RT_MID$((V_12ae$), (2), (1)))))   '@12eb5
+IF NOT (V_0e10% <> 0 AND V_0e10% <> 1 OR V_0e0e% <> 0 AND V_0e0e% <> 1) THEN GOTO L_12f2e   '@12ede
+BEEP   '@12f1c
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_12d35   '@12f26
+L_12f2e:
+IF NOT ((V_0e10% = 1 OR (V_0e0e% = 1 OR V_0e0c% = V_0e0a%)) AND V_0e08% = 0) THEN GOTO L_12f87   '@12f33
+BEEP   '@12f75
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_12a91   '@12f7f
+L_12f87:
+IF NOT (V_0e10% = 1 AND V_0e0c% = 1 OR V_0e0e% = 1 AND V_0e0a% = 1) THEN GOTO L_12fd7   '@12f87
+BEEP   '@12fc5
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_12b3c   '@12fcf
+L_12fd7:
+LOCATE 13, 1   '@12fd7
+RT_LINEINPUT " Inercia e constante N/*S* ", V_12ae$   '@12ff2 DS:24b6
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+GOSUB L_14b25   '@1300c
+V_175c! = V_0e0c% + V_0e08%   '@13019
+FOR V_166e! = 1 - V_0e0a% TO V_175c!   '@13031 DS:1d80
+RT_VIEWPRINT 15, 25   '@13040
+L_13052:
+RT_CLS 2   '@13057
+COLOR RT_CINT%(FX##(V_0dc0!))   '@13065
+PRINT " L"; V_166e!;   '@13082 DS:24d6
+COLOR 7   '@1309d
+PRINT " ("; V_0dd8$; ") ";   '@130b3 DS:24dc,24e2
+CALL MIXT_07f1_LimpaTeclado   '@130d3
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT "", V_12ae$   '@130dd DS:1dac
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+A_0e26!(RT_CINT%(FX##(V_166e!))) = VAL(V_12ae$)   '@130f7
+IF NOT (A_0e26!(RT_CINT%(FX##(V_166e!))) <= 0.0) THEN GOTO L_1316a   '@13127 DS:1eae
+BEEP   '@13158
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_13052   '@13162
+L_1316a:
+IF NOT (A_0e54!(0) <> 0.0 OR (V_0e08% + 1 = V_166e! OR V_166e! = 0.0)) THEN GOTO L_131e2   '@1316a DS:1eae
+GOTO L_13459   '@131da
+L_131e2:
+LOCATE 17, 40   '@131e7
+COLOR 3   '@13205
+PRINT "* <Enter> para calcular inercia"   '@1321b DS:24e8
+COLOR 7   '@13229
+LOCATE 15, 40   '@1323f
+BEEP   '@1325d
+COLOR RT_CINT%(FX##(V_0dc0!))   '@13267
+PRINT " J"; V_166e!;   '@13284 DS:250c
+COLOR 7   '@1329f
+PRINT " ("; V_0dd8$; "4/"; V_0dd8$; "4) ";   '@132b5 DS:24dc,2512,2518
+CALL MIXT_07f1_LimpaTeclado   '@132e7
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT "", V_12ae$   '@132f1 DS:1dac
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+L_13322:   ' entrada vinda de 01b337_F_1b337
+IF NOT (RT_MID$((V_12ae$), (1), (1)) = "*") THEN GOTO L_133e6   '@13322 DS:2234
+GOSUB L_14881   '@1332d
+LOCATE 15, 40   '@1333a
+COLOR RT_CINT%(FX##(V_0dc0!))   '@13358
+PRINT " J"; V_166e!;   '@13375 DS:250c
+COLOR 7   '@13390
+PRINT " ("; V_0dd8$; "4/"; V_0dd8$; "4) "; V_12ae$   '@133a6 DS:24dc,2512,2518
+L_133e6:
+A_0e54!(RT_CINT%(FX##(V_166e!))) = VAL(V_12ae$)   '@133e6
+IF NOT (FX##(A_0e54!(RT_CINT%(FX##(V_166e!)))) < 0.00999999977648258209228515625##) THEN GOTO L_13459   '@13416 DS:2520
+BEEP   '@13447
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_131e2   '@13451
+L_13459:
+RT_VIEWPRINT 17, 25   '@1345e
+RT_CLS 2   '@13470
+LOCATE 17, 1   '@1347e
+CALL MIXT_07f1_LimpaTeclado   '@13499
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT " Numero de divisoes de carga *1* ", V_12ae$   '@134a3 DS:2524
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+A_0f0c%(RT_CINT%(FX##(V_166e!))) = RT_CINT%(FX##(VAL(V_12ae$)))   '@134bd
+IF NOT (LEN(V_12ae$) = 0) THEN GOTO L_13527   '@134f3
+A_0f0c%(RT_CINT%(FX##(V_166e!))) = 1   '@13508
+L_13527:
+L_BP0c% = (A_0f0c%(RT_CINT%(FX##(V_166e!))) = 0)   '@13527
+IF NOT ((INSTR(V_12ae$, ",") OR L_BP0c%) <> 0) THEN GOTO L_1357d   '@1355c DS:254a
+BEEP   '@1356b
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_13459   '@13575
+L_1357d:
+IF NOT (V_166e! = 0.0) THEN GOTO L_135d1   '@1357d DS:1eae
+A_0f3a%(RT_CINT%(FX##(V_166e!))) = A_0f0c%(RT_CINT%(FX##(V_166e!)))   '@13598
+L_135d1:
+IF NOT (V_166e! > 0.0) THEN GOTO L_13646   '@135d1 DS:1eae
+A_0f3a%(RT_CINT%(FX##(V_166e!))) = A_0f3a%(RT_CINT%(FX##(V_166e!) - 1.0)) + A_0f0c%(RT_CINT%(FX##(V_166e!)))   '@135ec DS:1f3c
+L_13646:
+IF NOT (A_0f3a%(RT_CINT%(FX##(V_166e!))) > V_16bc% - (V_0e08% + (FX##(V_0e0c%) - V_166e!))) THEN GOTO L_13744   '@13646
+BEEP   '@13699
+COLOR RT_CINT%(FX##(V_0dc0!))   '@136a3
+LOCATE 19, 1   '@136c0
+PRINT " SOMENTE"; V_16bc%; " DIVISOES DE CARGA NA VIGA";   '@136db DS:2550,255c
+COLOR 7   '@136fb
+CALL MIXT_07f1_LimpaTeclado   '@13711
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_12ae$ = RT_INPUT$(1)   '@1371b
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_13459   '@13737
+L_13744:
+IF NOT (A_0f0c%(RT_CINT%(FX##(V_166e!))) = 0) THEN GOTO L_13773   '@13744
+GOTO L_14679   '@1376b
+L_13773:
+V_1760! = A_0f0c%(RT_CINT%(FX##(V_166e!)))   '@13773
+FOR V_1676! = 1.0 TO V_1760!   '@1379f DS:1d80
+V_167a! = A_0f3a%(RT_CINT%(FX##(V_166e!))) - A_0f0c%(RT_CINT%(FX##(V_166e!))) + FX##(V_1676!)   '@137a6
+RT_VIEWPRINT 19, 24   '@137f4
+RT_CLS 2   '@13806
+COLOR 3   '@13814
+PRINT " (cargas totais)"   '@1382a DS:257a
+COLOR RT_CINT%(FX##(V_0dc0!))   '@13838
+PRINT " P"; V_1676!;   '@13855 DS:258e
+COLOR 7   '@13870
+PRINT " ("; V_0ddc$; "/"; V_0dd8$; ") , ";   '@13886 DS:2372,24dc,2594
+COLOR RT_CINT%(FX##(V_0dc0!))   '@138b8
+PRINT "D"; V_1676!;   '@138d5 DS:259c
+COLOR 7   '@138f0
+PRINT " ("; V_0dd8$; ") , ";   '@13906 DS:24dc,2594
+COLOR RT_CINT%(FX##(V_0dc0!))   '@13926
+PRINT "F"; V_1676!;   '@13943 DS:1d8a
+COLOR 7   '@1395e
+PRINT " ("; V_0ddc$; ") ";   '@13974 DS:24dc,24e2
+CALL MIXT_07f1_LimpaTeclado   '@13994
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+CALL MIXT_00ff_Le3Campos(V_12ae$, V_12b2$, V_12b6$)   '@1399e
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+A_0e82!(RT_CINT%(FX##(V_167a!))) = VAL(V_12ae$)   '@139b4
+A_0eb0!(RT_CINT%(FX##(V_167a!))) = VAL(V_12b2$)   '@139e4
+A_0ede!(RT_CINT%(FX##(V_167a!))) = VAL(V_12b6$)   '@13a14
+IF NOT (LEN(V_12b2$) = 0) THEN GOTO L_13a96   '@13a44
+A_0eb0!(RT_CINT%(FX##(V_167a!))) = A_0e26!(RT_CINT%(FX##(V_166e!)))   '@13a59
+L_13a96:
+IF NOT (A_0e82!(RT_CINT%(FX##(V_167a!))) <= 0.0 OR (A_0eb0!(RT_CINT%(FX##(V_167a!))) < 0.0 OR A_0eb0!(RT_CINT%(FX##(V_167a!))) > A_0e26!(RT_CINT%(FX##(V_166e!))))) THEN GOTO L_13b65   '@13a96 DS:1eae
+GOSUB L_147b8   '@13b4b
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_13459   '@13b58
+L_13b65:
+L_BP0c% = (A_0eb0!(RT_CINT%(FX##(V_167a!))) <> A_0e26!(RT_CINT%(FX##(V_166e!))))   '@13b65 DS:1d80,1eae
+IF NOT ((A_0eb0!(RT_CINT%(FX##(V_167a!))) <> A_0e26!(RT_CINT%(FX##(V_166e!))) AND (V_0e08% < V_166e! AND A_0f0c%(RT_CINT%(FX##(V_166e!))) = V_1676!) OR ((A_0ede!(RT_CINT%(FX##(V_167a!))) <> 0.0 OR L_BP0c%) AND (V_0e08% >= V_166e! AND (V_166e! > 0.0 AND A_0f0c%(RT_CINT%(FX##(V_166e!))) = V_1676!)) OR A_0eb0!(RT_CINT%(FX##(V_167a!))) <> A_0e26!(RT_CINT%(FX##(V_166e!))) AND (V_166e! = 0.0 AND V_1676! = 1.0))) <> 0) THEN GOTO L_13d91   '@13cb5
+GOSUB L_147b8   '@13d7c
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_13459   '@13d89
+L_13d91:
+L_BP0c% = (A_0eb0!(RT_CINT%(FX##(V_167a!))) <= A_0eb0!(RT_CINT%(FX##(V_167a!) - 1.0)) AND V_166e! <> 0.0)   '@13d91 DS:1d80,1eae,1f3c
+IF NOT (((A_0eb0!(RT_CINT%(FX##(V_167a!))) >= A_0eb0!(RT_CINT%(FX##(V_167a!) - 1.0)) AND V_166e! = 0.0 OR L_BP0c%) AND V_1676! > 1.0) <> 0) THEN GOTO L_13e9d   '@13e46
+GOSUB L_147b8   '@13e88
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_13459   '@13e95
+L_13e9d:
+IF NOT (RT_MID$((V_12b6$), (1), (1)) = "*") THEN GOTO L_13f24   '@13e9d DS:2234
+A_0f96!(RT_CINT%(FX##(V_167a!))) = -100.0   '@13ebf DS:25a2
+A_0ede!(RT_CINT%(FX##(V_167a!))) = VAL(RT_MID2$((V_12b6$), (2)))   '@13ee6
+L_13f24:
+IF NOT (V_12c2$ = "N") THEN GOTO L_13f43   '@13f24 DS:1d84
+GOTO L_14404   '@13f3b
+L_13f43:
+IF NOT (V_12ca$ = "G") THEN GOTO L_14015   '@13f43 DS:20a2
+A_0f68!(RT_CINT%(FX##(V_167a!))) = FX##(V_12d2%) * A_0e82!(RT_CINT%(FX##(V_167a!))) / 100.0   '@13f5a DS:25a6
+IF NOT (RT_MID$((V_12b6$), (1), (1)) <> "*") THEN GOTO L_14010   '@13fa4 DS:2234
+A_0f96!(RT_CINT%(FX##(V_167a!))) = FX##(V_12d2%) * A_0ede!(RT_CINT%(FX##(V_167a!))) / 100.0   '@13fc6 DS:25a6
+L_14010:
+L_14015:
+IF NOT (V_12ca$ = "F") THEN GOTO L_14404   '@1401a DS:1d8a
+RT_VIEWPRINT 22, 24   '@14031
+RT_CLS 2   '@14043
+COLOR 3   '@14051
+PRINT " (cargas acidentais)"   '@14067 DS:25aa
+COLOR RT_CINT%(FX##(V_0dc0!))   '@14075
+PRINT " Pac"; V_1676!;   '@14092 DS:25c2
+COLOR 7   '@140ad
+PRINT " ("; V_0ddc$; "/"; V_0dd8$; ") , ";   '@140c3 DS:2372,24dc,2594
+COLOR RT_CINT%(FX##(V_0dc0!))   '@140f5
+PRINT "Fac"; V_1676!;   '@14112 DS:25ca
+COLOR 7   '@1412d
+PRINT " ("; V_0ddc$; ") ";   '@14143 DS:24dc,24e2
+CALL MIXT_07f1_LimpaTeclado   '@14163
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+CALL MIXT_0049_Le2Campos(V_12ae$, V_12b2$)   '@1416d
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+A_0f68!(RT_CINT%(FX##(V_167a!))) = VAL(V_12ae$)   '@1417f
+IF NOT (RT_MID$((V_12b6$), (1), (1)) <> "*") THEN GOTO L_14201   '@141af DS:2234
+A_0f96!(RT_CINT%(FX##(V_167a!))) = VAL(V_12b2$)   '@141d1
+L_14201:
+L_BP0c% = (A_0f68!(RT_CINT%(FX##(V_167a!))) >= A_0e82!(RT_CINT%(FX##(V_167a!))))   '@14201
+L_BP0e% = A_0ede!(RT_CINT%(FX##(V_167a!))) > 0.0 AND (A_0f96!(RT_CINT%(FX##(V_167a!))) >= A_0ede!(RT_CINT%(FX##(V_167a!))) AND RT_MID$((V_12b6$), (1), (1)) <> "*") OR L_BP0c%   '@14257 DS:1eae,2234
+L_BP10% = (A_0ede!(RT_CINT%(FX##(V_167a!))) = 0.0 OR RT_MID$((V_12b6$), (1), (1)) = "*")   '@142f9 DS:1eae,2234,2364
+IF NOT ((VAL(V_12b2$) > 0.0# AND L_BP10% OR L_BP0e%) <> 0) THEN GOTO L_143ff   '@1434f
+BEEP   '@14373
+COLOR RT_CINT%(FX##(V_0dc0!))   '@1437d
+PRINT ""   '@1439a DS:1dac
+PRINT " VERIFIQUE CARGA ACIDENTAL ";   '@143a8 DS:25d2
+COLOR 7   '@143b6
+CALL MIXT_07f1_LimpaTeclado   '@143cc
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_12ae$ = RT_INPUT$(1)   '@143d6
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_14015   '@143f2
+L_143ff:
+L_14404:
+RT_VIEWPRINT 25, 25   '@14409
+COLOR 3   '@14418
+RT_CLS 2   '@1442e
+V_12ae$ = LTRIM$(STR$(V_1676!))   '@1443c
+PRINT " P"; V_12ae$; "="; A_0e82!(RT_CINT%(FX##(V_167a!))); "    D"; V_12ae$; "="; A_0eb0!(RT_CINT%(FX##(V_167a!))); "    F"; V_12ae$; "="; A_0ede!(RT_CINT%(FX##(V_167a!)));   '@1445e DS:1e86,258e,25f2,25fc
+IF NOT (A_0f96!(RT_CINT%(FX##(V_167a!))) = -100.0) THEN GOTO L_1455c   '@1451d DS:25a2
+PRINT "*";   '@1454e DS:2234
+L_1455c:
+IF NOT (V_12c2$ = "S") THEN GOTO L_1464d   '@1455c DS:2606
+LOCATE 25, 45   '@14573
+PRINT "   Pac"; V_12ae$; "="; A_0f68!(RT_CINT%(FX##(V_167a!)));   '@14591 DS:1e86,260c
+IF NOT (A_0f96!(RT_CINT%(FX##(V_167a!))) <> -100.0) THEN GOTO L_14648   '@145d4 DS:25a2
+PRINT "    Fac"; V_12ae$; "="; A_0f96!(RT_CINT%(FX##(V_167a!)));   '@14605 DS:1e86,2616
+L_14648:
+L_1464d:
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+NEXT V_1676!   '@1464d DS:1d80
+L_14679:
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+NEXT V_166e!   '@1467e DS:1d80
+A_0e54!(0) = 1.0   '@146aa DS:1d80
+IF NOT (V_12c6$ = "S") THEN GOTO L_147ae   '@146c9 DS:2606
+RT_VIEWPRINT 15, 25   '@146e0
+RT_CLS 2   '@146f2
+PRINT " Momentos externos aplicados ("; V_0ddc$; V_0dd8$; ")"   '@14700 DS:23c8,2622
+PRINT " Mext( apoio 0 ) , Mext( apoio"; V_0e08%; ") ";   '@14729 DS:24e2,2644
+CALL MIXT_0049_Le2Campos(V_12ae$, V_12b2$)   '@14749
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+A_0fc4!(0) = VAL(V_12ae$)   '@1475b
+A_0fc4!(1) = VAL(V_12b2$)   '@14783
+L_147ae:
+RETURN   '@147ae
+L_147b8:   ' sub-rotina (alvo de GOSUB)
+LOCATE 22, 1   '@147bd
+BEEP   '@147d8
+BEEP   '@147e2
+COLOR RT_CINT%(FX##(V_0dc0!))   '@147ec
+PRINT " COLOCACAO ERRADA DAS CARGAS"   '@14809 DS:2666
+PRINT " CONSULTE O MANUAL";   '@14817 DS:2686
+CALL MIXT_07f1_LimpaTeclado   '@14825
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+COLOR 7   '@1482f
+V_12ae$ = RT_INPUT$(1)   '@14845
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_1676! = 100.0   '@14861 DS:25a6
+RETURN   '@14872
+L_14881:   ' sub-rotina (alvo de GOSUB)
+RT_VIEWPRINT 17, 20   '@14886
+RT_CLS 2   '@14898
+COLOR 14   '@148a6
+LOCATE 17, 30   '@148bc
+PRINT "Secao 1)  Bw,Hw ";   '@148da DS:269c
+CALL MIXT_0049_Le2Campos(V_12ae$, V_12b2$)   '@148e8
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF NOT (LEN(V_12ae$) = 0) THEN GOTO L_14917   '@148fa
+GOTO L_14ae0   '@1490f
+L_14917:
+LOCATE 18, 30   '@14917
+PRINT "Secao 2)  Bw,Hw ";   '@14935 DS:26b0
+CALL MIXT_0049_Le2Campos(V_12b6$, V_12ba$)   '@14943
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_167a! = INT(RT_POT##((FX##(VAL(V_12b2$))), (3.0#)) * VAL(V_12ae$) / (RT_POT##((FX##(VAL(V_12ba$))), (3.0#)) * VAL(V_12b6$)) * 100.0#) / 100.0#   '@14955 DS:1e8c,26c4
+V_1676! = INT(RT_POT##((FX##(VAL(V_12ba$))), (3.0#)) * VAL(V_12b6$) / (RT_POT##((FX##(VAL(V_12b2$))), (3.0#)) * VAL(V_12ae$)) * 100.0#) / 100.0#   '@149c5 DS:1e8c,26c4
+LOCATE 19, 30   '@14a35
+PRINT "   <J>=";   '@14a53 DS:26cc
+CALL MIXT_082a_Maior(V_167a!, V_1676!, V_1764!)   '@14a6d
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+PRINT V_1764!; "  *RETORNO* ";   '@14a72 DS:26d8
+CALL MIXT_07f1_LimpaTeclado   '@14a88
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_12ae$ = RT_INPUT$(1)   '@14a92
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+CALL MIXT_082a_Maior(V_1676!, V_167a!, V_1768!)   '@14aae
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_12ae$ = STR$(V_1768!)   '@14ac4
+L_14ae0:
+RT_CLS 2   '@14ae5
+RT_VIEWPRINT 15, 25   '@14af3
+COLOR 7   '@14b05
+RETURN   '@14b1b
+L_14b25:   ' sub-rotina (alvo de GOSUB)
+REDIM A_0e26!(-32768 TO -32768)   '@14b2a
+REDIM A_0f0c%(-32768 TO -32768)   '@14b38
+REDIM A_0f3a%(-32768 TO -32768)   '@14b41
+REDIM A_0e54!(-32768 TO -32768)   '@14b4a
+REDIM A_0eb0!(-32768 TO -32768)   '@14b53
+REDIM A_0ede!(-32768 TO -32768)   '@14b61
+REDIM A_0e82!(-32768 TO -32768)   '@14b6a
+REDIM A_0f68!(-32768 TO -32768)   '@14b73
+REDIM A_0f96!(-32768 TO -32768)   '@14b7c
+REDIM A_0fc4!(-32768 TO -32768)   '@14b85
+REDIM A_0ff2!(-32768 TO -32768)   '@14b8e
+REDIM A_1020!(-32768 TO -32768, -32768 TO -32768)   '@14b9c
+REDIM A_0e26!(0 TO 13)   '@14ba5
+REDIM A_0f0c%(0 TO 13)   '@14bc2
+REDIM A_0f3a%(0 TO 13)   '@14bdf
+REDIM A_0e54!(0 TO 13)   '@14bfc
+REDIM A_0eb0!(0 TO 40)   '@14c19
+REDIM A_0e82!(0 TO 40)   '@14c36
+REDIM A_0f68!(0 TO 40)   '@14c53
+REDIM A_0ede!(0 TO 40)   '@14c6b
+REDIM A_0f96!(0 TO 40)   '@14c88
+REDIM A_0fc4!(0 TO 3)   '@14ca0
+REDIM A_0ff2!(0 TO 12)   '@14cbd
+REDIM A_1020!(0 TO 12, 0 TO 2)   '@14cda
+IF NOT (UCASE$(V_12ae$) = "N") THEN GOTO L_14d42   '@14cfe DS:1d84
+A_0e54!(0) = 0.0   '@14d1b DS:1eae
+GOTO L_14d61   '@14d3a
+L_14d42:
+A_0e54!(0) = 1.0   '@14d42 DS:1d80
+L_14d61:
+FOR V_166e! = 1.0 TO 13.0   '@14d61 DS:1d80,26e8
+A_0e54!(RT_CINT%(FX##(V_166e!))) = 1.0   '@14d6e DS:1d80
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+NEXT V_166e!   '@14d95 DS:1d80,26e8
+RETURN   '@14dbe
+L_14dcd:   ' entrada vinda de 01157a_FUN_1000_157a, 015049_F_15049
+IF NOT (V_0e12% = 0) THEN GOTO L_14df1   '@14dd2
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_118ec   '@14de1
+L_14df1:
+V_104e! = 0.0   '@14df1 DS:1eae
+RT_VIEWPRINT 1, 25   '@14e02
+COLOR 7   '@14e14
+RT_CLS 2   '@14e2a
+COLOR RT_CINT%(FX##(V_0dc0!))   '@14e38
+PRINT RT_STRINGC$((80), (205))   '@14e55
+PRINT " Calculo das Vigas Arquivadas"   '@14e6d DS:26ec
+PRINT " Posicionadas"; V_0e12%; " Vigas referentes a Obra "; V_0e04$   '@14e7b DS:270e,2720
+PRINT RT_STRINGC$((80), (205))   '@14ea4
+L_14ebc:   ' entrada vinda de 015049_F_15049
+RT_VIEWPRINT 6, 25   '@14ec1
+COLOR 7   '@14ed3
+RT_CLS 2   '@14ee9
+RT_LINEINPUT " Calcular posicoes I/J/N a M/.../K *RETORNO* ", V_176c$   '@14ef7 DS:273e
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF NOT (LEN(V_176c$) = 0) THEN GOTO L_14f2e   '@14f11
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_118ec   '@14f26
+L_14f2e:
+V_176c$ = UCASE$(V_176c$)   '@14f2e
+V_1676! = 1.0   '@14f46 DS:1d80
+IF NOT (RT_MID2$((V_176c$), (LEN(V_176c$))) = "/") THEN GOTO L_14f99   '@14f57 DS:2372
+V_176c$ = "*"   '@14f7f DS:2234
+GOTO L_15216   '@14f91
+L_14f99:
+V_1770! = LEN(V_176c$)   '@14f99
+FOR V_1672! = 2.0 TO V_1770!   '@14fb4 DS:1d80,23e0
+IF NOT (RT_MID$((V_176c$), (RT_CINT%(FX##(V_1672!))), (1)) = "/") THEN GOTO L_1500b   '@14fbc DS:2372
+GOSUB L_15049   '@14fe8
+V_1676! = FX##(V_1672!) + 1.0   '@14ff5 DS:1d80
+L_1500b:
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+NEXT V_1672!   '@1500b DS:1d80
+GOSUB L_15049   '@15034
+GOTO L_15216   '@15041
+' ---- F_15049 @0x15049  (015049_F_15049.lift.txt; evidence_id (assembly): ev_7ab81819866f2c7e80b1327345e85e9b0ed57ed36b289d0a6a52e41641a2c4af)
+L_15049:   ' sub-rotina (alvo de GOSUB); entrada vinda de 01297b_F_1297b
+V_12b2$ = RT_MID$((V_176c$), (RT_CINT%(FX##(V_1676!))), (RT_CINT%(FX##(V_1672!) - V_1676!)))   '@1504e
+L_BP0c% = (VAL(V_12b2$) < 1.0#)   '@15081 DS:2770
+IF NOT ((VAL(V_12b2$) > V_0e12% OR L_BP0c%) <> 0) THEN GOTO L_150f4   '@150b7
+V_176c$ = "*"   '@150d8 DS:2234
+RETURN   '@150ea
+L_150f4:
+IF NOT (RT_INSTR%((1), (V_12b2$), ("A")) = 0) THEN GOTO L_1511b   '@150f4 DS:1dbc
+RETURN   '@15111
+L_1511b:
+L_BP0c% = (VAL(RT_MID2$((V_12b2$), (RT_INSTR%((1), (V_12b2$), ("A")) + 1))) < 1.0#)   '@1511b DS:1dbc,2770
+L_BP0e% = VAL(RT_MID2$((V_12b2$), (RT_INSTR%((1), (V_12b2$), ("A")) + 1))) > V_0e12% OR L_BP0c%   '@1517a DS:1dbc
+IF NOT ((VAL(RT_MID2$((V_12b2$), (RT_INSTR%((1), (V_12b2$), ("A")) + 1))) < VAL(V_12b2$) OR L_BP0e%) <> 0) THEN GOTO L_1520c   '@151ae DS:1dbc
+V_176c$ = "*"   '@151fa DS:2234
+L_1520c:
+RETURN   '@1520c
+L_15216:   ' entrada vinda de 01297b_F_1297b
+IF NOT (V_176c$ = "*") THEN GOTO L_15244   '@1521b DS:2234
+BEEP   '@15232
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_14ebc   '@1523c
+L_15244:
+LOCATE 8, 1   '@15244
+RT_LINEINPUT " Imprimo os resultados S/*N* ", V_1656$   '@1525f DS:2778
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_1656$ = UCASE$(V_1656$)   '@15279
+RT_LINEINPUT " Desenho diagramas de esforcos S/*N* ", V_165a$   '@15291 DS:279a
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_165a$ = UCASE$(V_165a$)   '@152ab
+IF NOT (V_165a$ = "S") THEN GOTO L_153f0   '@152c3 DS:2606
+L_152da:
+LOCATE 10, 1   '@152df
+PRINT " Escala 1/.. ";   '@152fa DS:27c4
+COLOR RT_CINT%(FX##(V_0dc0!))   '@15308
+PRINT "200.. 100.. 50..  FOTO ";   '@15325 DS:27d6
+COLOR 7   '@15333
+RT_LINEINPUT " *VIDEO* ", V_12e8$   '@15349 DS:27f2
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_12e8$ = UCASE$(V_12e8$)   '@15363
+L_BP0c% = (VAL(V_12e8$) = 0.0#)   '@1537b DS:2364
+L_BP0e% = LEN(V_12e8$) > 0 AND L_BP0c%   '@153a9
+IF NOT ((V_12e8$ <> "FOTO" AND L_BP0e%) <> 0) THEN GOTO L_153eb   '@153c4 DS:2800
+BEEP   '@153d9
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_152da   '@153e3
+L_153eb:
+L_153f0:
+V_12e4$ = "N"   '@153f0 DS:1d84
+IF NOT (V_1656$ <> "S") THEN GOTO L_15450   '@15402 DS:2606
+RT_LINEINPUT " Paro para visualizacao no Monitor S/*N* ", V_12e4$   '@15419 DS:2808
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_12e4$ = UCASE$(V_12e4$)   '@15433
+L_15450:
+RT_LINEINPUT " <D>esenho ou <I>mprimo o esquema estrutural das Vigas *N* ", V_12ae$   '@15450 DS:2836
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_12f0$ = UCASE$(V_12ae$)   '@1546a
+CALL MIXT_07f1_LimpaTeclado   '@15482
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT " Dados Corretos N/*S* ", V_12ae$   '@1548c DS:23e4
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF NOT (UCASE$(V_12ae$) = "N") THEN GOTO L_154cb   '@154a6 DS:1d84
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_14dcd   '@154c3
+L_154cb:
+V_12f4$ = ""   '@154cb DS:1dac
+L_BP0c% = (V_1656$ = "S")   '@154dd DS:2606
+L_BP0e% = V_12f0$ = "I" OR L_BP0c%   '@15502 DS:1e74
+L_BP10% = V_165a$ <> "S" AND L_BP0e%   '@1551d DS:2606
+L_BP12% = (V_165a$ = "S")   '@15538 DS:2364,2606
+L_BP14% = (VAL(V_12e8$) > 0.0#)   '@15551
+IF NOT (((V_12e8$ = "FOTO" OR L_BP14%) AND L_BP12% OR L_BP10%) <> 0) THEN GOTO L_155c7   '@15575 DS:2800
+PRINT " Acione <Enter> para seguir  ou  *<Enter> elimina o avanco do formulario ";   '@15590 DS:2876
+CALL MIXT_07f1_LimpaTeclado   '@1559e
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT "", V_12f4$   '@155a8 DS:1dac
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+L_155c7:
+REDIM A_16be%(-32768 TO -32768)   '@155c7
+REDIM A_16be%(0 TO CINT(V_0e14!))   '@155d5
+V_12ec! = 1.0   '@155f9 DS:1d80
+A_16be%(0) = 1   '@1560a
+L_15621:
+IF NOT (A_16be%(0) = 0) THEN GOTO L_1564d   '@15626
+GOTO L_15a0b   '@15645
+L_1564d:
+A_16be%(0) = 0   '@1564d
+V_1774% = 1   '@15666
+L_15671:
+V_1672! = VAL(RT_MID2$((V_176c$), (V_1774%)))   '@15676
+L_1569e:
+IF NOT (A_16be%(RT_CINT%(FX##(V_1672!))) = 1) THEN GOTO L_156d1   '@156a3
+GOTO L_158e4   '@156c9
+L_156d1:
+A_16be%(RT_CINT%(FX##(V_1672!))) = 1   '@156d1
+V_1776! = A_1110%(RT_CINT%(FX##(V_1672!)), A_10b4%(RT_CINT%(FX##(V_1672!)), 2) + A_10b4%(RT_CINT%(FX##(V_1672!)), 0))   '@156f0
+FOR V_1676! = 1.0 TO V_1776!   '@15754 DS:1d80
+IF NOT (A_1252!(RT_CINT%(FX##(V_1672!)), RT_CINT%(FX##(V_1676!))) = -100.0) THEN GOTO L_157c1   '@1575c DS:25a2
+A_16be%(RT_CINT%(FX##(V_1672!))) = 0   '@15798
+GOTO L_158e4   '@157b9
+L_157c1:
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+NEXT V_1676!   '@157c1 DS:1d80
+A_16be%(0) = 1   '@157ed
+CALL S_33df1(V_1672!)   '@15804
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF NOT (V_1656$ = "S") THEN GOTO L_15842   '@15812 DS:2606
+V_0e1c! = 1.0   '@15829 DS:1d80
+GOTO L_15853   '@1583a
+L_15842:
+V_0e1c! = 0.0   '@15842 DS:1eae
+L_15853:
+RT_VIEWPRINT 1, 25   '@15853
+COLOR 14, RT_CINT%(FX##(V_0dc4!))   '@15865
+RT_CLS 2   '@1588a
+CALL S_29ab7   '@15898
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+CALL S_40243   '@158a2
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+CALL S_24fe1   '@158ac
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF NOT (V_165a$ = "S") THEN GOTO L_158d7   '@158b6 DS:2606
+CALL S_4730d   '@158cd
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+L_158d7:
+GOSUB L_15d8a   '@158d7
+L_158e4:
+L_BP0c% = RT_INSTR%((V_1774%), (V_176c$), ("A"))   '@158e9 DS:1dbc
+L_BP0e% = (RT_INSTR%((V_1774%), (V_176c$), ("/")) >= L_BP0c%)   '@15910 DS:2372
+L_BP10% = RT_INSTR%((V_1774%), (V_176c$), ("/")) = 0 OR L_BP0e%   '@1592d DS:2372
+IF NOT ((RT_INSTR%((V_1774%), (V_176c$), ("A")) > 0 AND L_BP10%) <> 0) THEN GOTO L_159c4   '@1594c DS:1dbc
+IF NOT (FX##(V_1672!) < FX##(VAL(RT_MID2$((V_176c$), (RT_INSTR%((V_1774%), (V_176c$), ("A")) + 1))))) THEN GOTO L_159bf   '@15963 DS:1dbc
+V_1672! = FX##(V_1672!) + 1.0   '@159a1 DS:1d80
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_1569e   '@159b7
+L_159bf:
+L_159c4:
+IF NOT (RT_INSTR%((V_1774%), (V_176c$), ("/")) = 0) THEN GOTO L_159e9   '@159c4 DS:2372
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_15621   '@159e1
+L_159e9:
+V_1774% = RT_INSTR%((V_1774%), (V_176c$), ("/")) + 1   '@159e9 DS:2372
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_15671   '@15a03
+L_15a0b:
+V_12ae$ = ""   '@15a10 DS:1dac
+A_16be%(0) = 0   '@15a22
+V_1774% = 1   '@15a3b
+L_15a46:
+V_1672! = VAL(RT_MID2$((V_176c$), (V_1774%)))   '@15a4b
+L_15a73:
+IF NOT (A_16be%(RT_CINT%(FX##(V_1672!))) = 0) THEN GOTO L_15af4   '@15a78
+V_12ae$ = V_12ae$ + RT_MID2$((STR$(V_1672!)), (2)) + "-"   '@15a9f DS:28c4
+A_16be%(0) = 1   '@15add
+L_15af4:
+V_177a! = V_1774% + 1   '@15af4
+V_177e! = RT_INSTR%((V_1774%), (V_176c$), ("/"))   '@15b09 DS:2372
+CALL MIXT_082a_Maior(V_177a!, V_177e!, V_1782!)   '@15b26
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+L_BP0c% = (RT_INSTR%((V_1774%), (V_176c$), ("A")) <= V_1782!)   '@15b38 DS:1dbc
+IF NOT ((RT_INSTR%((V_1774%), (V_176c$), ("A")) > 0 AND L_BP0c%) <> 0) THEN GOTO L_15be8   '@15b70 DS:1dbc
+IF NOT (FX##(V_1672!) < FX##(VAL(RT_MID2$((V_176c$), (RT_INSTR%((V_1774%), (V_176c$), ("A")) + 1))))) THEN GOTO L_15be3   '@15b87 DS:1dbc
+V_1672! = FX##(V_1672!) + 1.0   '@15bc5 DS:1d80
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_15a73   '@15bdb
+L_15be3:
+L_15be8:
+IF NOT (RT_INSTR%((V_1774%), (V_176c$), ("/")) > 0) THEN GOTO L_15c27   '@15be8 DS:2372
+V_1774% = RT_INSTR%((V_1774%), (V_176c$), ("/")) + 1   '@15c05 DS:2372
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_15a46   '@15c1f
+L_15c27:
+IF NOT (A_16be%(0) = 0) THEN GOTO L_15c4e   '@15c27
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_118ec   '@15c46
+L_15c4e:
+RT_VIEWPRINT 1, 25   '@15c4e
+COLOR 7, RT_CINT%(4.0 * FX##(V_0dc4!)), RT_CINT%(4.0 * FX##(V_0dc4!))   '@15c60 DS:1e94
+RT_CLS 2   '@15c9e
+BEEP   '@15cac
+PRINT " AS VIGAS REFERENTES AS POSICOES:"   '@15cb6 DS:28ca
+COLOR RT_CINT%(FX##(V_0dc0!))   '@15cc4
+PRINT " "; V_12ae$   '@15ce1 DS:223a
+COLOR 7   '@15cf8
+PRINT " NAO FORAM PROCESSADAS"   '@15d0e DS:28f0
+CALL MIXT_07f1_LimpaTeclado   '@15d1c
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT " Qualquer Tecla para Continuar ", V_12ae$   '@15d26 DS:290a
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+COLOR 7, RT_CINT%(FX##(V_0dc4!)), RT_CINT%(FX##(V_0dc4!))   '@15d40
+RT_CLS 2   '@15d74
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_118ec   '@15d82
+' ---- F_15d8a @0x15d8a  (015d8a_F_15d8a.lift.txt; evidence_id (assembly): ev_8d66a6c205a78c917f79dbc0b5d8c922c260a50368f6d95588f98bda0c39ced1)
+L_15d8a:   ' sub-rotina (alvo de GOSUB); entrada vinda de 015049_F_15049
+V_16ba% = 1   '@15d8f
+L_15d9a:
+V_166e! = VAL(RT_MID2$((V_176c$), (V_16ba%)))   '@15d9f
+L_15dc7:
+V_1786! = A_1110%(RT_CINT%(FX##(V_166e!)), A_10b4%(RT_CINT%(FX##(V_166e!)), 2) + A_10b4%(RT_CINT%(FX##(V_166e!)), 0))   '@15dcc
+FOR V_1676! = 1.0 TO V_1786!   '@15e30 DS:1d80
+L_BP0c% = (A_1252!(RT_CINT%(FX##(V_166e!)), RT_CINT%(FX##(V_1676!))) = -100.0)   '@15e38 DS:25a2
+IF NOT ((FIX(ABS(FX##(A_11f6!(RT_CINT%(FX##(V_166e!)), RT_CINT%(FX##(V_1676!)))))) = FX##(V_1672!) AND L_BP0c%) <> 0) THEN GOTO L_15ed5   '@15eac
+GOSUB L_16025   '@15ec8
+L_15ed5:
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+NEXT V_1676!   '@15ed5 DS:1d80
+L_BP0c% = RT_INSTR%((V_16ba%), (V_176c$), ("A"))   '@15f01 DS:1dbc
+L_BP0e% = (RT_INSTR%((V_16ba%), (V_176c$), ("/")) >= L_BP0c%)   '@15f28 DS:2372
+L_BP10% = RT_INSTR%((V_16ba%), (V_176c$), ("/")) = 0 OR L_BP0e%   '@15f45 DS:2372
+IF NOT ((RT_INSTR%((V_16ba%), (V_176c$), ("A")) > 0 AND L_BP10%) <> 0) THEN GOTO L_15fdc   '@15f64 DS:1dbc
+IF NOT (FX##(V_166e!) < FX##(VAL(RT_MID2$((V_176c$), (RT_INSTR%((V_16ba%), (V_176c$), ("A")) + 1))))) THEN GOTO L_15fd7   '@15f7b DS:1dbc
+V_166e! = FX##(V_166e!) + 1.0   '@15fb9 DS:1d80
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_15dc7   '@15fcf
+L_15fd7:
+L_15fdc:
+IF NOT (RT_INSTR%((V_16ba%), (V_176c$), ("/")) > 0) THEN GOTO L_1601b   '@15fdc DS:2372
+V_16ba% = RT_INSTR%((V_16ba%), (V_176c$), ("/")) + 1   '@15ff9 DS:2372
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_15d9a   '@16013
+L_1601b:
+RETURN   '@1601b
+L_16025:   ' sub-rotina (alvo de GOSUB)
+V_167e! = RT_CINT%((A_11f6!(RT_CINT%(FX##(V_166e!)), RT_CINT%(FX##(V_1676!))) - INT(FX##(A_11f6!(RT_CINT%(FX##(V_166e!)), RT_CINT%(FX##(V_1676!)))))) * 100.0)   '@1602a DS:25a6
+IF NOT (A_10b4%(RT_CINT%(FX##(V_1672!)), 0) < V_167e!) THEN GOTO L_160db   '@1609b
+GOTO L_1627c   '@160d3
+L_160db:
+A_11f6!(RT_CINT%(FX##(V_166e!)), RT_CINT%(FX##(V_1676!))) = INT(FX##(A_0ff2!(RT_CINT%(FX##(V_167e!)))) * 1000.0) / 1000.0   '@160db DS:292e
+A_1252!(RT_CINT%(FX##(V_166e!)), RT_CINT%(FX##(V_1676!))) = 0.0   '@16134 DS:1eae
+L_BP0c% = (V_12c2$ = "S")   '@16166 DS:2606
+IF NOT ((V_12ce$ = "M" AND L_BP0c%) <> 0) THEN GOTO L_1627c   '@1618b DS:2932
+A_11f6!(RT_CINT%(FX##(V_166e!)), RT_CINT%(FX##(V_1676!))) = INT(FX##(A_1020!(RT_CINT%(FX##(V_167e!)), 0)) * 1000.0) / 1000.0   '@161a0 DS:292e
+A_1252!(RT_CINT%(FX##(V_166e!)), RT_CINT%(FX##(V_1676!))) = INT((FX##(A_1020!(RT_CINT%(FX##(V_167e!)), 0)) - A_1020!(RT_CINT%(FX##(V_167e!)), 1)) * 1000.0) / 1000.0   '@161fc DS:292e
+L_1627c:
+RETURN   '@16281
+L_16290:   ' entrada vinda de 01157a_FUN_1000_157a
+RT_VIEWPRINT 1, 25   '@16295
+COLOR 7   '@162a7
+RT_CLS 2   '@162bd
+COLOR RT_CINT%(FX##(V_0dc0!))   '@162cb
+PRINT RT_STRINGC$((80), (205))   '@162e8
+PRINT " Calculo de uma Viga independente dos Arquivos"   '@16300 DS:2938
+PRINT RT_STRINGC$((80), (205))   '@1630e
+LOCATE 7, 1   '@1632b
+RT_LINEINPUT " OBRA ", V_0e00$   '@16346 DS:296a
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_1672! = 1.0   '@16360 DS:1d80
+V_16bc% = 40   '@16371
+RT_VIEWPRINT 8, 25   '@1637c
+GOSUB L_1297b   '@1638e
+IF NOT (V_0dfc$ = "FIM") THEN GOTO L_163ba   '@1639b DS:23d8
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_118ec   '@163b2
+L_163ba:
+V_178a! = 0.0   '@163ba DS:1eae
+V_178e! = 1.0   '@163cc DS:1d80
+CALL MIXT_0dbe_GuardaTela(V_178a!, V_178e!, V_0dcc$)   '@163d7
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_VIEWPRINT 1, 25   '@163e8
+COLOR RT_CINT%(FX##(V_0dc0!)), RT_CINT%(4.0 * FX##(V_0dc4!))   '@163fa DS:1e94
+V_0e1c! = 2.0   '@1642b DS:23e0
+CALL S_29ab7   '@1643c
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+PRINT ""   '@16446 DS:1dac
+LOCATE , 15   '@16454
+CALL MIXT_07f1_LimpaTeclado   '@1646d
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT " Dados Corretos N/*S* ", V_12ae$   '@16477 DS:23e4
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+COLOR 7, RT_CINT%(FX##(V_0dc4!))   '@16491
+V_1792! = 1.0   '@164b6 DS:1d80
+V_1796! = 0.0   '@164c8 DS:1eae
+CALL MIXT_0dbe_GuardaTela(V_1792!, V_1796!, V_0dcc$)   '@164d3
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_VIEWPRINT 15, 25   '@164e4
+RT_CLS 2   '@164f6
+IF NOT (UCASE$(V_12ae$) = "N") THEN GOTO L_16529   '@16504 DS:1d84
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_118ec   '@16521
+L_16529:
+RT_LINEINPUT " Imprimo os Resultados S/*N* ", V_1656$   '@16529 DS:2974
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_1656$ = UCASE$(V_1656$)   '@16543
+RT_LINEINPUT " Desenho Diagramas de Esforcos S/*N* ", V_165a$   '@1655b DS:2996
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_165a$ = UCASE$(V_165a$)   '@16575
+IF NOT (V_165a$ = "S") THEN GOTO L_166c2   '@1658d DS:2606
+L_165a4:
+PRINT " Escala 1/.. ";   '@165a9 DS:27c4
+COLOR RT_CINT%(FX##(V_0dc0!))   '@165b7
+PRINT "200.. 100.. 50..  FOTO ";   '@165d4 DS:27d6
+COLOR 7   '@165e2
+RT_LINEINPUT " *VIDEO* ", V_12e8$   '@165f8 DS:27f2
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_12e8$ = UCASE$(V_12e8$)   '@16612
+L_BP0c% = (VAL(V_12e8$) = 0.0#)   '@1662a DS:2364
+L_BP0e% = LEN(V_12e8$) > 0 AND L_BP0c%   '@16658
+IF NOT ((V_12e8$ <> "FOTO" AND L_BP0e%) <> 0) THEN GOTO L_166bd   '@16673 DS:2800
+BEEP   '@16688
+LOCATE CSRLIN - 1, 1   '@16692
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_165a4   '@166b0
+L_166bd:
+L_166c2:
+V_12e4$ = "N"   '@166c2 DS:1d84
+IF NOT (V_1656$ <> "S") THEN GOTO L_16722   '@166d4 DS:2606
+RT_LINEINPUT " Paro para Visualizacao no Monitor S/*N* ", V_12e4$   '@166eb DS:29c0
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_12e4$ = UCASE$(V_12e4$)   '@16705
+L_16722:
+RT_LINEINPUT " <D>esenho ou <I>mprimo o esquema estrutural das Vigas *N* ", V_12ae$   '@16722 DS:2836
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_12f0$ = UCASE$(V_12ae$)   '@1673c
+CALL MIXT_07f1_LimpaTeclado   '@16754
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT " Dados Corretos N/*S* ", V_12ae$   '@1675e DS:23e4
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF NOT (UCASE$(V_12ae$) = "N") THEN GOTO L_1679d   '@16778 DS:1d84
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_118ec   '@16795
+L_1679d:
+V_12f4$ = ""   '@1679d DS:1dac
+L_BP0c% = (V_1656$ = "S")   '@167af DS:2606
+L_BP0e% = V_12f0$ = "I" OR L_BP0c%   '@167d4 DS:1e74
+L_BP10% = V_165a$ <> "S" AND L_BP0e%   '@167ef DS:2606
+L_BP12% = (V_165a$ = "S")   '@1680a DS:2364,2606
+L_BP14% = (VAL(V_12e8$) > 0.0#)   '@16823
+IF NOT (((V_12e8$ = "FOTO" OR L_BP14%) AND L_BP12% OR L_BP10%) <> 0) THEN GOTO L_16899   '@16847 DS:2800
+PRINT " Acione <Enter> para seguir  ou  *<Enter> elimina o avanco do formulario ";   '@16862 DS:2876
+CALL MIXT_07f1_LimpaTeclado   '@16870
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT "", V_12f4$   '@1687a DS:1dac
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+L_16899:
+V_104e! = 0.0   '@16899 DS:1eae
+V_12ec! = 1.0   '@168aa DS:1d80
+IF NOT (V_1656$ = "S") THEN GOTO L_168eb   '@168bb DS:2606
+V_0e1c! = 1.0   '@168d2 DS:1d80
+GOTO L_168fc   '@168e3
+L_168eb:
+V_0e1c! = 0.0   '@168eb DS:1eae
+L_168fc:
+RT_VIEWPRINT 1, 25   '@168fc
+COLOR 14, RT_CINT%(FX##(V_0dc4!))   '@1690e
+RT_CLS 2   '@16933
+CALL S_29ab7   '@16941
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+CALL S_40243   '@1694b
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+CALL S_24fe1   '@16955
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF NOT (V_165a$ = "S") THEN GOTO L_16980   '@1695f DS:2606
+CALL S_4730d   '@16976
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+L_16980:
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_118ec   '@16980
+' ---- FUN_1000_698d @0x1698d  (01698d_FUN_1000_698d.lift.txt; evidence_id (assembly): ev_6663425314eb199529ee5fb032778fc620a2a422fab1993b221eabc60c8336b4)
+L_1698d:   ' entrada vinda de 01157a_FUN_1000_157a, 01aa98_F_1aa98
+RT_VIEWPRINT 1, 25   '@16992
+COLOR RT_CINT%(FX##(V_0dc0!)), RT_CINT%(FX##(V_0dc4!))   '@169a4
+RT_CLS 2   '@169d0
+PRINT RT_STRINGC$((80), (205))   '@169de
+PRINT " Processamento de Vigas Continuas com saida de cargas nos Pilares"   '@169f6 DS:29ee
+PRINT " Maximo de"; V_0e22%; "Vigas e"; V_0e24%; "Pilares diferentes"   '@16a04 DS:2a34,2a42,2a4e
+COLOR 14   '@16a36
+PRINT " Consideracao de Cargas Totais";   '@16a4c DS:2a64
+IF NOT (V_12c2$ = "S") THEN GOTO L_16aa9   '@16a5a DS:2606
+PRINT " e Acidentais";   '@16a71 DS:2a86
+IF NOT (V_12c6$ = "S") THEN GOTO L_16aa4   '@16a7f DS:2606
+PRINT " com Momentos Externos";   '@16a96 DS:2a98
+L_16aa4:
+L_16aa9:
+PRINT ""   '@16aa9 DS:1dac
+PRINT " Consideracao de Reacoes ";   '@16ab7 DS:2ab2
+IF NOT (V_12ce$ = "M") THEN GOTO L_16af2   '@16ac5 DS:2932
+PRINT "Maximas"   '@16adc DS:2ad0
+GOTO L_16b00   '@16aea
+L_16af2:
+PRINT "Estaticas"   '@16af2 DS:2adc
+L_16b00:
+COLOR RT_CINT%(FX##(V_0dc0!))   '@16b00
+PRINT RT_STRINGC$((80), (205))   '@16b1d
+L_16b35:
+V_1672! = 13.0   '@16b3a DS:26e8
+GOSUB L_1a9b0   '@16b4b
+V_179a! = 0.0   '@16b58 DS:1eae
+V_179e! = 1.0   '@16b6a DS:1d80
+CALL MIXT_0dbe_GuardaTela(V_179a!, V_179e!, V_0dcc$)   '@16b75
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+L_16b86:   ' entrada vinda de 0176b3_FUN_1000_76b3
+RT_VIEWPRINT 7, 12   '@16b8b
+RT_CLS 2   '@16b9d
+COLOR 3   '@16bab
+PRINT " Coloque o Disco de Dados no Drive "; V_0de8$; ":"; V_0dec$   '@16bc1 DS:1e9c,2aea
+COLOR 7   '@16bef
+CALL MIXT_07f1_LimpaTeclado   '@16c05
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT " Nome da Obra *FIM* ", V_0e00$   '@16c0f DS:2b12
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+L_BP0c% = (LEN(V_0e00$) = 0)   '@16c29 DS:2364
+IF NOT ((VAL(V_0e00$) <> 0.0# OR L_BP0c%) <> 0) THEN GOTO L_16c74   '@16c4b
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_118ec   '@16c6c
+L_16c74:
+ON ERROR GOTO L_1acf8
+RT_ONERR = &H1acf8   '@16c74
+IF NOT (UCASE$(V_0e00$) = "D") THEN GOTO L_16cb2   '@16c83 DS:259c
+CALL S_30558   '@16ca0
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_16b35   '@16caa
+L_16cb2:
+OPEN RT_ARQ$(V_0de8$ + ":" + V_0dec$ + V_0e00$ + ".VIG") FOR INPUT AS #1   '@16cb2 DS:1e74,1e9c,2b2a
+CLOSE #1   '@16cf4
+OPEN RT_ARQ$(V_0de8$ + ":" + V_0dec$ + V_0e00$ + ".VIG") FOR RANDOM AS #1 LEN = 855   '@16d03 DS:1e9c,20de,2b2a
+RT_REG_12F8_LE 1, 1&   '@16d45 (registro de 855 bytes)
+CLOSE #1   '@16d64
+V_16b6% = V_1311%   '@16d73
+IF NOT (V_16b6% = 0) THEN GOTO L_16d9f   '@16d7e
+BEEP   '@16d8d
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_16b86   '@16d97
+L_16d9f:
+LOCATE 8, 45   '@16d9f
+COLOR RT_CINT%(4.0 * FX##(V_0dc4!)), 7   '@16dbd DS:1e94
+PRINT " Gravadas"; V_16b6%; "Vigas "   '@16de7 DS:2b32,2b40
+COLOR 7, RT_CINT%(FX##(V_0dc4!))   '@16e07
+CALL MIXT_07f1_LimpaTeclado   '@16e2c
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT " Listo as Vigas S/*N* ", V_12ae$   '@16e36 DS:2b4a
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF NOT (UCASE$(V_12ae$) <> "S") THEN GOTO L_16e75   '@16e50 DS:2606
+GOTO L_176b3   '@16e6d
+L_16e75:   ' entrada vinda de 017427_F_17427
+RT_VIEWPRINT 7, 25   '@16e7a
+ON ERROR GOTO L_1acf8
+RT_ONERR = &H1acf8   '@16e8c
+OPEN RT_ARQ$(V_0de8$ + ":" + V_0dec$ + V_0e00$ + ".VIG") FOR INPUT AS #1   '@16e9b DS:1e74,1e9c,2b2a
+CLOSE #1   '@16edd
+V_17a2! = 0.0   '@16eec DS:1eae
+V_17a6! = 1.0   '@16efe DS:1d80
+CALL MIXT_0dbe_GuardaTela(V_17a2!, V_17a6!, V_0dcc$)   '@16f09
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_166e! = 1.0   '@16f1a DS:1d80
+L_16f30:
+COLOR RT_CINT%(FX##(V_0dc4!)), 7   '@16f35
+LOCATE 7, 30   '@16f5a
+PRINT CHR$(218); RT_STRINGC$((38), (196)); CHR$(191)   '@16f78
+V_1672! = 8.0   '@16fae DS:2b64
+L_16fc4:
+LOCATE RT_CINT%(FX##(V_1672!)), 30   '@16fc4
+COLOR RT_CINT%(FX##(V_0dc4!))   '@16fe9
+PRINT CHR$(179); RT_STRINGC$((38), (32)); CHR$(179);   '@17006
+COLOR 0   '@1703c
+PRINT CHR$(219)   '@17051
+V_1672! = FX##(V_1672!) + 1.0   '@17065 DS:1d80
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+IF NOT (V_1672! = 22.0) THEN GOTO L_16fc4   '@1707b DS:1ed4
+LOCATE 22, 30   '@17096
+COLOR RT_CINT%(FX##(V_0dc4!))   '@170b4
+PRINT CHR$(195); RT_STRINGC$((38), (196)); CHR$(180);   '@170d1
+COLOR 0   '@17107
+PRINT CHR$(219)   '@1711c
+COLOR RT_CINT%(FX##(V_0dc4!))   '@17130
+LOCATE 8, 31   '@1714d
+PRINT "Registro  Viga            Tramos  Data"   '@1716b DS:2b68
+LOCATE 23, 30   '@17179
+PRINT CHR$(179); " Gravadas"; V_16b6%; "Vigas     * interrompe"; RT_TAB$(69); ""; CHR$(179);   '@17197 DS:1dac,2b32,2b92
+COLOR 0   '@171e7
+PRINT CHR$(219)   '@171fc
+LOCATE 24, 30   '@17210
+COLOR RT_CINT%(FX##(V_0dc4!))   '@1722e
+PRINT CHR$(192); RT_STRINGC$((38), (196)); CHR$(217);   '@1724b
+COLOR 0   '@17281
+PRINT CHR$(219)   '@17296
+LOCATE 25, 32   '@172aa
+PRINT RT_STRINGC$((39), (219));   '@172c8
+COLOR RT_CINT%(FX##(V_0dc4!))   '@172e0
+V_1672! = FX##(V_166e!) + 9.0   '@172fd DS:1eb2
+V_17aa! = FX##(V_16b6%) / 1.0   '@17313 DS:1d80
+CALL MIXT_0877_Menor(V_1672!, V_17aa!, V_17ae!)   '@1732c
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_1672! = V_17ae!   '@1733e
+GOSUB L_1742c   '@17349
+L_BP0c% = (V_16b6% = V_1672!)   '@17356
+IF NOT ((V_12ae$ = "*" OR L_BP0c%) <> 0) THEN GOTO L_17409   '@17382 DS:2234
+V_17b2! = 1.0   '@17397 DS:1d80
+V_17b6! = 0.0   '@173a9 DS:1eae
+CALL MIXT_0dbe_GuardaTela(V_17b2!, V_17b6!, V_0dcc$)   '@173b4
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+COLOR 7, RT_CINT%(FX##(V_0dc4!))   '@173c5
+RT_VIEWPRINT 7, 12   '@173ea
+GOTO L_1764a   '@173fc
+L_17409:
+V_166e! = FX##(V_1672!) + 1.0   '@17409 DS:1d80
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_16f30   '@1741f
+' ---- F_17427 @0x17427  (017427_F_17427.lift.txt; evidence_id (assembly): ev_ccb45e2e6c39c9173e482bf7b1057641ff3bae821a4cf7b1675279c84f069e32)
+L_1742c:   ' sub-rotina (alvo de GOSUB); entrada vinda de 01698d_FUN_1000_698d
+IF NOT (V_166e! > V_1672!) THEN GOTO L_17454   '@17431
+GOTO L_175bf   '@1744c
+L_17454:
+COLOR RT_CINT%(4.0 * FX##(V_0dc4!)), 7   '@17454 DS:1e94
+V_17ba! = V_1672!   '@1747e
+FOR V_1682! = V_166e! TO V_17ba!   '@17490 DS:1d80
+OPEN RT_ARQ$(V_0de8$ + ":" + V_0dec$ + V_0e00$ + ".VIG") FOR RANDOM AS #1 LEN = 855   '@17498 DS:1e9c,20de,2b2a
+RT_REG_12F8_LE 1, RT_CLNG&(FX##(V_1682!) + 1.0)   '@174da DS:1d80 (registro de 855 bytes)
+CLOSE #1   '@17504
+LOCATE RT_CINT%(10.0 - FX##(V_166e!) + V_1682!), 31   '@17513 DS:1ecc
+PRINT USING " ###      \             \   ##   \   \"; RT_PU#(V_1682!, " ###      \             \   ##   \   \", 1); RT_FIXL$(V_12f8$, 20); RT_PU#(V_1311%, " ###      \             \   ##   \   \", 2); RT_FIXL$(V_130c$, 5)   '@17542 DS:2bac
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+NEXT V_1682!   '@1758e DS:1d80
+L_175bf:
+COLOR RT_CINT%(FX##(V_0dc4!)), 7   '@175c4
+LOCATE 21, 31   '@175e9
+PRINT "Qualquer Tecla para Continuar "   '@17607 DS:2bd6
+CALL MIXT_07f1_LimpaTeclado   '@17615
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_12ae$ = RT_INPUT$(1)   '@1761f
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RETURN   '@1763b
+L_1764a:   ' entrada vinda de 01698d_FUN_1000_698d
+LOCATE 9, 1   '@1764f
+CALL MIXT_07f1_LimpaTeclado   '@1766a
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT " Relisto as Vigas S/*N* ", V_12ae$   '@17674 DS:2bf8
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF NOT (UCASE$(V_12ae$) = "S") THEN GOTO L_176b3   '@1768e DS:2606
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_16e75   '@176ab
+' ---- FUN_1000_76b3 @0x176b3  (0176b3_FUN_1000_76b3.lift.txt; evidence_id (assembly): ev_46d2cf8a4a9b1b2eee1bfa3526ac575225069df1cdd1bf378ac08e588d2a438b)
+L_176b3:   ' entrada vinda de 01698d_FUN_1000_698d, 017427_F_17427
+CALL MIXT_07f1_LimpaTeclado   '@176b8
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT " Continuo N/*S* ", V_12ae$   '@176c2 DS:2c14
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF NOT (UCASE$(V_12ae$) = "N") THEN GOTO L_17701   '@176dc DS:1d84
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_16b86   '@176f9
+L_17701:
+RT_VIEWPRINT 9, 25   '@17701
+RT_CLS 2   '@17713
+RT_VIEWPRINT 10, 25   '@17721
+PRINT " Escolha das Vigas para Processamento"   '@17733 DS:2c28
+CALL MIXT_07f1_LimpaTeclado   '@17741
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT " Todas as Vigas S/*N* ", V_12ae$   '@1774b DS:2c52
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF NOT (UCASE$(V_12ae$) = "S") THEN GOTO L_177ac   '@17765 DS:2606
+V_176c$ = "1 A" + STR$(V_16b6%)   '@17782 DS:2c6c
+GOTO L_17c37   '@177a4
+L_177ac:
+RT_VIEWPRINT 10, 25   '@177b1
+RT_CLS 2   '@177c3
+COLOR 7   '@177d1
+PRINT " Processar Registros  ";   '@177e7 DS:2c74
+COLOR RT_CINT%(FX##(V_0dc0!))   '@177f5
+PRINT "I/J/N a M/.../K ";   '@17812 DS:2c8e
+COLOR 7   '@17820
+V_166e! = 1.0   '@17836 DS:1d80
+CALL MIXT_07f1_LimpaTeclado   '@17847
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT "", V_176c$   '@17851 DS:1dac
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+L_BP0c% = (LEN(V_176c$) = 0)   '@1786b
+IF NOT ((RT_MID$((V_176c$), (LEN(V_176c$)), (1)) = "/" OR L_BP0c%) <> 0) THEN GOTO L_178c4   '@17889 DS:2372
+BEEP   '@178b2
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_177ac   '@178bc
+L_178c4:
+V_176c$ = UCASE$(V_176c$)   '@178c4
+V_17be! = LEN(V_176c$)   '@178dc
+FOR V_1672! = 2.0 TO V_17be!   '@178f7 DS:1d80,23e0
+IF NOT (RT_MID$((V_176c$), (RT_CINT%(FX##(V_1672!))), (1)) = "/") THEN GOTO L_17937   '@178fe DS:2372
+GOSUB L_179bb   '@1792a
+L_17937:
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+NEXT V_1672!   '@17937 DS:1d80
+V_0dfc$ = RT_MID2$((V_176c$), (RT_CINT%(FX##(V_166e!))))   '@17960
+GOSUB L_17a20   '@17987
+IF NOT (V_176c$ = " ") THEN GOTO L_179b3   '@17994 DS:223a
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_177ac   '@179ab
+L_179b3:
+GOTO L_17c37   '@179b3
+' ---- F_179bb @0x179bb  (0179bb_F_179bb.lift.txt; evidence_id (assembly): ev_95fc643a0269da4033ffa1b925dbf24432281c96d671aec06600b1d596397b68)
+L_179bb:   ' sub-rotina (alvo de GOSUB); entrada vinda de 0176b3_FUN_1000_76b3
+V_0dfc$ = RT_MID$((V_176c$), (RT_CINT%(FX##(V_166e!))), (RT_CINT%(FX##(V_1672!) - V_166e!)))   '@179c0
+GOSUB L_17a20   '@179f3
+V_166e! = FX##(V_1672!) + 1.0   '@17a00 DS:1d80
+RETURN   '@17a16
+L_17a20:   ' sub-rotina (alvo de GOSUB); entrada vinda de 0176b3_FUN_1000_76b3
+IF NOT (RT_INSTR%((1), (V_0dfc$), ("A")) > 0) THEN GOTO L_17b3f   '@17a25 DS:1dbc
+V_1686! = VAL(V_0dfc$)   '@17a42
+V_168a! = VAL(RT_MID2$((V_0dfc$), (RT_INSTR%((1), (V_0dfc$), ("A")) + 1)))   '@17a5c DS:1dbc
+IF NOT (V_16b6% >= V_168a! AND (V_16b6% >= V_1686! AND (V_168a! > 0.0 AND (V_1686! > 0.0 AND V_1686! <= V_168a!)))) THEN GOTO L_17b32   '@17a93 DS:1eae
+RETURN   '@17b28
+L_17b32:
+GOTO L_17ba0   '@17b32
+L_17b3f:
+L_BP0c% = (VAL(V_0dfc$) > 0.0#)   '@17b3f DS:2364
+IF NOT ((VAL(V_0dfc$) <= V_16b6% AND L_BP0c%) <> 0) THEN GOTO L_17ba0   '@17b75
+RETURN   '@17b96
+L_17ba0:
+LOCATE 12, 1   '@17ba5
+COLOR RT_CINT%(FX##(V_0dc0!))   '@17bc0
+BEEP   '@17bdd
+PRINT " VERIFIQUE OS SEUS DADOS DE ENTRADA";   '@17be7 DS:2ca2
+CALL MIXT_07f1_LimpaTeclado   '@17bf5
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_12ae$ = RT_INPUT$(1)   '@17bff
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_176c$ = " "   '@17c1b DS:223a
+RETURN   '@17c2d
+L_17c37:   ' entrada vinda de 0176b3_FUN_1000_76b3
+COLOR 3   '@17c3c
+LOCATE 12, 1   '@17c52
+PRINT " Entre somente com o numero do Pilar ou   * <Enter>  para desconsiderar o apoio"   '@17c6d DS:2cca
+V_16ae! = 0.0   '@17c7b DS:1eae
+V_1676! = 1.0   '@17c8c DS:1d80
+V_167e! = 1.0   '@17c9d DS:1d80
+ON ERROR GOTO L_1acf8
+RT_ONERR = &H1acf8   '@17cae
+V_17c2! = LEN(V_176c$)   '@17cbd
+FOR V_167a! = 2.0 TO V_17c2!   '@17cd8 DS:1d80,23e0
+IF NOT (RT_MID$((V_176c$), (RT_CINT%(FX##(V_167a!))), (1)) = "/") THEN GOTO L_17d19   '@17ce0 DS:2372
+GOSUB L_17d76   '@17d0c
+L_17d19:
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+NEXT V_167a!   '@17d19 DS:1d80
+GOSUB L_17d76   '@17d42
+IF NOT (V_12ae$ = "INDEXADA") THEN GOTO L_17d6e   '@17d4f DS:2d1e
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_118ec   '@17d66
+L_17d6e:
+GOTO L_18abc   '@17d6e
+' ---- F_17d76 @0x17d76  (017d76_F_17d76.lift.txt; evidence_id (assembly): ev_c3395a474cdbcb437fd6df718485cb6231a607672451b59e76add55e990deb26)
+L_17d76:   ' sub-rotina (alvo de GOSUB); entrada vinda de 0179bb_F_179bb
+V_166e! = VAL(RT_MID$((V_176c$), (RT_CINT%(FX##(V_1676!))), (RT_CINT%(FX##(V_167a!) - V_1676!))))   '@17d7b
+L_17db6:
+V_16a6! = V_166e!   '@17dbb
+RT_VIEWPRINT 14, 25   '@17dcc
+RT_CLS 2   '@17dde
+COLOR 7   '@17dec
+PRINT " Aguarde ..."   '@17e02 DS:1ed8
+GOSUB L_1ab18   '@17e10
+V_12ae$ = ""   '@17e1d DS:1dac
+V_17c6! = A_0f3a%(V_0e0c% + V_0e08%)   '@17e2f
+FOR V_1682! = 1.0 TO V_17c6!   '@17e58 DS:1d80
+IF NOT (A_0f96!(RT_CINT%(FX##(V_1682!))) = -100.0) THEN GOTO L_17f35   '@17e60 DS:25a2
+BEEP   '@17e91
+COLOR RT_CINT%(FX##(V_0dc0!))   '@17e9b
+RT_CLS 2   '@17eb8
+PRINT " Atencao !!!"   '@17ec6 DS:2240
+PRINT " Esta Viga possui cargas indexadas."   '@17ed4 DS:2d2a
+PRINT " Leia o arquivo, processe e regrave para poder utiliza-lo."   '@17ee2 DS:2d52
+CALL MIXT_07f1_LimpaTeclado   '@17ef0
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_12ae$ = RT_INPUT$(1)   '@17efa
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_12ae$ = "INDEXADA"   '@17f16 DS:2d1e
+GOTO L_17f61   '@17f28
+L_17f35:
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+NEXT V_1682!   '@17f35 DS:1d80
+L_17f61:
+IF NOT (V_12ae$ = "INDEXADA") THEN GOTO L_17f82   '@17f61 DS:2d1e
+RETURN   '@17f78
+L_17f82:
+GOSUB L_180ac   '@17f82
+IF NOT (RT_INSTR%((1), (RT_MID$((V_176c$), (RT_CINT%(FX##(V_1676!))), (RT_CINT%(FX##(V_167a!) - V_1676!)))), ("A")) = 0) THEN GOTO L_17fd5   '@17f8f DS:1dbc
+GOTO L_18087   '@17fcd
+L_17fd5:
+V_1686! = VAL(RT_MID2$((RT_MID$((V_176c$), (RT_CINT%(FX##(V_1676!))), (RT_CINT%(FX##(V_167a!) - V_1676!)))), (RT_INSTR%((1), (RT_MID$((V_176c$), (RT_CINT%(FX##(V_1676!))), (RT_CINT%(FX##(V_167a!) - V_1676!)))), ("A")) + 1)))   '@17fd5 DS:1dbc
+IF NOT (V_16a6! < V_1686!) THEN GOTO L_18087   '@1804e
+V_166e! = FX##(V_16a6!) + 1.0   '@18069 DS:1d80
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_17db6   '@1807f
+L_18087:
+V_1676! = FX##(V_167a!) + 1.0   '@1808c DS:1d80
+RETURN   '@180a2
+L_180ac:   ' sub-rotina (alvo de GOSUB)
+RT_CLS 2   '@180b1
+COLOR 7   '@180bf
+PRINT " Dados de Apoio"   '@180d5 DS:2d90
+COLOR 14   '@180e3
+PRINT " Registro"; V_166e!;   '@180f9 DS:2da4
+COLOR 7   '@18114
+PRINT RT_TAB$(15); ""; "Viga ";   '@1812a DS:1dac,2db2
+COLOR RT_CINT%(FX##(V_0dc0!))   '@1814a
+PRINT V_0dfc$;   '@18167
+COLOR 7   '@18175
+PRINT RT_TAB$(35); ""; V_0e08%; " Tramo" + RT_MID$(("s"), (1), (-(V_0e08% > 1)))   '@1818b DS:1dac,2dbc,2dc6
+V_12b2$ = "NAO LIDO"   '@181d5 DS:2dcc
+FOR V_1682! = 0.0 TO 12.0   '@181e7 DS:1d80,1eae,2de4
+IF NOT (FX##(A_0e54!(RT_CINT%(FX##(V_1682!)))) <> INT(FX##(A_0e54!(RT_CINT%(FX##(V_1682!)))) * 100.0) / 100.0) THEN GOTO L_182e8   '@181f4 DS:25a6
+A_1052%(RT_CINT%(FX##(V_167e!)), RT_CINT%(FX##(V_1682!))) = RT_CINT%((A_0e54!(RT_CINT%(FX##(V_1682!))) - INT(FX##(A_0e54!(RT_CINT%(FX##(V_1682!)))) * 100.0) / 100.0) * 100000.0)   '@1824c DS:25a6,2dd8
+V_12b2$ = "LIDO"   '@182ce DS:2ddc
+GOTO L_18319   '@182e0
+L_182e8:
+A_1052%(RT_CINT%(FX##(V_167e!)), RT_CINT%(FX##(V_1682!))) = 0   '@182e8
+L_18319:
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+NEXT V_1682!   '@18319 DS:1d80,2de4
+IF NOT (A_1052%(RT_CINT%(FX##(V_167e!)), 0) <> 0) THEN GOTO L_18377   '@18345
+GOTO L_185a1   '@1836f
+L_18377:
+V_17ca! = V_0e08%   '@1837c
+FOR V_1682! = 0.0 TO V_17ca!   '@18391 DS:1d80,1eae
+L_18398:
+COLOR 7   '@1839d
+LOCATE 16, 1   '@183b3
+PRINT " Numero do pilar referente ao Apoio"; V_1682!; "       ";   '@183ce DS:2de8,2e10
+LOCATE 16, 40   '@183f2
+CALL MIXT_07f1_LimpaTeclado   '@18410
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT "", V_12ae$   '@1841a DS:1dac
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF NOT (V_12ae$ = "*") THEN GOTO L_1847f   '@18434 DS:2234
+A_1052%(RT_CINT%(FX##(V_167e!)), RT_CINT%(FX##(V_1682!))) = 471   '@1844b
+GOTO L_1855e   '@18477
+L_1847f:
+L_BP0c% = (VAL(V_12ae$) <= 0.0#)   '@1847f DS:2364
+L_BP0e% = FX##(VAL(V_12ae$)) <> INT(FX##(VAL(V_12ae$))) OR L_BP0c%   '@184ad DS:2e1c
+IF NOT ((VAL(V_12ae$) = 471.0# OR L_BP0e%) <> 0) THEN GOTO L_1851d   '@184ea
+BEEP   '@1850b
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_18398   '@18515
+L_1851d:
+A_1052%(RT_CINT%(FX##(V_167e!)), RT_CINT%(FX##(V_1682!))) = RT_CINT%(FX##(VAL(V_12ae$)))   '@1851d
+L_1855e:
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+NEXT V_1682!   '@18563 DS:1d80
+V_12b2$ = "NAO LIDO"   '@1858f DS:2dcc
+L_185a1:
+LOCATE 16, 1   '@185a6
+PRINT RT_STRINGC$((60), (32))   '@185c1
+LOCATE 16, 1   '@185d9
+V_17ce! = V_0e08%   '@185f4
+FOR V_1682! = 0.0 TO V_17ce!   '@18609 DS:1d80,1eae
+IF NOT (A_1052%(RT_CINT%(FX##(V_167e!)), RT_CINT%(FX##(V_1682!))) = 471) THEN GOTO L_1866f   '@18610
+COLOR 3   '@18643
+PRINT " -desconsiderado";   '@18659 DS:2e24
+GOTO L_186dd   '@18667
+L_1866f:
+COLOR RT_CINT%(FX##(V_0dc0!))   '@1866f
+PRINT " -P"; RT_MID2$((STR$(A_1052%(RT_CINT%(FX##(V_167e!)), RT_CINT%(FX##(V_1682!))))), (2));   '@1868c DS:2e38
+L_186dd:
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+NEXT V_1682!   '@186dd DS:1d80
+LOCATE 17, 1   '@18709
+COLOR 7   '@18724
+CALL MIXT_07f1_LimpaTeclado   '@1873a
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT " Dados Corretos N/*S* ", V_12ae$   '@18744 DS:23e4
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF NOT (UCASE$(V_12ae$) = "N") THEN GOTO L_187bb   '@1875e DS:1d84
+LOCATE 16, 1   '@1877b
+PRINT RT_STRINGC$((160), (32))   '@18796
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_18377   '@187ae
+L_187bb:
+IF NOT (V_167e! = 1.0) THEN GOTO L_187e7   '@187bb DS:1d80
+V_166a! = 0.0   '@187d6 DS:1eae
+L_187e7:
+V_17d2! = V_0e08%   '@187e7
+FOR V_1672! = 0.0 TO V_17d2!   '@187fc DS:1d80,1eae
+V_17d6! = V_166a!   '@18804
+FOR V_166e! = 1.0 TO V_17d6!   '@18816 DS:1d80
+IF NOT (A_1718!(RT_CINT%(FX##(V_166e!))) = A_1052%(RT_CINT%(FX##(V_167e!)), RT_CINT%(FX##(V_1672!)))) THEN GOTO L_1887c   '@1881e
+GOTO L_188a8   '@18874
+L_1887c:
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+NEXT V_166e!   '@1887c DS:1d80
+L_188a8:
+IF NOT (A_1052%(RT_CINT%(FX##(V_167e!)), RT_CINT%(FX##(V_1672!))) <> 471 AND V_166e! > V_166a!) THEN GOTO L_18962   '@188a8
+V_166a! = FX##(V_166a!) + 1.0   '@18900 DS:1d80
+A_1718!(RT_CINT%(FX##(V_166a!))) = A_1052%(RT_CINT%(FX##(V_167e!)), RT_CINT%(FX##(V_1672!)))   '@18916
+L_18962:
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+NEXT V_1672!   '@18962 DS:1d80
+RT_CLS 2   '@1898e
+PRINT " Aguarde ..."   '@1899c DS:1ed8
+IF NOT (V_12b2$ = "NAO LIDO") THEN GOTO L_18a9c   '@189aa DS:2dcc
+V_17da! = V_0e08%   '@189c1
+FOR V_1682! = 0.0 TO V_17da!   '@189d6 DS:1d80,1eae
+A_0e54!(RT_CINT%(FX##(V_1682!))) = INT(FX##(A_0e54!(RT_CINT%(FX##(V_1682!)))) * 100.0) / 100.0 + FX##(A_1052%(RT_CINT%(FX##(V_167e!)), RT_CINT%(FX##(V_1682!)))) / 100000.0   '@189de DS:25a6,2dd8
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+NEXT V_1682!   '@18a5e DS:1d80
+GOSUB L_1abfd   '@18a8a
+L_18a9c:
+V_167e! = FX##(V_167e!) + 1.0   '@18a9c DS:1d80
+RETURN   '@18ab2
+L_18abc:   ' entrada vinda de 0179bb_F_179bb
+RT_VIEWPRINT 8, 25   '@18ac1
+RT_CLS 2   '@18ad3
+V_1084% = 100   '@18ae1
+PRINT ""   '@18aec DS:1dac
+PRINT " Atencao !!!"   '@18afa DS:2240
+PRINT ""   '@18b08 DS:1dac
+PRINT " Na geracao de cargas em Pilares, os valores de Carga Normal e Momentos"   '@18b16 DS:2e40
+PRINT " aplicados nas  Colunas,  poderao  ser  gravados  em  disco  de  dados."   '@18b24 DS:2e8c
+PRINT " Este arquivo  (.REP)  sera recuperado pelo programa PILAR - Edificios,"   '@18b32 DS:2ed8
+PRINT " carregando  automaticamente  todas  as   Colunas   naquele  pavimento."   '@18b40 DS:2f24
+PRINT " De acordo com a Norma Brasileira, alem dos momentos  de  engastamento,"   '@18b4e DS:2f70
+PRINT " deverao ser considerados tambem nas Colunas, parcela dos  Momentos  de"   '@18b5c DS:2fbc
+PRINT " engastamento perfeito nas Vigas de periferia e extremidade  em  funcao"   '@18b6a DS:3008
+PRINT " da relacao entre a rigidez da Viga e da Coluna."   '@18b78 DS:3054
+PRINT ""   '@18b86 DS:1dac
+PRINT " Entre com o multiplicador em porcentagem (0% a 100%) para estes momentos."   '@18b94 DS:3088
+PRINT ""   '@18ba2 DS:1dac
+PRINT " Multiplicador dos Momentos de Vigas Apoiadas (%) *"; LTRIM$(STR$(V_1084%)); "* ";   '@18bb0 DS:30d6,310e
+CALL MIXT_07f1_LimpaTeclado   '@18bdc
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT "", V_12ae$   '@18be6 DS:1dac
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+L_BP0c% = (LEN(V_12ae$) > 0)   '@18c00 DS:2364
+L_BP0e% = VAL(V_12ae$) >= 0.0# AND L_BP0c%   '@18c22 DS:1e8c
+IF NOT ((VAL(V_12ae$) <= 100.0# AND L_BP0e%) <> 0) THEN GOTO L_18c86   '@18c4a
+V_1084% = RT_CINT%(FX##(VAL(V_12ae$)))   '@18c6b
+L_18c86:
+L_BP0c% = (LEN(V_12ae$) > 0)   '@18c86
+L_BP0e% = (FX##(VAL(V_12ae$)) <> INT(FX##(VAL(V_12ae$))))   '@18ca3 DS:1e8c
+L_BP10% = VAL(V_12ae$) > 100.0# OR L_BP0e%   '@18cdd DS:2364
+IF NOT (((VAL(V_12ae$) < 0.0# OR L_BP10%) AND L_BP0c%) <> 0) THEN GOTO L_18d3b   '@18d05
+BEEP   '@18d29
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_18abc   '@18d33
+L_18d3b:
+RT_VIEWPRINT 9, 25   '@18d3b
+COLOR 7   '@18d4d
+RT_CLS 2   '@18d63
+PRINT " Escolha do Tipo de Saida e Impressao"   '@18d71 DS:3114
+PRINT ""   '@18d7f DS:1dac
+CALL MIXT_07f1_LimpaTeclado   '@18d8d
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT " Imprimo os Resultados S/*N* ", V_1656$   '@18d97 DS:2974
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_1656$ = UCASE$(V_1656$)   '@18db1
+CALL MIXT_07f1_LimpaTeclado   '@18dc9
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT " Desenho Diagrama de Esforcos S/*N* ", V_165a$   '@18dd3 DS:313e
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_165a$ = UCASE$(V_165a$)   '@18ded
+IF NOT (V_165a$ = "S") THEN GOTO L_18f3c   '@18e05 DS:2606
+L_18e1c:
+CALL MIXT_07f1_LimpaTeclado   '@18e21
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+LOCATE 13, 1   '@18e2b
+PRINT " Escala 1/.. ";   '@18e46 DS:27c4
+COLOR RT_CINT%(FX##(V_0dc0!))   '@18e54
+PRINT "200.. 100.. 50..  FOTO ";   '@18e71 DS:27d6
+COLOR 7   '@18e7f
+RT_LINEINPUT " *VIDEO* ", V_12e8$   '@18e95 DS:27f2
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_12e8$ = UCASE$(V_12e8$)   '@18eaf
+L_BP0c% = (VAL(V_12e8$) = 0.0#)   '@18ec7 DS:2364
+L_BP0e% = LEN(V_12e8$) > 0 AND L_BP0c%   '@18ef5
+IF NOT ((V_12e8$ <> "FOTO" AND L_BP0e%) <> 0) THEN GOTO L_18f37   '@18f10 DS:2800
+BEEP   '@18f25
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_18e1c   '@18f2f
+L_18f37:
+L_18f3c:
+V_12e4$ = "N"   '@18f3c DS:1d84
+IF NOT (V_1656$ <> "S") THEN GOTO L_18f9c   '@18f4e DS:2606
+RT_LINEINPUT " Paro para Visualizacao no Monitor S/*N* ", V_12e4$   '@18f65 DS:29c0
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_12e4$ = UCASE$(V_12e4$)   '@18f7f
+L_18f9c:
+RT_LINEINPUT " <D>esenho ou <I>mprimo o esquema estrutural das Vigas *N* ", V_12ae$   '@18f9c DS:2836
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_12f0$ = UCASE$(V_12ae$)   '@18fb6
+IF NOT (V_1656$ <> "S") THEN GOTO L_1901c   '@18fce DS:2606
+RT_LINEINPUT " Imprimo somente a Somatoria de Cargas S/*N* ", V_12ae$   '@18fe5 DS:3166
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_165e$ = UCASE$(V_12ae$)   '@18fff
+L_1901c:
+CALL MIXT_07f1_LimpaTeclado   '@1901c
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT " Dados Corretos N/*S* ", V_12ae$   '@19026 DS:23e4
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF NOT (UCASE$(V_12ae$) = "N") THEN GOTO L_19065   '@19040 DS:1d84
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_18abc   '@1905d
+L_19065:
+V_12f4$ = ""   '@19065 DS:1dac
+L_BP0c% = (V_1656$ = "S")   '@19077 DS:2606
+L_BP0e% = V_12f0$ = "I" OR L_BP0c%   '@1909c DS:1e74
+L_BP10% = V_165a$ <> "S" AND L_BP0e%   '@190b7 DS:2606
+L_BP12% = (V_165a$ = "S")   '@190d2 DS:2364,2606
+L_BP14% = (VAL(V_12e8$) > 0.0#)   '@190eb
+IF NOT (((V_12e8$ = "FOTO" OR L_BP14%) AND L_BP12% OR L_BP10%) <> 0) THEN GOTO L_19161   '@1910f DS:2800
+PRINT " Acione <Enter> para seguir  ou  *<Enter> elimina o avanco do formulario ";   '@1912a DS:2876
+CALL MIXT_07f1_LimpaTeclado   '@19138
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT "", V_12f4$   '@19142 DS:1dac
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+L_19161:
+IF NOT (V_1656$ = "S") THEN GOTO L_19196   '@19166 DS:2606
+V_0e1c! = 1.0   '@1917d DS:1d80
+GOTO L_191a7   '@1918e
+L_19196:
+V_0e1c! = 0.0   '@19196 DS:1eae
+L_191a7:
+V_104e! = 1.0   '@191a7 DS:1d80
+V_16ae! = 1.0   '@191b8 DS:1d80
+V_12ec! = 1.0   '@191c9 DS:1d80
+ON ERROR GOTO L_1acf8
+RT_ONERR = &H1acf8   '@191da
+V_16a6! = 1.0   '@191e9 DS:1d80
+V_1080! = 1.0   '@191fa DS:1d80
+V_17de! = V_166a!   '@1920b
+FOR V_166e! = 0.0 TO V_17de!   '@1921d DS:1d80,1eae
+A_172a!(RT_CINT%(FX##(V_166e!))) = 0.0   '@19224 DS:1eae
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+NEXT V_166e!   '@1924b DS:1d80
+REDIM A_16d0$(-32768 TO -32768)   '@19274
+REDIM A_16e2$(-32768 TO -32768)   '@19282
+REDIM A_16d0$(0 TO CINT(V_166a! + 1.0))   '@1928b DS:1d80
+REDIM A_16e2$(0 TO CINT(V_166a! + 1.0))   '@192b4 DS:1d80
+V_17e2! = LEN(V_176c$)   '@192dd
+FOR V_16aa! = 2.0 TO V_17e2!   '@192f8 DS:1d80,23e0
+IF NOT (RT_MID$((V_176c$), (RT_CINT%(FX##(V_16aa!))), (1)) = "/") THEN GOTO L_19339   '@19300 DS:2372
+GOSUB L_19377   '@1932c
+L_19339:
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+NEXT V_16aa!   '@19339 DS:1d80
+GOSUB L_19377   '@19362
+GOTO L_19af0   '@1936f
+' ---- F_19377 @0x19377  (019377_F_19377.lift.txt; evidence_id (assembly): ev_d30fd5d0fd01af6cc1d5c4b2b30a9e084ef80b5cd2e5377a28644f3a074e6ed9)
+L_19377:   ' sub-rotina (alvo de GOSUB); entrada vinda de 017d76_F_17d76
+V_166e! = VAL(RT_MID$((V_176c$), (RT_CINT%(FX##(V_16a6!))), (RT_CINT%(FX##(V_16aa!) - V_16a6!))))   '@1937c
+L_193b7:
+V_16b2! = V_166e!   '@193bc
+GOSUB L_1ab18   '@193cd
+GOSUB L_19504   '@193da
+IF NOT (RT_INSTR%((1), (RT_MID$((V_176c$), (RT_CINT%(FX##(V_16a6!))), (RT_CINT%(FX##(V_16aa!) - V_16a6!)))), ("A")) = 0) THEN GOTO L_1942d   '@193e7 DS:1dbc
+GOTO L_194df   '@19425
+L_1942d:
+V_1686! = VAL(RT_MID2$((RT_MID$((V_176c$), (RT_CINT%(FX##(V_16a6!))), (RT_CINT%(FX##(V_16aa!) - V_16a6!)))), (RT_INSTR%((1), (RT_MID$((V_176c$), (RT_CINT%(FX##(V_16a6!))), (RT_CINT%(FX##(V_16aa!) - V_16a6!)))), ("A")) + 1)))   '@1942d DS:1dbc
+IF NOT (V_16b2! < V_1686!) THEN GOTO L_194df   '@194a6
+V_166e! = FX##(V_16b2!) + 1.0   '@194c1 DS:1d80
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_193b7   '@194d7
+L_194df:
+V_16a6! = FX##(V_16aa!) + 1.0   '@194e4 DS:1d80
+RETURN   '@194fa
+L_19504:   ' sub-rotina (alvo de GOSUB)
+RT_VIEWPRINT 1, 25   '@19509
+COLOR 7, RT_CINT%(FX##(V_0dc4!)), RT_CINT%(FX##(V_0dc4!))   '@1951b
+RT_CLS 2   '@1954f
+V_1686! = RT_FRE&("")   '@1955d DS:1dac
+CALL S_29ab7   '@19577
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+CALL S_40243   '@19581
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+CALL S_24fe1   '@1958b
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF NOT (V_165a$ = "S") THEN GOTO L_195bb   '@19595 DS:2606
+CALL S_4730d   '@195ac
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+L_195bb:
+GOSUB L_195e8   '@195bb
+V_1080! = FX##(V_1080!) + 1.0   '@195c8 DS:1d80
+RETURN   '@195de
+L_195e8:   ' sub-rotina (alvo de GOSUB)
+V_17e6! = V_0e08%   '@195ed
+FOR V_1672! = 0.0 TO V_17e6!   '@19602 DS:1d80,1eae
+V_17ea! = V_166a!   '@1960a
+FOR V_166e! = 1.0 TO V_17ea!   '@1961c DS:1d80
+IF NOT (A_1052%(RT_CINT%(FX##(V_1080!)), RT_CINT%(FX##(V_1672!))) = A_1718!(RT_CINT%(FX##(V_166e!)))) THEN GOTO L_19a8e   '@19624
+V_169e! = -(FX##(V_12ce$ = "E") * A_0ff2!(RT_CINT%(FX##(V_1672!))) + FX##(V_12ce$ = "M") * A_1020!(RT_CINT%(FX##(V_1672!)), 0))   '@1967a DS:1d90,2932
+V_169e! = INT(FX##(V_169e!) * 100.0) / 100.0   '@196f5 DS:25a6
+A_172a!(RT_CINT%(FX##(V_166e!))) = FX##(A_172a!(RT_CINT%(FX##(V_166e!)))) + V_169e!   '@19717
+A_16d0$(RT_CINT%(FX##(V_166e!))) = A_16d0$(RT_CINT%(FX##(V_166e!))) + LTRIM$(RT_MID$((STR$(V_169e!)), (1), (RT_INSTR%((1), (STR$(V_169e!)), (".")) + 2))) + " (" + V_0dfc$ + ") + "   '@19759 DS:236c,24dc,3198
+IF NOT (A_0fc4!(2) <> 0.0 AND V_1672! = 0.0) THEN GOTO L_19926   '@197f1 DS:1eae
+A_16e2$(RT_CINT%(FX##(V_166e!))) = A_16e2$(RT_CINT%(FX##(V_166e!))) + LTRIM$(RT_MID$((STR$(A_0fc4!(2))), (1), (RT_INSTR%((1), (STR$(A_0fc4!(2))), (".")) + 2))) + "@1 [" + LTRIM$(STR$(A_0e26!(1))) + "]  (" + V_0dfc$ + ") > "   '@19840 DS:236c,31a0,31a8,31b0
+L_19926:
+IF NOT (A_0fc4!(3) <> 0.0 AND V_0e08% = V_1672!) THEN GOTO L_19a81   '@19926 DS:1eae
+A_16e2$(RT_CINT%(FX##(V_166e!))) = A_16e2$(RT_CINT%(FX##(V_166e!))) + LTRIM$(RT_MID$((STR$(A_0fc4!(3))), (1), (RT_INSTR%((1), (STR$(A_0fc4!(3))), (".")) + 2))) + "@" + LTRIM$(STR$(V_0e08%)) + " [" + LTRIM$(STR$(A_0e26!(V_0e08%))) + "]  (" + V_0dfc$ + ") > "   '@19978 DS:236c,31a8,31b0,31b8,31be
+L_19a81:
+GOTO L_19aba   '@19a81
+L_19a8e:
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+NEXT V_166e!   '@19a8e DS:1d80
+L_19aba:
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+NEXT V_1672!   '@19aba DS:1d80
+RETURN   '@19ae6
+L_19af0:   ' entrada vinda de 017d76_F_17d76
+ON ERROR GOTO L_11121
+RT_ONERR = &H11121   '@19af5
+IF NOT (V_0e1c! = 1.0) THEN GOTO L_19b72   '@19b04 DS:1d80
+RT_LPTABRE: RT_LPS CHR$(12)   '@19b1f
+RT_LPTABRE: RT_LPS V_12d8$   '@19b3d
+RT_LPTABRE: RT_LPS V_12dc$   '@19b55
+L_19b72:
+V_12ae$ = " Cargas Totais"   '@19b72 DS:31c4
+IF NOT (V_12c2$ = "S") THEN GOTO L_19bef   '@19b84 DS:2606
+V_12ae$ = V_12ae$ + " e Acidentais"   '@19b9b DS:2a86
+IF NOT (V_12c6$ = "S") THEN GOTO L_19bea   '@19bb7 DS:2606
+V_12ae$ = V_12ae$ + "  Momentos Externos"   '@19bce DS:31d6
+L_19bea:
+L_19bef:
+V_12ae$ = V_12ae$ + "  Reacoes "   '@19bef DS:31ee
+IF NOT (V_12ce$ = "E") THEN GOTO L_19c46   '@19c0b DS:1d90
+V_12ae$ = V_12ae$ + "Estaticas"   '@19c22 DS:2adc
+GOTO L_19c67   '@19c3e
+L_19c46:
+V_12ae$ = V_12ae$ + "Maximas"   '@19c46 DS:2ad0
+L_19c67:
+RT_SCREEN 0   '@19c67
+RT_VIEWPRINT 1, 25   '@19c7c
+COLOR RT_CINT%(FX##(V_0dc0!)), RT_CINT%(FX##(V_0dc4!)), RT_CINT%(FX##(V_0dc4!))   '@19c8e
+RT_CLS 2   '@19cc9
+PRINT RT_STRINGC$((79), (205))   '@19cd7
+PRINT " Reacoes de Apoio"   '@19cef DS:31fc
+PRINT V_12ae$   '@19cfd
+PRINT RT_STRINGC$((79), (205))   '@19d0b
+COLOR 7   '@19d23
+IF NOT (V_0e1c! = 1.0) THEN GOTO L_19df0   '@19d39 DS:1d80
+RT_LPTABRE: RT_LPS RT_STRINGC$((79), (45)): RT_LPFIM   '@19d54
+RT_LPTABRE: RT_LPTAB 10: RT_LPS "": RT_LPS " Reacoes de Apoio": RT_LPFIM   '@19d71 DS:1dac,31fc
+RT_LPTABRE: RT_LPTAB 10: RT_LPS "": RT_LPS V_12ae$: RT_LPFIM   '@19d96 DS:1dac
+RT_LPTABRE: RT_LPS RT_STRINGC$((79), (45)): RT_LPFIM   '@19dbb
+RT_LPTABRE: RT_LPS "": RT_LPFIM   '@19dd8 DS:1dac
+L_19df0:
+PRINT " Obra - "; V_0e00$   '@19df0 DS:3212
+PRINT " Registros "; V_176c$   '@19e07 DS:321e
+RT_VIEWPRINT 8, 25   '@19e1e
+RT_CLS 2   '@19e30
+L_BP0c% = (V_0e1c! = 1.0)   '@19e3e DS:1d80
+IF NOT ((V_165e$ = "S" OR L_BP0c%) <> 0) THEN GOTO L_19f03   '@19e67 DS:2606
+RT_LPTABRE: RT_LPTAB 10: RT_LPS "": RT_LPS " Obra - ": RT_LPS V_0e00$: RT_LPFIM   '@19e7c DS:1dac,3212
+RT_LPTABRE: RT_LPTAB 10: RT_LPS "": RT_LPS " Registros ": RT_LPS V_176c$: RT_LPFIM   '@19eaa DS:1dac,321e
+RT_LPTABRE: RT_LPS "": RT_LPFIM   '@19ed8 DS:1dac
+RT_LPTABRE: RT_LPS "": RT_LPFIM   '@19eeb DS:1dac
+L_19f03:
+V_166e! = 1.0   '@19f03 DS:1d80
+L_19f14:
+IF NOT (V_166e! <= V_166a!) THEN GOTO L_1a07d   '@19f19
+PRINT RT_TAB$(5); "";   '@19f34 DS:1dac
+PRINT USING "P###\ \####.##"; RT_PU#(A_1718!(RT_CINT%(FX##(V_166e!))), "P###\ \####.##", 1); " - "; RT_PU#(A_172a!(RT_CINT%(FX##(V_166e!))), "P###\ \####.##", 2);   '@19f4b DS:322e,3240
+L_BP0c% = (V_0e1c! = 1.0)   '@19fad DS:1d80
+IF NOT ((V_165e$ = "S" OR L_BP0c%) <> 0) THEN GOTO L_1a078   '@19fd6 DS:2606
+RT_LPTABRE: RT_LPTAB 5: RT_LPS ""   '@19feb DS:1dac
+RT_LPTABRE: PRINT #RT_LPT, USING "P###\ \####.##"; RT_PU#(A_1718!(RT_CINT%(FX##(V_166e!))), "P###\ \####.##", 1); " - "; RT_PU#(A_172a!(RT_CINT%(FX##(V_166e!))), "P###\ \####.##", 2);: RT_LPTQUEBRA 0   '@1a00c DS:322e,3240
+L_1a078:
+L_1a07d:
+IF NOT (FX##(V_166e!) + 1.0 <= FX##(V_166a!)) THEN GOTO L_1a1fa   '@1a07d DS:1d80
+PRINT RT_TAB$(30); "";   '@1a09d DS:1dac
+PRINT USING "P###\ \####.##"; RT_PU#(A_1718!(RT_CINT%(FX##(V_166e!) + 1.0)), "P###\ \####.##", 1); " - "; RT_PU#(A_172a!(RT_CINT%(FX##(V_166e!) + 1.0)), "P###\ \####.##", 2);   '@1a0b4 DS:1d80,322e,3240
+L_BP0c% = (V_0e1c! = 1.0)   '@1a120 DS:1d80
+IF NOT ((V_165e$ = "S" OR L_BP0c%) <> 0) THEN GOTO L_1a1f5   '@1a149 DS:2606
+RT_LPTABRE: RT_LPTAB 30: RT_LPS ""   '@1a15e DS:1dac
+RT_LPTABRE: PRINT #RT_LPT, USING "P###\ \####.##"; RT_PU#(A_1718!(RT_CINT%(FX##(V_166e!) + 1.0)), "P###\ \####.##", 1); " - "; RT_PU#(A_172a!(RT_CINT%(FX##(V_166e!) + 1.0)), "P###\ \####.##", 2);: RT_LPTQUEBRA 0   '@1a17f DS:1d80,322e,3240
+L_1a1f5:
+L_1a1fa:
+IF NOT (FX##(V_166e!) + 2.0 <= FX##(V_166a!)) THEN GOTO L_1a377   '@1a1fa DS:23e0
+PRINT RT_TAB$(55); "";   '@1a21a DS:1dac
+PRINT USING "P###\ \####.##"; RT_PU#(A_1718!(RT_CINT%(FX##(V_166e!) + 2.0)), "P###\ \####.##", 1); " - "; RT_PU#(A_172a!(RT_CINT%(FX##(V_166e!) + 2.0)), "P###\ \####.##", 2);   '@1a231 DS:23e0,322e,3240
+L_BP0c% = (V_0e1c! = 1.0)   '@1a29d DS:1d80
+IF NOT ((V_165e$ = "S" OR L_BP0c%) <> 0) THEN GOTO L_1a372   '@1a2c6 DS:2606
+RT_LPTABRE: RT_LPTAB 55: RT_LPS ""   '@1a2db DS:1dac
+RT_LPTABRE: PRINT #RT_LPT, USING "P###\ \####.##"; RT_PU#(A_1718!(RT_CINT%(FX##(V_166e!) + 2.0)), "P###\ \####.##", 1); " - "; RT_PU#(A_172a!(RT_CINT%(FX##(V_166e!) + 2.0)), "P###\ \####.##", 2);: RT_LPTQUEBRA 0   '@1a2fc DS:23e0,322e,3240
+L_1a372:
+L_1a377:
+PRINT ""   '@1a377 DS:1dac
+L_BP0c% = (V_0e1c! = 1.0)   '@1a385 DS:1d80
+IF NOT ((V_165e$ = "S" OR L_BP0c%) <> 0) THEN GOTO L_1a3d6   '@1a3ae DS:2606
+RT_LPTABRE: RT_LPS "": RT_LPFIM   '@1a3c3 DS:1dac
+L_1a3d6:
+IF NOT (FX##(V_166e!) + 2.0 < FX##(V_166a!)) THEN GOTO L_1a414   '@1a3d6 DS:23e0
+V_166e! = FX##(V_166e!) + 3.0   '@1a3f6 DS:3248
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_19f14   '@1a40c
+L_1a414:
+PRINT ""   '@1a414 DS:1dac
+PRINT V_1d70$   '@1a422
+PRINT RT_DATE$; "  "; RT_MID$((RT_TIME$), (1), (5))   '@1a430 DS:324c
+L_BP0c% = (V_0e1c! = 1.0)   '@1a462 DS:1d80
+IF NOT ((V_165e$ = "S" OR L_BP0c%) <> 0) THEN GOTO L_1a667   '@1a48b DS:2606
+RT_LPTABRE: RT_LPS "": RT_LPFIM   '@1a4a0 DS:1dac
+RT_LPTABRE: RT_LPS "": RT_LPFIM   '@1a4b3 DS:1dac
+V_17ee! = V_166a!   '@1a4c6
+FOR V_166e! = 1.0 TO V_17ee!   '@1a4d8 DS:1d80
+RT_LPTABRE: RT_LPTAB 5: RT_LPS "": RT_LPS "P": RT_LPS STR$(A_1718!(RT_CINT%(FX##(V_166e!)))) + " ": RT_LPTAB 15: RT_LPS "": RT_LPS "carga   ": RT_LPS A_16d0$(RT_CINT%(FX##(V_166e!))): RT_LPFIM   '@1a4e0 DS:1dac,1ffa,3252
+RT_LPTABRE: RT_LPTAB 15: RT_LPS "": RT_LPS "momento ": RT_LPS A_16e2$(RT_CINT%(FX##(V_166e!))): RT_LPFIM   '@1a560 DS:1dac,325e
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+NEXT V_166e!   '@1a5a2 DS:1d80
+RT_LPTABRE: RT_LPS "": RT_LPFIM   '@1a5ce DS:1dac
+RT_LPTABRE: RT_LPTAB 15: RT_LPS "": RT_LPS V_1d70$: RT_LPFIM   '@1a5e1 DS:1dac
+RT_LPTABRE: RT_LPTAB 15: RT_LPS "": RT_LPS RT_DATE$: RT_LPS "  ": RT_LPS RT_MID$((RT_TIME$), (1), (5)): RT_LPFIM   '@1a606 DS:1dac,324c
+RT_LPTABRE: RT_LPS "": RT_LPFIM   '@1a64f DS:1dac
+L_1a667:
+LOCATE 25, 1   '@1a667
+COLOR RT_CINT%(FX##(V_0dc0!))   '@1a682
+PRINT " GRAVO A SOMATORIA DE CARGAS NOS PILARES EM DISCO DE DADOS (.REP)  S/*N* ";   '@1a69f DS:326a
+CALL MIXT_07f1_LimpaTeclado   '@1a6ad
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUTPV "", V_12b2$   '@1a6b7 DS:1dac (LINE INPUT ; (B$LNIN 3))
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF NOT (UCASE$(RT_MID$((V_12b2$), (1), (1))) <> "S") THEN GOTO L_1a701   '@1a6d1 DS:2606
+GOTO L_1a982   '@1a6f9
+L_1a701:
+ON ERROR GOTO L_1acf8
+RT_ONERR = &H1acf8   '@1a701
+IF RT_DISP%(V_0de8$ + ":" + V_0dec$ + V_0e00$ + ".REP") THEN OPEN RT_ARQ$(V_0de8$ + ":" + V_0dec$ + V_0e00$ + ".REP") FOR APPEND AS #2 ELSE OPEN RT_ARQ$(V_0de8$ + ":" + V_0dec$ + V_0e00$ + ".REP") FOR OUTPUT AS #2   '@1a710 DS:1e9c,32b8,32be
+PRINT #2, "SISTRUT Software e Tecnologia s/c Ltda"   '@1a752 DS:32c6
+PRINT #2, "Versao 4.0    Abril 1990"   '@1a769 DS:32f0
+PRINT #2, ""   '@1a780 DS:1dac
+PRINT #2, " SOMATORIA DE REACOES EM PILARES"   '@1a797 DS:330c
+PRINT #2, " OBRA "; V_0e00$   '@1a7ae DS:296a
+PRINT #2, " GERADO EM "; RT_DATE$; "   "; RT_MID$((RT_TIME$), (1), (5))   '@1a7ce DS:3330,3340
+PRINT #2, " REGISTROS "; V_176c$   '@1a812 DS:3348
+PRINT #2, V_12ae$   '@1a832
+PRINT #2, ""   '@1a849 DS:1dac
+V_17f2! = V_166a!   '@1a860
+FOR V_166e! = 1.0 TO V_17f2!   '@1a872 DS:1d80
+PRINT #2, USING "P####     #####.##"; RT_PU#(A_1718!(RT_CINT%(FX##(V_166e!))), "P####     #####.##", 1); RT_PU#(A_172a!(RT_CINT%(FX##(V_166e!))), "P####     #####.##", 2)   '@1a87a DS:3358
+PRINT #2, "*"; A_16d0$(RT_CINT%(FX##(V_166e!)))   '@1a8d7 DS:2234
+PRINT #2, ">"; A_16e2$(RT_CINT%(FX##(V_166e!)))   '@1a90b DS:336e
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+NEXT V_166e!   '@1a93f DS:1d80
+CLOSE #2   '@1a96b
+L_1a982:
+REDIM A_16d0$(-32768 TO -32768)   '@1a987
+REDIM A_16e2$(-32768 TO -32768)   '@1a995
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_118ec   '@1a9a3
+' ---- F_1a9ab @0x1a9ab  (01a9ab_F_1a9ab.lift.txt; evidence_id (assembly): ev_00993307b0cea43e927a67242d43feb5eb5e4a67257f54db950cab2ead0b60ff)
+L_1a9b0:   ' sub-rotina (alvo de GOSUB); entrada vinda de 01698d_FUN_1000_698d
+ON ERROR GOTO L_1acf8
+RT_ONERR = &H1acf8   '@1a9b5
+RT_VIEWPRINT RT_CINT%(FX##(V_1672!)), 25   '@1a9c4
+RT_CLS 2   '@1a9dd
+COLOR 3   '@1a9eb
+PRINT RT_TAB$(30); ""; "Acione  D <Enter>  para alterar Drive e Diretorio"   '@1aa01 DS:1dac,3374
+RT_VIEWPRINT RT_CINT%(FX##(V_1672!) + 2.0), 25   '@1aa21 DS:23e0
+COLOR 14   '@1aa3f
+ON ERROR GOTO L_1aa9d
+RT_ONERR = &H1aa9d   '@1aa55
+RT_FILES V_0de8$ + ":" + V_0dec$ + "*.VIG"   '@1aa64 DS:1e9c,33aa (FILES: cabecalho em forma DOS (RT45))
+GOTO L_1aafa   '@1aa90
+' ---- F_1aa98 @0x1aa98  (01aa98_F_1aa98.lift.txt; evidence_id (assembly): ev_1ecdf67073626aa3f9edf5081576251f78b17f6537b0ea6187a89bce1eaa8da9)
+L_1aa9d:   ' entrada vinda de 01a9ab_F_1a9ab
+IF NOT (ERR = 53) THEN GOTO L_1aad1   '@1aaa2
+PRINT " Nenhum Arquivo Encontrado"   '@1aab4 DS:33b4
+RESUME NEXT   '@1aac2
+L_1aad1:
+RESUME L_1aae3   '@1aad1
+L_1aae3:
+GOSUB L_1acf8   '@1aae8
+L_1aafa:   ' entrada vinda de 01a9ab_F_1a9ab
+ON ERROR GOTO L_11121
+RT_ONERR = &H11121   '@1aaff
+RETURN   '@1ab0e
+L_1ab18:   ' sub-rotina (alvo de GOSUB); entrada vinda de 017d76_F_17d76, 019377_F_19377
+OPEN RT_ARQ$(V_0de8$ + ":" + V_0dec$ + V_0e00$ + ".VIG") FOR INPUT AS #1   '@1ab1d DS:1e74,1e9c,2b2a
+CLOSE #1   '@1ab5f
+OPEN RT_ARQ$(V_0de8$ + ":" + V_0dec$ + V_0e00$ + ".VIG") FOR RANDOM AS #1 LEN = 855   '@1ab6e DS:1e9c,20de,2b2a
+RT_REG_12F8_LE 1, RT_CLNG&(FX##(V_166e!) + 1.0)   '@1abb0 DS:1d80 (registro de 855 bytes)
+CLOSE #1   '@1abda
+CALL S_34263   '@1abe9
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RETURN   '@1abf3
+L_1abfd:   ' sub-rotina (alvo de GOSUB); entrada vinda de 017d76_F_17d76
+OPEN RT_ARQ$(V_0de8$ + ":" + V_0dec$ + V_0e00$ + ".VIG") FOR INPUT AS #1   '@1ac02 DS:1e74,1e9c,2b2a
+CLOSE #1   '@1ac44
+V_166e! = V_16a6!   '@1ac53
+CALL S_35e47   '@1ac64
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+OPEN RT_ARQ$(V_0de8$ + ":" + V_0dec$ + V_0e00$ + ".VIG") FOR RANDOM AS #1 LEN = 855   '@1ac6e DS:1e9c,20de,2b2a
+RT_REG_12F8_GRAVA 1, RT_CLNG&(FX##(V_166e!) + 1.0)   '@1acb0 DS:1d80 (registro de 855 bytes)
+CLOSE #1   '@1acda
+RETURN   '@1ace9
+L_1acf8:   ' sub-rotina (alvo de GOSUB); entrada vinda de 01698d_FUN_1000_698d, 0179bb_F_179bb, 017d76_F_17d76, 019377_F_19377, 01a9ab_F_1a9ab
+BEEP   '@1acfd
+V_17f6! = 0.0   '@1ad07 DS:1eae
+V_17fa! = 1.0   '@1ad19 DS:1d80
+CALL MIXT_0dbe_GuardaTela(V_17f6!, V_17fa!, V_0dcc$)   '@1ad24
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+ON ERROR GOTO L_11121
+RT_ONERR = &H11121   '@1ad35
+RT_CLOSE   '@1ad44 (CLOSE sem numero: nao fecha a impressora (LPT1) do LPRINT)
+RT_VIEWPRINT 21, 25   '@1ad51
+RT_CLS 2   '@1ad63
+LOCATE 23, 20   '@1ad71
+COLOR 14, RT_CINT%(FX##(V_0dc4!))   '@1ad8f
+IF NOT (ERR <> 53) THEN GOTO L_1adce   '@1adb4
+GOTO L_1ade9   '@1adc6
+L_1adce:
+PRINT " NAO EXISTE ESTE ARQUIVO NESTE DISCO"   '@1adce DS:33d2
+GOTO L_1ae5f   '@1addc
+L_1ade9:
+IF NOT (ERR <> 61) THEN GOTO L_1ae08   '@1adee
+GOTO L_1ae23   '@1ae00
+L_1ae08:
+PRINT " O SEU DISCO DE DADOS ESTA COMPLETO"   '@1ae08 DS:33fa
+GOTO L_1ae5f   '@1ae16
+L_1ae23:
+PRINT " VERIFIQUE O SEU DRIVE"   '@1ae28 DS:3422
+V_0de8$ = V_0df0$   '@1ae36
+V_0dec$ = V_0df4$   '@1ae48
+L_1ae5f:
+RESUME L_1ae76   '@1ae64
+L_1ae76:
+COLOR 7   '@1ae7b
+CALL MIXT_07f1_LimpaTeclado   '@1ae91
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_12ae$ = RT_INPUT$(1)   '@1ae9b
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_17fe! = 1.0   '@1aeb7 DS:1d80
+V_1802! = 0.0   '@1aec9 DS:1eae
+CALL MIXT_0dbe_GuardaTela(V_17fe!, V_1802!, V_0dcc$)   '@1aed4
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY no laco (B$EVCK)
+GOTO L_1698d   '@1aee5
+' ---- F_1aeed @0x1aeed  (01aeed_F_1aeed.lift.txt; evidence_id (assembly): ev_b4c510497ef0501da3e2df46e6069277a872c12376674e3c42ce017e978045cc)
+RT_FIM   ' @1aeed B$CENP (inicio/fim do modulo)
+' ---- F_1aef2 @0x1aef2  (01aef2_F_1aef2.lift.txt; evidence_id (assembly): ev_e92afcf363c7e43d891c1467575e21da513c1234a23ee38e1494ea5d7aa0e718)
+'RETRAD? @1aef2 ?? 50 bytes que nao parecem codigo do QuickBASIC (dados lidos como instrucoes; 23 instr.): XOR AX, 0x0; ADD byte ptr [BP + SI], BH ...
+L_1af24:
+'RETRAD? @1af24 ?? 4 bytes que nao parecem codigo do QuickBASIC (dados lidos como instrucoes; 2 instr.): ADD byte ptr [BX + SI], AL; JBE 0x1000:af28
+L_1af28:
+'RETRAD? @1af28 ?? 4 bytes que nao parecem codigo do QuickBASIC (dados lidos como instrucoes; 2 instr.): ADD byte ptr [BX + SI], AL; JNP 0x1000:af2c
+L_1af2c:
+'RETRAD? @1af2c ?? 226 bytes que nao parecem codigo do QuickBASIC (dados lidos como instrucoes; 97 instr.): ADD byte ptr [BX + SI], AL; ADD byte ptr [BX + SI], 0x0 ...
+L_1b00e:
+'RETRAD? @1b00e ?? 172 bytes que nao parecem codigo do QuickBASIC (dados lidos como instrucoes; 76 instr.): MOV word ptr [BP + SI], AX; ADD byte ptr [BX + SI], AL ...
+L_1b0ba:
+'RETRAD? @1b0ba ?? 17 bytes que nao parecem codigo do QuickBASIC (dados lidos como instrucoes; 7 instr.): MOV AL, 0x6; ADD byte ptr [BX + SI], AL ...
+' ---- F_1b0cb @0x1b0cb  (01b0cb_F_1b0cb.lift.txt; evidence_id (assembly): ev_e3f43dc0eb00c222103dacb626568ca46b8e8b8f447b3df5168d83ad8f28183a)
+'RETRAD? @1b0cc ?? 143 bytes que nao parecem codigo do QuickBASIC (dados lidos como instrucoes; 71 instr.): ADD byte ptr [BX + SI], AL; ADD AL, byte ptr [BX] ...
+L_1b15b:
+'RETRAD? @1b15b ?? 123 bytes que nao parecem codigo do QuickBASIC (dados lidos como instrucoes; 54 instr.): OR AX, word ptr [BX + SI]; ADD BH, CH ...
+L_1b1d6:
+'RETRAD? @1b1d6 ?? dado (entre trechos de dado lido como codigo): ADC AX, 0xf   '??
+'RETRAD? @1b1d9 ?? 350 bytes que nao parecem codigo do QuickBASIC (dados lidos como instrucoes; 158 instr.): ADD byte ptr [BP + SI], BL; SLDT word ptr [BX + SI] ...
+' ---- F_1b337 @0x1b337  (01b337_F_1b337.lift.txt; evidence_id (assembly): ev_39cf7433318e27ccde84cf04e519ea84dcafd5e0bf76ec83de7a197df0f4b3e9)
+'RETRAD? @1b337 ?? 36 bytes que nao parecem codigo do QuickBASIC (dados lidos como instrucoes; 20 instr.): PUSH SS; ADD byte ptr [BX + SI], AL ...
+L_1b35b:
+'RETRAD? @1b35b ?? 58 bytes que nao parecem codigo do QuickBASIC (dados lidos como instrucoes; 25 instr.): SBB byte ptr [BX + SI], AL; ADD BH, AH ...
+L_1b395:
+'RETRAD? @1b395 ?? 102 bytes que nao parecem codigo do QuickBASIC (dados lidos como instrucoes; 48 instr.): ADD byte ptr [BP + DI], AL; SBB AL, byte ptr [BX + SI] ...
+L_1b3fb:
+'RETRAD? @1b3fb ?? 184 bytes que nao parecem codigo do QuickBASIC (dados lidos como instrucoes; 87 instr.): SBB AL, 0x0; ADD byte ptr [BP + DI], BL ...
+L_1b4b3:
+'RETRAD? @1b4b3 ?? 90 bytes que nao parecem codigo do QuickBASIC (dados lidos como instrucoes; 40 instr.): AND byte ptr [BX + SI], AL; ADD byte ptr [DI + 0x20], AH ...
+L_1b50d:
+'RETRAD? @1b50d ?? 16 bytes que nao parecem codigo do QuickBASIC (dados lidos como instrucoes; 6 instr.): ADD byte ptr [0x22], AH; ADD byte ptr [BX + 0x22], CL ...
+' ---- M_VIAUX @0x20030  (020030_M_VIAUX.lift.txt; evidence_id (assembly): ev_cc98ce55267d4ae9b355a7593953e4c96a3c6ab840bbe111bf8f5225bf39a61a)
+' @20030 inicio do programa (B$?EVT)
+REDIM A_0f0c%(0 TO 13)   '@200cb
+REDIM A_0f3a%(0 TO 13)   '@200e8
+REDIM A_0e26!(0 TO 13)   '@20105
+REDIM A_0e54!(0 TO 13)   '@20122
+REDIM A_0e82!(0 TO 40)   '@2013f
+REDIM A_0f68!(0 TO 40)   '@2015c
+REDIM A_0eb0!(0 TO 40)   '@20174
+REDIM A_0ede!(0 TO 40)   '@20191
+REDIM A_0f96!(0 TO 40)   '@201ae
+REDIM A_0fc4!(0 TO 3)   '@201c6
+GOTO L_24e5c   '@201e3
+' ---- FUN_2000_4e5c @0x24e5c  (024e5c_FUN_2000_4e5c.lift.txt; evidence_id (assembly): ev_2746dcd2f85613adc3f54d77dc90d0ae7dfcd142ad02e232ad6153a75ac61de9)
+L_24e5c:   ' entrada vinda de 020030_M_VIAUX
+GOTO L_24fd9   '@24e5c
+' ---- FUN_2000_4fd9 @0x24fd9  (024fd9_FUN_2000_4fd9.lift.txt; evidence_id (assembly): ev_193284391aa25734db36329f9dfc6fd8a8a8b294c8fb989b6062939f3c52bf01)
+L_24fd9:   ' entrada vinda de 024e5c_FUN_2000_4e5c
+GOTO L_282e3   '@24fd9
+' ---- FUN_2000_82e3 @0x282e3  (0282e3_FUN_2000_82e3.lift.txt; evidence_id (assembly): ev_f2a1947a217f84592e6a6fd323e5de40c7cda1ddc868dc177f73f01dff829b6c)
+L_282e3:   ' entrada vinda de 024fd9_FUN_2000_4fd9
+GOTO L_28869   '@282e3
+' ---- FUN_2000_8869 @0x28869  (028869_FUN_2000_8869.lift.txt; evidence_id (assembly): ev_722750a723da062859c59a99ebd46e4a6beedeeeae03a7bdc3fa524c6d9b097d)
+L_28869:   ' entrada vinda de 0282e3_FUN_2000_82e3
+GOTO L_29aaf   '@28869
+' ---- FUN_2000_9aaf @0x29aaf  (029aaf_FUN_2000_9aaf.lift.txt; evidence_id (assembly): ev_f2fd8908d0ec56aacfd3202f716cceebee9477431bf082f4faa5607a069cd098)
+L_29aaf:   ' entrada vinda de 028869_FUN_2000_8869
+GOTO L_2aa6f   '@29aaf
+' ---- RT_EA @0x2aa6f  (02aa6f_RT_EA.lift.txt; evidence_id (assembly): ev_56c1fe88f26072dbd06d30e3811b714b9bfc8bc77ca411ef257805f992434be9)
+L_2aa6f:   ' entrada vinda de 029aaf_FUN_2000_9aaf
+RT_FIM   ' @2aa6f B$CENP (inicio/fim do modulo)
+' ---- M_VIGRAV @0x30030  (030030_M_VIGRAV.lift.txt; evidence_id (assembly): ev_44afc2c92c0197f3cbd145a139e76d220dddb344eba73f7fde7307cf17db1abf)
+' @30030 inicio do programa (B$?EVT)
+L_300fd:   ' entrada vinda de 030558_FUN_3000_0558, 03091d_FUN_3000_091d, 032b12_FUN_3000_2b12, 03386d_F_3386d
+RESUME L_30114   '@30102
+L_30114:
+ON ERROR GOTO L_300fd
+RT_ONERR = &H300fd   '@30119
+CALL S_24e64   '@30128
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+L_30137:   ' entrada vinda de 03386d_F_3386d
+IF NOT (ERR = 53) THEN GOTO L_3016b   '@3013c
+PRINT " Nenhum Arquivo Encontrado"   '@3014e DS:40a0
+RESUME NEXT   '@3015c
+L_3016b:
+L_30170:   ' entrada vinda de 03091d_FUN_3000_091d, 032b12_FUN_3000_2b12
+BEEP   '@30175
+V_1832! = 0.0   '@3017f DS:40be
+V_1836! = 1.0   '@30191 DS:40c2
+CALL MIXT_0dbe_GuardaTela(V_1832!, V_1836!, V_0dcc$)   '@3019c
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+ON ERROR GOTO L_300fd
+RT_ONERR = &H300fd   '@301ad
+CALL MIXT_07f1_LimpaTeclado   '@301bc
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_CLOSE   '@301c6 (CLOSE sem numero: nao fecha a impressora (LPT1) do LPRINT)
+RT_VIEWPRINT 21, 25   '@301d3
+RT_CLS 2   '@301e5
+LOCATE 23, 20   '@301f3
+COLOR 14, RT_CINT%(FX##(V_0dc4!))   '@30211
+IF NOT (ERR <> 53) THEN GOTO L_30250   '@30236
+GOTO L_3026b   '@30248
+L_30250:
+PRINT "NAO EXISTE ESTE ARQUIVO NESTE DISCO"   '@30250 DS:40c6
+GOTO L_302e1   '@3025e
+L_3026b:
+IF NOT (ERR <> 61) THEN GOTO L_3028a   '@30270
+GOTO L_302a5   '@30282
+L_3028a:
+PRINT "O SEU DISCO DE DADOS ESTA COMPLETO"   '@3028a DS:40ee
+GOTO L_302e1   '@30298
+L_302a5:
+PRINT "VERIFIQUE O SEU DRIVE"   '@302aa DS:4114
+V_0de8$ = V_0df0$   '@302b8
+V_0dec$ = V_0df4$   '@302ca
+L_302e1:
+COLOR 7   '@302e6
+CALL MIXT_07f1_LimpaTeclado   '@302fc
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_12ae$ = RT_INPUT$(1)   '@30306
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_183a! = 1.0   '@30322 DS:40c2
+V_183e! = 0.0   '@30334 DS:40be
+CALL MIXT_0dbe_GuardaTela(V_183a!, V_183e!, V_0dcc$)   '@3033f
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+V_12ae$ = "***"   '@30350 DS:412e
+RESUME NEXT   '@30362
+L_30371:   ' entrada vinda de 030558_FUN_3000_0558
+ON ERROR GOTO L_300fd
+RT_ONERR = &H300fd   '@30376
+COLOR 14   '@30385
+LOCATE 22, 1   '@3039b
+BEEP   '@303b6
+BEEP   '@303c0
+PRINT " ATENCAO ! ..  Drive e Diretorio nao encontrados"   '@303ca DS:4136
+COLOR 7   '@303d8
+PRINT " Crio o Diretorio ";   '@303ee DS:416a
+COLOR RT_CINT%(FX##(V_0dc0!))   '@303fc
+PRINT V_0de8$; ":"; V_0dec$;   '@30419 DS:4180
+COLOR 7   '@30439
+CALL MIXT_07f1_LimpaTeclado   '@3044f
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RT_LINEINPUT "    S/*N* ", V_12ae$   '@30459 DS:4186
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+IF NOT (UCASE$(V_12ae$) <> "S") THEN GOTO L_304f1   '@30473 DS:4194
+V_0dec$ = V_0df4$   '@30490
+V_0de8$ = V_0df0$   '@304a2
+V_1842! = 1.0   '@304b4 DS:40c2
+V_1846! = 0.0   '@304c6 DS:40be
+CALL MIXT_0dbe_GuardaTela(V_1842!, V_1846!, V_0dcc$)   '@304d1
+IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB L_11407, L_11432, L_1154c   ' ON KEY pelo roteiro (entre comandos)
+RESUME   '@304e2
+L_304f1:
+PRINT " Criando Diretorio     Aguarde ..."   '@304f1 DS:419a
+L_BP0c% = (LEN(V_0dec$) > 1)   '@304ff DS:4180
+MKDIR RT_ARQ$(V_0de8$ + ":" + RT_LEFT$((V_0dec$), (LEN(V_0dec$) + L_BP0c%)))   '@3052c
+RESUME   '@30546
+' @30550 (trecho de 6 bytes sem caminho de entrada conhecido: codigo morto ou alcancado por meio nao rastreado; traduzido abaixo)
+GOTO L_30915   '@30550
+' ---- FUN_3000_0915 @0x30915  (030915_FUN_3000_0915.lift.txt; evidence_id (assembly): ev_ba362f569057d06fa3d1607caaae63707326cd8372ac0fb74db636cd6ef94e3a)
+L_30915:   ' entrada vinda de 030030_M_VIGRAV
+GOTO L_33989   '@30915
+' ---- FUN_3000_3989 @0x33989  (033989_FUN_3000_3989.lift.txt; evidence_id (assembly): ev_078ed1fa8edcc6e6709592f79479a400f2275f417c647cb776ea3d2c18917a96)
+L_33989:   ' entrada vinda de 030915_FUN_3000_0915
+GOTO L_33de9   '@33989
+' ---- FUN_3000_3de9 @0x33de9  (033de9_FUN_3000_3de9.lift.txt; evidence_id (assembly): ev_674fd9c067c7f33f70750c655bb316ec002a4858bd5f49ee130c824dc8274254)
+L_33de9:   ' entrada vinda de 033989_FUN_3000_3989
+GOTO L_3425b   '@33de9
+' ---- FUN_3000_425b @0x3425b  (03425b_FUN_3000_425b.lift.txt; evidence_id (assembly): ev_7ed556d6ef14b39d022ebc9fe2732ead309a1956446788e013d971fcb3ee359f)
+L_3425b:   ' entrada vinda de 033de9_FUN_3000_3de9
+GOTO L_35e3f   '@3425b
+' ---- FUN_3000_5e3f @0x35e3f  (035e3f_FUN_3000_5e3f.lift.txt; evidence_id (assembly): ev_53db0b3a257407e37fbfca3484057e62ac99c01fcd9df7da43646ab28690fc8c)
+L_35e3f:   ' entrada vinda de 03425b_FUN_3000_425b
+GOTO L_378ca   '@35e3f
+' ---- RT_EA @0x378ca  (0378ca_RT_EA.lift.txt; evidence_id (assembly): ev_6752d0d78a79129b67720327b059a7b68992292fd4efff9f51916e0377db74b9)
+L_378ca:   ' entrada vinda de 035e3f_FUN_3000_5e3f
+RT_FIM   ' @378ca B$CENP (inicio/fim do modulo)
+' ---- F_378cf @0x378cf  (0378cf_F_378cf.lift.txt; evidence_id (assembly): ev_85d6dab498875a52099ef64ab6696a26db046bfe07a263f6c8905157d06413a4)
+'RETRAD? @378cf ?? 50 bytes que nao parecem codigo do QuickBASIC (dados lidos como instrucoes; 23 instr.): XOR AX, 0x0; ADD byte ptr [BP + SI], BH ...
+L_37901:
+'RETRAD? @37901 ?? 4 bytes que nao parecem codigo do QuickBASIC (dados lidos como instrucoes; 2 instr.): ADD byte ptr [BX + SI], AL; JBE 0x3000:7905
+L_37905:
+'RETRAD? @37905 ?? 4 bytes que nao parecem codigo do QuickBASIC (dados lidos como instrucoes; 2 instr.): ADD byte ptr [BX + SI], AL; JNP 0x3000:7909
+L_37909:
+'RETRAD? @37909 ?? 410 bytes que nao parecem codigo do QuickBASIC (dados lidos como instrucoes; 173 instr.): ADD byte ptr [BX + SI], AL; ADD byte ptr [BX + SI], 0x0 ...
+L_37aa3:
+'RETRAD? @37aa3 ?? dado (entre trechos de dado lido como codigo): V_0006% = ??valor
+'RETRAD? @37aa6 ?? 21 bytes que nao parecem codigo do QuickBASIC (dados lidos como instrucoes; 6 instr.): ADD byte ptr [BX + DI + 0x6], BH; ADD BH, AL ...
+L_37abb:
+'RETRAD? @37abb ?? 25 bytes que nao parecem codigo do QuickBASIC (dados lidos como instrucoes; 13 instr.): SYSRET; ADD byte ptr [BX + SI], AL ...
+L_37ad4:
+'RETRAD? @37ad5 ?? 235 bytes que nao parecem codigo do QuickBASIC (dados lidos como instrucoes; 110 instr.): ADD byte ptr [BX + SI], AL; STOSB ES:DI ...
+' ---- M_VICALC @0x40030  (040030_M_VICALC.lift.txt; evidence_id (assembly): ev_c5c1512e90618f4f65270f553cab35bcace43d090accec8fbb4137ea0eb281b5)
+' @40030 inicio do programa (B$?EVT)
+REDIM A_18b0!(0 TO 14)   '@400c6
+REDIM A_18c2!(0 TO 14)   '@400e3
+REDIM A_18d4!(0 TO 14)   '@40100
+REDIM A_18e6!(0 TO 14, 0 TO 2)   '@4011d
+REDIM A_18fc!(0 TO 14)   '@40141
+REDIM A_190e!(0 TO 14, 0 TO 2)   '@4015e
+REDIM A_1924!(0 TO 14)   '@40182
+REDIM A_1936!(0 TO 14)   '@4019f
+REDIM A_1948!(0 TO 14)   '@401bc
+REDIM A_195a!(0 TO 14)   '@401d9
+REDIM A_196c!(0 TO 14, 0 TO 4)   '@401f6
+REDIM A_1982!(0 TO 14, 0 TO 2)   '@40217
+GOTO L_47305   '@4023b
+' ---- FUN_4000_7305 @0x47305  (047305_FUN_4000_7305.lift.txt; evidence_id (assembly): ev_7ddedc6c4ac02c89a688cf42b635acd2a5b00df22780746a7b58d3cac531af42)
+L_47305:   ' entrada vinda de 040030_M_VICALC
+GOTO L_4d9b7   '@47305
+' ---- RT_EA @0x4d9b7  (04d9b7_RT_EA.lift.txt; evidence_id (assembly): ev_ca9558c998913a897e34d5e66f5893b74287c2dcffd716c3a5e69a40902d594d)
+L_4d9b7:   ' entrada vinda de 047305_FUN_4000_7305
+RT_FIM   ' @4d9b7 B$CENP (inicio/fim do modulo)
+' ---- M_NOM @0x50030  (050030_M_NOM.lift.txt; evidence_id (assembly): ev_75655925424ea091d2835550f939ec8bb90ac2c7cfba81c4028043f0fa7a385d)
+' @50030 inicio do programa (B$?EVT)
+GOTO L_502f1   '@5003a
+' ---- RT_EA @0x502f1  (0502f1_RT_EA.lift.txt; evidence_id (assembly): ev_0dfd707d9ce00c579cff0ffc8c4d7bcbbeba59dd546b63123b088e468b2a5ee8)
+L_502f1:   ' entrada vinda de 050030_M_NOM
+RT_FIM   ' @502f1 B$CENP (inicio/fim do modulo)
+RT_FIM
+
+' ---- tratador de erro do modulo MIXT (nivel de modulo no original)
+'$INCLUDE: '../comum/MIXT_MOD.BI'
+
+' ---- erro sem ON ERROR do programa: o BRUN45 escreve a mensagem e volta ao DOS
+RT_ERRO_FATAL:
+RT_ERRO_SEM_TRATADOR
+
+' Registro de 855 bytes em DS:12F8 (GET/PUT #): campos pelo endereco das variaveis.
+SUB RT_REG_12F8_LE (f AS INTEGER, r AS LONG)
+    GET #f, r, RG_12F8
+    V_12f8$ = MID$(RG_12F8, 1, 20)
+    V_130c$ = MID$(RG_12F8, 21, 5)
+    V_1311% = CVI(MID$(RG_12F8, 26, 2))
+    V_1313% = CVI(MID$(RG_12F8, 28, 2))
+    V_1315% = CVI(MID$(RG_12F8, 30, 2))
+    V_1317% = CVI(MID$(RG_12F8, 32, 2))
+    V_1319% = CVI(MID$(RG_12F8, 34, 2))
+    V_131b% = CVI(MID$(RG_12F8, 36, 2))
+    V_131d% = CVI(MID$(RG_12F8, 38, 2))
+    V_131f! = CVS(MID$(RG_12F8, 40, 4))
+    V_1323! = CVS(MID$(RG_12F8, 44, 4))
+    V_1327% = CVI(MID$(RG_12F8, 48, 2))
+    V_1329% = CVI(MID$(RG_12F8, 50, 2))
+    V_132b! = CVS(MID$(RG_12F8, 52, 4))
+    V_132f! = CVS(MID$(RG_12F8, 56, 4))
+    V_1333% = CVI(MID$(RG_12F8, 60, 2))
+    V_1335% = CVI(MID$(RG_12F8, 62, 2))
+    V_1337! = CVS(MID$(RG_12F8, 64, 4))
+    V_133b! = CVS(MID$(RG_12F8, 68, 4))
+    V_133f% = CVI(MID$(RG_12F8, 72, 2))
+    V_1341% = CVI(MID$(RG_12F8, 74, 2))
+    V_1343! = CVS(MID$(RG_12F8, 76, 4))
+    V_1347! = CVS(MID$(RG_12F8, 80, 4))
+    V_134b% = CVI(MID$(RG_12F8, 84, 2))
+    V_134d% = CVI(MID$(RG_12F8, 86, 2))
+    V_134f! = CVS(MID$(RG_12F8, 88, 4))
+    V_1353! = CVS(MID$(RG_12F8, 92, 4))
+    V_1357% = CVI(MID$(RG_12F8, 96, 2))
+    V_1359% = CVI(MID$(RG_12F8, 98, 2))
+    V_135b! = CVS(MID$(RG_12F8, 100, 4))
+    V_135f! = CVS(MID$(RG_12F8, 104, 4))
+    V_1363% = CVI(MID$(RG_12F8, 108, 2))
+    V_1365% = CVI(MID$(RG_12F8, 110, 2))
+    V_1367! = CVS(MID$(RG_12F8, 112, 4))
+    V_136b! = CVS(MID$(RG_12F8, 116, 4))
+    V_136f% = CVI(MID$(RG_12F8, 120, 2))
+    V_1371% = CVI(MID$(RG_12F8, 122, 2))
+    V_1373! = CVS(MID$(RG_12F8, 124, 4))
+    V_1377! = CVS(MID$(RG_12F8, 128, 4))
+    V_137b% = CVI(MID$(RG_12F8, 132, 2))
+    V_137d% = CVI(MID$(RG_12F8, 134, 2))
+    V_137f! = CVS(MID$(RG_12F8, 136, 4))
+    V_1383! = CVS(MID$(RG_12F8, 140, 4))
+    V_1387% = CVI(MID$(RG_12F8, 144, 2))
+    V_1389% = CVI(MID$(RG_12F8, 146, 2))
+    V_138b! = CVS(MID$(RG_12F8, 148, 4))
+    V_138f! = CVS(MID$(RG_12F8, 152, 4))
+    V_1393% = CVI(MID$(RG_12F8, 156, 2))
+    V_1395% = CVI(MID$(RG_12F8, 158, 2))
+    V_1397! = CVS(MID$(RG_12F8, 160, 4))
+    V_139b! = CVS(MID$(RG_12F8, 164, 4))
+    V_139f% = CVI(MID$(RG_12F8, 168, 2))
+    V_13a1% = CVI(MID$(RG_12F8, 170, 2))
+    V_13a3! = CVS(MID$(RG_12F8, 172, 4))
+    V_13a7! = CVS(MID$(RG_12F8, 176, 4))
+    V_13ab% = CVI(MID$(RG_12F8, 180, 2))
+    V_13ad% = CVI(MID$(RG_12F8, 182, 2))
+    V_13af! = CVS(MID$(RG_12F8, 184, 4))
+    V_13b3! = CVS(MID$(RG_12F8, 188, 4))
+    V_13b7% = CVI(MID$(RG_12F8, 192, 2))
+    V_13b9% = CVI(MID$(RG_12F8, 194, 2))
+    V_13bb! = CVS(MID$(RG_12F8, 196, 4))
+    V_13bf! = CVS(MID$(RG_12F8, 200, 4))
+    V_13cf! = CVS(MID$(RG_12F8, 216, 4))
+    V_13d3! = CVS(MID$(RG_12F8, 220, 4))
+    V_13d7! = CVS(MID$(RG_12F8, 224, 4))
+    V_13db! = CVS(MID$(RG_12F8, 228, 4))
+    V_13df! = CVS(MID$(RG_12F8, 232, 4))
+    V_13e3! = CVS(MID$(RG_12F8, 236, 4))
+    V_13e7! = CVS(MID$(RG_12F8, 240, 4))
+    V_13eb! = CVS(MID$(RG_12F8, 244, 4))
+    V_13ef! = CVS(MID$(RG_12F8, 248, 4))
+    V_13f3! = CVS(MID$(RG_12F8, 252, 4))
+    V_13f7! = CVS(MID$(RG_12F8, 256, 4))
+    V_13fb! = CVS(MID$(RG_12F8, 260, 4))
+    V_13ff! = CVS(MID$(RG_12F8, 264, 4))
+    V_1403! = CVS(MID$(RG_12F8, 268, 4))
+    V_1407! = CVS(MID$(RG_12F8, 272, 4))
+    V_140b! = CVS(MID$(RG_12F8, 276, 4))
+    V_140f! = CVS(MID$(RG_12F8, 280, 4))
+    V_1413! = CVS(MID$(RG_12F8, 284, 4))
+    V_1417! = CVS(MID$(RG_12F8, 288, 4))
+    V_141b! = CVS(MID$(RG_12F8, 292, 4))
+    V_141f! = CVS(MID$(RG_12F8, 296, 4))
+    V_1423! = CVS(MID$(RG_12F8, 300, 4))
+    V_1427! = CVS(MID$(RG_12F8, 304, 4))
+    V_142b! = CVS(MID$(RG_12F8, 308, 4))
+    V_142f! = CVS(MID$(RG_12F8, 312, 4))
+    V_1433! = CVS(MID$(RG_12F8, 316, 4))
+    V_1437! = CVS(MID$(RG_12F8, 320, 4))
+    V_143b! = CVS(MID$(RG_12F8, 324, 4))
+    V_143f! = CVS(MID$(RG_12F8, 328, 4))
+    V_1443! = CVS(MID$(RG_12F8, 332, 4))
+    V_1447! = CVS(MID$(RG_12F8, 336, 4))
+    V_144b! = CVS(MID$(RG_12F8, 340, 4))
+    V_144f! = CVS(MID$(RG_12F8, 344, 4))
+    V_1453! = CVS(MID$(RG_12F8, 348, 4))
+    V_1457! = CVS(MID$(RG_12F8, 352, 4))
+    V_145b! = CVS(MID$(RG_12F8, 356, 4))
+    V_145f! = CVS(MID$(RG_12F8, 360, 4))
+    V_1463! = CVS(MID$(RG_12F8, 364, 4))
+    V_1467! = CVS(MID$(RG_12F8, 368, 4))
+    V_146b! = CVS(MID$(RG_12F8, 372, 4))
+    V_146f! = CVS(MID$(RG_12F8, 376, 4))
+    V_1473! = CVS(MID$(RG_12F8, 380, 4))
+    V_1477! = CVS(MID$(RG_12F8, 384, 4))
+    V_147b! = CVS(MID$(RG_12F8, 388, 4))
+    V_147f! = CVS(MID$(RG_12F8, 392, 4))
+    V_1483! = CVS(MID$(RG_12F8, 396, 4))
+    V_1487! = CVS(MID$(RG_12F8, 400, 4))
+    V_148b! = CVS(MID$(RG_12F8, 404, 4))
+    V_148f! = CVS(MID$(RG_12F8, 408, 4))
+    V_1493! = CVS(MID$(RG_12F8, 412, 4))
+    V_1497! = CVS(MID$(RG_12F8, 416, 4))
+    V_149b! = CVS(MID$(RG_12F8, 420, 4))
+    V_149f! = CVS(MID$(RG_12F8, 424, 4))
+    V_14a3! = CVS(MID$(RG_12F8, 428, 4))
+    V_14a7! = CVS(MID$(RG_12F8, 432, 4))
+    V_14ab! = CVS(MID$(RG_12F8, 436, 4))
+    V_14af! = CVS(MID$(RG_12F8, 440, 4))
+    V_14b3! = CVS(MID$(RG_12F8, 444, 4))
+    V_14b7! = CVS(MID$(RG_12F8, 448, 4))
+    V_14bb! = CVS(MID$(RG_12F8, 452, 4))
+    V_14bf! = CVS(MID$(RG_12F8, 456, 4))
+    V_14c3! = CVS(MID$(RG_12F8, 460, 4))
+    V_14c7! = CVS(MID$(RG_12F8, 464, 4))
+    V_14cb! = CVS(MID$(RG_12F8, 468, 4))
+    V_14cf! = CVS(MID$(RG_12F8, 472, 4))
+    V_14d3! = CVS(MID$(RG_12F8, 476, 4))
+    V_14d7! = CVS(MID$(RG_12F8, 480, 4))
+    V_14db! = CVS(MID$(RG_12F8, 484, 4))
+    V_14df! = CVS(MID$(RG_12F8, 488, 4))
+    V_14e3! = CVS(MID$(RG_12F8, 492, 4))
+    V_14e7! = CVS(MID$(RG_12F8, 496, 4))
+    V_14eb! = CVS(MID$(RG_12F8, 500, 4))
+    V_14ef! = CVS(MID$(RG_12F8, 504, 4))
+    V_14f3! = CVS(MID$(RG_12F8, 508, 4))
+    V_14f7! = CVS(MID$(RG_12F8, 512, 4))
+    V_14fb! = CVS(MID$(RG_12F8, 516, 4))
+    V_14ff! = CVS(MID$(RG_12F8, 520, 4))
+    V_1503! = CVS(MID$(RG_12F8, 524, 4))
+    V_1507! = CVS(MID$(RG_12F8, 528, 4))
+    V_150b! = CVS(MID$(RG_12F8, 532, 4))
+    V_150f! = CVS(MID$(RG_12F8, 536, 4))
+    V_1513! = CVS(MID$(RG_12F8, 540, 4))
+    V_1517! = CVS(MID$(RG_12F8, 544, 4))
+    V_151b! = CVS(MID$(RG_12F8, 548, 4))
+    V_151f! = CVS(MID$(RG_12F8, 552, 4))
+    V_1523! = CVS(MID$(RG_12F8, 556, 4))
+    V_1527! = CVS(MID$(RG_12F8, 560, 4))
+    V_152b! = CVS(MID$(RG_12F8, 564, 4))
+    V_152f! = CVS(MID$(RG_12F8, 568, 4))
+    V_1533! = CVS(MID$(RG_12F8, 572, 4))
+    V_1537! = CVS(MID$(RG_12F8, 576, 4))
+    V_153b! = CVS(MID$(RG_12F8, 580, 4))
+    V_153f! = CVS(MID$(RG_12F8, 584, 4))
+    V_1543! = CVS(MID$(RG_12F8, 588, 4))
+    V_1547! = CVS(MID$(RG_12F8, 592, 4))
+    V_154b! = CVS(MID$(RG_12F8, 596, 4))
+    V_154f! = CVS(MID$(RG_12F8, 600, 4))
+    V_1553! = CVS(MID$(RG_12F8, 604, 4))
+    V_1557! = CVS(MID$(RG_12F8, 608, 4))
+    V_155b! = CVS(MID$(RG_12F8, 612, 4))
+    V_155f! = CVS(MID$(RG_12F8, 616, 4))
+    V_1563! = CVS(MID$(RG_12F8, 620, 4))
+    V_1567! = CVS(MID$(RG_12F8, 624, 4))
+    V_156b! = CVS(MID$(RG_12F8, 628, 4))
+    V_156f! = CVS(MID$(RG_12F8, 632, 4))
+    V_1573! = CVS(MID$(RG_12F8, 636, 4))
+    V_1577! = CVS(MID$(RG_12F8, 640, 4))
+    V_157b! = CVS(MID$(RG_12F8, 644, 4))
+    V_157f! = CVS(MID$(RG_12F8, 648, 4))
+    V_1583! = CVS(MID$(RG_12F8, 652, 4))
+    V_1587! = CVS(MID$(RG_12F8, 656, 4))
+    V_158b! = CVS(MID$(RG_12F8, 660, 4))
+    V_158f! = CVS(MID$(RG_12F8, 664, 4))
+    V_1593! = CVS(MID$(RG_12F8, 668, 4))
+    V_1597! = CVS(MID$(RG_12F8, 672, 4))
+    V_159b! = CVS(MID$(RG_12F8, 676, 4))
+    V_159f! = CVS(MID$(RG_12F8, 680, 4))
+    V_15a3! = CVS(MID$(RG_12F8, 684, 4))
+    V_15a7! = CVS(MID$(RG_12F8, 688, 4))
+    V_15ab! = CVS(MID$(RG_12F8, 692, 4))
+    V_15af! = CVS(MID$(RG_12F8, 696, 4))
+    V_15b3! = CVS(MID$(RG_12F8, 700, 4))
+    V_15b7! = CVS(MID$(RG_12F8, 704, 4))
+    V_15bb! = CVS(MID$(RG_12F8, 708, 4))
+    V_15bf! = CVS(MID$(RG_12F8, 712, 4))
+    V_15c3! = CVS(MID$(RG_12F8, 716, 4))
+    V_15c7! = CVS(MID$(RG_12F8, 720, 4))
+    V_15cb! = CVS(MID$(RG_12F8, 724, 4))
+    V_15cf! = CVS(MID$(RG_12F8, 728, 4))
+    V_15d3! = CVS(MID$(RG_12F8, 732, 4))
+    V_15d7! = CVS(MID$(RG_12F8, 736, 4))
+    V_15db! = CVS(MID$(RG_12F8, 740, 4))
+    V_15df! = CVS(MID$(RG_12F8, 744, 4))
+    V_15e3! = CVS(MID$(RG_12F8, 748, 4))
+    V_15e7! = CVS(MID$(RG_12F8, 752, 4))
+    V_15eb! = CVS(MID$(RG_12F8, 756, 4))
+    V_15ef! = CVS(MID$(RG_12F8, 760, 4))
+    V_15f3! = CVS(MID$(RG_12F8, 764, 4))
+    V_15f7! = CVS(MID$(RG_12F8, 768, 4))
+    V_15fb! = CVS(MID$(RG_12F8, 772, 4))
+    V_15ff! = CVS(MID$(RG_12F8, 776, 4))
+    V_1603! = CVS(MID$(RG_12F8, 780, 4))
+    V_1607! = CVS(MID$(RG_12F8, 784, 4))
+    V_160b! = CVS(MID$(RG_12F8, 788, 4))
+    V_160f! = CVS(MID$(RG_12F8, 792, 4))
+    V_1613! = CVS(MID$(RG_12F8, 796, 4))
+    V_1617! = CVS(MID$(RG_12F8, 800, 4))
+    V_161b! = CVS(MID$(RG_12F8, 804, 4))
+    V_161f! = CVS(MID$(RG_12F8, 808, 4))
+    V_1623! = CVS(MID$(RG_12F8, 812, 4))
+    V_1627! = CVS(MID$(RG_12F8, 816, 4))
+    V_162b! = CVS(MID$(RG_12F8, 820, 4))
+    V_162f! = CVS(MID$(RG_12F8, 824, 4))
+    V_1633! = CVS(MID$(RG_12F8, 828, 4))
+    V_1637! = CVS(MID$(RG_12F8, 832, 4))
+    V_163b! = CVS(MID$(RG_12F8, 836, 4))
+    V_163f! = CVS(MID$(RG_12F8, 840, 4))
+END SUB
+SUB RT_REG_12F8_GRAVA (f AS INTEGER, r AS LONG)
+    MID$(RG_12F8, 1, 20) = RT_FIX$(V_12f8$, 20)
+    MID$(RG_12F8, 21, 5) = RT_FIX$(V_130c$, 5)
+    MID$(RG_12F8, 26, 2) = MKI$(V_1311%)
+    MID$(RG_12F8, 28, 2) = MKI$(V_1313%)
+    MID$(RG_12F8, 30, 2) = MKI$(V_1315%)
+    MID$(RG_12F8, 32, 2) = MKI$(V_1317%)
+    MID$(RG_12F8, 34, 2) = MKI$(V_1319%)
+    MID$(RG_12F8, 36, 2) = MKI$(V_131b%)
+    MID$(RG_12F8, 38, 2) = MKI$(V_131d%)
+    MID$(RG_12F8, 40, 4) = MKS$(V_131f!)
+    MID$(RG_12F8, 44, 4) = MKS$(V_1323!)
+    MID$(RG_12F8, 48, 2) = MKI$(V_1327%)
+    MID$(RG_12F8, 50, 2) = MKI$(V_1329%)
+    MID$(RG_12F8, 52, 4) = MKS$(V_132b!)
+    MID$(RG_12F8, 56, 4) = MKS$(V_132f!)
+    MID$(RG_12F8, 60, 2) = MKI$(V_1333%)
+    MID$(RG_12F8, 62, 2) = MKI$(V_1335%)
+    MID$(RG_12F8, 64, 4) = MKS$(V_1337!)
+    MID$(RG_12F8, 68, 4) = MKS$(V_133b!)
+    MID$(RG_12F8, 72, 2) = MKI$(V_133f%)
+    MID$(RG_12F8, 74, 2) = MKI$(V_1341%)
+    MID$(RG_12F8, 76, 4) = MKS$(V_1343!)
+    MID$(RG_12F8, 80, 4) = MKS$(V_1347!)
+    MID$(RG_12F8, 84, 2) = MKI$(V_134b%)
+    MID$(RG_12F8, 86, 2) = MKI$(V_134d%)
+    MID$(RG_12F8, 88, 4) = MKS$(V_134f!)
+    MID$(RG_12F8, 92, 4) = MKS$(V_1353!)
+    MID$(RG_12F8, 96, 2) = MKI$(V_1357%)
+    MID$(RG_12F8, 98, 2) = MKI$(V_1359%)
+    MID$(RG_12F8, 100, 4) = MKS$(V_135b!)
+    MID$(RG_12F8, 104, 4) = MKS$(V_135f!)
+    MID$(RG_12F8, 108, 2) = MKI$(V_1363%)
+    MID$(RG_12F8, 110, 2) = MKI$(V_1365%)
+    MID$(RG_12F8, 112, 4) = MKS$(V_1367!)
+    MID$(RG_12F8, 116, 4) = MKS$(V_136b!)
+    MID$(RG_12F8, 120, 2) = MKI$(V_136f%)
+    MID$(RG_12F8, 122, 2) = MKI$(V_1371%)
+    MID$(RG_12F8, 124, 4) = MKS$(V_1373!)
+    MID$(RG_12F8, 128, 4) = MKS$(V_1377!)
+    MID$(RG_12F8, 132, 2) = MKI$(V_137b%)
+    MID$(RG_12F8, 134, 2) = MKI$(V_137d%)
+    MID$(RG_12F8, 136, 4) = MKS$(V_137f!)
+    MID$(RG_12F8, 140, 4) = MKS$(V_1383!)
+    MID$(RG_12F8, 144, 2) = MKI$(V_1387%)
+    MID$(RG_12F8, 146, 2) = MKI$(V_1389%)
+    MID$(RG_12F8, 148, 4) = MKS$(V_138b!)
+    MID$(RG_12F8, 152, 4) = MKS$(V_138f!)
+    MID$(RG_12F8, 156, 2) = MKI$(V_1393%)
+    MID$(RG_12F8, 158, 2) = MKI$(V_1395%)
+    MID$(RG_12F8, 160, 4) = MKS$(V_1397!)
+    MID$(RG_12F8, 164, 4) = MKS$(V_139b!)
+    MID$(RG_12F8, 168, 2) = MKI$(V_139f%)
+    MID$(RG_12F8, 170, 2) = MKI$(V_13a1%)
+    MID$(RG_12F8, 172, 4) = MKS$(V_13a3!)
+    MID$(RG_12F8, 176, 4) = MKS$(V_13a7!)
+    MID$(RG_12F8, 180, 2) = MKI$(V_13ab%)
+    MID$(RG_12F8, 182, 2) = MKI$(V_13ad%)
+    MID$(RG_12F8, 184, 4) = MKS$(V_13af!)
+    MID$(RG_12F8, 188, 4) = MKS$(V_13b3!)
+    MID$(RG_12F8, 192, 2) = MKI$(V_13b7%)
+    MID$(RG_12F8, 194, 2) = MKI$(V_13b9%)
+    MID$(RG_12F8, 196, 4) = MKS$(V_13bb!)
+    MID$(RG_12F8, 200, 4) = MKS$(V_13bf!)
+    MID$(RG_12F8, 216, 4) = MKS$(V_13cf!)
+    MID$(RG_12F8, 220, 4) = MKS$(V_13d3!)
+    MID$(RG_12F8, 224, 4) = MKS$(V_13d7!)
+    MID$(RG_12F8, 228, 4) = MKS$(V_13db!)
+    MID$(RG_12F8, 232, 4) = MKS$(V_13df!)
+    MID$(RG_12F8, 236, 4) = MKS$(V_13e3!)
+    MID$(RG_12F8, 240, 4) = MKS$(V_13e7!)
+    MID$(RG_12F8, 244, 4) = MKS$(V_13eb!)
+    MID$(RG_12F8, 248, 4) = MKS$(V_13ef!)
+    MID$(RG_12F8, 252, 4) = MKS$(V_13f3!)
+    MID$(RG_12F8, 256, 4) = MKS$(V_13f7!)
+    MID$(RG_12F8, 260, 4) = MKS$(V_13fb!)
+    MID$(RG_12F8, 264, 4) = MKS$(V_13ff!)
+    MID$(RG_12F8, 268, 4) = MKS$(V_1403!)
+    MID$(RG_12F8, 272, 4) = MKS$(V_1407!)
+    MID$(RG_12F8, 276, 4) = MKS$(V_140b!)
+    MID$(RG_12F8, 280, 4) = MKS$(V_140f!)
+    MID$(RG_12F8, 284, 4) = MKS$(V_1413!)
+    MID$(RG_12F8, 288, 4) = MKS$(V_1417!)
+    MID$(RG_12F8, 292, 4) = MKS$(V_141b!)
+    MID$(RG_12F8, 296, 4) = MKS$(V_141f!)
+    MID$(RG_12F8, 300, 4) = MKS$(V_1423!)
+    MID$(RG_12F8, 304, 4) = MKS$(V_1427!)
+    MID$(RG_12F8, 308, 4) = MKS$(V_142b!)
+    MID$(RG_12F8, 312, 4) = MKS$(V_142f!)
+    MID$(RG_12F8, 316, 4) = MKS$(V_1433!)
+    MID$(RG_12F8, 320, 4) = MKS$(V_1437!)
+    MID$(RG_12F8, 324, 4) = MKS$(V_143b!)
+    MID$(RG_12F8, 328, 4) = MKS$(V_143f!)
+    MID$(RG_12F8, 332, 4) = MKS$(V_1443!)
+    MID$(RG_12F8, 336, 4) = MKS$(V_1447!)
+    MID$(RG_12F8, 340, 4) = MKS$(V_144b!)
+    MID$(RG_12F8, 344, 4) = MKS$(V_144f!)
+    MID$(RG_12F8, 348, 4) = MKS$(V_1453!)
+    MID$(RG_12F8, 352, 4) = MKS$(V_1457!)
+    MID$(RG_12F8, 356, 4) = MKS$(V_145b!)
+    MID$(RG_12F8, 360, 4) = MKS$(V_145f!)
+    MID$(RG_12F8, 364, 4) = MKS$(V_1463!)
+    MID$(RG_12F8, 368, 4) = MKS$(V_1467!)
+    MID$(RG_12F8, 372, 4) = MKS$(V_146b!)
+    MID$(RG_12F8, 376, 4) = MKS$(V_146f!)
+    MID$(RG_12F8, 380, 4) = MKS$(V_1473!)
+    MID$(RG_12F8, 384, 4) = MKS$(V_1477!)
+    MID$(RG_12F8, 388, 4) = MKS$(V_147b!)
+    MID$(RG_12F8, 392, 4) = MKS$(V_147f!)
+    MID$(RG_12F8, 396, 4) = MKS$(V_1483!)
+    MID$(RG_12F8, 400, 4) = MKS$(V_1487!)
+    MID$(RG_12F8, 404, 4) = MKS$(V_148b!)
+    MID$(RG_12F8, 408, 4) = MKS$(V_148f!)
+    MID$(RG_12F8, 412, 4) = MKS$(V_1493!)
+    MID$(RG_12F8, 416, 4) = MKS$(V_1497!)
+    MID$(RG_12F8, 420, 4) = MKS$(V_149b!)
+    MID$(RG_12F8, 424, 4) = MKS$(V_149f!)
+    MID$(RG_12F8, 428, 4) = MKS$(V_14a3!)
+    MID$(RG_12F8, 432, 4) = MKS$(V_14a7!)
+    MID$(RG_12F8, 436, 4) = MKS$(V_14ab!)
+    MID$(RG_12F8, 440, 4) = MKS$(V_14af!)
+    MID$(RG_12F8, 444, 4) = MKS$(V_14b3!)
+    MID$(RG_12F8, 448, 4) = MKS$(V_14b7!)
+    MID$(RG_12F8, 452, 4) = MKS$(V_14bb!)
+    MID$(RG_12F8, 456, 4) = MKS$(V_14bf!)
+    MID$(RG_12F8, 460, 4) = MKS$(V_14c3!)
+    MID$(RG_12F8, 464, 4) = MKS$(V_14c7!)
+    MID$(RG_12F8, 468, 4) = MKS$(V_14cb!)
+    MID$(RG_12F8, 472, 4) = MKS$(V_14cf!)
+    MID$(RG_12F8, 476, 4) = MKS$(V_14d3!)
+    MID$(RG_12F8, 480, 4) = MKS$(V_14d7!)
+    MID$(RG_12F8, 484, 4) = MKS$(V_14db!)
+    MID$(RG_12F8, 488, 4) = MKS$(V_14df!)
+    MID$(RG_12F8, 492, 4) = MKS$(V_14e3!)
+    MID$(RG_12F8, 496, 4) = MKS$(V_14e7!)
+    MID$(RG_12F8, 500, 4) = MKS$(V_14eb!)
+    MID$(RG_12F8, 504, 4) = MKS$(V_14ef!)
+    MID$(RG_12F8, 508, 4) = MKS$(V_14f3!)
+    MID$(RG_12F8, 512, 4) = MKS$(V_14f7!)
+    MID$(RG_12F8, 516, 4) = MKS$(V_14fb!)
+    MID$(RG_12F8, 520, 4) = MKS$(V_14ff!)
+    MID$(RG_12F8, 524, 4) = MKS$(V_1503!)
+    MID$(RG_12F8, 528, 4) = MKS$(V_1507!)
+    MID$(RG_12F8, 532, 4) = MKS$(V_150b!)
+    MID$(RG_12F8, 536, 4) = MKS$(V_150f!)
+    MID$(RG_12F8, 540, 4) = MKS$(V_1513!)
+    MID$(RG_12F8, 544, 4) = MKS$(V_1517!)
+    MID$(RG_12F8, 548, 4) = MKS$(V_151b!)
+    MID$(RG_12F8, 552, 4) = MKS$(V_151f!)
+    MID$(RG_12F8, 556, 4) = MKS$(V_1523!)
+    MID$(RG_12F8, 560, 4) = MKS$(V_1527!)
+    MID$(RG_12F8, 564, 4) = MKS$(V_152b!)
+    MID$(RG_12F8, 568, 4) = MKS$(V_152f!)
+    MID$(RG_12F8, 572, 4) = MKS$(V_1533!)
+    MID$(RG_12F8, 576, 4) = MKS$(V_1537!)
+    MID$(RG_12F8, 580, 4) = MKS$(V_153b!)
+    MID$(RG_12F8, 584, 4) = MKS$(V_153f!)
+    MID$(RG_12F8, 588, 4) = MKS$(V_1543!)
+    MID$(RG_12F8, 592, 4) = MKS$(V_1547!)
+    MID$(RG_12F8, 596, 4) = MKS$(V_154b!)
+    MID$(RG_12F8, 600, 4) = MKS$(V_154f!)
+    MID$(RG_12F8, 604, 4) = MKS$(V_1553!)
+    MID$(RG_12F8, 608, 4) = MKS$(V_1557!)
+    MID$(RG_12F8, 612, 4) = MKS$(V_155b!)
+    MID$(RG_12F8, 616, 4) = MKS$(V_155f!)
+    MID$(RG_12F8, 620, 4) = MKS$(V_1563!)
+    MID$(RG_12F8, 624, 4) = MKS$(V_1567!)
+    MID$(RG_12F8, 628, 4) = MKS$(V_156b!)
+    MID$(RG_12F8, 632, 4) = MKS$(V_156f!)
+    MID$(RG_12F8, 636, 4) = MKS$(V_1573!)
+    MID$(RG_12F8, 640, 4) = MKS$(V_1577!)
+    MID$(RG_12F8, 644, 4) = MKS$(V_157b!)
+    MID$(RG_12F8, 648, 4) = MKS$(V_157f!)
+    MID$(RG_12F8, 652, 4) = MKS$(V_1583!)
+    MID$(RG_12F8, 656, 4) = MKS$(V_1587!)
+    MID$(RG_12F8, 660, 4) = MKS$(V_158b!)
+    MID$(RG_12F8, 664, 4) = MKS$(V_158f!)
+    MID$(RG_12F8, 668, 4) = MKS$(V_1593!)
+    MID$(RG_12F8, 672, 4) = MKS$(V_1597!)
+    MID$(RG_12F8, 676, 4) = MKS$(V_159b!)
+    MID$(RG_12F8, 680, 4) = MKS$(V_159f!)
+    MID$(RG_12F8, 684, 4) = MKS$(V_15a3!)
+    MID$(RG_12F8, 688, 4) = MKS$(V_15a7!)
+    MID$(RG_12F8, 692, 4) = MKS$(V_15ab!)
+    MID$(RG_12F8, 696, 4) = MKS$(V_15af!)
+    MID$(RG_12F8, 700, 4) = MKS$(V_15b3!)
+    MID$(RG_12F8, 704, 4) = MKS$(V_15b7!)
+    MID$(RG_12F8, 708, 4) = MKS$(V_15bb!)
+    MID$(RG_12F8, 712, 4) = MKS$(V_15bf!)
+    MID$(RG_12F8, 716, 4) = MKS$(V_15c3!)
+    MID$(RG_12F8, 720, 4) = MKS$(V_15c7!)
+    MID$(RG_12F8, 724, 4) = MKS$(V_15cb!)
+    MID$(RG_12F8, 728, 4) = MKS$(V_15cf!)
+    MID$(RG_12F8, 732, 4) = MKS$(V_15d3!)
+    MID$(RG_12F8, 736, 4) = MKS$(V_15d7!)
+    MID$(RG_12F8, 740, 4) = MKS$(V_15db!)
+    MID$(RG_12F8, 744, 4) = MKS$(V_15df!)
+    MID$(RG_12F8, 748, 4) = MKS$(V_15e3!)
+    MID$(RG_12F8, 752, 4) = MKS$(V_15e7!)
+    MID$(RG_12F8, 756, 4) = MKS$(V_15eb!)
+    MID$(RG_12F8, 760, 4) = MKS$(V_15ef!)
+    MID$(RG_12F8, 764, 4) = MKS$(V_15f3!)
+    MID$(RG_12F8, 768, 4) = MKS$(V_15f7!)
+    MID$(RG_12F8, 772, 4) = MKS$(V_15fb!)
+    MID$(RG_12F8, 776, 4) = MKS$(V_15ff!)
+    MID$(RG_12F8, 780, 4) = MKS$(V_1603!)
+    MID$(RG_12F8, 784, 4) = MKS$(V_1607!)
+    MID$(RG_12F8, 788, 4) = MKS$(V_160b!)
+    MID$(RG_12F8, 792, 4) = MKS$(V_160f!)
+    MID$(RG_12F8, 796, 4) = MKS$(V_1613!)
+    MID$(RG_12F8, 800, 4) = MKS$(V_1617!)
+    MID$(RG_12F8, 804, 4) = MKS$(V_161b!)
+    MID$(RG_12F8, 808, 4) = MKS$(V_161f!)
+    MID$(RG_12F8, 812, 4) = MKS$(V_1623!)
+    MID$(RG_12F8, 816, 4) = MKS$(V_1627!)
+    MID$(RG_12F8, 820, 4) = MKS$(V_162b!)
+    MID$(RG_12F8, 824, 4) = MKS$(V_162f!)
+    MID$(RG_12F8, 828, 4) = MKS$(V_1633!)
+    MID$(RG_12F8, 832, 4) = MKS$(V_1637!)
+    MID$(RG_12F8, 836, 4) = MKS$(V_163b!)
+    MID$(RG_12F8, 840, 4) = MKS$(V_163f!)
+    PUT #f, r, RG_12F8
+END SUB
+
+' Rotina em assembly do EXE em 0x70f20 (chamada por CALL SUB_70f20 no lift).
+' Versao A; DS do original: inicio DS:515A, CR LF DS:5154, fim DS:5157, margem em [DS:544B], ESC L em [DS:5152].
+SUB RT_ROTINA_0F20
+    SELECT CASE RT_MODO
+        CASE 9
+            RT_COPIA_TELA "A", 640, 344, 0, "               ", CHR$(27) + "L" + CHR$(128) + CHR$(2), CHR$(27) + "3" + CHR$(24), CHR$(13) + CHR$(10), CHR$(27) + "2"
+        CASE 3
+            RT_COPIA_TELA "A", 720, 344, 0, "        ", CHR$(27) + "L" + CHR$(208) + CHR$(2), CHR$(27) + "3" + CHR$(24), CHR$(13) + CHR$(10), CHR$(27) + "2"
+        CASE ELSE
+            RT_COPIA_TELA "A", 640, 200, 0, "               ", CHR$(27) + "L" + CHR$(128) + CHR$(2), CHR$(27) + "3" + CHR$(24), CHR$(13) + CHR$(10), CHR$(27) + "2"
+    END SELECT
+END SUB
+
+' Rotina em assembly do EXE em 0x7109c (chamada por CALL SUB_7109c no lift).
+' Versao B; DS do original: inicio DS:546E, CR LF DS:5468, fim DS:546B, margem em [DS:55F6], ESC L em [DS:5466].
+SUB RT_ROTINA_109C
+    SELECT CASE RT_MODO
+        CASE 9
+            RT_COPIA_TELA "B", 640, 344, 0, "            ", CHR$(27) + "KX" + CHR$(1), CHR$(27) + "3" + CHR$(24), CHR$(13) + CHR$(10), CHR$(27) + "2"
+        CASE 3
+            RT_COPIA_TELA "B", 720, 344, 0, "            ", CHR$(27) + "KX" + CHR$(1), CHR$(27) + "3" + CHR$(24), CHR$(13) + CHR$(10), CHR$(27) + "2"
+        CASE ELSE
+            RT_COPIA_TELA "B", 640, 200, 0, "                    ", CHR$(27) + "K" + CHR$(200) + CHR$(0), CHR$(27) + "3" + CHR$(24), CHR$(13) + CHR$(10), CHR$(27) + "2"
+    END SELECT
+END SUB
+
+' Volta o ON ERROR do modulo principal depois de uma SUB do MIXT que ligou o dela:
+' no QB4.5 cada modulo tem o seu tratador; no QB64 ha um so (ver RETRADUCAO.md).
+' CLEAR do original: zera as variaveis deste programa (as do COMMON: RT_COMMON_LIMPA).
+SUB RT_PROG_LIMPA
+    ERASE ST_19a0!
+    ERASE ST_19e0!
+    ERASE ST_1a1c!
+    ERASE ST_1a54!
+    ERASE ST_1a8c!
+    ERASE ST_1b00!
+    ERASE ST_1b28!
+    ERASE ST_1b50!
+    ERASE ST_1b78!
+    REDIM A_0e26!(-32768 TO -32768)
+    REDIM A_0e54!(-32768 TO -32768)
+    REDIM A_0e82!(-32768 TO -32768)
+    REDIM A_0eb0!(-32768 TO -32768)
+    REDIM A_0ede!(-32768 TO -32768)
+    REDIM A_0f0c%(-32768 TO -32768)
+    REDIM A_0f3a%(-32768 TO -32768)
+    REDIM A_0f68!(-32768 TO -32768)
+    REDIM A_0f96!(-32768 TO -32768)
+    REDIM A_0fc4!(-32768 TO -32768)
+    REDIM A_0ff2!(-32768 TO -32768)
+    REDIM A_1020!(-32768 TO -32768, -32768 TO -32768)
+    REDIM A_1052%(-32768 TO -32768, -32768 TO -32768)
+    REDIM A_1086$(-32768 TO -32768)
+    REDIM A_10b4%(-32768 TO -32768, -32768 TO -32768)
+    REDIM A_10e2%(-32768 TO -32768, -32768 TO -32768)
+    REDIM A_1110%(-32768 TO -32768, -32768 TO -32768)
+    REDIM A_113e!(-32768 TO -32768, -32768 TO -32768)
+    REDIM A_116c!(-32768 TO -32768, -32768 TO -32768)
+    REDIM A_119a!(-32768 TO -32768, -32768 TO -32768)
+    REDIM A_11c8!(-32768 TO -32768, -32768 TO -32768)
+    REDIM A_11f6!(-32768 TO -32768, -32768 TO -32768)
+    REDIM A_1224!(-32768 TO -32768, -32768 TO -32768)
+    REDIM A_1252!(-32768 TO -32768, -32768 TO -32768)
+    REDIM A_1280!(-32768 TO -32768, -32768 TO -32768)
+    REDIM A_16be%(-32768 TO -32768)
+    REDIM A_16d0$(-32768 TO -32768)
+    REDIM A_16e2$(-32768 TO -32768)
+    REDIM A_1718!(-32768 TO -32768)
+    REDIM A_172a!(-32768 TO -32768)
+    REDIM A_18b0!(-32768 TO -32768)
+    REDIM A_18c2!(-32768 TO -32768)
+    REDIM A_18d4!(-32768 TO -32768)
+    REDIM A_18e6!(-32768 TO -32768, -32768 TO -32768)
+    REDIM A_18fc!(-32768 TO -32768)
+    REDIM A_190e!(-32768 TO -32768, -32768 TO -32768)
+    REDIM A_1924!(-32768 TO -32768)
+    REDIM A_1936!(-32768 TO -32768)
+    REDIM A_1948!(-32768 TO -32768)
+    REDIM A_195a!(-32768 TO -32768)
+    REDIM A_196c!(-32768 TO -32768, -32768 TO -32768)
+    REDIM A_1982!(-32768 TO -32768, -32768 TO -32768)
+    V_0dc0! = 0
+    V_0dc4! = 0
+    V_0dc8! = 0
+    V_0dcc$ = ""
+    V_0dd0$ = ""
+    V_0dd4$ = ""
+    V_0dd8$ = ""
+    V_0ddc$ = ""
+    V_0de0! = 0
+    V_0de4! = 0
+    V_0de8$ = ""
+    V_0dec$ = ""
+    V_0df0$ = ""
+    V_0df4$ = ""
+    V_0df8$ = ""
+    V_0dfc$ = ""
+    V_0e00$ = ""
+    V_0e04$ = ""
+    V_0e08% = 0
+    V_0e0a% = 0
+    V_0e0c% = 0
+    V_0e0e% = 0
+    V_0e10% = 0
+    V_0e12% = 0
+    V_0e14! = 0
+    V_0e18! = 0
+    V_0e1c! = 0
+    V_0e20% = 0
+    V_0e22% = 0
+    V_0e24% = 0
+    V_104e! = 0
+    V_1080! = 0
+    V_1084% = 0
+    V_12ae$ = ""
+    V_12b2$ = ""
+    V_12b6$ = ""
+    V_12ba$ = ""
+    V_12c2$ = ""
+    V_12c6$ = ""
+    V_12ca$ = ""
+    V_12ce$ = ""
+    V_12d2% = 0
+    V_12d4$ = ""
+    V_12d8$ = ""
+    V_12dc$ = ""
+    V_12e0$ = ""
+    V_12e4$ = ""
+    V_12e8$ = ""
+    V_12ec! = 0
+    V_12f0$ = ""
+    V_12f4$ = ""
+    V_12f8$ = ""
+    V_130c$ = ""
+    V_1311% = 0
+    V_1313% = 0
+    V_1315% = 0
+    V_1317% = 0
+    V_1319% = 0
+    V_131b% = 0
+    V_131d% = 0
+    V_131f! = 0
+    V_1323! = 0
+    V_1327% = 0
+    V_1329% = 0
+    V_132b! = 0
+    V_132f! = 0
+    V_1333% = 0
+    V_1335% = 0
+    V_1337! = 0
+    V_133b! = 0
+    V_133f% = 0
+    V_1341% = 0
+    V_1343! = 0
+    V_1347! = 0
+    V_134b% = 0
+    V_134d% = 0
+    V_134f! = 0
+    V_1353! = 0
+    V_1357% = 0
+    V_1359% = 0
+    V_135b! = 0
+    V_135f! = 0
+    V_1363% = 0
+    V_1365% = 0
+    V_1367! = 0
+    V_136b! = 0
+    V_136f% = 0
+    V_1371% = 0
+    V_1373! = 0
+    V_1377! = 0
+    V_137b% = 0
+    V_137d% = 0
+    V_137f! = 0
+    V_1383! = 0
+    V_1387% = 0
+    V_1389% = 0
+    V_138b! = 0
+    V_138f! = 0
+    V_1393% = 0
+    V_1395% = 0
+    V_1397! = 0
+    V_139b! = 0
+    V_139f% = 0
+    V_13a1% = 0
+    V_13a3! = 0
+    V_13a7! = 0
+    V_13ab% = 0
+    V_13ad% = 0
+    V_13af! = 0
+    V_13b3! = 0
+    V_13b7% = 0
+    V_13b9% = 0
+    V_13bb! = 0
+    V_13bf! = 0
+    V_13cf! = 0
+    V_13d3! = 0
+    V_13d7! = 0
+    V_13db! = 0
+    V_13df! = 0
+    V_13e3! = 0
+    V_13e7! = 0
+    V_13eb! = 0
+    V_13ef! = 0
+    V_13f3! = 0
+    V_13f7! = 0
+    V_13fb! = 0
+    V_13ff! = 0
+    V_1403! = 0
+    V_1407! = 0
+    V_140b! = 0
+    V_140f! = 0
+    V_1413! = 0
+    V_1417! = 0
+    V_141b! = 0
+    V_141f! = 0
+    V_1423! = 0
+    V_1427! = 0
+    V_142b! = 0
+    V_142f! = 0
+    V_1433! = 0
+    V_1437! = 0
+    V_143b! = 0
+    V_143f! = 0
+    V_1443! = 0
+    V_1447! = 0
+    V_144b! = 0
+    V_144f! = 0
+    V_1453! = 0
+    V_1457! = 0
+    V_145b! = 0
+    V_145f! = 0
+    V_1463! = 0
+    V_1467! = 0
+    V_146b! = 0
+    V_146f! = 0
+    V_1473! = 0
+    V_1477! = 0
+    V_147b! = 0
+    V_147f! = 0
+    V_1483! = 0
+    V_1487! = 0
+    V_148b! = 0
+    V_148f! = 0
+    V_1493! = 0
+    V_1497! = 0
+    V_149b! = 0
+    V_149f! = 0
+    V_14a3! = 0
+    V_14a7! = 0
+    V_14ab! = 0
+    V_14af! = 0
+    V_14b3! = 0
+    V_14b7! = 0
+    V_14bb! = 0
+    V_14bf! = 0
+    V_14c3! = 0
+    V_14c7! = 0
+    V_14cb! = 0
+    V_14cf! = 0
+    V_14d3! = 0
+    V_14d7! = 0
+    V_14db! = 0
+    V_14df! = 0
+    V_14e3! = 0
+    V_14e7! = 0
+    V_14eb! = 0
+    V_14ef! = 0
+    V_14f3! = 0
+    V_14f7! = 0
+    V_14fb! = 0
+    V_14ff! = 0
+    V_1503! = 0
+    V_1507! = 0
+    V_150b! = 0
+    V_150f! = 0
+    V_1513! = 0
+    V_1517! = 0
+    V_151b! = 0
+    V_151f! = 0
+    V_1523! = 0
+    V_1527! = 0
+    V_152b! = 0
+    V_152f! = 0
+    V_1533! = 0
+    V_1537! = 0
+    V_153b! = 0
+    V_153f! = 0
+    V_1543! = 0
+    V_1547! = 0
+    V_154b! = 0
+    V_154f! = 0
+    V_1553! = 0
+    V_1557! = 0
+    V_155b! = 0
+    V_155f! = 0
+    V_1563! = 0
+    V_1567! = 0
+    V_156b! = 0
+    V_156f! = 0
+    V_1573! = 0
+    V_1577! = 0
+    V_157b! = 0
+    V_157f! = 0
+    V_1583! = 0
+    V_1587! = 0
+    V_158b! = 0
+    V_158f! = 0
+    V_1593! = 0
+    V_1597! = 0
+    V_159b! = 0
+    V_159f! = 0
+    V_15a3! = 0
+    V_15a7! = 0
+    V_15ab! = 0
+    V_15af! = 0
+    V_15b3! = 0
+    V_15b7! = 0
+    V_15bb! = 0
+    V_15bf! = 0
+    V_15c3! = 0
+    V_15c7! = 0
+    V_15cb! = 0
+    V_15cf! = 0
+    V_15d3! = 0
+    V_15d7! = 0
+    V_15db! = 0
+    V_15df! = 0
+    V_15e3! = 0
+    V_15e7! = 0
+    V_15eb! = 0
+    V_15ef! = 0
+    V_15f3! = 0
+    V_15f7! = 0
+    V_15fb! = 0
+    V_15ff! = 0
+    V_1603! = 0
+    V_1607! = 0
+    V_160b! = 0
+    V_160f! = 0
+    V_1613! = 0
+    V_1617! = 0
+    V_161b! = 0
+    V_161f! = 0
+    V_1623! = 0
+    V_1627! = 0
+    V_162b! = 0
+    V_162f! = 0
+    V_1633! = 0
+    V_1637! = 0
+    V_163b! = 0
+    V_163f! = 0
+    V_1656$ = ""
+    V_165a$ = ""
+    V_165e$ = ""
+    V_166a! = 0
+    V_166e! = 0
+    V_1672! = 0
+    V_1676! = 0
+    V_167a! = 0
+    V_167e! = 0
+    V_1682! = 0
+    V_1686! = 0
+    V_168a! = 0
+    V_169e! = 0
+    V_16a6! = 0
+    V_16aa! = 0
+    V_16ae! = 0
+    V_16b2! = 0
+    V_16b6% = 0
+    V_16ba% = 0
+    V_16bc% = 0
+    V_16f4! = 0
+    V_16f8! = 0
+    V_16fc! = 0
+    V_1700! = 0
+    V_1704! = 0
+    V_1708! = 0
+    V_170c! = 0
+    V_1710! = 0
+    V_1714! = 0
+    V_173c! = 0
+    V_1740! = 0
+    V_1744! = 0
+    V_1748$ = ""
+    V_174c! = 0
+    V_1750! = 0
+    V_1754! = 0
+    V_1758! = 0
+    V_175c! = 0
+    V_1760! = 0
+    V_1764! = 0
+    V_1768! = 0
+    V_176c$ = ""
+    V_1770! = 0
+    V_1774% = 0
+    V_1776! = 0
+    V_177a! = 0
+    V_177e! = 0
+    V_1782! = 0
+    V_1786! = 0
+    V_178a! = 0
+    V_178e! = 0
+    V_1792! = 0
+    V_1796! = 0
+    V_179a! = 0
+    V_179e! = 0
+    V_17a2! = 0
+    V_17a6! = 0
+    V_17aa! = 0
+    V_17ae! = 0
+    V_17b2! = 0
+    V_17b6! = 0
+    V_17ba! = 0
+    V_17be! = 0
+    V_17c2! = 0
+    V_17c6! = 0
+    V_17ca! = 0
+    V_17ce! = 0
+    V_17d2! = 0
+    V_17d6! = 0
+    V_17da! = 0
+    V_17de! = 0
+    V_17e2! = 0
+    V_17e6! = 0
+    V_17ea! = 0
+    V_17ee! = 0
+    V_17f2! = 0
+    V_17f6! = 0
+    V_17fa! = 0
+    V_17fe! = 0
+    V_1802! = 0
+    V_180c% = 0
+    V_180e% = 0
+    V_1810% = 0
+    V_1812% = 0
+    V_1814! = 0
+    V_1818! = 0
+    V_181c! = 0
+    V_1820! = 0
+    V_1824! = 0
+    V_1828! = 0
+    V_1832! = 0
+    V_1836! = 0
+    V_183a! = 0
+    V_183e! = 0
+    V_1842! = 0
+    V_1846! = 0
+    V_184a! = 0
+    V_185a! = 0
+    V_1862! = 0
+    V_1866$ = ""
+    V_186a! = 0
+    V_186e! = 0
+    V_1872! = 0
+    V_1876! = 0
+    V_187a! = 0
+    V_187e! = 0
+    V_1882! = 0
+    V_1886! = 0
+    V_188a! = 0
+    V_188e! = 0
+    V_1892! = 0
+    V_1896! = 0
+    V_189a! = 0
+    V_189e! = 0
+    V_18a2! = 0
+    V_18a6! = 0
+    V_1998! = 0
+    V_199c! = 0
+    V_1afc! = 0
+    V_1bf0! = 0
+    V_1bf4! = 0
+    V_1bf8! = 0
+    V_1bfc! = 0
+    V_1c00! = 0
+    V_1c04! = 0
+    V_1c08! = 0
+    V_1c0c! = 0
+    V_1c10! = 0
+    V_1c14% = 0
+    V_1c16% = 0
+    V_1c18! = 0
+    V_1c1c% = 0
+    V_1c1e% = 0
+    V_1c20% = 0
+    V_1c22% = 0
+    V_1c24% = 0
+    V_1c26% = 0
+    V_1c28% = 0
+    V_1c2a% = 0
+    V_1c2c% = 0
+    V_1c2e% = 0
+    V_1c30! = 0
+    V_1c34% = 0
+    V_1c36% = 0
+    V_1c38% = 0
+    V_1c3a% = 0
+    V_1c3c% = 0
+    V_1c3e% = 0
+    V_1c40% = 0
+    V_1c42% = 0
+    V_1c44% = 0
+    V_1c46! = 0
+    V_1c4a% = 0
+    V_1c4c% = 0
+    V_1c4e% = 0
+    V_1c50% = 0
+    V_1c52% = 0
+    V_1c54! = 0
+    V_1c58% = 0
+    V_1c5a% = 0
+    V_1c5c% = 0
+    V_1c5e! = 0
+    V_1c62! = 0
+    V_1c66! = 0
+    V_1c6a! = 0
+    V_1d70$ = ""
+END SUB
+
+' ON KEY dentro de SUB: -1 = o tratador i volta com RETURN simples e roda aqui; 0 = sai da SUB.
+FUNCTION RT_ONKEY_FICA% (i AS INTEGER)
+    SELECT CASE i
+        CASE 1   ' L_11407: BEEP; GOSUB L_11161; RETURN
+            BEEP
+            RT_ONKEY_FICA% = -1
+        CASE 2   ' L_11432: sai da SUB (RT_SCREEN 0; RT_VIEWPRINT 1, 25; COLOR 7, 0, 0; RT_CLS 0; PRINT " Aguarde ..."; )
+        CASE 3   ' L_1154c: sai da SUB (BEEP; GOSUB L_11161; RETURN L_118ec)
+    END SELECT
+END FUNCTION
+
+SUB RT_REARMA_ERRO
+    RT_ERRO_MIXT = 0
+    SELECT CASE RT_ONERR
+        CASE &H10f56: ON ERROR GOTO L_10f56
+        CASE &H10fc1: ON ERROR GOTO L_10fc1
+        CASE &H11121: ON ERROR GOTO L_11121
+        CASE &H114fc: ON ERROR GOTO L_114fc
+        CASE &H1aa9d: ON ERROR GOTO L_1aa9d
+        CASE &H1acf8: ON ERROR GOTO L_1acf8
+        CASE &H300fd: ON ERROR GOTO L_300fd
+        CASE ELSE: ON ERROR GOTO RT_ERRO_FATAL
+    END SELECT
+END SUB
+
+SUB S_201eb   ' entrada de SUB/FUNCTION (B$ENRA, locais 154 bytes) (0x201eb)
+    DIM L_BP0e!
+    DIM L_BP12!
+    DIM L_BP16!
+    DIM L_BP1a!
+    DIM L_BP1e!
+    DIM L_BP22!
+    DIM L_BP26!
+    DIM L_BP2a!
+    DIM L_BP2e!
+    DIM L_BP32!
+    DIM L_BP36!
+    DIM L_BP3a$
+    DIM L_BP3e!
+    DIM L_BP42!
+    DIM L_BP46!
+    DIM L_BP4a!
+    DIM L_BP4e!
+    DIM L_BP52!
+    DIM L_BP56!
+    DIM L_BP5a!
+    DIM L_BP5c%
+    DIM L_BP60!
+    DIM L_BP64!
+    DIM L_BP66%
+    DIM L_BP6a!
+    DIM L_BP6e!
+    DIM L_BP72!
+    DIM L_BP74%
+    DIM L_BP78!
+    DIM L_BP7c!
+    DIM L_BP80!
+    DIM L_BP82%
+    DIM L_BP84%
+    DIM L_BP86%
+    DIM L_BP8a!
+    DIM L_BP8c%
+    DIM L_BP8e%
+    DIM L_BP90%
+    DIM L_BP92%
+    DIM L_BP94%
+    DIM L_BP96%
+    DIM L_BP98%
+    DIM L_BP9c!
+    DIM L_BP9e%
+    DIM L_BPa0%
+    DIM L_BPa2%
+    DIM L_BPa4%
+    ' ---- FUN_2000_01eb @0x201eb  (0201eb_FUN_2000_01eb.lift.txt; evidence_id (assembly): ev_cfc6fe74c0b65018eabca0de570fefaf87b1cef0acab224861f027e57719b273)
+    IF NOT (V_0e12% = 0) THEN GOTO L_20214   '@201fd
+    GOTO L_24e4b   '@2020c
+L_20214:
+    RT_VIEWPRINT 1, 25   '@20214
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@20226
+    RT_CLS 2   '@20243
+    PRINT RT_STRINGC$((80), (205))   '@20251
+    PRINT " Correcoes das Geometrias e Carregamentos das Vigas      Posicionadas"; V_0e12%; "Vigas"   '@20269 DS:3440,348a
+    PRINT RT_STRINGC$((80), (205))   '@20289
+L_202a1:
+    RT_VIEWPRINT 5, 25   '@202a6
+    RT_CLS 2   '@202b8
+    CALL MIXT_07f1_LimpaTeclado   '@202c6
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    COLOR 7   '@202d0
+    RT_LINEINPUT " Numero da Posicao a ser Alterada *FIM* ", V_12ae$   '@202e6 DS:3494
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    IF NOT (LEN(V_12ae$) = 0) THEN GOTO L_2031d   '@20300
+    GOTO L_24e4b   '@20315
+L_2031d:
+    L_BP36! = VAL(V_12ae$)   '@2031d
+    IF NOT (V_0e12% < L_BP36! OR L_BP36! < 1.0) THEN GOTO L_20387   '@20336 DS:34c0
+    BEEP   '@20375
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_202a1   '@2037f
+L_20387:
+    CALL S_33df1(L_BP36!)   '@20387
+    IF RT_EVENTO THEN EXIT SUB   ' ON KEY que sai da SUB
+    RT_CLS 2   '@20395
+    COLOR 7   '@203a3
+    PRINT " Posicao(";   '@203b9 DS:34c4
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@203c7
+    PRINT L_BP36!;   '@203e4
+    COLOR 7   '@203f4
+    PRINT ")"   '@2040a DS:34d2
+    GOSUB L_20440   '@20418
+    CALL S_33991(L_BP36!)   '@20425
+    IF RT_EVENTO THEN EXIT SUB   ' ON KEY que sai da SUB
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_202a1   '@20433
+    ' ---- F_2043b @0x2043b  (02043b_F_2043b.lift.txt; evidence_id (assembly): ev_f9b7fb58fc3ee190994c5cfdce32ed64d730c968d89cde12127dfed4168bcef7)
+L_20440:   ' sub-rotina (alvo de GOSUB); entrada vinda de 0201eb_FUN_2000_01eb
+    RT_VIEWPRINT 7, 25   '@20445
+    RT_CLS 2   '@20457
+    COLOR 7   '@20465
+    LOCATE 7, 20   '@2047b
+    PRINT "1  -  Nome da ";   '@20499 DS:34d8
+    COLOR RT_CINT%(FX##(V_0dc8!))   '@204a7
+    PRINT "V";   '@204c4 DS:34ea
+    COLOR 7   '@204d2
+    PRINT "iga - "; V_0dfc$   '@204e8 DS:34f0
+    LOCATE 9, 20   '@204ff
+    PRINT "2  -  ";   '@2051d DS:34fa
+    COLOR RT_CINT%(FX##(V_0dc8!))   '@2052b
+    PRINT "N";   '@20548 DS:3504
+    COLOR 7   '@20556
+    PRINT "umero de Tramos -"; V_0e08%   '@2056c DS:350a
+    LOCATE 11, 20   '@20583
+    PRINT "3  -  ";   '@205a1 DS:3520
+    COLOR RT_CINT%(FX##(V_0dc8!))   '@205af
+    PRINT "B";   '@205cc DS:352a
+    COLOR 7   '@205da
+    PRINT "alancos e ";   '@205f0 DS:3530
+    COLOR RT_CINT%(FX##(V_0dc8!))   '@205fe
+    PRINT "E";   '@2061b DS:353e
+    COLOR 7   '@20629
+    PRINT "ngastes"   '@2063f DS:3544
+    LOCATE 13, 20   '@2064d
+    PRINT "4  -  ";   '@2066b DS:3550
+    COLOR RT_CINT%(FX##(V_0dc8!))   '@20679
+    PRINT "C";   '@20696 DS:355a
+    COLOR 7   '@206a4
+    PRINT "omprimento dos Tramos e Inercias"   '@206ba DS:3560
+    LOCATE 15, 20   '@206c8
+    PRINT "5  -  Cargas ";   '@206e6 DS:3584
+    COLOR RT_CINT%(FX##(V_0dc8!))   '@206f4
+    PRINT "T";   '@20711 DS:3596
+    COLOR 7   '@2071f
+    PRINT "otais"   '@20735 DS:359c
+    LOCATE 17, 20   '@20743
+    PRINT "6  -  Cargas ";   '@20761 DS:35a6
+    COLOR RT_CINT%(FX##(V_0dc8!))   '@2076f
+    PRINT "A";   '@2078c DS:35b8
+    COLOR 7   '@2079a
+    PRINT "cidentais"   '@207b0 DS:35be
+    LOCATE 19, 20   '@207be
+    PRINT "7  -  ";   '@207dc DS:35cc
+    COLOR RT_CINT%(FX##(V_0dc8!))   '@207ea
+    PRINT "M";   '@20807 DS:35d6
+    COLOR 7   '@20815
+    PRINT "omentos Aplicados"   '@2082b DS:35dc
+    LOCATE 21, 20   '@20839
+    PRINT "8  -  *Fim da Correcao*"   '@20857 DS:35f2
+    CALL MIXT_07f1_LimpaTeclado   '@20865
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    V_12ae$ = RT_INPUT$(1)   '@2086f
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    L_BP3a$ = V_12ae$   '@2088b
+    IF NOT (L_BP3a$ <> "1") THEN GOTO L_208d8   '@2089d DS:360e
+    IF NOT (L_BP3a$ <> "V") THEN GOTO L_208d8   '@208b4 DS:34ea
+    IF NOT (L_BP3a$ = "v") THEN GOTO L_209a4   '@208c6 DS:3614
+L_208d8:
+    RT_CLS 2   '@208d8
+    PRINT " Alteracao do nome da Viga"   '@208e6 DS:361a
+    PRINT " Viga *";   '@208f4 DS:3638
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@20902
+    PRINT V_0dfc$;   '@2091f
+    COLOR 7   '@2092d
+    PRINT "* ";   '@20943 DS:3644
+    CALL MIXT_07f1_LimpaTeclado   '@20951
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINEINPUT "", V_12ae$   '@2095b DS:364a
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    IF NOT (LEN(V_12ae$) > 0) THEN GOTO L_2099c   '@20975
+    V_0dfc$ = V_12ae$   '@2098a
+L_2099c:
+    GOTO L_22801   '@2099c
+L_209a4:
+    IF NOT (L_BP3a$ <> "2") THEN GOTO L_209da   '@209a4 DS:364e
+    IF NOT (L_BP3a$ <> "N") THEN GOTO L_209da   '@209b6 DS:3504
+    IF NOT (L_BP3a$ = "n") THEN GOTO L_21585   '@209c8 DS:3654
+L_209da:
+    RT_CLS 2   '@209df
+    PRINT " Incluir um novo Tramo apos o Tramo *NAO* ";   '@209ed DS:365a
+    CALL MIXT_07f1_LimpaTeclado   '@209fb
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINEINPUT "", V_12ae$   '@20a05 DS:364a
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    IF NOT (LEN(V_12ae$) > 0) THEN GOTO L_2109f   '@20a1f
+    L_BP12! = VAL(V_12ae$)   '@20a34
+    IF NOT (A_0f3a%(V_0e0c% + V_0e08%) + 1 > 30 OR (V_0e08% = 12 OR (V_0e08% + 1 < L_BP12! OR L_BP12! < 0.0))) THEN GOTO L_20ad2   '@20a4d DS:3688
+    BEEP   '@20ac0
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_209da   '@20aca
+L_20ad2:
+    L_BP3e! = FX##(L_BP12!) + 1.0   '@20ad2 DS:34c0
+    FOR L_BP0e! = V_0e0c% + V_0e08% TO L_BP3e! STEP -1.0   '@20ae6 DS:368c
+    A_0e26!(RT_CINT%(FX##(L_BP0e!) + 1.0)) = A_0e26!(RT_CINT%(FX##(L_BP0e!)))   '@20af6 DS:34c0
+    A_0e54!(RT_CINT%(FX##(L_BP0e!) + 1.0)) = A_0e54!(RT_CINT%(FX##(L_BP0e!)))   '@20b36 DS:34c0
+    A_0f0c%(RT_CINT%(FX##(L_BP0e!) + 1.0)) = A_0f0c%(RT_CINT%(FX##(L_BP0e!)))   '@20b76 DS:34c0
+    A_0f3a%(RT_CINT%(FX##(L_BP0e!) + 1.0)) = A_0f3a%(RT_CINT%(FX##(L_BP0e!))) + 1   '@20bb2 DS:34c0
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP0e!   '@20bef DS:368c
+    L_BP42! = 1 + A_0f3a%(RT_CINT%(FX##(L_BP12!)))   '@20c17
+    FOR L_BP0e! = A_0f3a%(V_0e0c% + V_0e08% + 1) - 1 TO L_BP42! STEP -1.0   '@20c42 DS:368c
+    A_0e82!(RT_CINT%(FX##(L_BP0e!) + 1.0)) = A_0e82!(RT_CINT%(FX##(L_BP0e!)))   '@20c64 DS:34c0
+    A_0eb0!(RT_CINT%(FX##(L_BP0e!) + 1.0)) = A_0eb0!(RT_CINT%(FX##(L_BP0e!)))   '@20ca4 DS:34c0
+    A_0ede!(RT_CINT%(FX##(L_BP0e!) + 1.0)) = A_0ede!(RT_CINT%(FX##(L_BP0e!)))   '@20ce4 DS:34c0
+    A_0f68!(RT_CINT%(FX##(L_BP0e!) + 1.0)) = A_0f68!(RT_CINT%(FX##(L_BP0e!)))   '@20d24 DS:34c0
+    A_0f96!(RT_CINT%(FX##(L_BP0e!) + 1.0)) = A_0f96!(RT_CINT%(FX##(L_BP0e!)))   '@20d64 DS:34c0
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP0e!   '@20da4 DS:368c
+    V_0e08% = V_0e08% + 1   '@20dcc
+    L_BP12! = FX##(L_BP12!) + 1.0   '@20dd5 DS:34c0
+L_20de9:
+    LOCATE 9, 1   '@20dee
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@20e09
+    PRINT " L"; L_BP12!;   '@20e26 DS:3690
+    COLOR 7   '@20e3f
+    PRINT " ("; V_0dd8$; ") ";   '@20e55 DS:3696,369c
+    CALL MIXT_07f1_LimpaTeclado   '@20e75
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINEINPUT "", V_12ae$   '@20e7f DS:364a
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    A_0e26!(RT_CINT%(FX##(L_BP12!))) = VAL(V_12ae$)   '@20e99
+    IF NOT (A_0e26!(RT_CINT%(FX##(L_BP12!))) <= 0.0) THEN GOTO L_20f0a   '@20ec8 DS:3688
+    BEEP   '@20ef8
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_20de9   '@20f02
+L_20f0a:
+    A_0e54!(RT_CINT%(FX##(L_BP12!))) = 1.0   '@20f0a DS:34c0
+    A_0f0c%(RT_CINT%(FX##(L_BP12!))) = 1   '@20f30
+    A_0f3a%(RT_CINT%(FX##(L_BP12!))) = A_0f3a%(RT_CINT%(FX##(L_BP12!) - 1.0)) + 1   '@20f4e DS:368c
+    A_0e82!(A_0f3a%(RT_CINT%(FX##(L_BP12!)))) = 0.0   '@20f8b DS:3688
+    A_0f68!(A_0f3a%(RT_CINT%(FX##(L_BP12!)))) = 0.0   '@20fbd DS:3688
+    A_0eb0!(A_0f3a%(RT_CINT%(FX##(L_BP12!)))) = A_0e26!(RT_CINT%(FX##(L_BP12!)))   '@20fef
+    A_0ede!(A_0f3a%(RT_CINT%(FX##(L_BP12!)))) = 0.0   '@21036 DS:3688
+    A_0f96!(A_0f3a%(RT_CINT%(FX##(L_BP12!)))) = 0.0   '@21068 DS:3688
+L_2109f:
+    RT_CLS 2   '@210a4
+    PRINT " Eliminar o Tramo *NENHUM* ";   '@210b2 DS:36a2
+    CALL MIXT_07f1_LimpaTeclado   '@210c0
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINEINPUT "", V_12ae$   '@210ca DS:364a
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    IF NOT (LEN(V_12ae$) > 0) THEN GOTO L_2157d   '@210e4
+    L_BP12! = VAL(V_12ae$)   '@210f9
+    IF NOT (V_0e0c% = V_0e0a% AND V_0e08% = 1 OR (V_0e08% = 0 OR (V_0e08% < L_BP12! OR L_BP12! < 1.0))) THEN GOTO L_2118e   '@21112 DS:34c0
+    BEEP   '@2117c
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_2109f   '@21186
+L_2118e:
+    L_BP46! = A_0f3a%(V_0e0c% + V_0e08%)   '@2118e
+    FOR L_BP0e! = 1 + A_0f3a%(RT_CINT%(FX##(L_BP12!))) TO L_BP46!   '@211b6 DS:34c0
+    A_0e82!(RT_CINT%(FX##(L_BP0e!) - A_0f0c%(RT_CINT%(FX##(L_BP12!))))) = A_0e82!(RT_CINT%(FX##(L_BP0e!)))   '@211d8
+    A_0eb0!(RT_CINT%(FX##(L_BP0e!) - A_0f0c%(RT_CINT%(FX##(L_BP12!))))) = A_0eb0!(RT_CINT%(FX##(L_BP0e!)))   '@21234
+    A_0ede!(RT_CINT%(FX##(L_BP0e!) - A_0f0c%(RT_CINT%(FX##(L_BP12!))))) = A_0ede!(RT_CINT%(FX##(L_BP0e!)))   '@21290
+    A_0f68!(RT_CINT%(FX##(L_BP0e!) - A_0f0c%(RT_CINT%(FX##(L_BP12!))))) = A_0f68!(RT_CINT%(FX##(L_BP0e!)))   '@212ec
+    A_0f96!(RT_CINT%(FX##(L_BP0e!) - A_0f0c%(RT_CINT%(FX##(L_BP12!))))) = A_0f96!(RT_CINT%(FX##(L_BP0e!)))   '@21348
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP0e!   '@213a4 DS:34c0
+    L_BP22! = A_0f0c%(RT_CINT%(FX##(L_BP12!)))   '@213cc
+    L_BP4a! = V_0e0c% + V_0e08%   '@213f5
+    FOR L_BP0e! = FX##(L_BP12!) + 1.0 TO L_BP4a!   '@2140d DS:34c0
+    A_0e26!(RT_CINT%(FX##(L_BP0e!) - 1.0)) = A_0e26!(RT_CINT%(FX##(L_BP0e!)))   '@21418 DS:368c
+    A_0e54!(RT_CINT%(FX##(L_BP0e!) - 1.0)) = A_0e54!(RT_CINT%(FX##(L_BP0e!)))   '@21458 DS:368c
+    A_0f0c%(RT_CINT%(FX##(L_BP0e!) - 1.0)) = A_0f0c%(RT_CINT%(FX##(L_BP0e!)))   '@21498 DS:368c
+    A_0f3a%(RT_CINT%(FX##(L_BP0e!) - 1.0)) = RT_CINT%(FX##(A_0f3a%(RT_CINT%(FX##(L_BP0e!)))) - L_BP22!)   '@214d4 DS:368c
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP0e!   '@21522 DS:34c0
+    V_0e08% = V_0e08% - 1   '@2154a
+    IF NOT (V_0e08% = 0) THEN GOTO L_21578   '@21553
+    V_0e0e% = 0   '@21562
+    V_0e10% = 0   '@2156d
+L_21578:
+L_2157d:
+    GOTO L_22801   '@2157d
+L_21585:
+    IF NOT (L_BP3a$ <> "3") THEN GOTO L_215df   '@21585 DS:36c2
+    IF NOT (L_BP3a$ <> "B") THEN GOTO L_215df   '@21597 DS:352a
+    IF NOT (L_BP3a$ <> "b") THEN GOTO L_215df   '@215a9 DS:36c8
+    IF NOT (L_BP3a$ <> "E") THEN GOTO L_215df   '@215bb DS:353e
+    IF NOT (L_BP3a$ = "e") THEN GOTO L_226c6   '@215cd DS:36ce
+L_215df:
+    RT_CLS 2   '@215e4
+    PRINT " Balanco  esquerda(";   '@215f2 DS:36d4
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@21600
+    PRINT "10";   '@2161d DS:36ec
+    COLOR 7   '@2162b
+    PRINT ")  direita(";   '@21641 DS:36f2
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@2164f
+    PRINT "01";   '@2166c DS:3702
+    COLOR 7   '@2167a
+    PRINT ")  ambos(";   '@21690 DS:3708
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@2169e
+    PRINT "11";   '@216bb DS:3716
+    COLOR 7   '@216c9
+    PRINT ")  *";   '@216df DS:371c
+    IF NOT (V_0e0c% = 0 AND V_0e0a% = 0) THEN GOTO L_21727   '@216ed
+    PRINT "NAO* ";   '@21711 DS:3724
+    GOTO L_21764   '@2171f
+L_21727:
+    PRINT LTRIM$(STR$(V_0e0a%)); LTRIM$(STR$(V_0e0c%)); "* ";   '@21727 DS:3644
+L_21764:
+    CALL MIXT_07f1_LimpaTeclado   '@21764
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINEINPUT "", V_12ae$   '@2176e DS:364a
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    IF NOT (LEN(V_12ae$) = 0) THEN GOTO L_217c5   '@21788
+    L_BP26! = 2.0   '@2179d DS:372e
+    L_BP2a! = 2.0   '@217ad DS:372e
+    GOTO L_218b8   '@217bd
+L_217c5:
+    L_BP26! = VAL(RT_MID$((V_12ae$), (1), (1)))   '@217c5
+    L_BP2a! = VAL(RT_MID$((V_12ae$), (2), (1)))   '@217e9
+    IF NOT (L_BP26! = L_BP2a! AND V_0e08% = 0 OR (L_BP2a! <> 0.0 AND L_BP2a! <> 1.0 OR L_BP26! <> 0.0 AND L_BP26! <> 1.0)) THEN GOTO L_218b8   '@21810 DS:34c0,3688
+    BEEP   '@218a6
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_215df   '@218b0
+L_218b8:
+    LOCATE 9, 1   '@218bd
+    PRINT " Engaste  esquerda(";   '@218d8 DS:3732
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@218e6
+    PRINT "10";   '@21903 DS:36ec
+    COLOR 7   '@21911
+    PRINT ")  direita(";   '@21927 DS:36f2
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@21935
+    PRINT "01";   '@21952 DS:3702
+    COLOR 7   '@21960
+    PRINT ")  ambos(";   '@21976 DS:3708
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@21984
+    PRINT "11";   '@219a1 DS:3716
+    COLOR 7   '@219af
+    PRINT ")  *";   '@219c5 DS:371c
+    IF NOT (V_0e10% = 0 AND V_0e0e% = 0) THEN GOTO L_21a0d   '@219d3
+    PRINT "NAO* ";   '@219f7 DS:3724
+    GOTO L_21a4a   '@21a05
+L_21a0d:
+    PRINT LTRIM$(STR$(V_0e0e%)); LTRIM$(STR$(V_0e10%)); "* ";   '@21a0d DS:3644
+L_21a4a:
+    CALL MIXT_07f1_LimpaTeclado   '@21a4a
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINEINPUT "", V_12ae$   '@21a54 DS:364a
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    IF NOT (LEN(V_12ae$) = 0) THEN GOTO L_21a8b   '@21a6e
+    GOTO L_21b87   '@21a83
+L_21a8b:
+    L_BP2e! = VAL(RT_MID$((V_12ae$), (1), (1)))   '@21a8b
+    L_BP32! = VAL(RT_MID$((V_12ae$), (2), (1)))   '@21aaf
+    IF NOT (V_0e08% = 0 OR (L_BP32! <> 0.0 AND L_BP32! <> 1.0 OR L_BP2e! <> 0.0 AND L_BP2e! <> 1.0)) THEN GOTO L_21b65   '@21ad6 DS:34c0,3688
+    BEEP   '@21b53
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_218b8   '@21b5d
+L_21b65:
+    V_0e0e% = RT_CINT%(FX##(L_BP2e!))   '@21b65
+    V_0e10% = RT_CINT%(FX##(L_BP32!))   '@21b76
+L_21b87:
+    IF NOT (L_BP32! = 1.0 AND L_BP2a! = 1.0 OR L_BP2e! = 1.0 AND L_BP26! = 1.0) THEN GOTO L_21c0e   '@21b8c DS:34c0
+    BEEP   '@21bfc
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_215df   '@21c06
+L_21c0e:
+    IF NOT (V_0e0a% = 0 AND L_BP26! = 1.0) THEN GOTO L_2204b   '@21c0e DS:34c0
+    LOCATE 11, 1   '@21c3d
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@21c58
+    PRINT " L"; 0;   '@21c75 DS:3690
+    COLOR 7   '@21c8b
+    PRINT " ("; V_0dd8$; ") ";   '@21ca1 DS:3696,369c
+    CALL MIXT_07f1_LimpaTeclado   '@21cc1
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINEINPUT "", V_12ae$   '@21ccb DS:364a
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    A_0e26!(0) = VAL(V_12ae$)   '@21ce5
+    IF NOT (A_0e26!(0) <= 0.0) THEN GOTO L_21d48   '@21d0d DS:3688
+    BEEP   '@21d36
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_21b87   '@21d40
+L_21d48:
+    A_0e54!(0) = 1.0   '@21d48 DS:34c0
+    A_0f0c%(0) = 1   '@21d67
+    A_0f3a%(0) = 1   '@21d7e
+    L_BP4e! = V_0e0c% + V_0e08%   '@21d95
+    FOR L_BP0e! = 1.0 TO L_BP4e!   '@21dad DS:34c0
+    A_0f3a%(RT_CINT%(FX##(L_BP0e!))) = A_0f3a%(RT_CINT%(FX##(L_BP0e!))) + 1   '@21db4
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP0e!   '@21dec DS:34c0
+    FOR L_BP0e! = A_0f3a%(V_0e0c% + V_0e08%) TO 1.0 STEP -1.0   '@21e11 DS:34c0,368c
+    A_0e82!(RT_CINT%(FX##(L_BP0e!) + 1.0)) = A_0e82!(RT_CINT%(FX##(L_BP0e!)))   '@21e36 DS:34c0
+    A_0f68!(RT_CINT%(FX##(L_BP0e!) + 1.0)) = A_0f68!(RT_CINT%(FX##(L_BP0e!)))   '@21e76 DS:34c0
+    A_0eb0!(RT_CINT%(FX##(L_BP0e!) + 1.0)) = A_0eb0!(RT_CINT%(FX##(L_BP0e!)))   '@21eb6 DS:34c0
+    A_0ede!(RT_CINT%(FX##(L_BP0e!) + 1.0)) = A_0ede!(RT_CINT%(FX##(L_BP0e!)))   '@21ef6 DS:34c0
+    A_0f96!(RT_CINT%(FX##(L_BP0e!) + 1.0)) = A_0f96!(RT_CINT%(FX##(L_BP0e!)))   '@21f36 DS:34c0
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP0e!   '@21f76 DS:34c0,368c
+    A_0e82!(1) = 0.0   '@21f9f DS:3688
+    A_0f68!(1) = 0.0   '@21fbc DS:3688
+    A_0eb0!(1) = A_0e26!(0)   '@21fd9
+    A_0ede!(1) = 0.0   '@22001 DS:3688
+    A_0f96!(1) = 0.0   '@2201e DS:3688
+    V_0e0a% = 1   '@2203b
+L_2204b:
+    IF NOT (V_0e0c% = 0 AND L_BP2a! = 1.0) THEN GOTO L_222f5   '@22050 DS:34c0
+    LOCATE 13, 1   '@2207f
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@2209a
+    PRINT " L"; V_0e08% + 1;   '@220b7 DS:3690
+    COLOR 7   '@220cf
+    PRINT " ("; V_0dd8$; ") ";   '@220e5 DS:3696,369c
+    CALL MIXT_07f1_LimpaTeclado   '@22105
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINEINPUT "", V_12ae$   '@2210f DS:364a
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    A_0e26!(V_0e08% + 1) = VAL(V_12ae$)   '@22129
+    IF NOT (A_0e26!(V_0e08% + 1) <= 0.0) THEN GOTO L_22190   '@22153 DS:3688
+    BEEP   '@2217e
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_2204b   '@22188
+L_22190:
+    A_0e54!(V_0e08% + 1) = 1.0   '@22190 DS:34c0
+    A_0f0c%(V_0e08% + 1) = 1   '@221b1
+    A_0f3a%(1 + V_0e08%) = A_0f3a%(V_0e08%) + 1   '@221ca
+    A_0e82!(A_0f3a%(V_0e08% + 1)) = 0.0   '@221f7 DS:3688
+    A_0f68!(A_0f3a%(V_0e08% + 1)) = 0.0   '@22224 DS:3688
+    A_0eb0!(A_0f3a%(V_0e08% + 1)) = A_0e26!(V_0e08% + 1)   '@22251
+    A_0ede!(A_0f3a%(V_0e08% + 1)) = 0.0   '@2228b DS:3688
+    A_0f96!(A_0f3a%(V_0e08% + 1)) = 0.0   '@222b8 DS:3688
+    V_0e0c% = 1   '@222e5
+L_222f5:
+    IF NOT (V_0e0a% = 1 AND L_BP26! = 0.0) THEN GOTO L_22628   '@222f5 DS:3688
+    A_0e26!(0) = 0.0   '@22324 DS:3688
+    L_BP52! = A_0f3a%(V_0e0c% + V_0e08%)   '@22343
+    FOR L_BP0e! = 1 + A_0f3a%(0) TO L_BP52!   '@2236a DS:34c0
+    A_0e82!(RT_CINT%(FX##(L_BP0e!) - A_0f3a%(0))) = A_0e82!(RT_CINT%(FX##(L_BP0e!)))   '@22386
+    A_0eb0!(RT_CINT%(FX##(L_BP0e!) - A_0f3a%(0))) = A_0eb0!(RT_CINT%(FX##(L_BP0e!)))   '@223db
+    A_0ede!(RT_CINT%(FX##(L_BP0e!) - A_0f3a%(0))) = A_0ede!(RT_CINT%(FX##(L_BP0e!)))   '@22430
+    A_0f68!(RT_CINT%(FX##(L_BP0e!) - A_0f3a%(0))) = A_0f68!(RT_CINT%(FX##(L_BP0e!)))   '@22485
+    A_0f96!(RT_CINT%(FX##(L_BP0e!) - A_0f3a%(0))) = A_0f96!(RT_CINT%(FX##(L_BP0e!)))   '@224da
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP0e!   '@2252f DS:34c0
+    L_BP56! = V_0e0c% + V_0e08%   '@22557
+    FOR L_BP0e! = 1.0 TO L_BP56!   '@2256f DS:34c0
+    A_0f3a%(RT_CINT%(FX##(L_BP0e!))) = A_0f3a%(RT_CINT%(FX##(L_BP0e!))) - A_0f3a%(0)   '@22576
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP0e!   '@225c1 DS:34c0
+    A_0f0c%(0) = 0   '@225e6
+    A_0f3a%(0) = 0   '@225ff
+    V_0e0a% = 0   '@22618
+L_22628:
+    IF NOT (V_0e0c% = 1 AND L_BP2a! = 0.0) THEN GOTO L_226be   '@22628 DS:3688
+    A_0e26!(V_0e08% + 1) = 0.0   '@22657 DS:3688
+    A_0f0c%(V_0e08% + 1) = 0   '@22678
+    A_0f3a%(V_0e08% + 1) = 0   '@22693
+    V_0e0c% = 0   '@226ae
+L_226be:
+    GOTO L_22801   '@226be
+L_226c6:
+    IF NOT (L_BP3a$ <> "4") THEN GOTO L_226fc   '@226c6 DS:374a
+    IF NOT (L_BP3a$ <> "C") THEN GOTO L_226fc   '@226d8 DS:355a
+    IF NOT (L_BP3a$ = "c") THEN GOTO L_22711   '@226ea DS:3750
+L_226fc:
+    GOSUB L_22809   '@226fc
+    GOTO L_22801   '@22709
+L_22711:
+    IF NOT (L_BP3a$ <> "5") THEN GOTO L_22747   '@22711 DS:3756
+    IF NOT (L_BP3a$ <> "T") THEN GOTO L_22747   '@22723 DS:3596
+    IF NOT (L_BP3a$ = "t") THEN GOTO L_2275c   '@22735 DS:375c
+L_22747:
+    GOSUB L_22f47   '@22747
+    GOTO L_22801   '@22754
+L_2275c:
+    IF NOT (L_BP3a$ <> "6") THEN GOTO L_22792   '@2275c DS:3762
+    IF NOT (L_BP3a$ <> "A") THEN GOTO L_22792   '@2276e DS:35b8
+    IF NOT (L_BP3a$ = "a") THEN GOTO L_227a7   '@22780 DS:3768
+L_22792:
+    GOSUB L_24479   '@22792
+    GOTO L_22801   '@2279f
+L_227a7:
+    IF NOT (L_BP3a$ <> "7") THEN GOTO L_227dd   '@227a7 DS:376e
+    IF NOT (L_BP3a$ <> "M") THEN GOTO L_227dd   '@227b9 DS:35d6
+    IF NOT (L_BP3a$ = "m") THEN GOTO L_227f2   '@227cb DS:3774
+L_227dd:
+    GOSUB L_24c4a   '@227dd
+    GOTO L_22801   '@227ea
+L_227f2:
+    RETURN   '@227f2
+L_22801:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_20440   '@22801
+    ' ---- F_22809 @0x22809  (022809_F_22809.lift.txt; evidence_id (assembly): ev_a04bbb5f372ce2eb61b88577a9e8266e773d917164aeaedbdf766ca5232150e8)
+L_22809:   ' sub-rotina (alvo de GOSUB); entrada vinda de 02043b_F_2043b
+    L_BP12! = 1 - V_0e0a%   '@2280e
+    L_BP22! = V_0e0c% + V_0e08%   '@22825
+    IF NOT (L_BP22! > 13.0) THEN GOTO L_22866   '@2283c DS:377a
+    L_BP22! = 13.0   '@22856 DS:377a
+L_22866:
+    RT_CLS 2   '@2286b
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@22879
+    PRINT RT_TAB$(20); ""; "TRAMO     L("; V_0dd8$; ")      J("; V_0dd8$; "4/"; V_0dd8$; "4)"   '@22896 DS:364a,377e,378e,379c,37a2
+    PRINT RT_TAB$(20); ""; RT_STRINGC$((28), (223))   '@228ec DS:364a
+    L_BP5a! = L_BP22!   '@22916
+    FOR L_BP0e! = L_BP12! TO L_BP5a!   '@22926 DS:34c0
+    V_12b2$ = " ##      ###.###     ##.##"   '@2292c DS:37a8
+    LOCATE RT_CINT%(FX##(L_BP0e!) - L_BP12! + 9.0), 1   '@2293e DS:37c6
+    COLOR 7   '@22968
+    PRINT TAB(20); "";: PRINT USING V_12b2$; RT_PU#(L_BP0e!, V_12b2$, 1); RT_PU#(A_0e26!(RT_CINT%(FX##(L_BP0e!))), V_12b2$, 2); RT_PU#(A_0e54!(RT_CINT%(FX##(L_BP0e!))), V_12b2$, 3)   '@2297e DS:364a
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP0e!   '@229ed DS:34c0
+L_22a15:
+    COLOR 14   '@22a1a
+    LOCATE 24, 1   '@22a30
+    PRINT " TRAMO , L , J  *NAO* ";   '@22a4b DS:37ca
+    CALL MIXT_07f1_LimpaTeclado   '@22a59
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    CALL MIXT_00ff_Le3Campos(V_12ae$, V_12b2$, V_12b6$)   '@22a63
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_VIEWPRINT 24, 25   '@22a79
+    RT_CLS 2   '@22a8b
+    RT_VIEWPRINT 7, 25   '@22a99
+    IF NOT (V_0e0c% + V_0e08% > L_BP22! AND LEN(V_12ae$) = 0) THEN GOTO L_22b1a   '@22aab
+    L_BP12! = FX##(L_BP22!) + 1.0   '@22ae7 DS:34c0
+    L_BP22! = V_0e0c% + V_0e08%   '@22afb
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_22866   '@22b12
+L_22b1a:
+    IF NOT (LEN(V_12ae$) = 0) THEN GOTO L_22b39   '@22b1a
+    RETURN   '@22b2f
+L_22b39:
+    L_BP1e! = VAL(V_12ae$)   '@22b39
+    L_BP5c% = (L_BP1e! > L_BP22! OR L_BP1e! < L_BP12!)   '@22b52
+    IF NOT ((INT(FX##(L_BP1e!)) <> FX##(L_BP1e!) OR L_BP5c%) <> 0) THEN GOTO L_22bc0   '@22b92
+    BEEP   '@22bae
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_22a15   '@22bb8
+L_22bc0:
+    IF NOT (LEN(V_12b2$) > 0) THEN GOTO L_22dcf   '@22bc0
+    IF NOT (FX##(VAL(V_12b2$)) >= FX##(A_0e26!(RT_CINT%(FX##(L_BP1e!))))) THEN GOTO L_22c9e   '@22bd5
+    IF NOT (L_BP1e! > 0.0) THEN GOTO L_22c6b   '@22c0e DS:3688
+    A_0eb0!(A_0f3a%(RT_CINT%(FX##(L_BP1e!)))) = VAL(V_12b2$)   '@22c28
+    GOTO L_22c96   '@22c63
+L_22c6b:
+    A_0eb0!(1) = VAL(V_12b2$)   '@22c6b
+L_22c96:
+    GOTO L_22d9b   '@22c96
+L_22c9e:
+    L_BP60! = 1 + (A_0f3a%(RT_CINT%(FX##(L_BP1e!))) - A_0f0c%(RT_CINT%(FX##(L_BP1e!))))   '@22c9e
+    FOR L_BP0e! = A_0f3a%(RT_CINT%(FX##(L_BP1e!))) TO L_BP60! STEP -1.0   '@22ce5 DS:368c
+    IF NOT (FX##(A_0eb0!(RT_CINT%(FX##(L_BP0e!)))) > FX##(VAL(V_12b2$))) THEN GOTO L_22d6e   '@22d06
+    A_0eb0!(RT_CINT%(FX##(L_BP0e!))) = VAL(V_12b2$)   '@22d3f
+L_22d6e:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP0e!   '@22d6e DS:368c
+L_22d9b:
+    A_0e26!(RT_CINT%(FX##(L_BP1e!))) = VAL(V_12b2$)   '@22d9b
+L_22dcf:
+    IF NOT (VAL(V_12b6$) > 0.0#) THEN GOTO L_22e7e   '@22dcf DS:37e4
+    A_0e54!(RT_CINT%(FX##(L_BP1e!))) = INT(FX##(VAL(V_12b6$)) * 100.0#) / 100.0# + (A_0e54!(RT_CINT%(FX##(L_BP1e!))) - INT(FX##(A_0e54!(RT_CINT%(FX##(L_BP1e!)))) * 100.0) / 100.0)   '@22df3 DS:37ec,37f4
+L_22e7e:
+    V_12b2$ = " ##      ###.###     ##.##"   '@22e7e DS:37a8
+    LOCATE RT_CINT%(FX##(L_BP1e!) - L_BP12! + 9.0), 1   '@22e90 DS:37c6
+    COLOR 3   '@22eba
+    PRINT TAB(20); "";: PRINT USING V_12b2$; RT_PU#(L_BP1e!, V_12b2$, 1); RT_PU#(A_0e26!(RT_CINT%(FX##(L_BP1e!))), V_12b2$, 2); RT_PU#(A_0e54!(RT_CINT%(FX##(L_BP1e!))), V_12b2$, 3)   '@22ed0 DS:364a
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_22a15   '@22f3f
+    ' ---- F_22f47 @0x22f47  (022f47_F_22f47.lift.txt; evidence_id (assembly): ev_1abbdf4fdad1dd33f2d732d1d90825b335d9c101f2fd3f3b8d52cac14fa379e5)
+L_22f47:   ' sub-rotina (alvo de GOSUB); entrada vinda de 02043b_F_2043b
+    L_BP22! = 0.0   '@22f4c DS:3688
+    L_BP16! = 1.0   '@22f5c DS:34c0
+    L_BP1a! = A_0f3a%(V_0e0c% + V_0e08%)   '@22f6c
+    IF NOT (L_BP1a! > 13.0) THEN GOTO L_22fbd   '@22f93 DS:377a
+    L_BP1a! = 13.0   '@22fad DS:377a
+L_22fbd:
+    RT_CLS 2   '@22fc2
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@22fd0
+    PRINT RT_TAB$(20); ""; "CARGA  TRAMO    P("; V_0ddc$; "/"; V_0dd8$; ")    D("; V_0dd8$; ")    F("; V_0ddc$; ")"   '@22fed DS:34d2,364a,37f8,380e,3814,3820
+    PRINT RT_TAB$(20); ""; RT_STRINGC$((38), (223))   '@23055 DS:364a
+    L_BP64! = L_BP1a!   '@2307f
+    FOR L_BP0e! = L_BP16! TO L_BP64!   '@2308f DS:34c0
+L_23096:
+    IF NOT (A_0f3a%(RT_CINT%(FX##(L_BP22!))) < L_BP0e!) THEN GOTO L_230e9   '@2309b
+    L_BP22! = FX##(L_BP22!) + 1.0   '@230ce DS:34c0
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_23096   '@230e2
+L_230e9:
+    V_12b2$ = " ##    ###    ####.##  ###.##  ###.##&"   '@230e9 DS:382c
+    LOCATE RT_CINT%(FX##(L_BP0e!) - L_BP16! + 10.0), 1   '@230fb DS:3856
+    COLOR 7   '@23125
+    PRINT TAB(20); "";: PRINT USING V_12b2$; RT_PU#(L_BP0e!, V_12b2$, 1); RT_PU#(L_BP22!, V_12b2$, 2); RT_PU#(A_0e82!(RT_CINT%(FX##(L_BP0e!))), V_12b2$, 3); RT_PU#(A_0eb0!(RT_CINT%(FX##(L_BP0e!))), V_12b2$, 4); RT_PU#(A_0ede!(RT_CINT%(FX##(L_BP0e!))), V_12b2$, 5);   '@2313b DS:364a
+    IF NOT (A_0f96!(RT_CINT%(FX##(L_BP0e!))) = -100.0) THEN GOTO L_23222   '@231dc DS:385a
+    PRINT "*"   '@2320c DS:385e
+    GOTO L_23230   '@2321a
+L_23222:
+    PRINT " "   '@23222 DS:3864
+L_23230:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP0e!   '@23230 DS:34c0
+L_23258:
+    LOCATE 25, 1   '@2325d
+    COLOR 11   '@23278
+    PRINT " Coloque  I n  para INCLUIR antes da carga de numero n  e  D n  para DELETAR";   '@2328e DS:386a
+    COLOR 14   '@2329c
+    LOCATE 24, 1   '@232b2
+    PRINT " CARGA , P , D , F  *NAO* ";   '@232cd DS:38ba
+    CALL MIXT_07f1_LimpaTeclado   '@232db
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    CALL MIXT_021e_Le4Campos(V_12ae$, V_12b2$, V_12b6$, V_12ba$)   '@232e5
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_VIEWPRINT 24, 25   '@232ff
+    RT_CLS 2   '@23311
+    RT_VIEWPRINT 7, 25   '@2331f
+    IF NOT (A_0f3a%(V_0e0c% + V_0e08%) > L_BP1a! AND LEN(V_12ae$) = 0) THEN GOTO L_233f7   '@23331
+    L_BP16! = FX##(L_BP1a!) + 1.0   '@2337d DS:34c0
+    L_BP1a! = A_0f3a%(V_0e0c% + V_0e08%)   '@23391
+    IF NOT (FX##(L_BP16!) + 12.0 < FX##(L_BP1a!)) THEN GOTO L_233ea   '@233b8 DS:38d8
+    L_BP1a! = FX##(L_BP16!) + 12.0   '@233d6 DS:38d8
+L_233ea:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_22fbd   '@233ea
+L_233f7:
+    IF NOT (LEN(V_12ae$) = 0) THEN GOTO L_23416   '@233f7
+    RETURN   '@2340c
+L_23416:
+    IF NOT (UCASE$(RT_MID$((V_12ae$), (1), (1))) = "I") THEN GOTO L_23864   '@23416 DS:38dc
+    L_BP12! = VAL(RT_MID2$((V_12ae$), (2)))   '@2343e
+    L_BP66% = (A_0f3a%(V_0e0c% + V_0e08%) < L_BP12! OR L_BP12! < 1.0)   '@23465 DS:34c0
+    IF NOT ((INT(FX##(L_BP12!)) <> FX##(L_BP12!) OR L_BP66%) <> 0) THEN GOTO L_234f1   '@234c3
+    BEEP   '@234df
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_23258   '@234e9
+L_234f1:
+    L_BP6a! = L_BP12!   '@234f1
+    FOR L_BP0e! = A_0f3a%(V_0e0c% + V_0e08%) TO L_BP6a! STEP -1.0   '@23500 DS:368c
+    A_0e82!(RT_CINT%(FX##(L_BP0e!) + 1.0)) = A_0e82!(RT_CINT%(FX##(L_BP0e!)))   '@23520 DS:34c0
+    A_0eb0!(RT_CINT%(FX##(L_BP0e!) + 1.0)) = A_0eb0!(RT_CINT%(FX##(L_BP0e!)))   '@23560 DS:34c0
+    A_0ede!(RT_CINT%(FX##(L_BP0e!) + 1.0)) = A_0ede!(RT_CINT%(FX##(L_BP0e!)))   '@235a0 DS:34c0
+    A_0f68!(RT_CINT%(FX##(L_BP0e!) + 1.0)) = A_0f68!(RT_CINT%(FX##(L_BP0e!)))   '@235e0 DS:34c0
+    A_0f96!(RT_CINT%(FX##(L_BP0e!) + 1.0)) = A_0f96!(RT_CINT%(FX##(L_BP0e!)))   '@23620 DS:34c0
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP0e!   '@23660 DS:368c
+    L_BP6e! = V_0e0c% + V_0e08%   '@23688
+    FOR L_BP0e! = 1 - V_0e0a% TO L_BP6e!   '@2369f DS:34c0
+    IF NOT (1 + (A_0f3a%(RT_CINT%(FX##(L_BP0e!))) - A_0f0c%(RT_CINT%(FX##(L_BP0e!)))) <= L_BP12! AND A_0f3a%(RT_CINT%(FX##(L_BP0e!))) >= L_BP12!) THEN GOTO L_23775   '@236ae
+    A_0f0c%(RT_CINT%(FX##(L_BP0e!))) = A_0f0c%(RT_CINT%(FX##(L_BP0e!))) + 1   '@2373d
+L_23775:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP0e!   '@23775 DS:34c0
+    L_BP72! = V_0e0c% + V_0e08%   '@2379d
+    FOR L_BP0e! = 1 - V_0e0a% TO L_BP72!   '@237b4 DS:34c0
+    IF NOT (A_0f3a%(RT_CINT%(FX##(L_BP0e!))) >= L_BP12!) THEN GOTO L_2382f   '@237c4
+    A_0f3a%(RT_CINT%(FX##(L_BP0e!))) = A_0f3a%(RT_CINT%(FX##(L_BP0e!))) + 1   '@237f7
+L_2382f:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP0e!   '@2382f DS:34c0
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_22f47   '@23857
+L_23864:
+    IF NOT (UCASE$(RT_MID$((V_12ae$), (1), (1))) = "D") THEN GOTO L_23cb6   '@23864 DS:38e2
+    L_BP12! = VAL(RT_MID2$((V_12ae$), (2)))   '@2388c
+    L_BP74% = (A_0f3a%(V_0e0c% + V_0e08%) < L_BP12! OR L_BP12! < 1.0)   '@238b3 DS:34c0
+    IF NOT ((INT(FX##(L_BP12!)) <> FX##(L_BP12!) OR L_BP74%) <> 0) THEN GOTO L_2393f   '@23911
+    BEEP   '@2392d
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_23258   '@23937
+L_2393f:
+    L_BP78! = A_0f3a%(V_0e0c% + V_0e08%)   '@2393f
+    FOR L_BP0e! = FX##(L_BP12!) + 1.0 TO L_BP78!   '@23967 DS:34c0
+    A_0e82!(RT_CINT%(FX##(L_BP0e!) - 1.0)) = A_0e82!(RT_CINT%(FX##(L_BP0e!)))   '@23972 DS:368c
+    A_0eb0!(RT_CINT%(FX##(L_BP0e!) - 1.0)) = A_0eb0!(RT_CINT%(FX##(L_BP0e!)))   '@239b2 DS:368c
+    A_0ede!(RT_CINT%(FX##(L_BP0e!) - 1.0)) = A_0ede!(RT_CINT%(FX##(L_BP0e!)))   '@239f2 DS:368c
+    A_0f68!(RT_CINT%(FX##(L_BP0e!) - 1.0)) = A_0f68!(RT_CINT%(FX##(L_BP0e!)))   '@23a32 DS:368c
+    A_0f96!(RT_CINT%(FX##(L_BP0e!) - 1.0)) = A_0f96!(RT_CINT%(FX##(L_BP0e!)))   '@23a72 DS:368c
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP0e!   '@23ab2 DS:34c0
+    L_BP7c! = V_0e0c% + V_0e08%   '@23ada
+    FOR L_BP0e! = 1 - V_0e0a% TO L_BP7c!   '@23af1 DS:34c0
+    IF NOT (1 + (A_0f3a%(RT_CINT%(FX##(L_BP0e!))) - A_0f0c%(RT_CINT%(FX##(L_BP0e!)))) <= L_BP12! AND A_0f3a%(RT_CINT%(FX##(L_BP0e!))) >= L_BP12!) THEN GOTO L_23bc7   '@23b00
+    A_0f0c%(RT_CINT%(FX##(L_BP0e!))) = A_0f0c%(RT_CINT%(FX##(L_BP0e!))) - 1   '@23b8f
+L_23bc7:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP0e!   '@23bc7 DS:34c0
+    L_BP80! = V_0e0c% + V_0e08%   '@23bef
+    FOR L_BP0e! = 1 - V_0e0a% TO L_BP80!   '@23c06 DS:34c0
+    IF NOT (A_0f3a%(RT_CINT%(FX##(L_BP0e!))) >= L_BP12!) THEN GOTO L_23c81   '@23c16
+    A_0f3a%(RT_CINT%(FX##(L_BP0e!))) = A_0f3a%(RT_CINT%(FX##(L_BP0e!))) - 1   '@23c49
+L_23c81:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP0e!   '@23c81 DS:34c0
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_22f47   '@23ca9
+L_23cb6:
+    L_BP1e! = VAL(V_12ae$)   '@23cb6
+    L_BP82% = (L_BP1e! > L_BP1a! OR L_BP1e! < L_BP16!)   '@23ccf
+    IF NOT ((INT(FX##(L_BP1e!)) <> FX##(L_BP1e!) OR L_BP82%) <> 0) THEN GOTO L_23d3f   '@23d10
+    BEEP   '@23d2d
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_23258   '@23d37
+L_23d3f:
+    L_BP84% = (LEN(V_12b2$) > 0)   '@23d3f DS:37e4
+    IF NOT ((VAL(V_12b2$) > 0.0# AND L_BP84%) <> 0) THEN GOTO L_23e3c   '@23d62
+    A_0e82!(RT_CINT%(FX##(L_BP1e!))) = VAL(V_12b2$)   '@23d84
+    L_BP86% = (V_12c2$ = "S")   '@23db3 DS:38e8
+    IF NOT ((V_12ca$ = "G" AND L_BP86%) <> 0) THEN GOTO L_23e37   '@23dd9 DS:38ee
+    A_0f68!(RT_CINT%(FX##(L_BP1e!))) = FX##(V_12d2%) * A_0e82!(RT_CINT%(FX##(L_BP1e!))) / 100.0   '@23def DS:37f4
+L_23e37:
+L_23e3c:
+    IF NOT (LEN(V_12b6$) > 0) THEN GOTO L_24169   '@23e3c
+    L_BP8a! = V_0e0c% + V_0e08%   '@23e51
+    FOR L_BP0e! = 1 - V_0e0a% TO L_BP8a!   '@23e69 DS:34c0
+    IF NOT (A_0f3a%(RT_CINT%(FX##(L_BP0e!))) >= L_BP1e!) THEN GOTO L_23eb3   '@23e78
+    GOTO L_23ed9   '@23eab
+L_23eb3:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP0e!   '@23eb3 DS:34c0
+L_23ed9:
+    IF NOT (FX##(VAL(V_12b6$)) <= FX##(A_0e26!(RT_CINT%(FX##(L_BP0e!))))) THEN GOTO L_24164   '@23ed9
+    IF NOT (L_BP0e! = 0.0) THEN GOTO L_2402c   '@23f12 DS:3688
+    L_BP8c% = (L_BP1e! > 1.0)   '@23f2c DS:34c0,368c
+    L_BP8e% = FX##(VAL(V_12b6$)) < FX##(A_0eb0!(RT_CINT%(FX##(L_BP1e!) - 1.0))) AND L_BP8c%   '@23f72 DS:34c0
+    L_BP90% = (L_BP1e! = 1.0)   '@23fcb
+    IF NOT ((FX##(VAL(V_12b6$)) = FX##(A_0e26!(RT_CINT%(FX##(L_BP0e!)))) AND L_BP90% OR L_BP8e%) <> 0) THEN GOTO L_24024   '@23fcf
+    A_0eb0!(RT_CINT%(FX##(L_BP1e!))) = VAL(V_12b6$)   '@23ff5
+L_24024:
+    GOTO L_2415f   '@24024
+L_2402c:
+    L_BP92% = (A_0f3a%(RT_CINT%(FX##(L_BP0e!))) > L_BP1e!)   '@2402c DS:34c0
+    L_BP94% = FX##(VAL(V_12b6$)) < FX##(A_0eb0!(RT_CINT%(FX##(L_BP1e!) + 1.0))) AND L_BP92%   '@2408b
+    L_BP96% = (A_0f3a%(RT_CINT%(FX##(L_BP0e!))) = L_BP1e!)   '@24101
+    IF NOT ((FX##(VAL(V_12b6$)) = FX##(A_0e26!(RT_CINT%(FX##(L_BP0e!)))) AND L_BP96% OR L_BP94%) <> 0) THEN GOTO L_2415a   '@24105
+    A_0eb0!(RT_CINT%(FX##(L_BP1e!))) = VAL(V_12b6$)   '@2412b
+L_2415a:
+L_2415f:
+L_24164:
+L_24169:
+    IF NOT (LEN(V_12ba$) > 0) THEN GOTO L_2433f   '@24169
+    A_0ede!(RT_CINT%(FX##(L_BP1e!))) = VAL(V_12ba$)   '@2417e
+    L_BP98% = (V_12c2$ = "S")   '@241ad DS:38e8
+    IF NOT ((V_12ca$ = "G" AND L_BP98%) <> 0) THEN GOTO L_24231   '@241d3 DS:38ee
+    A_0f96!(RT_CINT%(FX##(L_BP1e!))) = FX##(V_12d2%) * A_0ede!(RT_CINT%(FX##(L_BP1e!))) / 100.0   '@241e9 DS:37f4
+L_24231:
+    IF NOT (A_0f96!(RT_CINT%(FX##(L_BP1e!))) = -100.0 AND VAL(V_12ba$) >= 0.0#) THEN GOTO L_242b5   '@24231 DS:37e4,385a
+    A_0f96!(RT_CINT%(FX##(L_BP1e!))) = 0.0   '@2428f DS:3688
+L_242b5:
+    IF NOT (RT_MID$((V_12ba$), (1), (1)) = "*") THEN GOTO L_2433a   '@242b5 DS:385e
+    A_0ede!(RT_CINT%(FX##(L_BP1e!))) = VAL(RT_MID2$((V_12ba$), (2)))   '@242d7
+    A_0f96!(RT_CINT%(FX##(L_BP1e!))) = -100.0   '@24314 DS:385a
+L_2433a:
+L_2433f:
+    V_12b2$ = "####.##  ###.##  ###.##"   '@2433f DS:38f4
+    LOCATE RT_CINT%(FX##(L_BP1e!) - L_BP16! + 10.0), 34   '@24351 DS:3856
+    COLOR 3   '@2437e
+    PRINT USING V_12b2$; RT_PU#(A_0e82!(RT_CINT%(FX##(L_BP1e!))), V_12b2$, 1); RT_PU#(A_0eb0!(RT_CINT%(FX##(L_BP1e!))), V_12b2$, 2); RT_PU#(A_0ede!(RT_CINT%(FX##(L_BP1e!))), V_12b2$, 3);   '@24394
+    IF NOT (A_0f96!(RT_CINT%(FX##(L_BP1e!))) = -100.0) THEN GOTO L_24453   '@2440d DS:385a
+    PRINT "*"   '@2443d DS:385e
+    GOTO L_24461   '@2444b
+L_24453:
+    PRINT " "   '@24453 DS:3864
+L_24461:
+    L_BP22! = 0.0   '@24461 DS:3688
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_23258   '@24471
+    ' ---- F_24479 @0x24479  (024479_F_24479.lift.txt; evidence_id (assembly): ev_7479ed4b636444eb8e776a80c134cc7923126aa10e9e231c406fcb5705aa8f4a)
+L_24479:   ' sub-rotina (alvo de GOSUB); entrada vinda de 02043b_F_2043b
+    L_BP22! = 0.0   '@2447e DS:3688
+    L_BP16! = 1.0   '@2448e DS:34c0
+    L_BP1a! = A_0f3a%(V_0e0c% + V_0e08%)   '@2449e
+    IF NOT (L_BP1a! > 13.0) THEN GOTO L_244ef   '@244c5 DS:377a
+    L_BP1a! = 13.0   '@244df DS:377a
+L_244ef:
+    RT_CLS 2   '@244f4
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@24502
+    PRINT RT_TAB$(20); ""; "CARGA  TRAMO   Pac("; V_0ddc$; "/"; V_0dd8$; ")    Fac("; V_0ddc$; ")"   '@2451f DS:34d2,364a,380e,3910,3928
+    PRINT RT_TAB$(20); ""; RT_STRINGC$((33), (223))   '@24575 DS:364a
+    L_BP9c! = L_BP1a!   '@2459f
+    FOR L_BP0e! = L_BP16! TO L_BP9c!   '@245b0 DS:34c0
+L_245b6:
+    IF NOT (A_0f3a%(RT_CINT%(FX##(L_BP22!))) < L_BP0e!) THEN GOTO L_24609   '@245bb
+    L_BP22! = FX##(L_BP22!) + 1.0   '@245ee DS:34c0
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_245b6   '@24602
+L_24609:
+    V_12b2$ = " ##    ###    ####.##    ####.##"   '@24609 DS:3936
+    LOCATE RT_CINT%(FX##(L_BP0e!) - L_BP16! + 10.0), 1   '@2461b DS:3856
+    COLOR 7   '@24645
+    PRINT TAB(20); "";: PRINT USING V_12b2$; RT_PU#(L_BP0e!, V_12b2$, 1); RT_PU#(L_BP22!, V_12b2$, 2); RT_PU#(A_0f68!(RT_CINT%(FX##(L_BP0e!))), V_12b2$, 3); RT_PU#(A_0f96!(RT_CINT%(FX##(L_BP0e!))), V_12b2$, 4)   '@2465b DS:364a
+    IF NOT (A_0f96!(RT_CINT%(FX##(L_BP0e!))) = -100.0) THEN GOTO L_24740   '@246d5 DS:385a
+    LOCATE RT_CINT%(FX##(L_BP0e!) - L_BP16! + 10.0), 45   '@24705 DS:3856
+    PRINT " indexada "   '@24732 DS:395a
+L_24740:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP0e!   '@24740 DS:34c0
+L_24769:
+    COLOR 14   '@2476e
+    LOCATE 24, 1   '@24784
+    PRINT " CARGA , Pac , Fac *NAO* ";   '@2479f DS:3968
+    CALL MIXT_07f1_LimpaTeclado   '@247ad
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    CALL MIXT_00ff_Le3Campos(V_12ae$, V_12b2$, V_12b6$)   '@247b7
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_VIEWPRINT 24, 25   '@247cd
+    RT_CLS 2   '@247df
+    RT_VIEWPRINT 7, 25   '@247ed
+    IF NOT (A_0f3a%(V_0e0c% + V_0e08%) > L_BP1a! AND LEN(V_12ae$) = 0) THEN GOTO L_248c5   '@247ff
+    L_BP16! = FX##(L_BP1a!) + 1.0   '@2484b DS:34c0
+    L_BP1a! = A_0f3a%(V_0e0c% + V_0e08%)   '@2485f
+    IF NOT (FX##(L_BP16!) + 12.0 < FX##(L_BP1a!)) THEN GOTO L_248b8   '@24886 DS:38d8
+    L_BP1a! = FX##(L_BP16!) + 12.0   '@248a4 DS:38d8
+L_248b8:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_244ef   '@248b8
+L_248c5:
+    IF NOT (LEN(V_12ae$) = 0) THEN GOTO L_248e4   '@248c5
+    RETURN   '@248da
+L_248e4:
+    L_BP1e! = VAL(V_12ae$)   '@248e4
+    L_BP9e% = (L_BP1e! > L_BP1a! OR L_BP1e! < L_BP16!)   '@248fd
+    IF NOT ((INT(FX##(L_BP1e!)) <> FX##(L_BP1e!) OR L_BP9e%) <> 0) THEN GOTO L_2496d   '@2493e
+    BEEP   '@2495b
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_24769   '@24965
+L_2496d:
+    IF NOT (A_0f96!(RT_CINT%(FX##(L_BP1e!))) = -100.0 AND VAL(V_12b6$) > 0.0#) THEN GOTO L_249dd   '@2496d DS:37e4,385a
+    BEEP   '@249cb
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_24769   '@249d5
+L_249dd:
+    L_BPa0% = (LEN(V_12b2$) > 0)   '@249dd DS:37e4
+    L_BPa2% = VAL(V_12b2$) >= 0.0# AND L_BPa0%   '@24a00
+    IF NOT ((FX##(VAL(V_12b2$)) < FX##(A_0e82!(RT_CINT%(FX##(L_BP1e!)))) AND L_BPa2%) <> 0) THEN GOTO L_24a92   '@24a41
+    A_0f68!(RT_CINT%(FX##(L_BP1e!))) = VAL(V_12b2$)   '@24a63
+L_24a92:
+    L_BPa4% = (LEN(V_12b6$) > 0)   '@24a92
+    IF NOT ((FX##(VAL(V_12b6$)) < FX##(A_0ede!(RT_CINT%(FX##(L_BP1e!)))) AND L_BPa4%) <> 0) THEN GOTO L_24b1b   '@24aca
+    A_0f96!(RT_CINT%(FX##(L_BP1e!))) = VAL(V_12b6$)   '@24aec
+L_24b1b:
+    V_12b2$ = "####.##    ####.##"   '@24b1b DS:3986
+    LOCATE RT_CINT%(FX##(L_BP1e!) - L_BP16! + 10.0), 34   '@24b2d DS:3856
+    COLOR 3   '@24b5a
+    PRINT USING V_12b2$; RT_PU#(A_0f68!(RT_CINT%(FX##(L_BP1e!))), V_12b2$, 1); RT_PU#(A_0f96!(RT_CINT%(FX##(L_BP1e!))), V_12b2$, 2);   '@24b70
+    IF NOT (A_0f96!(RT_CINT%(FX##(L_BP0e!))) = -100.0) THEN GOTO L_24c32   '@24bc7 DS:385a
+    LOCATE RT_CINT%(FX##(L_BP1e!) - L_BP16! + 10.0), 45   '@24bf7 DS:3856
+    PRINT " indexada "   '@24c24 DS:395a
+L_24c32:
+    L_BP22! = 0.0   '@24c32 DS:3688
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_24769   '@24c42
+    ' ---- F_24c4a @0x24c4a  (024c4a_F_24c4a.lift.txt; evidence_id (assembly): ev_c364ac7ab2a90b314ca13af1c41d0a4dca345850105d857205532ec10bea3c22)
+L_24c4a:   ' sub-rotina (alvo de GOSUB); entrada vinda de 02043b_F_2043b
+    RT_CLS 2   '@24c4f
+    PRINT RT_TAB$(10); ""; "Momentos Externos Aplicados ("; V_0ddc$; V_0dd8$; ")"   '@24c5d DS:34d2,364a,399c
+    PRINT RT_TAB$(10); ""; "Mext(apoio 0) , Mext(apoio"; STR$(V_0e08%); ")  *";   '@24c98 DS:364a,371c,39be
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@24cd0
+    PRINT LTRIM$(STR$(A_0fc4!(0)));   '@24ced
+    COLOR 7   '@24d19
+    PRINT "* , *";   '@24d2f DS:39dc
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@24d3d
+    PRINT LTRIM$(STR$(A_0fc4!(1)));   '@24d5a
+    COLOR 7   '@24d84
+    PRINT "* ";   '@24d9a DS:3644
+    CALL MIXT_07f1_LimpaTeclado   '@24da8
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    CALL MIXT_0049_Le2Campos(V_12ae$, V_12b2$)   '@24db2
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    IF NOT (LEN(V_12ae$) > 0) THEN GOTO L_24e01   '@24dc4
+    A_0fc4!(0) = VAL(V_12ae$)   '@24dd9
+L_24e01:
+    IF NOT (LEN(V_12b2$) > 0) THEN GOTO L_24e3c   '@24e01
+    A_0fc4!(1) = VAL(V_12b2$)   '@24e16
+L_24e3c:
+    RETURN   '@24e3c
+L_24e4b:   ' entrada vinda de 0201eb_FUN_2000_01eb
+    ' @24e4b libera strings locais (L_BP3a)
+    ' END SUB   '@24e54
+END SUB
+
+SUB S_24e64   ' entrada de SUB/FUNCTION (B$ENRA, locais 0 bytes) (0x24e64)
+    ' ---- FUN_2000_4e64 @0x24e64  (024e64_FUN_2000_4e64.lift.txt; evidence_id (assembly): ev_e22c10c31393935b8555ee6713cd72842428679cae0cea5b8a9c48483b47957e)
+    BEEP   '@24e6c
+    BEEP   '@24e76
+    BEEP   '@24e80
+    RT_SCREEN 0   '@24e8a
+    RT_VIEWPRINT 1, 25   '@24e9f
+    RT_CLOSE   '@24eb1 (CLOSE sem numero: nao fecha a impressora (LPT1) do LPRINT)
+    COLOR RT_CINT%(FX##(V_0dc0!)), RT_CINT%(4.0 * FX##(V_0dc4!)), RT_CINT%(4.0 * FX##(V_0dc4!))   '@24ebe DS:39e6
+    RT_CLS 0   '@24f03
+    LOCATE 10, 1   '@24f10
+    PRINT RT_TAB$(30); ""; "erro no processamento"   '@24f2b DS:364a,39ea
+    PRINT RT_TAB$(20); ""; "verifique a consistencia dos seus dados"   '@24f4b DS:364a,3a04
+    PRINT RT_TAB$(24); ""; "Acione ESC <Enter> para Continuar ";   '@24f6b DS:364a,3a30
+L_24f90:
+    CALL MIXT_07f1_LimpaTeclado   '@24f95
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    V_12ae$ = RT_INPUT$(1)   '@24f9f
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    BEEP   '@24fbb
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_24f90   '@24fc5
+END SUB
+
+SUB S_24fe1   ' entrada de SUB/FUNCTION (B$ENRA, locais 368 bytes) (0x24fe1)
+    DIM L_BP0e!
+    DIM L_BP10%
+    DIM L_BP12%
+    DIM L_BP16!
+    DIM L_BP1a!
+    DIM L_BP1e!
+    DIM L_BP22!
+    DIM L_BP26!
+    DIM L_BP2a!
+    DIM L_BP2e!
+    DIM L_BP30%
+    DIM L_BP34!
+    DIM L_BP38!
+    DIM L_BP3c!
+    DIM L_BP40!
+    DIM L_BP44!
+    DIM L_BP48$
+    DIM L_BP4c$
+    DIM L_BP50!
+    DIM L_BP54!
+    DIM L_BP58$
+    DIM L_BP5c$
+    DIM L_BP60!
+    DIM L_BP64!
+    DIM L_BP68$
+    DIM L_BP6c$
+    DIM L_BP70!
+    DIM L_BP74!
+    DIM L_BP78!
+    DIM L_BP7c!
+    DIM L_BP80$
+    DIM L_BP84!
+    DIM L_BP88!
+    DIM L_BP8c$
+    DIM L_BP90!
+    DIM L_BP94!
+    DIM L_BP98!
+    DIM L_BP9c!
+    DIM L_BPa0!
+    DIM L_BPa4!
+    DIM L_BPa8!
+    DIM L_BPac!
+    DIM L_BPb0!
+    DIM L_BPb4!
+    DIM L_BPb8!
+    DIM L_BPbc!
+    DIM L_BPc0!
+    DIM L_BPc4$
+    DIM L_BPc8!
+    DIM L_BPcc!
+    DIM L_BPd0$
+    DIM L_BPd4!
+    DIM L_BPd8!
+    DIM L_BPdc$
+    DIM L_BPe0!
+    DIM L_BPe4!
+    DIM L_BPe8!
+    DIM L_BPec!
+    DIM L_BPf0$
+    DIM L_BPf4!
+    DIM L_BPf8!
+    DIM L_BPfc!
+    ' ---- FUN_2000_4fe1 @0x24fe1  (024fe1_FUN_2000_4fe1.lift.txt; evidence_id (assembly): ev_4e2f25a22cb9ac959c7f51ec514738cabde6981d827e31a2ce70bdee7ad60d2c)
+    L_BP10% = (V_12f0$ <> "D")   '@24fee DS:38e2
+    IF NOT ((V_12f0$ <> "I" AND L_BP10%) <> 0) THEN GOTO L_25030   '@25013 DS:38dc
+    GOTO L_282db   '@25028
+L_25030:
+    COLOR 7   '@25030
+    L_BP12% = (V_0dcc$ = "CGA")   '@25046 DS:3a56
+    IF NOT ((V_0dcc$ = "MCG" OR L_BP12%) <> 0) THEN GOTO L_25108   '@2506b DS:3a5e
+    L_BP16! = 7.0   '@25080 DS:3a66
+    L_BP1a! = 7.0   '@25090 DS:3a66
+    L_BP1e! = 7.0   '@250a0 DS:3a66
+    L_BP22! = 7.0   '@250b0 DS:3a66
+    L_BP26! = 7.0   '@250c0 DS:3a66
+    L_BP2a! = 639.0   '@250d0 DS:3a6a
+    L_BP2e! = 192.0   '@250e0 DS:3a6e
+    RT_SCREEN 2   '@250f0
+L_25108:
+    L_BP30% = (V_0dcc$ = "EGA")   '@25108 DS:3a72
+    IF NOT ((V_0dcc$ = "VGA" OR L_BP30%) <> 0) THEN GOTO L_251e3   '@2512d DS:3a7a
+    L_BP16! = 15.0   '@25142 DS:3a82
+    L_BP1a! = 10.0   '@25152 DS:3856
+    L_BP1e! = 14.0   '@25162 DS:3a86
+    L_BP22! = 12.0   '@25172 DS:38d8
+    L_BP26! = 11.0   '@25182 DS:3a8a
+    L_BP2a! = 639.0   '@25192 DS:3a6a
+    L_BP2e! = 344.0   '@251a2 DS:3a8e
+    RT_SCREEN 9   '@251b2
+    COLOR , 1   '@251c8
+L_251e3:
+    IF NOT (V_0dcc$ = "HER") THEN GOTO L_25285   '@251e3 DS:3a92
+    L_BP16! = 7.0   '@251fa DS:3a66
+    L_BP1a! = 7.0   '@2520a DS:3a66
+    L_BP1e! = 7.0   '@2521a DS:3a66
+    L_BP22! = 7.0   '@2522a DS:3a66
+    L_BP26! = 7.0   '@2523a DS:3a66
+    L_BP2a! = 719.0   '@2524a DS:3a9a
+    L_BP2e! = 344.0   '@2525a DS:3a8e
+    RT_SCREEN 3   '@2526a
+L_25285:
+    RT_CLS 0   '@25285
+    RT_VIEW 2, (0), (0), (RT_CINT%(FX##(L_BP2a!))), (RT_CINT%(FX##(L_BP2e!))), (-1), (-1)   '@25292 (B$VIEW decodificado)
+    RT_WINDOW 1, (0), (0), (640), (192)   '@252bc DS:3688,368a,3a6e,3a70,3a9e,3aa0 (B$WIND decodificado)
+    L_BP34! = 0.0   '@252ea DS:3688
+    L_BP38! = V_0e0c% + V_0e08%   '@252fa
+    FOR L_BP3c! = 1 - V_0e0a% TO L_BP38!   '@25311 DS:34c0
+    L_BP34! = FX##(A_0e26!(RT_CINT%(FX##(L_BP3c!)))) + L_BP34!   '@25320
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP3c!   '@25349 DS:34c0
+    L_BP0e! = 620.0 / FX##(L_BP34!)   '@2536e DS:3aa2
+    L_BP40! = 10.0   '@25382 DS:3856
+    L_BP44! = 8.0   '@25393 DS:3aa6
+    L_BP48$ = "Obra - " + V_0e00$   '@2539d DS:3aaa
+    L_BP4c$ = "CGA"   '@253b4 DS:3a56
+    CALL MIXT_08c4_TextoGrafico(L_BP40!, L_BP44!, L_BP48$, L_BP4c$)   '@253c1
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    ' @253d6 libera strings locais (L_BP48)
+    ' @253df libera strings locais (L_BP4c)
+    L_BP50! = 240.0   '@253e8 DS:3ab6
+    L_BP54! = 8.0   '@253f9 DS:3aa6
+    L_BP58$ = "Viga - " + V_0dfc$   '@25403 DS:3aba
+    L_BP5c$ = "CGA"   '@2541a DS:3a56
+    CALL MIXT_08c4_TextoGrafico(L_BP50!, L_BP54!, L_BP58$, L_BP5c$)   '@25427
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    ' @2543c libera strings locais (L_BP58)
+    ' @25445 libera strings locais (L_BP5c)
+    L_BP60! = 500.0   '@2544e DS:3ac6
+    L_BP64! = 8.0   '@2545f DS:3aa6
+    L_BP68$ = RT_DATE$   '@25469
+    L_BP6c$ = "CGA"   '@25478 DS:3a56
+    CALL MIXT_08c4_TextoGrafico(L_BP60!, L_BP64!, L_BP68$, L_BP6c$)   '@25485
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    ' @2549a libera strings locais (L_BP68)
+    ' @254a3 libera strings locais (L_BP6c)
+    RT_LINE 0, 10, 639, 10, 9, RT_CINT%(FX##(L_BP1a!)), 0   '@254ac
+    L_BP34! = 0.0   '@254e0 DS:3688
+    L_BP70! = V_0e0c% + V_0e08%   '@254f0
+    FOR L_BP3c! = 1 - V_0e0a% TO L_BP70!   '@25507 DS:34c0
+    RT_LINE RT_SNG!(FX##(L_BP0e!) * L_BP34! + 10.0), 132.0, RT_SNG!((FX##(A_0e26!(RT_CINT%(FX##(L_BP3c!)))) + L_BP34!) * L_BP0e! + 10.0), 132.0, 9, RT_CINT%(FX##(L_BP26!)), 0   '@25516 DS:3856,3aca
+    IF NOT (V_0e0a% = 0 AND L_BP3c! = 1.0) THEN GOTO L_256e9   '@25593 DS:34c0
+    IF NOT (V_0e08% <> 0 AND V_0e0e% = 0) THEN GOTO L_2560b   '@255c2
+    L_BP74! = 10.0   '@255e6 DS:3856
+    GOSUB L_28210   '@255f6
+    GOTO L_256e4   '@25603
+L_2560b:
+    RT_LINE 9, 124, 9, 140, 9, RT_CINT%(FX##(L_BP26!)), 0   '@2560b
+    RT_LINE 9, 127, 5, 132, 9, RT_CINT%(FX##(L_BP26!)), 0   '@25640
+    RT_LINE 9, 130, 5, 135, 9, RT_CINT%(FX##(L_BP26!)), 0   '@25675
+    RT_LINE 9, 133, 5, 138, 9, RT_CINT%(FX##(L_BP26!)), 0   '@256aa
+L_256e4:
+L_256e9:
+    IF NOT (V_0e08% > 0 AND (V_0e10% = 0 AND V_0e08% = L_BP3c!) OR V_0e0c% + V_0e08% > L_BP3c!) THEN GOTO L_25788   '@256e9
+    L_BP74! = (FX##(A_0e26!(RT_CINT%(FX##(L_BP3c!)))) + L_BP34!) * L_BP0e! + 10.0   '@25749 DS:3856
+    GOSUB L_28210   '@2577b
+L_25788:
+    IF NOT (V_0e0a% = 1 AND V_0e08% = 0 OR V_0e10% = 1 AND V_0e08% = L_BP3c!) THEN GOTO L_258ad   '@25788
+    RT_LINE 631, 124, 631, 140, 9, RT_CINT%(FX##(L_BP26!)), 0   '@257d4
+    RT_LINE 631, 127, 635, 132, 9, RT_CINT%(FX##(L_BP26!)), 0   '@25809
+    RT_LINE 631, 130, 635, 135, 9, RT_CINT%(FX##(L_BP26!)), 0   '@2583e
+    RT_LINE 631, 133, 635, 138, 9, RT_CINT%(FX##(L_BP26!)), 0   '@25873
+L_258ad:
+    RT_LINE RT_SNG!(FX##(L_BP0e!) * L_BP34! + 10.0), 188.0, RT_SNG!((FX##(A_0e26!(RT_CINT%(FX##(L_BP3c!)))) + L_BP34!) * L_BP0e! + 10.0), 188.0, 9, RT_CINT%(FX##(L_BP1e!)), 0   '@258ad DS:3856,3ace
+    RT_LINE RT_SNG!(FX##(L_BP0e!) * L_BP34! + 10.0), 192.0, RT_SNG!(FX##(L_BP0e!) * L_BP34! + 10.0), 184.0, 9, RT_CINT%(FX##(L_BP1e!)), 0   '@2592a DS:3856,3a6e,3ad2
+    RT_LINE RT_SNG!((FX##(A_0e26!(RT_CINT%(FX##(L_BP3c!)))) + L_BP34!) * L_BP0e! + 10.0), 192.0, RT_SNG!((FX##(A_0e26!(RT_CINT%(FX##(L_BP3c!)))) + L_BP34!) * L_BP0e! + 10.0), 184.0, 9, RT_CINT%(FX##(L_BP1e!)), 0   '@2598d DS:3856,3a6e,3ad2
+    V_12ae$ = LTRIM$(STR$(A_0e26!(RT_CINT%(FX##(L_BP3c!)))))   '@25a24
+    L_BP78! = (FX##(A_0e26!(RT_CINT%(FX##(L_BP3c!)))) / 2.0 + L_BP34!) * L_BP0e! - LEN(V_12ae$) * 4 + 10.0   '@25a5b DS:372e,3856
+    L_BP7c! = 184.0   '@25aa8 DS:3ad2
+    L_BP80$ = "CGA"   '@25ab2 DS:3a56
+    CALL MIXT_08c4_TextoGrafico(L_BP78!, L_BP7c!, V_12ae$, L_BP80$)   '@25abf
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    ' @25ad4 libera strings locais (L_BP80)
+    V_12ae$ = LTRIM$(STR$(RT_SNG!(INT(FX##(A_0e54!(RT_CINT%(FX##(L_BP3c!)))) * 100.0) / 100.0)))   '@25add DS:37f4
+    L_BP84! = (FX##(A_0e26!(RT_CINT%(FX##(L_BP3c!)))) / 2.0 + L_BP34!) * L_BP0e! - LEN(V_12ae$) * 4 + 10.0   '@25b2c DS:372e,3856
+    L_BP88! = 144.0   '@25b7a DS:3ad6
+    L_BP8c$ = "CGA"   '@25b85 DS:3a56
+    CALL MIXT_08c4_TextoGrafico(L_BP84!, L_BP88!, V_12ae$, L_BP8c$)   '@25b93
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    ' @25bab libera strings locais (L_BP8c)
+    L_BP34! = FX##(A_0e26!(RT_CINT%(FX##(L_BP3c!)))) + L_BP34!   '@25bb5
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP3c!   '@25bde DS:34c0
+    L_BP90! = 0.0   '@25c06 DS:3688
+    L_BP94! = 0.0   '@25c17 DS:3688
+    L_BP98! = V_0e0c% + V_0e08%   '@25c28
+    FOR L_BP3c! = 1 - V_0e0a% TO L_BP98!   '@25c40 DS:34c0
+    L_BP9c! = A_0f3a%(RT_CINT%(FX##(L_BP3c!)))   '@25c50
+    FOR L_BP74! = 1 + (A_0f3a%(RT_CINT%(FX##(L_BP3c!))) - A_0f0c%(RT_CINT%(FX##(L_BP3c!)))) TO L_BP9c!   '@25c7b DS:34c0
+    L_BPa0! = ABS(FX##(A_0ede!(RT_CINT%(FX##(L_BP74!)))))   '@25cb8
+    CALL MIXT_082a_Maior(L_BP94!, L_BPa0!, L_BPa4!)   '@25ce1
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    L_BP94! = L_BPa4!   '@25cf6
+    L_BPa8! = ABS(FX##(A_0e82!(RT_CINT%(FX##(L_BP74!)))))   '@25d01
+    CALL MIXT_082a_Maior(L_BP90!, L_BPa8!, L_BPac!)   '@25d2a
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    L_BP90! = L_BPac!   '@25d3f
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP74!   '@25d4a DS:34c0
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP3c!   '@25d73 DS:34c0
+    L_BP34! = 0.0   '@25d9c DS:3688
+    L_BPb0! = V_0e0c% + V_0e08%   '@25dac
+    FOR L_BP3c! = 1 - V_0e0a% TO L_BPb0!   '@25dc4 DS:34c0
+    L_BPb4! = 0.0   '@25dd4 DS:3688
+    L_BPb8! = A_0f3a%(RT_CINT%(FX##(L_BP3c!)))   '@25de5
+    FOR L_BP74! = 1 + (A_0f3a%(RT_CINT%(FX##(L_BP3c!))) - A_0f0c%(RT_CINT%(FX##(L_BP3c!)))) TO L_BPb8!   '@25e10 DS:34c0
+    IF NOT (L_BP3c! = 0.0) THEN GOTO L_26d0d   '@25e4e DS:3688
+    IF NOT (A_0f0c%(0) = L_BP74!) THEN GOTO L_25ead   '@25e68
+    L_BPb4! = 0.0   '@25e94 DS:3688
+    GOTO L_25ed8   '@25ea5
+L_25ead:
+    L_BPb4! = A_0eb0!(RT_CINT%(FX##(L_BP74!) + 1.0))   '@25ead DS:34c0
+L_25ed8:
+    RT_LINE RT_SNG!((FX##(A_0e26!(0)) - A_0eb0!(RT_CINT%(FX##(L_BP74!)))) * L_BP0e! + 10.0), 130.0, RT_SNG!((FX##(A_0e26!(0)) - L_BPb4!) * L_BP0e! + 10.0), RT_SNG!(130.0 - FX##(A_0e82!(RT_CINT%(FX##(L_BP74!)))) * 18.0 / L_BP90!), 25, RT_CINT%(FX##(L_BP22!)), 0   '@25ed8 DS:3856,3ada,3ade
+    V_12ae$ = CHR$(27) + LTRIM$(STR$(A_0eb0!(RT_CINT%(FX##(L_BP74!)))))   '@25fa7
+    IF NOT (INSTR(V_12ae$, ".") > 0) THEN GOTO L_26034   '@25fee DS:3ae2
+    V_12ae$ = RT_MID$((V_12ae$), (1), (INSTR(V_12ae$, ".") + 2))   '@26007 DS:3ae2
+L_26034:
+    L_BPbc! = (FX##(A_0e26!(0)) - A_0eb0!(RT_CINT%(FX##(L_BP74!)))) * L_BP0e! + 10.0   '@26034 DS:3856
+    L_BPc0! = (FX##(L_BP74!) / 2.0 = RT_CLNG&(FX##(L_BP74!)) \ 2&) * 8 + 168   '@26076 DS:372e
+    L_BPc4$ = "CGA"   '@260bc DS:3a56
+    CALL MIXT_08c4_TextoGrafico(L_BPbc!, L_BPc0!, V_12ae$, L_BPc4$)   '@260ca
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    ' @260e2 libera strings locais (L_BPc4)
+    IF NOT (INSTR(STR$(A_0e82!(RT_CINT%(FX##(L_BP74!)))), "E") > 0) THEN GOTO L_26170   '@260ec DS:353e
+    A_0e82!(RT_CINT%(FX##(L_BP74!))) = INT(FX##(A_0e82!(RT_CINT%(FX##(L_BP74!)))) * 1000.0) / 1000.0   '@26124 DS:3ae8
+L_26170:
+    V_12ae$ = LTRIM$(STR$(A_0e82!(RT_CINT%(FX##(L_BP74!)))))   '@26170
+    IF NOT (INSTR(V_12ae$, ".") > 0) THEN GOTO L_261ed   '@261a7 DS:3ae2
+    V_12ae$ = RT_MID$((V_12ae$), (1), (INSTR(V_12ae$, ".") + 2))   '@261c0 DS:3ae2
+L_261ed:
+    L_BPc8! = (FX##(A_0e26!(0)) * 2.0 - L_BPb4! - A_0eb0!(RT_CINT%(FX##(L_BP74!)))) * L_BP0e! / 2.0 - LEN(V_12ae$) * 4 + 10.0   '@261ed DS:372e,3856
+    L_BPcc! = (FX##(L_BP74!) / 2.0 = RT_CLNG&(FX##(L_BP74!)) \ 2&) * 16 + 104   '@26253 DS:372e
+    L_BPd0$ = "CGA"   '@2629b DS:3a56
+    CALL MIXT_08c4_TextoGrafico(L_BPc8!, L_BPcc!, V_12ae$, L_BPd0$)   '@262a9
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    ' @262c1 libera strings locais (L_BPd0)
+    IF NOT (A_0f68!(RT_CINT%(FX##(L_BP74!))) > 0.0) THEN GOTO L_264df   '@262cb DS:3688
+    IF NOT (INSTR(STR$(A_0f68!(RT_CINT%(FX##(L_BP74!)))), "E") > 0) THEN GOTO L_2637f   '@262fb DS:353e
+    A_0f68!(RT_CINT%(FX##(L_BP74!))) = INT(FX##(A_0f68!(RT_CINT%(FX##(L_BP74!)))) * 1000.0) / 1000.0   '@26333 DS:3ae8
+L_2637f:
+    V_12ae$ = LTRIM$(STR$(A_0f68!(RT_CINT%(FX##(L_BP74!)))))   '@2637f
+    IF NOT (INSTR(V_12ae$, ".") > 0) THEN GOTO L_263fc   '@263b6 DS:3ae2
+    V_12ae$ = RT_MID$((V_12ae$), (1), (INSTR(V_12ae$, ".") + 2))   '@263cf DS:3ae2
+L_263fc:
+    L_BPd4! = (FX##(A_0e26!(0)) * 2.0 - L_BPb4! - A_0eb0!(RT_CINT%(FX##(L_BP74!)))) * L_BP0e! / 2.0 - LEN(V_12ae$) * 4 + 10.0   '@263fc DS:372e,3856
+    L_BPd8! = (FX##(L_BP74!) / 2.0 = RT_CLNG&(FX##(L_BP74!)) \ 2&) * 16 + 112   '@26462 DS:372e
+    L_BPdc$ = "CGA"   '@264aa DS:3a56
+    CALL MIXT_08c4_TextoGrafico(L_BPd4!, L_BPd8!, V_12ae$, L_BPdc$)   '@264b8
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    ' @264d0 libera strings locais (L_BPdc)
+L_264df:
+    IF NOT (A_0ede!(RT_CINT%(FX##(L_BP74!))) <> 0.0) THEN GOTO L_26d05   '@264df DS:3688
+    RT_LINE RT_SNG!((FX##(A_0e26!(0)) - A_0eb0!(RT_CINT%(FX##(L_BP74!)))) * L_BP0e! + 10.0), 75.0, RT_SNG!((FX##(A_0e26!(0)) - A_0eb0!(RT_CINT%(FX##(L_BP74!)))) * L_BP0e! + 10.0), RT_SNG!(75.0 - ABS(FX##(A_0ede!(RT_CINT%(FX##(L_BP74!))))) * 28.0 / L_BP94!), 9, RT_CINT%(FX##(L_BP26!)), 0   '@2650f DS:3856,3aec,3af0
+    RT_LINE RT_SNG!((FX##(A_0e26!(0)) - A_0eb0!(RT_CINT%(FX##(L_BP74!)))) * L_BP0e! + 10.0), RT_SNG!(75.0 - FX##(A_0ede!(RT_CINT%(FX##(L_BP74!))) < 0.0) * A_0ede!(RT_CINT%(FX##(L_BP74!))) * 28.0 / L_BP94!), RT_SNG!((FX##(A_0e26!(0)) - A_0eb0!(RT_CINT%(FX##(L_BP74!)))) * L_BP0e! + 5.0), RT_SNG!(72.0 - (FX##(A_0ede!(RT_CINT%(FX##(L_BP74!)))) * 28.0 / L_BP94! + 6.0) * (A_0ede!(RT_CINT%(FX##(L_BP74!))) < 0.0)), 9, RT_CINT%(FX##(L_BP26!)), 0   '@265f5 DS:3688,3856,3aec,3af0,3af4,3af8,3afc
+    RT_LINE RT_SNG!((FX##(A_0e26!(0)) - A_0eb0!(RT_CINT%(FX##(L_BP74!)))) * L_BP0e! + 10.0), RT_SNG!(75.0 - FX##(A_0ede!(RT_CINT%(FX##(L_BP74!))) < 0.0) * A_0ede!(RT_CINT%(FX##(L_BP74!))) * 28.0 / L_BP94!), RT_SNG!((FX##(A_0e26!(0)) - A_0eb0!(RT_CINT%(FX##(L_BP74!)))) * L_BP0e! + 15.0), RT_SNG!(72.0 - (FX##(A_0ede!(RT_CINT%(FX##(L_BP74!)))) * 28.0 / L_BP94! + 6.0) * (A_0ede!(RT_CINT%(FX##(L_BP74!))) < 0.0)), 9, RT_CINT%(FX##(L_BP26!)), 0   '@26770 DS:3688,3856,3a82,3aec,3af0,3af8,3afc
+    IF NOT (INSTR(STR$(A_0ede!(RT_CINT%(FX##(L_BP74!)))), "E") > 0) THEN GOTO L_2696f   '@268eb DS:353e
+    A_0ede!(RT_CINT%(FX##(L_BP74!))) = INT(FX##(A_0ede!(RT_CINT%(FX##(L_BP74!)))) * 1000.0) / 1000.0   '@26923 DS:3ae8
+L_2696f:
+    V_12ae$ = LTRIM$(STR$(A_0ede!(RT_CINT%(FX##(L_BP74!)))))   '@2696f
+    IF NOT (INSTR(V_12ae$, ".") > 0) THEN GOTO L_269ec   '@269a6 DS:3ae2
+    V_12ae$ = RT_MID$((V_12ae$), (1), (INSTR(V_12ae$, ".") + 2))   '@269bf DS:3ae2
+L_269ec:
+    L_BPe0! = (FX##(A_0e26!(0)) - A_0eb0!(RT_CINT%(FX##(L_BP74!)))) * L_BP0e! - LEN(V_12ae$) * 4 + 10.0   '@269ec DS:3856
+    L_BPe4! = 0.0   '@26a44 DS:3688
+    CALL MIXT_082a_Maior(L_BPe0!, L_BPe4!, L_BPe8!)   '@26a4f
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    L_BPec! = (FX##(L_BP74!) / 2.0 = RT_CLNG&(FX##(L_BP74!)) \ 2&) * 16 + 40   '@26a63 DS:372e
+    L_BPf0$ = "CGA"   '@26aab DS:3a56
+    CALL MIXT_08c4_TextoGrafico(L_BPe8!, L_BPec!, V_12ae$, L_BPf0$)   '@26ab9
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    ' @26ad1 libera strings locais (L_BPf0)
+    IF NOT (A_0f96!(RT_CINT%(FX##(L_BP74!))) <> 0.0) THEN GOTO L_26d00   '@26adb DS:3688
+    IF NOT (INSTR(STR$(A_0f96!(RT_CINT%(FX##(L_BP74!)))), "E") > 0) THEN GOTO L_26b8f   '@26b0b DS:353e
+    A_0f96!(RT_CINT%(FX##(L_BP74!))) = INT(FX##(A_0f96!(RT_CINT%(FX##(L_BP74!)))) * 1000.0) / 1000.0   '@26b43 DS:3ae8
+L_26b8f:
+    V_12ae$ = LTRIM$(STR$(A_0f96!(RT_CINT%(FX##(L_BP74!)))))   '@26b8f
+    IF NOT (INSTR(V_12ae$, ".") > 0) THEN GOTO L_26c0c   '@26bc6 DS:3ae2
+    V_12ae$ = RT_MID$((V_12ae$), (1), (INSTR(V_12ae$, ".") + 2))   '@26bdf DS:3ae2
+L_26c0c:
+    L_BPf4! = (FX##(A_0e26!(0)) - A_0eb0!(RT_CINT%(FX##(L_BP74!)))) * L_BP0e! - LEN(V_12ae$) * 4 + 10.0   '@26c0c DS:3856
+    L_BPf8! = 0.0   '@26c64 DS:3688
+    CALL MIXT_082a_Maior(L_BPf4!, L_BPf8!, L_BPfc!)   '@26c6f
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    L_BP100! = (FX##(L_BP74!) / 2.0 = RT_CLNG&(FX##(L_BP74!)) \ 2&) * 16 + 48   '@26c83 DS:372e
+    L_BP104$ = "CGA"   '@26ccb DS:3a56
+    CALL MIXT_08c4_TextoGrafico(L_BPfc!, L_BP100!, V_12ae$, L_BP104$)   '@26cd9
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    ' @26cf1 libera strings locais (L_BP104)
+L_26d00:
+L_26d05:
+    GOTO L_27a9b   '@26d05
+L_26d0d:
+    RT_LINE RT_SNG!((FX##(L_BP34!) + L_BPb4!) * L_BP0e! + 10.0), 130.0, RT_SNG!((FX##(A_0eb0!(RT_CINT%(FX##(L_BP74!)))) + L_BP34!) * L_BP0e! + 10.0), RT_SNG!(130.0 - FX##(A_0e82!(RT_CINT%(FX##(L_BP74!)))) * 18.0 / L_BP90!), 25, RT_CINT%(FX##(L_BP22!)), 0   '@26d0d DS:3856,3ada,3ade
+    V_12ae$ = LTRIM$(STR$(A_0eb0!(RT_CINT%(FX##(L_BP74!)))))   '@26dbe
+    IF NOT (INSTR(V_12ae$, ".") > 0) THEN GOTO L_26e3b   '@26df5 DS:3ae2
+    V_12ae$ = RT_MID$((V_12ae$), (1), (INSTR(V_12ae$, ".") + 2))   '@26e0e DS:3ae2
+L_26e3b:
+    V_12ae$ = V_12ae$ + CHR$(26)   '@26e3b
+    L_BP108! = (FX##(A_0eb0!(RT_CINT%(FX##(L_BP74!)))) + L_BP34!) * L_BP0e! - LEN(V_12ae$) * 8 + 10.0   '@26e5d DS:3856
+    L_BP10c! = (FX##(L_BP74!) / 2.0 = RT_CLNG&(FX##(L_BP74!)) \ 2&) * 8 + 168   '@26ea7 DS:372e
+    L_BP110$ = "CGA"   '@26eed DS:3a56
+    CALL MIXT_08c4_TextoGrafico(L_BP108!, L_BP10c!, V_12ae$, L_BP110$)   '@26efb
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    ' @26f13 libera strings locais (L_BP110)
+    IF NOT (INSTR(STR$(A_0e82!(RT_CINT%(FX##(L_BP74!)))), "E") > 0) THEN GOTO L_26fa1   '@26f1d DS:353e
+    A_0e82!(RT_CINT%(FX##(L_BP74!))) = INT(FX##(A_0e82!(RT_CINT%(FX##(L_BP74!)))) * 1000.0) / 1000.0   '@26f55 DS:3ae8
+L_26fa1:
+    V_12ae$ = LTRIM$(STR$(A_0e82!(RT_CINT%(FX##(L_BP74!)))))   '@26fa1
+    IF NOT (INSTR(V_12ae$, ".") > 0) THEN GOTO L_2701e   '@26fd8 DS:3ae2
+    V_12ae$ = RT_MID$((V_12ae$), (1), (INSTR(V_12ae$, ".") + 2))   '@26ff1 DS:3ae2
+L_2701e:
+    L_BP114! = ((FX##(A_0eb0!(RT_CINT%(FX##(L_BP74!)))) + L_BPb4!) / 2.0 + L_BP34!) * L_BP0e! - LEN(V_12ae$) * 4 + 10.0   '@2701e DS:372e,3856
+    L_BP118! = (FX##(L_BP74!) / 2.0 = RT_CLNG&(FX##(L_BP74!)) \ 2&) * 16 + 104   '@27070 DS:372e
+    L_BP11c$ = "CGA"   '@270b8 DS:3a56
+    CALL MIXT_08c4_TextoGrafico(L_BP114!, L_BP118!, V_12ae$, L_BP11c$)   '@270c6
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    ' @270de libera strings locais (L_BP11c)
+    IF NOT (A_0f68!(RT_CINT%(FX##(L_BP74!))) > 0.0) THEN GOTO L_272e8   '@270e8 DS:3688
+    IF NOT (INSTR(STR$(A_0f68!(RT_CINT%(FX##(L_BP74!)))), "E") > 0) THEN GOTO L_2719c   '@27118 DS:353e
+    A_0f68!(RT_CINT%(FX##(L_BP74!))) = INT(FX##(A_0f68!(RT_CINT%(FX##(L_BP74!)))) * 1000.0) / 1000.0   '@27150 DS:3ae8
+L_2719c:
+    V_12ae$ = LTRIM$(STR$(A_0f68!(RT_CINT%(FX##(L_BP74!)))))   '@2719c
+    IF NOT (INSTR(V_12ae$, ".") > 0) THEN GOTO L_27219   '@271d3 DS:3ae2
+    V_12ae$ = RT_MID$((V_12ae$), (1), (INSTR(V_12ae$, ".") + 2))   '@271ec DS:3ae2
+L_27219:
+    L_BP120! = ((FX##(A_0eb0!(RT_CINT%(FX##(L_BP74!)))) + L_BPb4!) / 2.0 + L_BP34!) * L_BP0e! - LEN(V_12ae$) * 4 + 10.0   '@27219 DS:372e,3856
+    L_BP124! = (FX##(L_BP74!) / 2.0 = RT_CLNG&(FX##(L_BP74!)) \ 2&) * 16 + 112   '@2726b DS:372e
+    L_BP128$ = "CGA"   '@272b3 DS:3a56
+    CALL MIXT_08c4_TextoGrafico(L_BP120!, L_BP124!, V_12ae$, L_BP128$)   '@272c1
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    ' @272d9 libera strings locais (L_BP128)
+L_272e8:
+    IF NOT (A_0ede!(RT_CINT%(FX##(L_BP74!))) <> 0.0) THEN GOTO L_27a96   '@272e8 DS:3688
+    RT_LINE RT_SNG!((FX##(A_0eb0!(RT_CINT%(FX##(L_BP74!)))) + L_BP34!) * L_BP0e! + 10.0), 75.0, RT_SNG!((FX##(A_0eb0!(RT_CINT%(FX##(L_BP74!)))) + L_BP34!) * L_BP0e! + 10.0), RT_SNG!(75.0 - ABS(FX##(A_0ede!(RT_CINT%(FX##(L_BP74!))))) * 28.0 / L_BP94!), 9, RT_CINT%(FX##(L_BP26!)), 0   '@27318 DS:3856,3aec,3af0
+    RT_LINE RT_SNG!((FX##(A_0eb0!(RT_CINT%(FX##(L_BP74!)))) + L_BP34!) * L_BP0e! + 10.0), RT_SNG!(75.0 - FX##(A_0ede!(RT_CINT%(FX##(L_BP74!))) < 0.0) * A_0ede!(RT_CINT%(FX##(L_BP74!))) * 28.0 / L_BP94!), RT_SNG!((FX##(A_0eb0!(RT_CINT%(FX##(L_BP74!)))) + L_BP34!) * L_BP0e! + 5.0), RT_SNG!(72.0 - (FX##(A_0ede!(RT_CINT%(FX##(L_BP74!)))) * 28.0 / L_BP94! + 6.0) * (A_0ede!(RT_CINT%(FX##(L_BP74!))) < 0.0)), 9, RT_CINT%(FX##(L_BP26!)), 0   '@273e0 DS:3688,3856,3aec,3af0,3af4,3af8,3afc
+    RT_LINE RT_SNG!((FX##(A_0eb0!(RT_CINT%(FX##(L_BP74!)))) + L_BP34!) * L_BP0e! + 10.0), RT_SNG!(75.0 - FX##(A_0ede!(RT_CINT%(FX##(L_BP74!))) < 0.0) * A_0ede!(RT_CINT%(FX##(L_BP74!))) * 28.0 / L_BP94!), RT_SNG!((FX##(A_0eb0!(RT_CINT%(FX##(L_BP74!)))) + L_BP34!) * L_BP0e! + 15.0), RT_SNG!(72.0 - (FX##(A_0ede!(RT_CINT%(FX##(L_BP74!)))) * 28.0 / L_BP94! + 6.0) * (A_0ede!(RT_CINT%(FX##(L_BP74!))) < 0.0)), 9, RT_CINT%(FX##(L_BP26!)), 0   '@2753d DS:3688,3856,3a82,3aec,3af0,3af8,3afc
+    IF NOT (INSTR(STR$(A_0ede!(RT_CINT%(FX##(L_BP74!)))), "E") > 0) THEN GOTO L_2771e   '@2769a DS:353e
+    A_0ede!(RT_CINT%(FX##(L_BP74!))) = INT(FX##(A_0ede!(RT_CINT%(FX##(L_BP74!)))) * 1000.0) / 1000.0   '@276d2 DS:3ae8
+L_2771e:
+    V_12ae$ = LTRIM$(STR$(A_0ede!(RT_CINT%(FX##(L_BP74!)))))   '@2771e
+    IF NOT (INSTR(V_12ae$, ".") > 0) THEN GOTO L_2779b   '@27755 DS:3ae2
+    V_12ae$ = RT_MID$((V_12ae$), (1), (INSTR(V_12ae$, ".") + 2))   '@2776e DS:3ae2
+L_2779b:
+    L_BP12c! = (FX##(A_0eb0!(RT_CINT%(FX##(L_BP74!)))) + L_BP34!) * L_BP0e! - LEN(V_12ae$) * 4 + 10.0   '@2779b DS:3856
+    L_BP130! = 0.0   '@277e4 DS:3688
+    CALL MIXT_082a_Maior(L_BP12c!, L_BP130!, L_BP134!)   '@277ef
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    L_BP138! = (FX##(L_BP74!) / 2.0 = RT_CLNG&(FX##(L_BP74!)) \ 2&) * 16 + 40   '@27803 DS:372e
+    L_BP13c$ = "CGA"   '@2784b DS:3a56
+    CALL MIXT_08c4_TextoGrafico(L_BP134!, L_BP138!, V_12ae$, L_BP13c$)   '@27859
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    ' @27871 libera strings locais (L_BP13c)
+    IF NOT (A_0f96!(RT_CINT%(FX##(L_BP74!))) <> 0.0) THEN GOTO L_27a91   '@2787b DS:3688
+    IF NOT (INSTR(STR$(A_0f96!(RT_CINT%(FX##(L_BP74!)))), "E") > 0) THEN GOTO L_2792f   '@278ab DS:353e
+    A_0f96!(RT_CINT%(FX##(L_BP74!))) = INT(FX##(A_0f96!(RT_CINT%(FX##(L_BP74!)))) * 1000.0) / 1000.0   '@278e3 DS:3ae8
+L_2792f:
+    V_12ae$ = LTRIM$(STR$(A_0f96!(RT_CINT%(FX##(L_BP74!)))))   '@2792f
+    IF NOT (INSTR(V_12ae$, ".") > 0) THEN GOTO L_279ac   '@27966 DS:3ae2
+    V_12ae$ = RT_MID$((V_12ae$), (1), (INSTR(V_12ae$, ".") + 2))   '@2797f DS:3ae2
+L_279ac:
+    L_BP140! = (FX##(A_0eb0!(RT_CINT%(FX##(L_BP74!)))) + L_BP34!) * L_BP0e! - LEN(V_12ae$) * 4 + 10.0   '@279ac DS:3856
+    L_BP144! = 0.0   '@279f5 DS:3688
+    CALL MIXT_082a_Maior(L_BP140!, L_BP144!, L_BP148!)   '@27a00
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    L_BP14c! = (FX##(L_BP74!) / 2.0 = RT_CLNG&(FX##(L_BP74!)) \ 2&) * 16 + 48   '@27a14 DS:372e
+    L_BP150$ = "CGA"   '@27a5c DS:3a56
+    CALL MIXT_08c4_TextoGrafico(L_BP148!, L_BP14c!, V_12ae$, L_BP150$)   '@27a6a
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    ' @27a82 libera strings locais (L_BP150)
+L_27a91:
+L_27a96:
+L_27a9b:
+    L_BPb4! = A_0eb0!(RT_CINT%(FX##(L_BP74!)))   '@27a9b
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP74!   '@27ac1 DS:34c0
+    L_BP34! = FX##(A_0e26!(RT_CINT%(FX##(L_BP3c!)))) + L_BP34!   '@27aea
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP3c!   '@27b13 DS:34c0
+    IF NOT (A_0fc4!(0) <> 0.0) THEN GOTO L_27df8   '@27b3c DS:3688
+    ' @27b65 CIRCLE angulo inicial 0.0   ' DS:3688,3856,3b00
+    ' @27baa CIRCLE angulo final 3.1416   ' DS:3b04
+    ' @27bb8 CIRCLE aspecto 4.0 / (L_BP2a! * 3.0) * L_BP2e!   ' DS:39e6,3b08
+    RT_CIRCLE RT_SNG!(FX##(A_0e26!(0)) * L_BP0e! + 10.0), 64.0, 9.0, 1800, RT_CINT%(FX##(L_BP26!)), 0.0, RT_SNG!(3.1415998935699462890625##), RT_SNG!(4.0 / (FX##(L_BP2a!) * 3.0) * L_BP2e!)   '@27bdb DS:37c6,37c8
+    IF NOT (A_0fc4!(0) < 0.0) THEN GOTO L_27ca4   '@27bf2 DS:3688
+    RT_LINE RT_SNG!(FX##(A_0e26!(0)) * L_BP0e! + 1.0), 64.0, RT_SNG!(FX##(A_0e26!(0)) * L_BP0e! - 1.0), 62.0, 9, RT_CINT%(FX##(L_BP26!)), 0   '@27c1b DS:34c0,368c,3b00,3b0c
+    GOTO L_27d2a   '@27c9c
+L_27ca4:
+    RT_LINE RT_SNG!(FX##(A_0e26!(0)) * L_BP0e! + 19.0), 64.0, RT_SNG!(FX##(A_0e26!(0)) * L_BP0e! + 21.0), 62.0, 9, RT_CINT%(FX##(L_BP26!)), 0   '@27ca4 DS:3b00,3b0c,3b10,3b14
+L_27d2a:
+    V_12ae$ = LTRIM$(STR$(A_0fc4!(0)))   '@27d2a
+    L_BP154! = 0.0   '@27d5a DS:3688
+    L_BP158! = FX##(A_0e26!(0)) * L_BP0e! - LEN(V_12ae$) * 4 + 10.0   '@27d6b DS:3856
+    CALL MIXT_082a_Maior(L_BP154!, L_BP158!, L_BP15c!)   '@27da3
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    L_BP160! = 60.0   '@27db8 DS:3b18
+    L_BP164$ = "CGA"   '@27dc3 DS:3a56
+    CALL MIXT_08c4_TextoGrafico(L_BP15c!, L_BP160!, V_12ae$, L_BP164$)   '@27dd1
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    ' @27de9 libera strings locais (L_BP164)
+L_27df8:
+    L_BP34! = FX##(L_BP34!) - A_0e26!(V_0e08% + 1)   '@27df8
+    IF NOT (A_0fc4!(1) <> 0.0) THEN GOTO L_2808c   '@27e1c DS:3688
+    ' @27e43 CIRCLE angulo inicial 0.0   ' DS:3688,3856,3b00
+    ' @27e79 CIRCLE angulo final 3.1416   ' DS:3b04
+    ' @27e87 CIRCLE aspecto 4.0 / (L_BP2a! * 3.0) * L_BP2e!   ' DS:39e6,3b08
+    RT_CIRCLE RT_SNG!(FX##(L_BP0e!) * L_BP34! + 10.0), 64.0, 9.0, 1800, RT_CINT%(FX##(L_BP26!)), 0.0, RT_SNG!(3.1415998935699462890625##), RT_SNG!(4.0 / (FX##(L_BP2a!) * 3.0) * L_BP2e!)   '@27eaa DS:37c6,37c8
+    IF NOT (A_0fc4!(1) < 0.0) THEN GOTO L_27f53   '@27ec1 DS:3688
+    RT_LINE RT_SNG!(FX##(L_BP0e!) * L_BP34! + 19.0), 64.0, RT_SNG!(FX##(L_BP0e!) * L_BP34! + 21.0), 62.0, 9, RT_CINT%(FX##(L_BP26!)), 0   '@27ee8 DS:3b00,3b0c,3b10,3b14
+    GOTO L_27fbb   '@27f4b
+L_27f53:
+    RT_LINE RT_SNG!(FX##(L_BP0e!) * L_BP34! + 1.0), 64.0, RT_SNG!(FX##(L_BP0e!) * L_BP34! - 1.0), 62.0, 9, RT_CINT%(FX##(L_BP26!)), 0   '@27f53 DS:34c0,368c,3b00,3b0c
+L_27fbb:
+    V_12ae$ = LTRIM$(STR$(A_0fc4!(1)))   '@27fbb
+    L_BP168! = FX##(L_BP0e!) * L_BP34! - LEN(V_12ae$) * 4 + 10.0   '@27fe9 DS:3856
+    L_BP16c! = -(LEN(V_12ae$) * 8 - 639)   '@28017
+    CALL MIXT_0877_Menor(L_BP168!, L_BP16c!, L_BP170!)   '@28037
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    L_BP174! = 60.0   '@2804c DS:3b18
+    L_BP178$ = "CGA"   '@28057 DS:3a56
+    CALL MIXT_08c4_TextoGrafico(L_BP170!, L_BP174!, V_12ae$, L_BP178$)   '@28065
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    ' @2807d libera strings locais (L_BP178)
+L_2808c:
+    IF NOT (V_12f0$ = "I") THEN GOTO L_281c3   '@2808c DS:38dc
+    L_BP17a% = (V_0e1c! = 0.0)   '@280a3 DS:3688
+    IF NOT ((V_12f4$ <> "*" AND L_BP17a%) <> 0) THEN GOTO L_2818b   '@280cd DS:385e
+    IF NOT (V_12e8$ = "FOTO") THEN GOTO L_2811b   '@280e3 DS:3b1c
+    RT_LPTABRE: RT_LPS CHR$(12): RT_LPFIM   '@280fa
+    GOTO L_28186   '@28113
+L_2811b:
+    V_12ec! = FX##(V_12ec!) + 1.0   '@2811b DS:34c0
+    IF NOT (FX##(V_12ec!) / 2.0 = RT_CLNG&(FX##(V_12ec!)) \ 2&) THEN GOTO L_28181   '@28131 DS:372e
+    RT_LPTABRE: RT_LPS CHR$(12): RT_LPFIM   '@28168
+L_28181:
+L_28186:
+L_2818b:
+    RT_LPTABRE: RT_LPS V_12e0$: RT_LPFIM   '@2818b
+    RT_LPTABRE: RT_LPS "": RT_LPFIM   '@2819e DS:364a
+    RT_ROTINA_0F20   '@281b1 (rotina em assembly ligada ao EXE (SUB_70f20); gerada no fim do programa)
+    GOTO L_281ee   '@281bb
+L_281c3:
+    CALL MIXT_07f1_LimpaTeclado   '@281c3
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    V_12ae$ = RT_INPUT$(1)   '@281cd
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+L_281ee:
+    RT_SCREEN 0   '@281ee
+    GOTO L_282db   '@28203
+    ' ---- F_2820b @0x2820b  (02820b_F_2820b.lift.txt; evidence_id (assembly): ev_00f5b881fe4421c8f2bf21c499a711cd4ed07a9094bf612774a11d497f9523a0)
+L_28210:   ' sub-rotina (alvo de GOSUB); entrada vinda de 024fe1_FUN_2000_4fe1
+    RT_LINE L_BP74!, 133.0, RT_SNG!(FX##(L_BP74!) - 4.0), 137.0, 9, RT_CINT%(FX##(L_BP26!)), 0   '@28215 DS:3b24,3b28,3b2c
+    RT_LINE 0, 0, RT_SNG!(FX##(L_BP74!) + 4.0), 137.0, 8, RT_CINT%(FX##(L_BP26!)), 0   '@28263 DS:39e6,3b2c
+    RT_LINE 0, 0, L_BP74!, 133.0, 8, RT_CINT%(FX##(L_BP26!)), 0   '@2829e DS:3b24
+    RETURN   '@282cc
+L_282db:   ' entrada vinda de 024fe1_FUN_2000_4fe1
+    ' END SUB   '@282db
+END SUB
+
+SUB S_282eb   ' entrada de SUB/FUNCTION (B$ENRA, locais 10 bytes) (0x282eb)
+    DIM L_BP0c%
+    DIM L_BP0e%
+    DIM L_BP10%
+    DIM L_BP12%
+    DIM L_BP14%
+    ' ---- FUN_2000_82eb @0x282eb  (0282eb_FUN_2000_82eb.lift.txt; evidence_id (assembly): ev_4150e2b6cc3bf30076fc260acb619d9c82d0754df155c550cb8beb72f63d6824)
+    IF NOT (V_0e12% = 0) THEN GOTO L_28319   '@28302
+    GOTO L_28861   '@28311
+L_28319:
+    RT_VIEWPRINT 1, 25   '@28319
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@2832b
+    RT_CLS 2   '@28348
+    PRINT RT_STRINGC$((80), (205))   '@28356
+    PRINT RT_TAB$(5); ""; "Obra "; V_0e04$; RT_TAB$(23); ""; "Posicionadas"; V_0e12%; " Vigas"   '@2836e DS:364a,3b30,3b3a,3b4a
+    PRINT RT_TAB$(5); ""; "POSICAO  VIGA     TRAMOS Be Bd Ee Ed   Vinculo de Carga"   '@283c4 DS:364a,3b54
+    PRINT RT_STRINGC$((80), (205))   '@283e4
+    L_BP0e% = 1   '@283fc
+L_28406:
+    L_BP0c% = L_BP0e% + 15   '@2840b
+    IF NOT (V_0e12% < L_BP0c%) THEN GOTO L_28434   '@28419
+    L_BP0c% = V_0e12%   '@28429
+L_28434:
+    GOSUB L_2846c   '@28434
+    IF NOT (V_0e12% = L_BP0c%) THEN GOTO L_28459   '@28441
+    GOTO L_28861   '@28451
+L_28459:
+    L_BP0e% = L_BP0c% + 1   '@28459
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_28406   '@28465
+    ' ---- F_2846c @0x2846c  (02846c_F_2846c.lift.txt; evidence_id (assembly): ev_a9bc876af9d3af582ede833c65463edad83b502359288e115520c08359c3b274)
+L_2846c:   ' sub-rotina (alvo de GOSUB); entrada vinda de 0282eb_FUN_2000_82eb
+    RT_VIEWPRINT 6, 25   '@28471
+    RT_CLS 2   '@28483
+    L_BP10% = L_BP0e%   '@28491
+L_284a2:
+    IF NOT (L_BP0c% >= L_BP10%) THEN GOTO L_2861c   '@284a2
+    V_12ae$ = " ###    \         \ ###  ## ## ## ##"   '@284ad DS:3b90
+    GOSUB L_28668   '@284bf
+    COLOR 3   '@284cc
+    PRINT V_12b6$;   '@284e2
+    COLOR 7   '@284f0
+    PRINT TAB(5); "";: PRINT USING V_12ae$; RT_PU#(L_BP10%, V_12ae$, 1); A_1086$(L_BP10%); RT_PU#(A_10b4%(L_BP10%, 0), V_12ae$, 2); RT_PU#(A_10b4%(L_BP10%, 1), V_12ae$, 3); RT_PU#(A_10b4%(L_BP10%, 2), V_12ae$, 4); RT_PU#(A_10b4%(L_BP10%, 3), V_12ae$, 5); RT_PU#(A_10b4%(L_BP10%, 4), V_12ae$, 6)   '@28506 DS:364a
+    COLOR 14   '@285c6
+    LOCATE CSRLIN - 1, 44   '@285dc
+    PRINT V_12b2$   '@285fd
+    L_BP10% = L_BP10% + 1   '@2860b
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_284a2   '@28613
+L_2861c:
+    PRINT ""   '@2861c DS:364a
+    PRINT " Qualquer Tecla para Continuar ";   '@2862a DS:3bb8
+    CALL MIXT_07f1_LimpaTeclado   '@28638
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    V_12ae$ = RT_INPUT$(1)   '@28642
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RETURN   '@2865e
+L_28668:   ' sub-rotina (alvo de GOSUB)
+    V_12b2$ = ""   '@2866d DS:364a
+    V_12b6$ = ""   '@2867f DS:364a
+    L_BP12% = 1   '@28691
+L_286a0:
+    IF NOT (A_1110%(L_BP10%, A_10b4%(L_BP10%, 2) + A_10b4%(L_BP10%, 0)) >= L_BP12%) THEN GOTO L_28852   '@286a0
+    IF NOT (A_1252!(L_BP10%, L_BP12%) = -100.0) THEN GOTO L_28842   '@286df DS:385a
+    V_12b2$ = V_12b2$ + A_1086$(RT_CINT%(INT(FX##(A_11f6!(L_BP10%, L_BP12%))))) + "/"   '@2870b DS:380e
+    L_BP14% = RT_CINT%((A_11f6!(L_BP10%, L_BP12%) - INT(FX##(A_11f6!(L_BP10%, L_BP12%)))) * 100.0)   '@2875d DS:37f4
+    IF NOT (A_10b4%(RT_CINT%(INT(FX##(A_11f6!(L_BP10%, L_BP12%)))), 0) < L_BP14%) THEN GOTO L_287f5   '@287be
+    V_12b6$ = "erro"   '@287e3 DS:3bdc
+L_287f5:
+    IF NOT (L_BP10% = INT(FX##(A_11f6!(L_BP10%, L_BP12%)))) THEN GOTO L_2883d   '@287f5
+    V_12b6$ = "erro"   '@2882b DS:3bdc
+L_2883d:
+L_28842:
+    L_BP12% = L_BP12% + 1   '@28842
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_286a0   '@2884a
+L_28852:
+    RETURN   '@28852
+L_28861:   ' entrada vinda de 0282eb_FUN_2000_82eb
+    ' END SUB   '@28861
+END SUB
+
+SUB S_28871   ' entrada de SUB/FUNCTION (B$ENRA, locais 14 bytes) (0x28871)
+    DIM L_BP0e$
+    DIM L_BP10%
+    DIM L_BP12%
+    DIM L_BP14%
+    DIM L_BP16%
+    DIM L_BP18%
+    ' ---- FUN_2000_8871 @0x28871  (028871_FUN_2000_8871.lift.txt; evidence_id (assembly): ev_b835d0f4bd5342fde51e85aeb3e1604ea6bd54ea5857de2f2c720d50ad8ca35c)
+    RT_VIEWPRINT 1, 25   '@28883
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@28895
+    RT_CLS 2   '@288b2
+    PRINT RT_STRINGC$((80), (205))   '@288c0
+    PRINT " Correcao dos Parametros"   '@288d8 DS:3be4
+    PRINT RT_STRINGC$((80), (205))   '@288e6
+L_288fe:
+    RT_VIEWPRINT 5, 25   '@28903
+    LOCATE 8, 13   '@28915
+    COLOR 7   '@28933
+    PRINT "1 - ";   '@28949 DS:3c00
+    COLOR RT_CINT%(FX##(V_0dc8!))   '@28957
+    PRINT "R";   '@28974 DS:3c08
+    COLOR 7   '@28982
+    PRINT "eduzir Momentos Negativos a";   '@28998 DS:3c0e
+    COLOR 14   '@289a6
+    PRINT RT_SNG!(FX##(V_0e18!) * 100.0);   '@289bc DS:37f4
+    COLOR 7   '@289da
+    PRINT " %    "   '@289f0 DS:3c2e
+    LOCATE 10, 13   '@289fe
+    COLOR 7   '@28a1c
+    PRINT "2 - ";   '@28a32 DS:3c38
+    COLOR RT_CINT%(FX##(V_0dc8!))   '@28a40
+    PRINT "F";   '@28a5d DS:3c40
+    COLOR 7   '@28a6b
+    PRINT "orneco Cargas Acidentais (";   '@28a81 DS:3c46
+    COLOR 14   '@28a8f
+    PRINT V_12c2$;   '@28aa5
+    COLOR 7   '@28ab3
+    PRINT ")"   '@28ac9 DS:34d2
+    LOCATE 11, 13   '@28ad7
+    IF NOT (V_12c2$ = "N") THEN GOTO L_28b14   '@28af5 DS:3504
+    GOTO L_28b86   '@28b0c
+L_28b14:
+    COLOR 14   '@28b14
+    IF NOT (V_12ca$ = "F") THEN GOTO L_28b4f   '@28b2a DS:3c40
+    PRINT "    Fornecidas atraves de entrada de dados";   '@28b41 DS:3c64
+L_28b4f:
+    IF NOT (V_12ca$ = "G") THEN GOTO L_28b86   '@28b4f DS:38ee
+    PRINT "    Geradas automaticamente como"; V_12d2%; "% da carga total";   '@28b66 DS:3c92,3cb6
+L_28b86:
+    PRINT RT_SPC$(60); "";   '@28b8b DS:364a
+    LOCATE 13, 13   '@28ba2
+    COLOR 7   '@28bc0
+    PRINT "3 - ";   '@28bd6 DS:3cca
+    COLOR RT_CINT%(FX##(V_0dc8!))   '@28be4
+    PRINT "A";   '@28c01 DS:35b8
+    COLOR 7   '@28c0f
+    PRINT "plicacao e fornecimento de Momentos Externos (";   '@28c25 DS:3cd2
+    COLOR 14   '@28c33
+    PRINT V_12c6$;   '@28c49
+    COLOR 7   '@28c57
+    PRINT ")  "   '@28c6d DS:3d04
+    LOCATE 15, 13   '@28c7b
+    COLOR 7   '@28c99
+    PRINT "4 - ";   '@28caf DS:3d0c
+    COLOR RT_CINT%(FX##(V_0dc8!))   '@28cbd
+    PRINT "I";   '@28cda DS:38dc
+    COLOR 7   '@28ce8
+    PRINT "ndexacao com reacoes Maximas ou Estaticas (";   '@28cfe DS:3d14
+    COLOR 14   '@28d0c
+    PRINT V_12ce$;   '@28d22
+    COLOR 7   '@28d30
+    PRINT ")  "   '@28d46 DS:3d04
+    LOCATE 17, 13   '@28d54
+    COLOR 7   '@28d72
+    PRINT "5 - ";   '@28d88 DS:3d44
+    COLOR RT_CINT%(FX##(V_0dc8!))   '@28d96
+    PRINT "U";   '@28db3 DS:3d4c
+    COLOR 7   '@28dc1
+    PRINT "nidade de Esforcos e Medidas (";   '@28dd7 DS:3d52
+    COLOR 14   '@28de5
+    PRINT V_0ddc$; "/"; V_0dd8$;   '@28dfb DS:380e
+    COLOR 7   '@28e1b
+    PRINT ")   "   '@28e31 DS:3d74
+    LOCATE 19, 13   '@28e3f
+    COLOR 7   '@28e5d
+    PRINT "6 - *Retorno ao Menu Principal*"   '@28e73 DS:3d7c
+    LOCATE 21, 13   '@28e86
+    COLOR 7   '@28ea4
+    PRINT "Escolha opcao ";   '@28eba DS:3da0
+    CALL MIXT_07f1_LimpaTeclado   '@28ec8
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    V_12ae$ = RT_INPUT$(1)   '@28ed2
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    L_BP0e$ = V_12ae$   '@28eee
+    IF NOT (L_BP0e$ <> "1") THEN GOTO L_28f3b   '@28f00 DS:360e
+    IF NOT (L_BP0e$ <> "R") THEN GOTO L_28f3b   '@28f17 DS:3c08
+    IF NOT (L_BP0e$ = "r") THEN GOTO L_28f4b   '@28f29 DS:3db2
+L_28f3b:
+    GOTO L_29070   '@28f3b
+L_28f4b:
+    IF NOT (L_BP0e$ <> "2") THEN GOTO L_28f81   '@28f4b DS:364e
+    IF NOT (L_BP0e$ <> "F") THEN GOTO L_28f81   '@28f5d DS:3c40
+    IF NOT (L_BP0e$ = "f") THEN GOTO L_28f91   '@28f6f DS:3db8
+L_28f81:
+    GOTO L_291d5   '@28f81
+L_28f91:
+    IF NOT (L_BP0e$ <> "3") THEN GOTO L_28fc7   '@28f91 DS:36c2
+    IF NOT (L_BP0e$ <> "A") THEN GOTO L_28fc7   '@28fa3 DS:35b8
+    IF NOT (L_BP0e$ = "a") THEN GOTO L_28fd7   '@28fb5 DS:3768
+L_28fc7:
+    GOTO L_29552   '@28fc7
+L_28fd7:
+    IF NOT (L_BP0e$ <> "4") THEN GOTO L_2900d   '@28fd7 DS:374a
+    IF NOT (L_BP0e$ <> "I") THEN GOTO L_2900d   '@28fe9 DS:38dc
+    IF NOT (L_BP0e$ = "i") THEN GOTO L_2901d   '@28ffb DS:3dbe
+L_2900d:
+    GOTO L_296bb   '@2900d
+L_2901d:
+    IF NOT (L_BP0e$ <> "5") THEN GOTO L_29053   '@2901d DS:3756
+    IF NOT (L_BP0e$ <> "U") THEN GOTO L_29053   '@2902f DS:3d4c
+    IF NOT (L_BP0e$ = "u") THEN GOTO L_29063   '@29041 DS:3dc4
+L_29053:
+    GOTO L_297fb   '@29053
+L_29063:
+    GOTO L_29a9e   '@29063
+L_29070:
+    RT_VIEWPRINT 21, 25   '@29075
+    RT_CLS 2   '@29087
+    LOCATE 22, 2   '@29095
+    COLOR 14   '@290b3
+    PRINT "Reduzir Momentos Negativos a *"; RT_SNG!(100.0 * FX##(V_0e18!)); "* % ";   '@290c9 DS:37f4,3dca,3dec
+    CALL MIXT_07f1_LimpaTeclado   '@290f9
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINEINPUT "", V_12ae$   '@29103 DS:364a
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_CLS 2   '@2911d
+    IF NOT (LEN(V_12ae$) = 0) THEN GOTO L_29148   '@2912b
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_288fe   '@29140
+L_29148:
+    L_BP10% = (VAL(V_12ae$) < 10.0#)   '@29148 DS:37ec,3df4
+    IF NOT ((VAL(V_12ae$) > 100.0# OR L_BP10%) <> 0) THEN GOTO L_291ae   '@2917b
+    BEEP   '@2919c
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_29070   '@291a6
+L_291ae:
+    V_0e18! = FX##(VAL(V_12ae$)) / 100.0#   '@291ae DS:37ec
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_288fe   '@291cd
+L_291d5:
+    RT_VIEWPRINT 21, 25   '@291da
+    RT_CLS 2   '@291ec
+    LOCATE 22, 2   '@291fa
+    COLOR 14   '@29218
+    PRINT "Considero Cargas Acidentais na entrada de dados/processamento ";   '@2922e DS:3dfc
+    IF NOT (V_12c2$ = "S") THEN GOTO L_29269   '@2923c DS:38e8
+    PRINT "N/*S* ";   '@29253 DS:3e3e
+    GOTO L_29277   '@29261
+L_29269:
+    PRINT "S/*N* ";   '@29269 DS:3e48
+L_29277:
+    CALL MIXT_07f1_LimpaTeclado   '@29277
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINEINPUT "", V_12ae$   '@29281 DS:364a
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    L_BP12% = (UCASE$(V_12ae$) = "N")   '@2929b DS:3504
+    IF NOT ((UCASE$(V_12ae$) = "S" OR L_BP12%) <> 0) THEN GOTO L_29301   '@292c2 DS:38e8
+    V_12c2$ = UCASE$(V_12ae$)   '@292e1
+    GOTO L_29328   '@292f9
+L_29301:
+    IF NOT (LEN(V_12ae$) > 0) THEN GOTO L_29328   '@29301
+    BEEP   '@29316
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_291d5   '@29320
+L_29328:
+    IF NOT (V_12c2$ = "N") THEN GOTO L_2934c   '@2932d DS:3504
+    GOTO L_29537   '@29344
+L_2934c:
+    LOCATE 23, 2   '@2934c
+    PRINT "As cargas Acidentais serao <F>ornecidas ou <G>eradas *"; V_12ca$; "* ";   '@2936a DS:3644,3e52
+    CALL MIXT_07f1_LimpaTeclado   '@2938a
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINEINPUT "", V_12ae$   '@29394 DS:364a
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    IF NOT (UCASE$(V_12ae$) = "F") THEN GOTO L_293ea   '@293ae DS:3c40
+    V_12ca$ = "F"   '@293cb DS:3c40
+    GOTO L_29537   '@293dd
+L_293ea:
+    IF NOT (UCASE$(V_12ae$) = "G") THEN GOTO L_29537   '@293ea DS:38ee
+L_29407:
+    V_12ca$ = "G"   '@2940c DS:38ee
+    LOCATE 24, 2   '@2941e
+    PRINT "Percentual de Carga Acidental *"; RT_MID2$((STR$(V_12d2%)), (2)); "* ";   '@2943c DS:3644,3e8c
+    CALL MIXT_07f1_LimpaTeclado   '@29470
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINEINPUT "", V_12ae$   '@2947a DS:364a
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    IF NOT (LEN(V_12ae$) = 0) THEN GOTO L_294b1   '@29494
+    GOTO L_29537   '@294a9
+L_294b1:
+    L_BP14% = (VAL(V_12ae$) < 4.0#)   '@294b1 DS:3eb0,3eb8
+    IF NOT ((VAL(V_12ae$) > 96.0# AND L_BP14%) <> 0) THEN GOTO L_29517   '@294e4
+    BEEP   '@29505
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_29407   '@2950f
+L_29517:
+    V_12d2% = RT_CINT%(FX##(VAL(V_12ae$)))   '@29517
+L_29537:
+    RT_CLS 2   '@2953c
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_288fe   '@2954a
+L_29552:
+    RT_VIEWPRINT 21, 25   '@29557
+    RT_CLS 2   '@29569
+    LOCATE 22, 2   '@29577
+    COLOR 14   '@29595
+    PRINT "Aplicacao e Fornecimento de Momentos Externos  ";   '@295ab DS:3ec0
+    IF NOT (V_12c6$ = "S") THEN GOTO L_295e6   '@295b9 DS:38e8
+    PRINT "N/*S* ";   '@295d0 DS:3e3e
+    GOTO L_295f4   '@295de
+L_295e6:
+    PRINT "S/*N* ";   '@295e6 DS:3e48
+L_295f4:
+    CALL MIXT_07f1_LimpaTeclado   '@295f4
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINEINPUT "", V_12ae$   '@295fe DS:364a
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_CLS 2   '@29618
+    IF NOT (LEN(V_12ae$) = 0) THEN GOTO L_29643   '@29626
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_288fe   '@2963b
+L_29643:
+    L_BP16% = (UCASE$(V_12ae$) <> "N")   '@29643 DS:3504
+    IF NOT ((UCASE$(V_12ae$) <> "S" AND L_BP16%) <> 0) THEN GOTO L_2969b   '@2966a DS:38e8
+    BEEP   '@29689
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_29552   '@29693
+L_2969b:
+    V_12c6$ = UCASE$(V_12ae$)   '@2969b
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_288fe   '@296b3
+L_296bb:
+    RT_VIEWPRINT 21, 25   '@296c0
+    RT_CLS 2   '@296d2
+    LOCATE 22, 2   '@296e0
+    COLOR 14   '@296fe
+    PRINT "As reacoes Indexadas e/ou Somatoria serao <M>aximas ou <E>staticas *"; V_12ce$; "*";   '@29714 DS:385e,3ef4
+    CALL MIXT_07f1_LimpaTeclado   '@29734
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINEINPUT " ", V_12ae$   '@2973e DS:3864
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_CLS 2   '@29758
+    IF NOT (LEN(V_12ae$) = 0) THEN GOTO L_29783   '@29766
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_288fe   '@2977b
+L_29783:
+    L_BP18% = (UCASE$(V_12ae$) <> "M")   '@29783 DS:35d6
+    IF NOT ((UCASE$(V_12ae$) <> "E" AND L_BP18%) <> 0) THEN GOTO L_297db   '@297aa DS:353e
+    BEEP   '@297c9
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_296bb   '@297d3
+L_297db:
+    V_12ce$ = UCASE$(V_12ae$)   '@297db
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_288fe   '@297f3
+L_297fb:
+    RT_VIEWPRINT 21, 25   '@29800
+    RT_CLS 2   '@29812
+    LOCATE 22, 2   '@29820
+    COLOR 14   '@2983e
+    PRINT "Unidade de Forca *"; V_0ddc$; "*";   '@29854 DS:385e,3f3c
+    CALL MIXT_07f1_LimpaTeclado   '@29874
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINEINPUT " ", V_12ae$   '@2987e DS:3864
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    IF NOT (LEN(V_12ae$) = 0) THEN GOTO L_298b5   '@29898
+    GOTO L_29953   '@298ad
+L_298b5:
+    V_0ddc$ = V_12ae$   '@298b5
+L_298c7:
+    LOCATE 22, 35   '@298cc
+    RT_LINEINPUT "Coef. Multiplicador para tonelada ", V_12ae$   '@298ea DS:3f52
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    IF NOT (VAL(V_12ae$) <= 0.0#) THEN GOTO L_29939   '@29904 DS:37e4
+    BEEP   '@29928
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_298c7   '@29932
+L_29939:
+    V_0de4! = VAL(V_12ae$)   '@29939
+L_29953:
+    LOCATE 23, 2   '@29958
+    PRINT "Unidade de Medida *"; V_0dd8$; "*";   '@29976 DS:385e,3f78
+    CALL MIXT_07f1_LimpaTeclado   '@29996
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINEINPUT " ", V_12ae$   '@299a0 DS:3864
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    IF NOT (LEN(V_12ae$) = 0) THEN GOTO L_299e5   '@299ba
+    RT_CLS 2   '@299cf
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_288fe   '@299dd
+L_299e5:
+    V_0dd8$ = V_12ae$   '@299e5
+L_299f7:
+    LOCATE 23, 35   '@299fc
+    RT_LINEINPUT "Coef. Multiplicador para metro ", V_12ae$   '@29a1a DS:3f90
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    IF NOT (VAL(V_12ae$) <= 0.0#) THEN GOTO L_29a69   '@29a34 DS:37e4
+    BEEP   '@29a58
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_299f7   '@29a62
+L_29a69:
+    V_0de0! = VAL(V_12ae$)   '@29a69
+    RT_CLS 2   '@29a83
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_288fe   '@29a91
+L_29a9e:
+    ' @29a9e libera strings locais (L_BP0e)
+    ' END SUB   '@29aa7
+END SUB
+
+SUB S_29ab7   ' entrada de SUB/FUNCTION (B$ENSA, STATIC, locais 4 bytes) (0x29ab7)
+    DIM L_BP0c%
+    DIM L_BP0e%
+    ' ---- FUN_2000_9ab7 @0x29ab7  (029ab7_FUN_2000_9ab7.lift.txt; evidence_id (assembly): ev_30152135dfcd98280c849e5e9f62adbf6800132b58a84598e1e32d4def4bcf42)
+    IF NOT (V_0e1c! = 1.0) THEN GOTO L_29b44   '@29ac4 DS:34c0
+    IF NOT (V_12f4$ <> "*") THEN GOTO L_29b14   '@29adf DS:385e
+    RT_LPTABRE: RT_LPS CHR$(12)   '@29af6
+L_29b14:
+    RT_LPTABRE: RT_LPS V_12d8$   '@29b14
+    RT_LPTABRE: RT_LPS V_12dc$: RT_LPFIM   '@29b2c
+L_29b44:
+    V_12ae$ = RT_STRINGC$((18), (35))   '@29b44
+    IF NOT (V_0e1c! = 2.0) THEN GOTO L_29c4c   '@29b60 DS:372e
+    GOSUB L_2a9d3   '@29b7b
+    LOCATE , 31   '@29b88
+    PRINT V_12ae$   '@29ba1
+    LOCATE , 33   '@29baf
+    PRINT "OBRA-"; V_0e00$   '@29bc8 DS:3fb4
+    LOCATE , 33   '@29bdf
+    PRINT "VIGA-"; V_0dfc$   '@29bf8 DS:3fbe
+    LOCATE , 31   '@29c0f
+    PRINT V_12ae$   '@29c28
+    PRINT ""   '@29c36 DS:364a
+    GOTO L_29d1e   '@29c44
+L_29c4c:
+    RT_VIEWPRINT 1, 1   '@29c4c
+    COLOR RT_CINT%(FX##(V_0dc4!)), 7   '@29c5b
+    RT_CLS 2   '@29c80
+    PRINT RT_TAB$(22); ""; "OBRA - "; V_0e00$; RT_TAB$(45); ""; "VIGA - "; V_0dfc$;   '@29c8e DS:364a,3fc8,3fd4
+    COLOR RT_CINT%(FX##(V_0dc0!)), RT_CINT%(FX##(V_0dc4!))   '@29cdb
+    RT_VIEWPRINT 2, 25   '@29d07
+L_29d1e:
+    IF NOT (V_0e1c! = 1.0) THEN GOTO L_29df7   '@29d1e DS:34c0
+    RT_LPTABRE: RT_LPTAB 31: RT_LPS "": RT_LPS V_12ae$: RT_LPFIM   '@29d39 DS:364a
+    RT_LPTABRE: RT_LPTAB 33: RT_LPS "": RT_LPS "OBRA-": RT_LPS V_0e00$: RT_LPFIM   '@29d5e DS:364a,3fb4
+    RT_LPTABRE: RT_LPTAB 33: RT_LPS "": RT_LPS "VIGA-": RT_LPS V_0dfc$: RT_LPFIM   '@29d8c DS:364a,3fbe
+    RT_LPTABRE: RT_LPTAB 31: RT_LPS "": RT_LPS V_12ae$: RT_LPFIM   '@29dba DS:364a
+    RT_LPTABRE: RT_LPS "": RT_LPFIM   '@29ddf DS:364a
+L_29df7:
+    V_12ae$ = " TRAMO   L(" + V_0dd8$ + ")    J(" + V_0dd8$ + "4/" + V_0dd8$ + "4)    P(" + V_0ddc$ + "/" + V_0dd8$ + ")    D(" + V_0dd8$ + ")    F(" + V_0ddc$ + ")"   '@29df7 DS:34d2,379c,380e,3814,3820,3fe0,3ff0,3ffc
+    LOCATE , 15   '@29e95
+    PRINT V_12ae$   '@29eae
+    LOCATE , 15   '@29ebc
+    PRINT RT_STRINGC$((52), (46))   '@29ed5
+    IF NOT (V_0e1c! = 1.0) THEN GOTO L_29f61   '@29eed DS:34c0
+    RT_LPTABRE: RT_LPTAB 15: RT_LPS "": RT_LPS V_12ae$: RT_LPFIM   '@29f08 DS:364a
+    RT_LPTABRE: RT_LPTAB 15: RT_LPS "": RT_LPS RT_STRINGC$((52), (46)): RT_LPFIM   '@29f2d DS:364a
+L_29f61:
+    V_1810% = V_0e0c% + V_0e08%   '@29f61
+    FOR V_180c% = 1 - V_0e0a% TO V_1810%   '@29f70
+    V_12ae$ = " "   '@29f7a DS:3864
+    IF NOT (V_0e08% + 1 = V_180c% OR V_180c% = 0) THEN GOTO L_29fc6   '@29f8c
+    V_12ae$ = "b"   '@29fb4 DS:36c8
+L_29fc6:
+    IF NOT (V_0e10% = 1 AND V_0e08% = V_180c% OR V_0e0e% = 1 AND V_180c% = 1) THEN GOTO L_2a018   '@29fc6
+    V_12ae$ = "e"   '@2a006 DS:36ce
+L_2a018:
+    V_12b2$ = "\\ ##  ###.###    ##.##"   '@2a018 DS:4008
+    LOCATE , 15   '@2a02a
+    PRINT USING V_12b2$; V_12ae$; RT_PU#(V_180c%, V_12b2$, 1); RT_PU#(A_0e26!(V_180c%), V_12b2$, 2); RT_PU#(A_0e54!(V_180c%), V_12b2$, 3)   '@2a043
+    IF NOT (V_0e1c! = 1.0) THEN GOTO L_2a12a   '@2a09b DS:34c0
+    RT_LPTABRE: RT_LPTAB 15: RT_LPS "": PRINT #RT_LPT, USING V_12b2$; V_12ae$; RT_PU#(V_180c%, V_12b2$, 1); RT_PU#(A_0e26!(V_180c%), V_12b2$, 2); RT_PU#(A_0e54!(V_180c%), V_12b2$, 3): RT_LPTQUEBRA 0   '@2a0b6 DS:364a
+L_2a12a:
+    IF NOT (A_0f0c%(V_180c%) = 0) THEN GOTO L_2a152   '@2a12a
+    GOTO L_2a6fa   '@2a14a
+L_2a152:
+    V_1812% = A_0f0c%(V_180c%)   '@2a152
+    FOR V_180e% = 1 TO V_1812%   '@2a16d
+    V_12ae$ = "###.###  ###.## ####.##&"   '@2a174 DS:4024
+    LOCATE , 42   '@2a186
+    PRINT USING V_12ae$; RT_PU#(A_0e82!(A_0f3a%(V_180c%) + (V_180e% - A_0f0c%(V_180c%))), V_12ae$, 1); RT_PU#(A_0eb0!(A_0f3a%(V_180c%) + (V_180e% - A_0f0c%(V_180c%))), V_12ae$, 2); RT_PU#(A_0ede!(A_0f3a%(V_180c%) + (V_180e% - A_0f0c%(V_180c%))), V_12ae$, 3);   '@2a19f
+    IF NOT (A_0f96!(A_0f3a%(V_180c%) + (V_180e% - A_0f0c%(V_180c%))) = -100.0) THEN GOTO L_2a2da   '@2a275 DS:385a
+    PRINT "*"   '@2a2c4 DS:385e
+    GOTO L_2a2e8   '@2a2d2
+L_2a2da:
+    PRINT ""   '@2a2da DS:364a
+L_2a2e8:
+    IF NOT (V_0e1c! = 1.0) THEN GOTO L_2a472   '@2a2e8 DS:34c0
+    RT_LPTABRE: RT_LPTAB 42: RT_LPS "": PRINT #RT_LPT, USING V_12ae$; RT_PU#(A_0e82!(A_0f3a%(V_180c%) + (V_180e% - A_0f0c%(V_180c%))), V_12ae$, 1); RT_PU#(A_0eb0!(A_0f3a%(V_180c%) + (V_180e% - A_0f0c%(V_180c%))), V_12ae$, 2); RT_PU#(A_0ede!(A_0f3a%(V_180c%) + (V_180e% - A_0f0c%(V_180c%))), V_12ae$, 3);: RT_LPTQUEBRA 0   '@2a303 DS:364a
+    IF NOT (A_0f96!(A_0f3a%(V_180c%) + (V_180e% - A_0f0c%(V_180c%))) = -100.0) THEN GOTO L_2a45a   '@2a3f0 DS:385a
+    RT_LPTABRE: RT_LPS "*": RT_LPFIM   '@2a43f DS:385e
+    GOTO L_2a46d   '@2a452
+L_2a45a:
+    RT_LPTABRE: RT_LPS "": RT_LPFIM   '@2a45a DS:364a
+L_2a46d:
+L_2a472:
+    IF NOT (V_12c2$ = "N") THEN GOTO L_2a491   '@2a472 DS:3504
+    GOTO L_2a6e0   '@2a489
+L_2a491:
+    V_12ae$ = "ac###.###         ####.##"   '@2a491 DS:4040
+    LOCATE , 40   '@2a4a3
+    V_1814! = 0.0   '@2a4bc DS:3688
+    V_1818! = A_0f96!(A_0f3a%(V_180c%) + (V_180e% - A_0f0c%(V_180c%)))   '@2a517
+    PRINT USING V_12ae$; RT_PU#(A_0f68!(A_0f3a%(V_180c%) + (V_180e% - A_0f0c%(V_180c%))), V_12ae$, 1);   '@2a4bc
+    CALL MIXT_082a_Maior(V_1814!, V_1818!, V_181c!)   '@2a563
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    A_0f96!(A_0f3a%(V_180c%) + (V_180e% - A_0f0c%(V_180c%))) = V_1818!   '@2a569
+    PRINT USING RT_USING_RESTO$(V_12ae$, 1); RT_PU#(V_181c!, RT_USING_RESTO$(V_12ae$, 1), 1)   '@2a5a8 (continua o PRINT USING de @2a4bc)
+    IF NOT (V_0e1c! = 1.0) THEN GOTO L_2a6e0   '@2a5b5 DS:34c0
+    V_1820! = 0.0   '@2a5d0 DS:364a,3688
+    V_1824! = A_0f96!(A_0f3a%(V_180c%) + (V_180e% - A_0f0c%(V_180c%)))   '@2a642
+    RT_LPTABRE: RT_LPTAB 40: RT_LPS "": PRINT #RT_LPT, USING V_12ae$; RT_PU#(A_0f68!(A_0f3a%(V_180c%) + (V_180e% - A_0f0c%(V_180c%))), V_12ae$, 1);: RT_LPTQUEBRA 0   '@2a5d0
+    CALL MIXT_082a_Maior(V_1820!, V_1824!, V_1828!)   '@2a68e
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    A_0f96!(A_0f3a%(V_180c%) + (V_180e% - A_0f0c%(V_180c%))) = V_1824!   '@2a694
+    PRINT #RT_LPT, USING RT_USING_RESTO$(V_12ae$, 1); RT_PU#(V_1828!, RT_USING_RESTO$(V_12ae$, 1), 1): RT_LPTQUEBRA 0   '@2a6d3 (continua o PRINT USING de @2a5d0)
+L_2a6e0:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_180e%   '@2a6e5
+L_2a6fa:
+    IF NOT (V_0e1c! = 2.0) THEN GOTO L_2a804   '@2a6ff DS:372e
+    L_BP0c% = A_0f0c%(V_180c% + 1)   '@2a71a
+    L_BP0e% = CSRLIN   '@2a74a
+    IF NOT ((1 - (V_12c2$ = "S")) * L_BP0c% + L_BP0e% + 1 > 23) THEN GOTO L_2a7ff   '@2a74d DS:38e8
+    COLOR 3   '@2a76d
+    LOCATE , 15   '@2a783
+    PRINT "Continua ..."   '@2a79c DS:405e
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@2a7aa
+    CALL MIXT_07f1_LimpaTeclado   '@2a7c7
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    V_12ae$ = RT_INPUT$(1)   '@2a7d1
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    GOSUB L_2a9d3   '@2a7ed
+L_2a7ff:
+L_2a804:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_180c%   '@2a804
+    IF NOT (V_12c6$ = "S") THEN GOTO L_2a9c6   '@2a819 DS:38e8
+    LOCATE , 19   '@2a830
+    PRINT "Mext( apoio 0 )="; A_0fc4!(0); V_0ddc$; V_0dd8$;   '@2a849 DS:406e
+    LOCATE , 44   '@2a884
+    PRINT "Mext( apoio"; V_0e08%; ")="; A_0fc4!(1); V_0ddc$; V_0dd8$   '@2a89d DS:4082,4092
+    IF NOT (V_0e1c! = 1.0) THEN GOTO L_2a9c1   '@2a8e8 DS:34c0
+    RT_LPTABRE: RT_LPTAB 19: RT_LPS "": RT_LPS "Mext( apoio 0 )=": RT_LPS STR$(A_0fc4!(0)) + " ": RT_LPS V_0ddc$: RT_LPS V_0dd8$   '@2a903 DS:364a,406e
+    RT_LPTABRE: RT_LPTAB 44: RT_LPS "": RT_LPS "Mext( apoio": RT_LPS STR$(V_0e08%) + " ": RT_LPS ")=": RT_LPS STR$(A_0fc4!(1)) + " ": RT_LPS V_0ddc$: RT_LPS V_0dd8$: RT_LPFIM   '@2a95a DS:364a,4082,4092
+L_2a9c1:
+L_2a9c6:
+    GOTO L_2aa67   '@2a9c6
+    ' ---- F_2a9ce @0x2a9ce  (02a9ce_F_2a9ce.lift.txt; evidence_id (assembly): ev_6a2b01de364b686518ba3513f202176ff697cd70723d9c83e7412bf51ff53f9d)
+L_2a9d3:   ' sub-rotina (alvo de GOSUB); entrada vinda de 029ab7_FUN_2000_9ab7
+    FOR V_180e% = 1 TO 25   '@2a9d8
+    LOCATE V_180e%, 13   '@2a9e4
+    PRINT CHR$(186); RT_TAB$(70); ""; CHR$(186);   '@2a9ff DS:364a
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_180e%   '@2aa34
+    LOCATE 2   '@2aa45
+    RETURN   '@2aa58
+L_2aa67:   ' entrada vinda de 029ab7_FUN_2000_9ab7
+    ' END SUB   '@2aa67
+END SUB
+
+SUB S_30558   ' entrada de SUB/FUNCTION (B$ENRA, locais 18 bytes) (0x30558)
+    DIM L_BP0e!
+    DIM L_BP12!
+    DIM L_BP16!
+    DIM L_BP1a!
+    DIM L_BP1c%
+    ' ---- FUN_3000_0558 @0x30558  (030558_FUN_3000_0558.lift.txt; evidence_id (assembly): ev_d8de0bdffae069bce61f475727cc14a8b46b2f0122f8f5d3fb4cf3b70ff7b768)
+    L_BP0e! = 0.0   '@3056a DS:40be
+    L_BP12! = 1.0   '@3057b DS:40c2
+    CALL MIXT_0dbe_GuardaTela(L_BP0e!, L_BP12!, V_0dcc$)   '@30585
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    COLOR 7   '@30596
+    RT_VIEWPRINT 22, 25   '@305ac
+    RT_CLS 2   '@305be
+    LOCATE 23, 1   '@305cc
+    PRINT " Drive que contem o Disco de Dados ";   '@305e7 DS:41c0
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@305f5
+    PRINT "*"; RT_MID$((V_0de8$), (1), (1)); "*";   '@30612 DS:41e8
+    CALL MIXT_07f1_LimpaTeclado   '@3063d
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINEINPUT " ", V_12ae$   '@30647 DS:41ee
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    IF NOT (LEN(V_12ae$) > 0) THEN GOTO L_30688   '@30661
+    V_0de8$ = V_12ae$   '@30676
+L_30688:
+    LOCATE 24, 1   '@30688
+    COLOR 3   '@306a3
+    PRINT " [";   '@306b9 DS:41f4
+    COLOR 7   '@306c7
+    PRINT "\Diretorio\Subdiretorio\...\";   '@306dd DS:41fa
+    COLOR 3   '@306eb
+    PRINT "]";   '@30701 DS:421a
+    COLOR 7   '@3070f
+    PRINT "Subdiretorio ";   '@30725 DS:4220
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@30733
+    PRINT "*"; V_0dec$; "*";   '@30750 DS:41e8
+    COLOR 7   '@30770
+    CALL MIXT_07f1_LimpaTeclado   '@30786
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINEINPUT " ", V_12ae$   '@30790 DS:41ee
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    IF NOT (LEN(V_12ae$) > 0) THEN GOTO L_30828   '@307aa
+    IF NOT (RT_MID$((V_12ae$), (1), (1)) <> "\") THEN GOTO L_3080b   '@307bf DS:4232
+    V_0dec$ = V_0dec$ + UCASE$(V_12ae$)   '@307e1
+    GOTO L_30823   '@30803
+L_3080b:
+    V_0dec$ = UCASE$(V_12ae$)   '@3080b
+L_30823:
+L_30828:
+    IF NOT (RT_RIGHT$((V_0dec$), (1)) <> "\") THEN GOTO L_30865   '@30828 DS:4232
+    V_0dec$ = V_0dec$ + "\"   '@30849 DS:4232
+L_30865:
+    L_BP16! = 1.0   '@3086f DS:40c2
+    L_BP1a! = 0.0   '@30880 DS:40be
+    CALL MIXT_0dbe_GuardaTela(L_BP16!, L_BP1a!, V_0dcc$)   '@3088a
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    ON ERROR GOTO L_30371
+    RT_ONERR = &H30371   '@3089b
+    L_BP1c% = (LEN(V_0dec$) > 1)   '@308aa DS:4180
+    CHDIR RT_ARQ$(V_0de8$ + ":" + RT_LEFT$((V_0dec$), (LEN(V_0dec$) + L_BP1c%)))   '@308d7
+    ON ERROR GOTO L_300fd
+    RT_ONERR = &H300fd   '@308f1
+    GOTO L_3090d   '@30900
+L_3090d:
+    ' END SUB   '@3090d
+END SUB
+
+SUB S_3091d   ' entrada de SUB/FUNCTION (B$ENSA, STATIC, locais 12 bytes) (0x3091d)
+    DIM L_BP0c%
+    DIM L_BP0e%
+    DIM L_BP10%
+    DIM L_BP12%
+    DIM L_BP14%
+    DIM L_BP16%
+    ' ---- FUN_3000_091d @0x3091d  (03091d_FUN_3000_091d.lift.txt; evidence_id (assembly): ev_ed740340df202e612e3ef0a4f80aed6d86e6627060e04607af27fd79c205b09d)
+L_30934:   ' entrada vinda de 032b12_FUN_3000_2b12
+    ON ERROR GOTO L_300fd
+    RT_ONERR = &H300fd   '@30939
+    RT_VIEWPRINT 1, 25   '@30948
+    V_1862! = RT_FRE&("")   '@3095a DS:4238
+    V_1862! = INT(FX##(RT_FREN&(-1)) / 1024.0#)   '@30974 DS:423c
+    COLOR RT_CINT%(FX##(V_0dc0!)), RT_CINT%(FX##(V_0dc4!))   '@3099a
+    RT_CLS 2   '@309c6
+    PRINT RT_STRINGC$((80), (205))   '@309d4
+    PRINT " Gravacao e Leitura de Vigas Continuas"   '@309ec DS:4244
+    PRINT RT_STRINGC$((80), (205))   '@309fa
+    COLOR 7   '@30a12
+    LOCATE 6, 20   '@30a28
+    PRINT "1  -  ";   '@30a46 DS:426e
+    COLOR RT_CINT%(FX##(V_0dc8!))   '@30a54
+    PRINT "C";   '@30a71 DS:4278
+    COLOR 7   '@30a7f
+    PRINT "riacao de Arquivo em Disco"   '@30a95 DS:427e
+    LOCATE 8, 20   '@30aa3
+    PRINT "2  -  ";   '@30ac1 DS:429c
+    COLOR RT_CINT%(FX##(V_0dc8!))   '@30acf
+    PRINT "G";   '@30aec DS:42a6
+    COLOR 7   '@30afa
+    PRINT "ravacao de Vigas em Disco"   '@30b10 DS:42ac
+    LOCATE 10, 20   '@30b1e
+    PRINT "3  -  ";   '@30b3c DS:42ca
+    COLOR RT_CINT%(FX##(V_0dc8!))   '@30b4a
+    PRINT "N";   '@30b67 DS:42d4
+    COLOR 7   '@30b75
+    PRINT "umero de Vigas Gravadas"   '@30b8b DS:42da
+    LOCATE 12, 20   '@30b99
+    PRINT "4  -  Ca";   '@30bb7 DS:42f6
+    COLOR RT_CINT%(FX##(V_0dc8!))   '@30bc5
+    PRINT "t";   '@30be2 DS:4302
+    COLOR 7   '@30bf0
+    PRINT "alogo de Vigas Gravadas"   '@30c06 DS:4308
+    LOCATE 14, 20   '@30c14
+    PRINT "5  -  ";   '@30c32 DS:4324
+    COLOR RT_CINT%(FX##(V_0dc8!))   '@30c40
+    PRINT "L";   '@30c5d DS:432e
+    COLOR 7   '@30c6b
+    PRINT "eitura de Vigas Gravadas"   '@30c81 DS:4334
+    LOCATE 16, 20   '@30c8f
+    PRINT "6  -  Acesso ao ";   '@30cad DS:4350
+    COLOR RT_CINT%(FX##(V_0dc8!))   '@30cbb
+    PRINT "D";   '@30cd8 DS:4364
+    COLOR 7   '@30ce6
+    PRINT "OS ";   '@30cfc DS:436a
+    COLOR 3   '@30d0a
+    PRINT "("; V_1862!; "Kbytes livres )"   '@30d20 DS:4372,4378
+    COLOR 7   '@30d44
+    LOCATE 18, 20   '@30d5a
+    PRINT "7  -  ";   '@30d78 DS:438c
+    COLOR RT_CINT%(FX##(V_0dc8!))   '@30d86
+    PRINT "A";   '@30da3 DS:4396
+    COLOR 7   '@30db1
+    PRINT "lterar Drive e Diretorio  ";   '@30dc7 DS:439c
+    COLOR 3   '@30dd5
+    PRINT V_0de8$; ":"; V_0dec$   '@30deb DS:4180
+    COLOR 7   '@30e0b
+    LOCATE 20, 20   '@30e21
+    PRINT "8  -  *Retorno ao Menu Principal*"   '@30e3f DS:43ba
+    LOCATE 22, 20   '@30e4d
+    PRINT "escolha opcao ";   '@30e6b DS:43e0
+    CALL MIXT_07f1_LimpaTeclado   '@30e79
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    V_12ae$ = RT_INPUT$(1)   '@30e83
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    V_1866$ = V_12ae$   '@30e9f
+    IF NOT (V_1866$ <> "1") THEN GOTO L_30eec   '@30eb1 DS:43f2
+    IF NOT (V_1866$ <> "C") THEN GOTO L_30eec   '@30ec8 DS:4278
+    IF NOT (V_1866$ = "c") THEN GOTO L_31350   '@30eda DS:43f8
+L_30eec:
+    RT_VIEWPRINT 5, 25   '@30eec
+    RT_CLS 2   '@30efe
+    COLOR RT_CINT%(4.0 * FX##(V_0dc4!)), 7   '@30f0c DS:43fe
+    PRINT RT_TAB$(2); ""; "  ATENCAO !  "   '@30f36 DS:4238,4402
+    COLOR RT_CINT%(FX##(V_0dc0!)), RT_CINT%(FX##(V_0dc4!))   '@30f56
+    PRINT " A criacao do arquivo, deve ser feita somente quando este ainda nao existe."   '@30f82 DS:4414
+    PRINT " Caso ja exista tal arquivo no Disco, ele sera inteiramente perdido."   '@30f90 DS:4464
+    PRINT ""   '@30f9e DS:4238
+    COLOR 7   '@30fac
+    PRINT " O Arquivo que sera criado para gravacao das Vigas arquivadas em Memoria,"   '@30fc2 DS:44ac
+    PRINT " devera ter o mesmo nome da Obra arquivada com extensao .VIG "   '@30fd0 DS:44fa
+    PRINT ""   '@30fde DS:4238
+    COLOR 14   '@30fec
+    IF NOT (V_0e12% > 0) THEN GOTO L_31042   '@31002
+    PRINT " Arquivadas em Memoria"; V_0e12%; " Vigas da Obra "; V_0e04$   '@31011 DS:453c,4556
+    GOTO L_31055   '@3103a
+L_31042:
+    PRINT " Nao ha Vigas Arquivadas na Memoria"   '@31042 DS:456a
+L_31055:
+L_3105a:
+    ON ERROR GOTO L_300fd
+    RT_ONERR = &H300fd   '@3105f
+    V_186a! = 16.0   '@3106e DS:4592
+    GOSUB L_33877   '@3107f
+    RT_VIEWPRINT 5, 25   '@3108c
+    LOCATE 14, 1   '@3109e
+    COLOR 7   '@310b9
+    PRINT " Nome do arquivo *";   '@310cf DS:4596
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@310dd
+    PRINT "NAO CRIAR";   '@310fa DS:45ac
+    COLOR 7   '@31108
+    PRINT "* ";   '@3111e DS:45ba
+    CALL MIXT_07f1_LimpaTeclado   '@3112c
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINEINPUT "", V_0e00$   '@31136 DS:4238
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    IF NOT (LEN(V_0e00$) = 0) THEN GOTO L_3116d   '@31150
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_30934   '@31165
+L_3116d:
+    L_BP0c% = (VAL(V_0e00$) <> 0.0#)   '@3116d DS:45c0
+    IF NOT ((LEN(V_0e00$) > 8 OR L_BP0c%) <> 0) THEN GOTO L_311c5   '@3119b
+    BEEP   '@311b3
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_3105a   '@311bd
+L_311c5:
+    L_BP0e% = (RT_INSTR%((1), (V_0e00$), (" ")) > 0)   '@311c5 DS:41ee
+    L_BP10% = RT_INSTR%((1), (V_0e00$), (".")) > 0 OR L_BP0e%   '@311f2 DS:45c8
+    L_BP12% = RT_INSTR%((1), (V_0e00$), ("\")) > 0 OR L_BP10%   '@31211 DS:4232
+    IF NOT ((RT_INSTR%((1), (V_0e00$), ("/")) > 0 OR L_BP12%) <> 0) THEN GOTO L_31259   '@31230 DS:45ce
+    BEEP   '@31247
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_3105a   '@31251
+L_31259:
+    ON ERROR GOTO L_30170
+    RT_ONERR = &H30170   '@31259
+    IF NOT (UCASE$(V_0e00$) = "D") THEN GOTO L_31297   '@31268 DS:4364
+    CALL S_30558   '@31285
+    IF RT_EVENTO THEN EXIT SUB   ' ON KEY que sai da SUB
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_3105a   '@3128f
+L_31297:
+    V_1311% = 0   '@31297
+    OPEN RT_ARQ$(V_0de8$ + ":" + V_0dec$ + V_0e00$ + ".VIG") FOR RANDOM AS #1 LEN = 855   '@312a2 DS:4180,45d4,45da
+    IF NOT (V_12ae$ = "***") THEN GOTO L_31303   '@312e4 DS:412e
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_3105a   '@312fb
+L_31303:
+    RT_REG_12F8_GRAVA 1, 1&   '@31303 (registro de 855 bytes)
+    CLOSE #1   '@31322
+    ON ERROR GOTO L_300fd
+    RT_ONERR = &H300fd   '@31331
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_30934   '@31340
+L_31350:
+    IF NOT (V_1866$ <> "2") THEN GOTO L_31386   '@31350 DS:45e2
+    IF NOT (V_1866$ <> "G") THEN GOTO L_31386   '@31362 DS:42a6
+    IF NOT (V_1866$ = "g") THEN GOTO L_31c8e   '@31374 DS:45e8
+L_31386:
+    IF NOT (V_0e12% = 0) THEN GOTO L_3139d   '@31386
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_30934   '@31395
+L_3139d:
+    RT_VIEWPRINT 1, 25   '@3139d
+    COLOR RT_CINT%(FX##(V_0dc0!)), RT_CINT%(FX##(V_0dc4!))   '@313af
+    RT_CLS 2   '@313db
+    PRINT RT_STRINGC$((80), (205))   '@313e9
+    PRINT " Gravacao de Vigas Continuas"   '@31401 DS:45ee
+    PRINT " Arquivadas em Memoria"; V_0e12%; "Vigas referentes a Obra "; V_0e04$   '@3140f DS:453c,460e
+    PRINT RT_STRINGC$((80), (205))   '@31438
+L_31455:
+    V_186a! = 13.0   '@3145a DS:462a
+    GOSUB L_33877   '@3146b
+    RT_VIEWPRINT 5, 25   '@31478
+    LOCATE 10, 1   '@3148a
+    COLOR 3   '@314a5
+    PRINT " Entre com o intervalo de posicoes que sera gravado   ..."   '@314bb DS:462e
+    PRINT " 1 A 2  ou  1,5 (1 2.. 5)  ou  2 (somente 2)  ou  4a7 ..."   '@314c9 DS:466c
+L_314dc:
+    LOCATE 6, 1   '@314e1
+    COLOR 7   '@314fc
+    PRINT " Gravar no Disco, posicoes da memoria ";   '@31512 DS:46aa
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@31520
+    PRINT "i";   '@3153d DS:46d4
+    COLOR 7   '@3154b
+    PRINT " A ";   '@31561 DS:46da
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@3156f
+    PRINT "j";   '@3158c DS:46e2
+    COLOR 7   '@3159a
+    PRINT "  *FIM* ";   '@315b0 DS:46e8
+    CALL MIXT_0049_Le2Campos(V_12ae$, V_12b2$)   '@315be
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    IF NOT (UCASE$(V_12ae$) = "D") THEN GOTO L_315ff   '@315d0 DS:4364
+    CALL S_30558   '@315ed
+    IF RT_EVENTO THEN EXIT SUB   ' ON KEY que sai da SUB
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_31455   '@315f7
+L_315ff:
+    V_186e! = VAL(V_12ae$)   '@315ff
+    V_1872! = VAL(V_12b2$)   '@31619
+    IF NOT (LEN(V_12ae$) = 0) THEN GOTO L_31650   '@31633
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_30934   '@31648
+L_31650:
+    IF NOT (RT_INSTR%((1), (UCASE$(V_12ae$)), ("A")) > 0) THEN GOTO L_316a9   '@31650 DS:4396
+    V_1872! = VAL(RT_MID2$((V_12ae$), (INSTR(UCASE$(V_12ae$), "A") + 1)))   '@31673 DS:4396
+L_316a9:
+    IF NOT (V_1872! = 0.0) THEN GOTO L_316d5   '@316a9 DS:40be
+    V_1872! = V_186e!   '@316c4
+L_316d5:
+    IF NOT (V_1872! < V_186e! OR (V_0e12% < V_1872! OR V_186e! < 1.0)) THEN GOTO L_31743   '@316d5 DS:40c2
+    BEEP   '@31731
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_314dc   '@3173b
+L_31743:
+L_31748:
+    LOCATE 7, 1   '@3174d
+    PRINT " A partir (";   '@31768 DS:46f4
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@31776
+    PRINT "INCLUSIVE";   '@31793 DS:4704
+    COLOR 7   '@317a1
+    PRINT ") no Disco, do Registro ";   '@317b7 DS:4712
+    CALL MIXT_07f1_LimpaTeclado   '@317c5
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINEINPUT "", V_12ae$   '@317cf DS:4238
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    V_185a! = VAL(V_12ae$)   '@317e9
+    IF NOT (V_185a! < 1.0) THEN GOTO L_31830   '@31803 DS:40c2
+    BEEP   '@3181e
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_31748   '@31828
+L_31830:
+    CALL MIXT_07f1_LimpaTeclado   '@31830
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    LOCATE 8, 1   '@3183a
+    RT_LINEINPUT " Dados Corretos N/*S* ", V_12ae$   '@31855 DS:472e
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    IF NOT (UCASE$(V_12ae$) = "N") THEN GOTO L_31894   '@3186f DS:42d4
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_314dc   '@3188c
+L_31894:
+    ON ERROR GOTO L_30170
+    RT_ONERR = &H30170   '@31894
+    OPEN RT_ARQ$(V_0de8$ + ":" + V_0dec$ + V_0e04$ + ".VIG") FOR INPUT AS #1   '@318a3 DS:4180,45da,4748
+    CLOSE #1   '@318e5
+    IF NOT (V_12ae$ = "***") THEN GOTO L_31913   '@318f4 DS:412e
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_31455   '@3190b
+L_31913:
+    OPEN RT_ARQ$(V_0de8$ + ":" + V_0dec$ + V_0e04$ + ".VIG") FOR RANDOM AS #1 LEN = 855   '@31913 DS:4180,45d4,45da
+    RT_REG_12F8_LE 1, 1&   '@31955 (registro de 855 bytes)
+    IF NOT (V_12ae$ = "***") THEN GOTO L_31993   '@31974 DS:412e
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_31455   '@3198b
+L_31993:
+    CLOSE #1   '@31993
+    V_1876! = V_1311%   '@319a2
+    IF NOT (FX##(V_1876!) + 1.0 < FX##(V_185a!)) THEN GOTO L_31ab3   '@319b6 DS:40c2
+    LOCATE 8, 40   '@319d6
+    BEEP   '@319f4
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@319fe
+    PRINT " GRAVADOS"; V_1876!; "REGISTROS NESTE ARQUIVO ";   '@31a1b DS:474e,475c
+    CALL MIXT_07f1_LimpaTeclado   '@31a3f
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    ON ERROR GOTO L_300fd
+    RT_ONERR = &H300fd   '@31a49
+    V_12ae$ = RT_INPUT$(1)   '@31a58
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_VIEWPRINT 5, 9   '@31a74
+    RT_CLS 2   '@31a86
+    RT_VIEWPRINT 5, 25   '@31a94
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_314dc   '@31aa6
+L_31ab3:
+    V_187a! = V_1872!   '@31ab3
+    FOR V_186a! = V_186e! TO V_187a!   '@31ac5 DS:40c2
+    CALL S_33df1(V_186a!)   '@31acc
+    IF RT_EVENTO THEN EXIT SUB   ' ON KEY que sai da SUB
+    CALL S_35e47   '@31ada
+    IF RT_EVENTO THEN EXIT SUB   ' ON KEY que sai da SUB
+    OPEN RT_ARQ$(V_0de8$ + ":" + V_0dec$ + V_0e04$ + ".VIG") FOR RANDOM AS #1 LEN = 855   '@31ae4 DS:4180,45d4,45da
+    RT_REG_12F8_GRAVA 1, RT_CLNG&(FX##(V_185a!) + 1.0)   '@31b26 DS:40c2 (registro de 855 bytes)
+    IF NOT (V_12ae$ = "***") THEN GOTO L_31b6f   '@31b50 DS:412e
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_31455   '@31b67
+L_31b6f:
+    CLOSE #1   '@31b6f
+    V_185a! = FX##(V_185a!) + 1.0   '@31b7e DS:40c2
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_186a!   '@31b94 DS:40c2
+    IF NOT (FX##(V_185a!) - 1.0 <= FX##(V_1876!)) THEN GOTO L_31be8   '@31bc0 DS:4778
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_30934   '@31be0
+L_31be8:
+    V_1311% = RT_CINT%(FX##(V_185a!) - 1.0)   '@31be8 DS:4778
+    OPEN RT_ARQ$(V_0de8$ + ":" + V_0dec$ + V_0e04$ + ".VIG") FOR RANDOM AS #1 LEN = 855   '@31bff DS:4180,45d4,45da
+    RT_REG_12F8_GRAVA 1, 1&   '@31c41 (registro de 855 bytes)
+    CLOSE #1   '@31c60
+    ON ERROR GOTO L_300fd
+    RT_ONERR = &H300fd   '@31c6f
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_30934   '@31c7e
+L_31c8e:
+    IF NOT (V_1866$ <> "3") THEN GOTO L_31cc4   '@31c8e DS:477c
+    IF NOT (V_1866$ <> "N") THEN GOTO L_31cc4   '@31ca0 DS:42d4
+    IF NOT (V_1866$ = "n") THEN GOTO L_320ac   '@31cb2 DS:4782
+L_31cc4:
+    RT_VIEWPRINT 1, 25   '@31cc4
+    COLOR RT_CINT%(FX##(V_0dc0!)), RT_CINT%(FX##(V_0dc4!))   '@31cd6
+    RT_CLS 2   '@31d02
+    PRINT RT_STRINGC$((80), (205))   '@31d10
+    PRINT " Pesquisa do Numero de Vigas Gravadas"   '@31d28 DS:4788
+    IF NOT (V_0e12% > 0) THEN GOTO L_31d76   '@31d36
+    PRINT " Arquivadas em Memoria"; V_0e12%; "Vigas da Obra "; V_0e04$   '@31d45 DS:453c,47b2
+    GOTO L_31d89   '@31d6e
+L_31d76:
+    PRINT " Nao ha Vigas Arquivadas na Memoria"   '@31d76 DS:456a
+L_31d89:
+    PRINT RT_STRINGC$((80), (205))   '@31d89
+L_31da6:
+    V_186a! = 9.0   '@31dab DS:47c4
+    GOSUB L_33877   '@31dbc
+L_31dce:
+    RT_VIEWPRINT 5, 25   '@31dd3
+    LOCATE 6, 1   '@31de5
+    COLOR 7   '@31e00
+    PRINT " Nome do Arquivo a Pesquisar *FIM* ";   '@31e16 DS:47c8
+    CALL MIXT_07f1_LimpaTeclado   '@31e24
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINEINPUT "", V_0e00$   '@31e2e DS:4238
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    IF NOT (LEN(V_0e00$) = 0) THEN GOTO L_31e65   '@31e48
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_30934   '@31e5d
+L_31e65:
+    ON ERROR GOTO L_30170
+    RT_ONERR = &H30170   '@31e65
+    IF NOT (UCASE$(V_0e00$) = "D") THEN GOTO L_31ea3   '@31e74 DS:4364
+    CALL S_30558   '@31e91
+    IF RT_EVENTO THEN EXIT SUB   ' ON KEY que sai da SUB
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_31da6   '@31e9b
+L_31ea3:
+    OPEN RT_ARQ$(V_0de8$ + ":" + V_0dec$ + V_0e00$ + ".VIG") FOR INPUT AS #1   '@31ea3 DS:4180,45da,4748
+    CLOSE #1   '@31ee5
+    IF NOT (V_12ae$ = "***") THEN GOTO L_31f13   '@31ef4 DS:412e
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_31da6   '@31f0b
+L_31f13:
+    OPEN RT_ARQ$(V_0de8$ + ":" + V_0dec$ + V_0e00$ + ".VIG") FOR RANDOM AS #1 LEN = 855   '@31f13 DS:4180,45d4,45da
+    RT_REG_12F8_LE 1, 1&   '@31f55 (registro de 855 bytes)
+    IF NOT (V_12ae$ = "***") THEN GOTO L_31f93   '@31f74 DS:412e
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_31da6   '@31f8b
+L_31f93:
+    V_187e! = V_1311%   '@31f93
+    CLOSE #1   '@31fa7
+    ON ERROR GOTO L_300fd
+    RT_ONERR = &H300fd   '@31fb6
+    LOCATE 6, 50   '@31fc5
+    COLOR RT_CINT%(4.0 * FX##(V_0dc4!)), 7   '@31fe3 DS:43fe
+    PRINT " Gravadas"; V_187e!; "Vigas ";   '@3200d DS:47f0,47fe
+    CALL MIXT_07f1_LimpaTeclado   '@32031
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    COLOR 7, RT_CINT%(FX##(V_0dc4!))   '@3203b
+    V_12ae$ = RT_INPUT$(1)   '@32060
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_VIEWPRINT 5, 8   '@3207c
+    RT_CLS 2   '@3208e
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_31dce   '@3209c
+L_320ac:
+    IF NOT (V_1866$ <> "4") THEN GOTO L_320e2   '@320ac DS:4808
+    IF NOT (V_1866$ <> "T") THEN GOTO L_320e2   '@320be DS:480e
+    IF NOT (V_1866$ = "t") THEN GOTO L_32b12   '@320d0 DS:4302
+L_320e2:
+    RT_VIEWPRINT 1, 25   '@320e2
+    COLOR RT_CINT%(FX##(V_0dc0!)), RT_CINT%(FX##(V_0dc4!))   '@320f4
+    RT_CLS 2   '@32120
+    PRINT RT_STRINGC$((80), (205))   '@3212e
+    PRINT " Catalogo de Vigas Gravadas em Disco"   '@32146 DS:4814
+    IF NOT (V_0e12% > 0) THEN GOTO L_32194   '@32154
+    PRINT " Arquivadas em Memoria"; V_0e12%; "Vigas da Obra "; V_0e04$   '@32163 DS:453c,47b2
+    GOTO L_321a7   '@3218c
+L_32194:
+    PRINT " Nao ha Vigas Arquivadas na Memoria"   '@32194 DS:456a
+L_321a7:
+    PRINT RT_STRINGC$((80), (205))   '@321a7
+L_321c4:
+    V_186a! = 9.0   '@321c9 DS:47c4
+    GOSUB L_33877   '@321da
+L_321ec:
+    RT_VIEWPRINT 5, 25   '@321f1
+    LOCATE 6, 1   '@32203
+    COLOR 7   '@3221e
+    PRINT " Nome do Arquivo a Catalogar *FIM* ";   '@32234 DS:483c
+    CALL MIXT_07f1_LimpaTeclado   '@32242
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    V_1882! = 0.0   '@3224c DS:40be
+    V_1886! = 1.0   '@3225e DS:40c2
+    CALL MIXT_0dbe_GuardaTela(V_1882!, V_1886!, V_0dcc$)   '@32269
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINEINPUT "", V_0e00$   '@3227a DS:4238
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    IF NOT (LEN(V_0e00$) = 0) THEN GOTO L_322b1   '@32294
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_30934   '@322a9
+L_322b1:
+    ON ERROR GOTO L_30170
+    RT_ONERR = &H30170   '@322b1
+    IF NOT (UCASE$(V_0e00$) = "D") THEN GOTO L_322ef   '@322c0 DS:4364
+    CALL S_30558   '@322dd
+    IF RT_EVENTO THEN EXIT SUB   ' ON KEY que sai da SUB
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_321c4   '@322e7
+L_322ef:
+    OPEN RT_ARQ$(V_0de8$ + ":" + V_0dec$ + V_0e00$ + ".VIG") FOR INPUT AS #1   '@322ef DS:4180,45da,4748
+    CLOSE #1   '@32331
+    IF NOT (V_12ae$ = "***") THEN GOTO L_3235f   '@32340 DS:412e
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_321c4   '@32357
+L_3235f:
+    OPEN RT_ARQ$(V_0de8$ + ":" + V_0dec$ + V_0e00$ + ".VIG") FOR RANDOM AS #1 LEN = 855   '@3235f DS:4180,45d4,45da
+    RT_REG_12F8_LE 1, 1&   '@323a1 (registro de 855 bytes)
+    IF NOT (V_12ae$ = "***") THEN GOTO L_323df   '@323c0 DS:412e
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_321c4   '@323d7
+L_323df:
+    CLOSE #1   '@323df
+    V_187e! = V_1311%   '@323ee
+    V_184a! = 1.0   '@32402 DS:40c2
+L_32418:
+    COLOR RT_CINT%(FX##(V_0dc4!)), 7   '@3241d
+    LOCATE 7, 30   '@32442
+    PRINT CHR$(218); RT_STRINGC$((38), (196)); CHR$(191)   '@32460
+    V_186a! = 8.0   '@32496 DS:4864
+L_324ac:
+    LOCATE RT_CINT%(FX##(V_186a!)), 30   '@324ac
+    COLOR RT_CINT%(FX##(V_0dc4!))   '@324d1
+    PRINT CHR$(179); RT_STRINGC$((38), (32)); CHR$(179);   '@324ee
+    COLOR 0   '@32524
+    PRINT CHR$(219)   '@32539
+    V_186a! = FX##(V_186a!) + 1.0   '@3254d DS:40c2
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    IF NOT (V_186a! = 22.0) THEN GOTO L_324ac   '@32563 DS:4868
+    LOCATE 22, 30   '@3257e
+    COLOR RT_CINT%(FX##(V_0dc4!))   '@3259c
+    PRINT CHR$(195); RT_STRINGC$((38), (196)); CHR$(180);   '@325b9
+    COLOR 0   '@325ef
+    PRINT CHR$(219)   '@32604
+    COLOR RT_CINT%(FX##(V_0dc4!))   '@32618
+    LOCATE 8, 31   '@32635
+    PRINT "Registro  Viga            Tramos  Data"   '@32653 DS:486c
+    LOCATE 23, 30   '@32661
+    PRINT CHR$(179); " Gravadas"; V_187e!; "Vigas     * interrompe"; RT_TAB$(69); ""; CHR$(179);   '@3267f DS:4238,47f0,4896
+    COLOR 0   '@326d3
+    PRINT CHR$(219)   '@326e8
+    LOCATE 24, 30   '@326fc
+    COLOR RT_CINT%(FX##(V_0dc4!))   '@3271a
+    PRINT CHR$(192); RT_STRINGC$((38), (196)); CHR$(217);   '@32737
+    COLOR 0   '@3276d
+    PRINT CHR$(219);   '@32782
+    LOCATE 25, 32   '@32796
+    PRINT RT_STRINGC$((39), (219));   '@327b4
+    V_186a! = FX##(V_184a!) + 9.0   '@327cc DS:47c4
+    CALL MIXT_0877_Menor(V_186a!, V_187e!, V_188a!)   '@327e2
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    V_186a! = V_188a!   '@327f9
+    GOSUB L_328d2   '@32804
+    L_BP14% = (V_186a! = V_187e!)   '@32811
+    IF NOT ((V_12ae$ = "*" OR L_BP14%) <> 0) THEN GOTO L_328af   '@3283a DS:41e8
+    V_188e! = 1.0   '@3284f DS:40c2
+    V_1892! = 0.0   '@32861 DS:40be
+    CALL MIXT_0dbe_GuardaTela(V_188e!, V_1892!, V_0dcc$)   '@3286c
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    COLOR 7, RT_CINT%(FX##(V_0dc4!))   '@3287d
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_321ec   '@328a2
+L_328af:
+    V_184a! = FX##(V_186a!) + 1.0   '@328af DS:40c2
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_32418   '@328c5
+    ' ---- F_328cd @0x328cd  (0328cd_F_328cd.lift.txt; evidence_id (assembly): ev_00c4c014f2793873b94b67c43eb69d851d1e4083a7e76a98b8c110aaebab9883)
+L_328d2:   ' sub-rotina (alvo de GOSUB); entrada vinda de 03091d_FUN_3000_091d
+    IF NOT (V_184a! > V_186a!) THEN GOTO L_328fa   '@328d7
+    GOTO L_32a84   '@328f2
+L_328fa:
+    COLOR RT_CINT%(4.0 * FX##(V_0dc4!)), 7   '@328fa DS:43fe
+    V_1896! = V_186a!   '@32924
+    FOR V_185a! = V_184a! TO V_1896!   '@32936 DS:40c2
+    OPEN RT_ARQ$(V_0de8$ + ":" + V_0dec$ + V_0e00$ + ".VIG") FOR RANDOM AS #1 LEN = 855   '@3293e DS:4180,45d4,45da
+    RT_REG_12F8_LE 1, RT_CLNG&(FX##(V_185a!) + 1.0)   '@32980 DS:40c2 (registro de 855 bytes)
+    IF NOT (V_12ae$ = "***") THEN GOTO L_329c9   '@329aa DS:412e
+    GOTO L_32a84   '@329c1
+L_329c9:
+    CLOSE #1   '@329c9
+    LOCATE RT_CINT%(10.0 - FX##(V_184a!) + V_185a!), 31   '@329d8 DS:48b0
+    PRINT USING " ###      \             \   ##   \   \"; RT_PU#(V_185a!, " ###      \             \   ##   \   \", 1); RT_FIXL$(V_12f8$, 20); RT_PU#(V_1311%, " ###      \             \   ##   \   \", 2); RT_FIXL$(V_130c$, 5)   '@32a07 DS:48b4
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_185a!   '@32a53 DS:40c2
+L_32a84:
+    COLOR RT_CINT%(FX##(V_0dc4!)), 7   '@32a89
+    LOCATE 21, 31   '@32aae
+    PRINT "Qualquer Tecla para Continuar "   '@32acc DS:48de
+    CALL MIXT_07f1_LimpaTeclado   '@32ada
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    V_12ae$ = RT_INPUT$(1)   '@32ae4
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RETURN   '@32b00
+    ' @32b0a (trecho de 6 bytes sem caminho de entrada conhecido: codigo morto ou alcancado por meio nao rastreado; traduzido abaixo)
+    GOTO L_33872   '@32b0a
+    ' ---- FUN_3000_2b12 @0x32b12  (032b12_FUN_3000_2b12.lift.txt; evidence_id (assembly): ev_e3180b98660d424e7523a85b3cf9fd3f2f77cde2fb8e8230f3030a8db2bfd72c)
+L_32b12:   ' entrada vinda de 03091d_FUN_3000_091d
+    IF NOT (V_1866$ <> "5") THEN GOTO L_32b48   '@32b12 DS:4900
+    IF NOT (V_1866$ <> "L") THEN GOTO L_32b48   '@32b24 DS:432e
+    IF NOT (V_1866$ = "l") THEN GOTO L_336fe   '@32b36 DS:4906
+L_32b48:
+    RT_VIEWPRINT 1, 25   '@32b48
+    COLOR RT_CINT%(FX##(V_0dc0!)), RT_CINT%(FX##(V_0dc4!))   '@32b5a
+    RT_CLS 2   '@32b86
+    PRINT RT_STRINGC$((80), (205))   '@32b94
+    PRINT " Leitura de Vigas Gravadas em Disco"   '@32bac DS:490c
+    IF NOT (V_0e12% > 0) THEN GOTO L_32bfa   '@32bba
+    PRINT " Arquivadas em Memoria"; V_0e12%; "Vigas da Obra "; V_0e04$   '@32bc9 DS:453c,47b2
+    GOTO L_32c0d   '@32bf2
+L_32bfa:
+    PRINT " Nao ha Vigas Arquivadas na Memoria"   '@32bfa DS:456a
+L_32c0d:
+    PRINT RT_STRINGC$((80), (205))   '@32c0d
+L_32c2a:
+    V_186a! = 14.0   '@32c2f DS:4934
+    GOSUB L_33877   '@32c40
+L_32c52:
+    RT_VIEWPRINT 5, 9   '@32c57
+    RT_CLS 2   '@32c69
+    RT_VIEWPRINT 5, 25   '@32c77
+    LOCATE 6, 1   '@32c89
+    COLOR 7   '@32ca4
+    IF NOT (V_0e12% = 0) THEN GOTO L_32cdb   '@32cba
+    V_0e04$ = "RETORNO"   '@32cc9 DS:4938
+L_32cdb:
+    PRINT " Nome da Obra *"; V_0e04$; "* ";   '@32cdb DS:45ba,4944
+    CALL MIXT_07f1_LimpaTeclado   '@32cfb
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINEINPUT "", V_0e00$   '@32d05 DS:4238
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    IF NOT (LEN(V_0e00$) = 0) THEN GOTO L_32d62   '@32d1f
+    V_0e00$ = V_0e04$   '@32d34
+    IF NOT (V_0e12% = 0) THEN GOTO L_32d5d   '@32d46
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_30934   '@32d55
+L_32d5d:
+L_32d62:
+    ON ERROR GOTO L_30170
+    RT_ONERR = &H30170   '@32d62
+    IF NOT (UCASE$(V_0e00$) = "D") THEN GOTO L_32da0   '@32d71 DS:4364
+    CALL S_30558   '@32d8e
+    IF RT_EVENTO THEN EXIT SUB   ' ON KEY que sai da SUB
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_32c2a   '@32d98
+L_32da0:
+    L_BP16% = (V_0e12% > 0)   '@32da0
+    IF NOT ((UCASE$(V_0e00$) <> UCASE$(V_0e04$) AND L_BP16%) <> 0) THEN GOTO L_32ed6   '@32db9
+    BEEP   '@32dde
+    LOCATE 7, 1   '@32de8
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@32e03
+    PRINT " As Vigas da Obra "; V_0e04$; " serao Perdidas  SIM/*N* ";   '@32e20 DS:4958,496e
+    CALL MIXT_07f1_LimpaTeclado   '@32e40
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINEINPUT "", V_12b2$   '@32e4a DS:4238
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    LOCATE 7, 1   '@32e64
+    PRINT RT_STRINGC$((60), (32))   '@32e7f
+    IF NOT (UCASE$(V_12b2$) = "SIM") THEN GOTO L_32ed1   '@32e97 DS:498c
+    V_0e12% = 0   '@32eb4
+    V_0e04$ = V_0e00$   '@32ebf
+L_32ed1:
+L_32ed6:
+    LOCATE 11, 1   '@32ed6
+    COLOR 3   '@32ef1
+    PRINT " Entre com o intervalo de posicoes que sera lido ..."   '@32f07 DS:4994
+    PRINT " 1 A 2  ou  1,5 (1 2.. 5)  ou  2 (somente 2)  ou  4a7 ..."   '@32f15 DS:466c
+L_32f28:
+    LOCATE 7, 1   '@32f2d
+    COLOR 7   '@32f48
+    PRINT " Ler Registros do Disco ";   '@32f5e DS:49cc
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@32f6c
+    PRINT "i";   '@32f89 DS:46d4
+    COLOR 7   '@32f97
+    PRINT " A ";   '@32fad DS:46da
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@32fbb
+    PRINT "j";   '@32fd8 DS:46e2
+    COLOR 7   '@32fe6
+    PRINT "  *FIM* ";   '@32ffc DS:46e8
+    CALL MIXT_0049_Le2Campos(V_12ae$, V_12b2$)   '@3300a
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    V_186e! = VAL(V_12ae$)   '@3301c
+    V_1872! = VAL(V_12b2$)   '@33036
+    IF NOT (LEN(V_12ae$) = 0) THEN GOTO L_3306d   '@33050
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_30934   '@33065
+L_3306d:
+    IF NOT (RT_INSTR%((1), (UCASE$(V_12ae$)), ("A")) > 0) THEN GOTO L_330c6   '@3306d DS:4396
+    V_1872! = VAL(RT_MID2$((V_12ae$), (INSTR(UCASE$(V_12ae$), "A") + 1)))   '@33090 DS:4396
+L_330c6:
+    IF NOT (V_1872! = 0.0) THEN GOTO L_330f2   '@330c6 DS:40be
+    V_1872! = V_186e!   '@330e1
+L_330f2:
+    IF NOT (FX##(V_1872!) - V_186e! + 1.0 > FX##(V_0e14!) OR (V_1872! < V_186e! OR V_186e! < 1.0)) THEN GOTO L_33167   '@330f2 DS:40c2
+    BEEP   '@33155
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_32f28   '@3315f
+L_33167:
+L_3316c:
+    LOCATE 8, 1   '@33171
+    PRINT " Coloca-las em Memoria a Partir (";   '@3318c DS:49e8
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@3319a
+    PRINT "INCLUSIVE";   '@331b7 DS:4704
+    COLOR 7   '@331c5
+    PRINT ") da Posicao *"; LTRIM$(STR$(V_0e12% + 1)); "*";   '@331db DS:41e8,4a0e
+    CALL MIXT_07f1_LimpaTeclado   '@33208
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINEINPUT " ", V_12ae$   '@33212 DS:41ee
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    V_186a! = VAL(V_12ae$)   '@3322c
+    IF NOT (V_186a! = 0.0) THEN GOTO L_33276   '@33246 DS:40be
+    V_186a! = V_0e12% + 1   '@33261
+L_33276:
+    IF NOT (V_186a! < 0.0 OR (V_0e12% + 1 < V_186a! OR FX##(V_1872!) - V_186e! + V_186a! > FX##(V_0e14!))) THEN GOTO L_332f2   '@33276 DS:40be
+    BEEP   '@332e0
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_3316c   '@332ea
+L_332f2:
+    LOCATE 9, 1   '@332f2
+    CALL MIXT_07f1_LimpaTeclado   '@3330d
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINEINPUT " Dados Corretos N/*S* ", V_12ae$   '@33317 DS:472e
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    IF NOT (UCASE$(V_12ae$) = "N") THEN GOTO L_33356   '@33331 DS:42d4
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_32c52   '@3334e
+L_33356:
+    V_0e04$ = V_0e00$   '@33356
+    OPEN RT_ARQ$(V_0de8$ + ":" + V_0dec$ + V_0e04$ + ".VIG") FOR INPUT AS #1   '@33368 DS:4180,45da,4748
+    CLOSE #1   '@333aa
+    IF NOT (V_12ae$ = "***") THEN GOTO L_333d8   '@333b9 DS:412e
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_32c2a   '@333d0
+L_333d8:
+    OPEN RT_ARQ$(V_0de8$ + ":" + V_0dec$ + V_0e04$ + ".VIG") FOR RANDOM AS #1 LEN = 855   '@333d8 DS:4180,45d4,45da
+    RT_REG_12F8_LE 1, 1&   '@3341a (registro de 855 bytes)
+    IF NOT (V_12ae$ = "***") THEN GOTO L_33458   '@33439 DS:412e
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_32c2a   '@33450
+L_33458:
+    CLOSE #1   '@33458
+    V_187e! = V_1311%   '@33467
+    IF NOT (V_1872! > V_187e!) THEN GOTO L_33599   '@3347b
+    RT_VIEWPRINT 8, 9   '@33496
+    RT_CLS 2   '@334a8
+    BEEP   '@334b6
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@334c0
+    PRINT ""   '@334dd DS:4238
+    PRINT " TEMOS"; V_187e!; "VIGAS GRAVADAS NESTE ARQUIVO.  NAO PODE SER LIDO ATE O REGISTRO"; V_1872!; ".";   '@334eb DS:45c8,4a20,4a2a
+    CALL MIXT_07f1_LimpaTeclado   '@33525
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    ON ERROR GOTO L_300fd
+    RT_ONERR = &H300fd   '@3352f
+    V_12ae$ = RT_INPUT$(1)   '@3353e
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_VIEWPRINT 7, 9   '@3355a
+    RT_CLS 2   '@3356c
+    RT_VIEWPRINT 5, 25   '@3357a
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_32f28   '@3358c
+L_33599:
+    V_189a! = V_1872!   '@33599
+    FOR V_185a! = V_186e! TO V_189a!   '@335ab DS:40c2
+    OPEN RT_ARQ$(V_0de8$ + ":" + V_0dec$ + V_0e04$ + ".VIG") FOR RANDOM AS #1 LEN = 855   '@335b2 DS:4180,45d4,45da
+    RT_REG_12F8_LE 1, RT_CLNG&(FX##(V_185a!) + 1.0)   '@335f4 DS:40c2 (registro de 855 bytes)
+    IF NOT (V_12ae$ = "***") THEN GOTO L_3363d   '@3361e DS:412e
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_32c2a   '@33635
+L_3363d:
+    CLOSE #1   '@3363d
+    CALL S_34263   '@3364c
+    IF RT_EVENTO THEN EXIT SUB   ' ON KEY que sai da SUB
+    CALL S_33991(V_186a!)   '@33656
+    IF RT_EVENTO THEN EXIT SUB   ' ON KEY que sai da SUB
+    V_186a! = FX##(V_186a!) + 1.0   '@33664 DS:40c2
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_185a!   '@3367a DS:40c2
+    V_189e! = FX##(V_0e12%) / 1.0   '@336a6 DS:40c2
+    V_18a2! = FX##(V_186a!) - 1.0   '@336c0 DS:4778
+    CALL MIXT_082a_Maior(V_189e!, V_18a2!, V_18a6!)   '@336d0
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    V_0e12% = RT_CINT%(FX##(V_18a6!))   '@336e2
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_30934   '@336ee
+L_336fe:
+    IF NOT (V_1866$ <> "6") THEN GOTO L_33734   '@336fe DS:4a6e
+    IF NOT (V_1866$ <> "D") THEN GOTO L_33734   '@33710 DS:4364
+    IF NOT (V_1866$ = "d") THEN GOTO L_33815   '@33722 DS:4a74
+L_33734:
+    COLOR RT_CINT%(FX##(V_0dc0!)), RT_CINT%(4.0 * FX##(V_0dc4!)), RT_CINT%(4.0 * FX##(V_0dc4!))   '@33734 DS:43fe
+    RT_VIEWPRINT 1, 25   '@33779
+    RT_CLS 2   '@3378b
+    PRINT " para retornar acione EXIT <Enter>"   '@33799 DS:4a7a
+    PRINT ""   '@337a7 DS:4238
+    RT_SHELL ""   '@337b5 DS:4238
+    COLOR 7, RT_CINT%(FX##(V_0dc4!)), RT_CINT%(FX##(V_0dc4!))   '@337c3
+    RT_CLS 2   '@337f7
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_30934   '@33805
+L_33815:
+    IF NOT (V_1866$ <> "7") THEN GOTO L_3384b   '@33815 DS:4aa0
+    IF NOT (V_1866$ <> "A") THEN GOTO L_3384b   '@33827 DS:4396
+    IF NOT (V_1866$ = "a") THEN GOTO L_33865   '@33839 DS:4aa6
+L_3384b:
+    CALL S_30558   '@3384b
+    IF RT_EVENTO THEN EXIT SUB   ' ON KEY que sai da SUB
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_30934   '@33855
+L_33865:
+    GOTO L_33978   '@33865
+    ' ---- F_3386d @0x3386d  (03386d_F_3386d.lift.txt; evidence_id (assembly): ev_499b4adba9240c82dc681e230947829895595ffb0e7c163e3852a63c015924b3)
+L_33872:   ' entrada vinda de 0328cd_F_328cd
+L_33877:   ' sub-rotina (alvo de GOSUB); entrada vinda de 03091d_FUN_3000_091d, 032b12_FUN_3000_2b12
+    RT_VIEWPRINT RT_CINT%(FX##(V_186a!)), 25   '@3387c
+    RT_CLS 2   '@33895
+    COLOR 3   '@338a3
+    PRINT RT_TAB$(30); ""; "Acione  D <Enter>  para alterar Drive e Diretorio"   '@338b9 DS:4238,4aac
+    RT_VIEWPRINT RT_CINT%(FX##(V_186a!) + 2.0), 25   '@338d9 DS:4ae2
+    COLOR 14   '@338f7
+    ON ERROR GOTO L_30137
+    RT_ONERR = &H30137   '@3390d
+    RT_FILES V_0de8$ + ":" + V_0dec$ + "*.VIG"   '@3391c DS:4180,4ae6 (FILES: cabecalho em forma DOS (RT45))
+    ON ERROR GOTO L_300fd
+    RT_ONERR = &H300fd   '@33948
+    RT_VIEWPRINT 5, 25   '@33957
+    RETURN   '@33969
+L_33978:   ' entrada vinda de 032b12_FUN_3000_2b12
+    ' @33978 libera strings locais (V_1866)
+    ' END SUB   '@33981
+END SUB
+
+SUB S_33991 (P_BP06!)   ' entrada de SUB/FUNCTION (B$ENRA, locais 8 bytes) (0x33991)
+    DIM L_BP0e!
+    DIM L_BP12!
+    ' ---- FUN_3000_3991 @0x33991  (033991_FUN_3000_3991.lift.txt; evidence_id (assembly): ev_b38494d49be9eea79dd28ba3f3895305e1eae88469b37fdaf106af8b52f5b384)
+    A_1086$(RT_CINT%(FX##(P_BP06!))) = V_0dfc$   '@33999
+    A_10b4%(RT_CINT%(FX##(P_BP06!)), 0) = V_0e08%   '@339c0
+    A_10b4%(RT_CINT%(FX##(P_BP06!)), 1) = V_0e0a%   '@339e6
+    A_10b4%(RT_CINT%(FX##(P_BP06!)), 2) = V_0e0c%   '@33a0d
+    A_10b4%(RT_CINT%(FX##(P_BP06!)), 3) = V_0e0e%   '@33a31
+    A_10b4%(RT_CINT%(FX##(P_BP06!)), 4) = V_0e10%   '@33a58
+    A_1280!(RT_CINT%(FX##(P_BP06!)), 0) = A_0fc4!(0)   '@33a7f
+    A_1280!(RT_CINT%(FX##(P_BP06!)), 1) = A_0fc4!(1)   '@33ab8
+    FOR L_BP0e! = 0.0 TO 13.0   '@33af0 DS:40be,40c2,462a
+    A_113e!(RT_CINT%(FX##(P_BP06!)), RT_CINT%(FX##(L_BP0e!))) = A_0e26!(RT_CINT%(FX##(L_BP0e!)))   '@33afe
+    A_116c!(RT_CINT%(FX##(P_BP06!)), RT_CINT%(FX##(L_BP0e!))) = A_0e54!(RT_CINT%(FX##(L_BP0e!)))   '@33b45
+    A_10e2%(RT_CINT%(FX##(P_BP06!)), RT_CINT%(FX##(L_BP0e!))) = A_0f0c%(RT_CINT%(FX##(L_BP0e!)))   '@33b8c
+    A_1110%(RT_CINT%(FX##(P_BP06!)), RT_CINT%(FX##(L_BP0e!))) = A_0f3a%(RT_CINT%(FX##(L_BP0e!)))   '@33bd3
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP0e!   '@33c1a DS:40c2,462a
+    FOR L_BP12! = 0.0 TO 30.0   '@33c43 DS:40be,40c2,4af0
+    A_11c8!(RT_CINT%(FX##(P_BP06!)), RT_CINT%(FX##(L_BP12!))) = A_0eb0!(RT_CINT%(FX##(L_BP12!)))   '@33c50
+    A_11f6!(RT_CINT%(FX##(P_BP06!)), RT_CINT%(FX##(L_BP12!))) = A_0ede!(RT_CINT%(FX##(L_BP12!)))   '@33c97
+    A_119a!(RT_CINT%(FX##(P_BP06!)), RT_CINT%(FX##(L_BP12!))) = A_0e82!(RT_CINT%(FX##(L_BP12!)))   '@33cde
+    A_1252!(RT_CINT%(FX##(P_BP06!)), RT_CINT%(FX##(L_BP12!))) = A_0f96!(RT_CINT%(FX##(L_BP12!)))   '@33d25
+    A_1224!(RT_CINT%(FX##(P_BP06!)), RT_CINT%(FX##(L_BP12!))) = A_0f68!(RT_CINT%(FX##(L_BP12!)))   '@33d6c
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP12!   '@33db3 DS:40c2,4af0
+    ' END SUB   '@33ddc
+END SUB
+
+SUB S_33df1 (P_BP06!)   ' entrada de SUB/FUNCTION (B$ENRA, locais 8 bytes) (0x33df1)
+    DIM L_BP0e!
+    DIM L_BP12!
+    ' ---- FUN_3000_3df1 @0x33df1  (033df1_FUN_3000_3df1.lift.txt; evidence_id (assembly): ev_e4d7fc5287954c704d4042f3d39152df46114204a7648ee22ba6b49fee166d6b)
+    V_0dfc$ = A_1086$(RT_CINT%(FX##(P_BP06!)))   '@33df9
+    V_0e00$ = V_0e04$   '@33e20
+    V_0e08% = A_10b4%(RT_CINT%(FX##(P_BP06!)), 0)   '@33e32
+    V_0e0a% = A_10b4%(RT_CINT%(FX##(P_BP06!)), 1)   '@33e58
+    V_0e0c% = A_10b4%(RT_CINT%(FX##(P_BP06!)), 2)   '@33e7f
+    V_0e0e% = A_10b4%(RT_CINT%(FX##(P_BP06!)), 3)   '@33ea3
+    V_0e10% = A_10b4%(RT_CINT%(FX##(P_BP06!)), 4)   '@33eca
+    A_0fc4!(0) = A_1280!(RT_CINT%(FX##(P_BP06!)), 0)   '@33ef1
+    A_0fc4!(1) = A_1280!(RT_CINT%(FX##(P_BP06!)), 1)   '@33f2a
+    FOR L_BP0e! = 0.0 TO 13.0   '@33f62 DS:40be,40c2,462a
+    A_0e26!(RT_CINT%(FX##(L_BP0e!))) = A_113e!(RT_CINT%(FX##(P_BP06!)), RT_CINT%(FX##(L_BP0e!)))   '@33f70
+    A_0e54!(RT_CINT%(FX##(L_BP0e!))) = A_116c!(RT_CINT%(FX##(P_BP06!)), RT_CINT%(FX##(L_BP0e!)))   '@33fb7
+    A_0f0c%(RT_CINT%(FX##(L_BP0e!))) = A_10e2%(RT_CINT%(FX##(P_BP06!)), RT_CINT%(FX##(L_BP0e!)))   '@33ffe
+    A_0f3a%(RT_CINT%(FX##(L_BP0e!))) = A_1110%(RT_CINT%(FX##(P_BP06!)), RT_CINT%(FX##(L_BP0e!)))   '@34045
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP0e!   '@3408c DS:40c2,462a
+    FOR L_BP12! = 0.0 TO 30.0   '@340b5 DS:40be,40c2,4af0
+    A_0eb0!(RT_CINT%(FX##(L_BP12!))) = A_11c8!(RT_CINT%(FX##(P_BP06!)), RT_CINT%(FX##(L_BP12!)))   '@340c2
+    A_0ede!(RT_CINT%(FX##(L_BP12!))) = A_11f6!(RT_CINT%(FX##(P_BP06!)), RT_CINT%(FX##(L_BP12!)))   '@34109
+    A_0e82!(RT_CINT%(FX##(L_BP12!))) = A_119a!(RT_CINT%(FX##(P_BP06!)), RT_CINT%(FX##(L_BP12!)))   '@34150
+    A_0f96!(RT_CINT%(FX##(L_BP12!))) = A_1252!(RT_CINT%(FX##(P_BP06!)), RT_CINT%(FX##(L_BP12!)))   '@34197
+    A_0f68!(RT_CINT%(FX##(L_BP12!))) = A_1224!(RT_CINT%(FX##(P_BP06!)), RT_CINT%(FX##(L_BP12!)))   '@341de
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP12!   '@34225 DS:40c2,4af0
+    ' END SUB   '@3424e
+END SUB
+
+SUB S_34263   ' entrada de SUB/FUNCTION (B$ENRA, locais 0 bytes) (0x34263)
+    ' ---- FUN_3000_4263 @0x34263  (034263_FUN_3000_4263.lift.txt; evidence_id (assembly): ev_91f99aad8b96060b79c9cbbccca64f0f55f6174b9e11175d342d0661f174ea74)
+    V_0dfc$ = RTRIM$(RT_FIXL$(V_12f8$, 20))   '@34270
+    V_0e08% = V_1311%   '@34293
+    V_0e0a% = V_1313%   '@3429e
+    V_0e0c% = V_1315%   '@342a9
+    V_0e0e% = V_1317%   '@342b4
+    V_0e10% = V_1319%   '@342bf
+    REDIM A_0e26!(-32768 TO -32768)   '@342ca
+    REDIM A_0f0c%(-32768 TO -32768)   '@342d8
+    REDIM A_0f3a%(-32768 TO -32768)   '@342e1
+    REDIM A_0e54!(-32768 TO -32768)   '@342ea
+    REDIM A_0eb0!(-32768 TO -32768)   '@342f3
+    REDIM A_0ede!(-32768 TO -32768)   '@34301
+    REDIM A_0e82!(-32768 TO -32768)   '@3430a
+    REDIM A_0f68!(-32768 TO -32768)   '@34313
+    REDIM A_0f96!(-32768 TO -32768)   '@3431c
+    REDIM A_0fc4!(-32768 TO -32768)   '@34325
+    REDIM A_0e26!(0 TO 13)   '@3432e
+    REDIM A_0f0c%(0 TO 13)   '@3434b
+    REDIM A_0f3a%(0 TO 13)   '@34368
+    REDIM A_0e54!(0 TO 13)   '@34385
+    REDIM A_0eb0!(0 TO 40)   '@343a2
+    REDIM A_0e82!(0 TO 40)   '@343bf
+    REDIM A_0f68!(0 TO 40)   '@343dc
+    REDIM A_0ede!(0 TO 40)   '@343f4
+    REDIM A_0f96!(0 TO 40)   '@34411
+    REDIM A_0fc4!(0 TO 3)   '@34429
+    A_0f0c%(0) = V_131b%   '@34446
+    A_0f3a%(0) = V_131d%   '@34460
+    A_0e26!(0) = V_131f!   '@3447a
+    A_0e54!(0) = V_1323!   '@34499
+    A_0f0c%(1) = V_1327%   '@344b8
+    A_0f3a%(1) = V_1329%   '@344d0
+    A_0e26!(1) = V_132b!   '@344e8
+    A_0e54!(1) = V_132f!   '@34505
+    A_0f0c%(2) = V_1333%   '@34522
+    A_0f3a%(2) = V_1335%   '@3453d
+    A_0e26!(2) = V_1337!   '@34558
+    A_0e54!(2) = V_133b!   '@34578
+    A_0f0c%(3) = V_133f%   '@34598
+    A_0f3a%(3) = V_1341%   '@345b3
+    A_0e26!(3) = V_1343!   '@345ce
+    A_0e54!(3) = V_1347!   '@345ee
+    A_0f0c%(4) = V_134b%   '@3460e
+    A_0f3a%(4) = V_134d%   '@34629
+    A_0e26!(4) = V_134f!   '@34644
+    A_0e54!(4) = V_1353!   '@34664
+    A_0f0c%(5) = V_1357%   '@34684
+    A_0f3a%(5) = V_1359%   '@3469f
+    A_0e26!(5) = V_135b!   '@346ba
+    A_0e54!(5) = V_135f!   '@346da
+    A_0f0c%(6) = V_1363%   '@346fa
+    A_0f3a%(6) = V_1365%   '@34715
+    A_0e26!(6) = V_1367!   '@34730
+    A_0e54!(6) = V_136b!   '@34750
+    A_0f0c%(7) = V_136f%   '@34770
+    A_0f3a%(7) = V_1371%   '@3478b
+    A_0e26!(7) = V_1373!   '@347a6
+    A_0e54!(7) = V_1377!   '@347c6
+    A_0f0c%(8) = V_137b%   '@347e6
+    A_0f3a%(8) = V_137d%   '@34801
+    A_0e26!(8) = V_137f!   '@3481c
+    A_0e54!(8) = V_1383!   '@3483c
+    A_0f0c%(9) = V_1387%   '@3485c
+    A_0f3a%(9) = V_1389%   '@34877
+    A_0e26!(9) = V_138b!   '@34892
+    A_0e54!(9) = V_138f!   '@348b2
+    A_0f0c%(10) = V_1393%   '@348d2
+    A_0f3a%(10) = V_1395%   '@348ed
+    A_0e26!(10) = V_1397!   '@34908
+    A_0e54!(10) = V_139b!   '@34928
+    A_0f0c%(11) = V_139f%   '@34948
+    A_0f3a%(11) = V_13a1%   '@34963
+    A_0e26!(11) = V_13a3!   '@3497e
+    A_0e54!(11) = V_13a7!   '@3499e
+    A_0f0c%(12) = V_13ab%   '@349be
+    A_0f3a%(12) = V_13ad%   '@349d9
+    A_0e26!(12) = V_13af!   '@349f4
+    A_0e54!(12) = V_13b3!   '@34a14
+    A_0f0c%(13) = V_13b7%   '@34a34
+    A_0f3a%(13) = V_13b9%   '@34a4f
+    A_0e26!(13) = V_13bb!   '@34a6a
+    A_0e54!(13) = V_13bf!   '@34a8a
+    A_0e82!(0) = V_13cf!   '@34aaa
+    A_0eb0!(0) = V_13d3!   '@34ac9
+    A_0ede!(0) = V_13d7!   '@34ae8
+    A_0f68!(0) = V_13db!   '@34b07
+    A_0f96!(0) = V_13df!   '@34b26
+    A_0e82!(1) = V_13e3!   '@34b45
+    A_0eb0!(1) = V_13e7!   '@34b62
+    A_0ede!(1) = V_13eb!   '@34b7f
+    A_0f68!(1) = V_13ef!   '@34b9c
+    A_0f96!(1) = V_13f3!   '@34bb9
+    A_0e82!(2) = V_13f7!   '@34bd6
+    A_0eb0!(2) = V_13fb!   '@34bf6
+    A_0ede!(2) = V_13ff!   '@34c16
+    A_0f68!(2) = V_1403!   '@34c36
+    A_0f96!(2) = V_1407!   '@34c56
+    A_0e82!(3) = V_140b!   '@34c76
+    A_0eb0!(3) = V_140f!   '@34c96
+    A_0ede!(3) = V_1413!   '@34cb6
+    A_0f68!(3) = V_1417!   '@34cd6
+    A_0f96!(3) = V_141b!   '@34cf6
+    A_0e82!(4) = V_141f!   '@34d16
+    A_0eb0!(4) = V_1423!   '@34d36
+    A_0ede!(4) = V_1427!   '@34d56
+    A_0f68!(4) = V_142b!   '@34d76
+    A_0f96!(4) = V_142f!   '@34d96
+    A_0e82!(5) = V_1433!   '@34db6
+    A_0eb0!(5) = V_1437!   '@34dd6
+    A_0ede!(5) = V_143b!   '@34df6
+    A_0f68!(5) = V_143f!   '@34e16
+    A_0f96!(5) = V_1443!   '@34e36
+    A_0e82!(6) = V_1447!   '@34e56
+    A_0eb0!(6) = V_144b!   '@34e76
+    A_0ede!(6) = V_144f!   '@34e96
+    A_0f68!(6) = V_1453!   '@34eb6
+    A_0f96!(6) = V_1457!   '@34ed6
+    A_0e82!(7) = V_145b!   '@34ef6
+    A_0eb0!(7) = V_145f!   '@34f16
+    A_0ede!(7) = V_1463!   '@34f36
+    A_0f68!(7) = V_1467!   '@34f56
+    A_0f96!(7) = V_146b!   '@34f76
+    A_0e82!(8) = V_146f!   '@34f96
+    A_0eb0!(8) = V_1473!   '@34fb6
+    A_0ede!(8) = V_1477!   '@34fd6
+    A_0f68!(8) = V_147b!   '@34ff6
+    A_0f96!(8) = V_147f!   '@35016
+    A_0e82!(9) = V_1483!   '@35036
+    A_0eb0!(9) = V_1487!   '@35056
+    A_0ede!(9) = V_148b!   '@35076
+    A_0f68!(9) = V_148f!   '@35096
+    A_0f96!(9) = V_1493!   '@350b6
+    A_0e82!(10) = V_1497!   '@350d6
+    A_0eb0!(10) = V_149b!   '@350f6
+    A_0ede!(10) = V_149f!   '@35116
+    A_0f68!(10) = V_14a3!   '@35136
+    A_0f96!(10) = V_14a7!   '@35156
+    A_0e82!(11) = V_14ab!   '@35176
+    A_0eb0!(11) = V_14af!   '@35196
+    A_0ede!(11) = V_14b3!   '@351b6
+    A_0f68!(11) = V_14b7!   '@351d6
+    A_0f96!(11) = V_14bb!   '@351f6
+    A_0e82!(12) = V_14bf!   '@35216
+    A_0eb0!(12) = V_14c3!   '@35236
+    A_0ede!(12) = V_14c7!   '@35256
+    A_0f68!(12) = V_14cb!   '@35276
+    A_0f96!(12) = V_14cf!   '@35296
+    A_0e82!(13) = V_14d3!   '@352b6
+    A_0eb0!(13) = V_14d7!   '@352d6
+    A_0ede!(13) = V_14db!   '@352f6
+    A_0f68!(13) = V_14df!   '@35316
+    A_0f96!(13) = V_14e3!   '@35336
+    A_0e82!(14) = V_14e7!   '@35356
+    A_0eb0!(14) = V_14eb!   '@35376
+    A_0ede!(14) = V_14ef!   '@35396
+    A_0f68!(14) = V_14f3!   '@353b6
+    A_0f96!(14) = V_14f7!   '@353d6
+    A_0e82!(15) = V_14fb!   '@353f6
+    A_0eb0!(15) = V_14ff!   '@35416
+    A_0ede!(15) = V_1503!   '@35436
+    A_0f68!(15) = V_1507!   '@35456
+    A_0f96!(15) = V_150b!   '@35476
+    A_0e82!(16) = V_150f!   '@35496
+    A_0eb0!(16) = V_1513!   '@354b6
+    A_0ede!(16) = V_1517!   '@354d6
+    A_0f68!(16) = V_151b!   '@354f6
+    A_0f96!(16) = V_151f!   '@35516
+    A_0e82!(17) = V_1523!   '@35536
+    A_0eb0!(17) = V_1527!   '@35556
+    A_0ede!(17) = V_152b!   '@35576
+    A_0f68!(17) = V_152f!   '@35596
+    A_0f96!(17) = V_1533!   '@355b6
+    A_0e82!(18) = V_1537!   '@355d6
+    A_0eb0!(18) = V_153b!   '@355f6
+    A_0ede!(18) = V_153f!   '@35616
+    A_0f68!(18) = V_1543!   '@35636
+    A_0f96!(18) = V_1547!   '@35656
+    A_0e82!(19) = V_154b!   '@35676
+    A_0eb0!(19) = V_154f!   '@35696
+    A_0ede!(19) = V_1553!   '@356b6
+    A_0f68!(19) = V_1557!   '@356d6
+    A_0f96!(19) = V_155b!   '@356f6
+    A_0e82!(20) = V_155f!   '@35716
+    A_0eb0!(20) = V_1563!   '@35736
+    A_0ede!(20) = V_1567!   '@35756
+    A_0f68!(20) = V_156b!   '@35776
+    A_0f96!(20) = V_156f!   '@35796
+    A_0e82!(21) = V_1573!   '@357b6
+    A_0eb0!(21) = V_1577!   '@357d6
+    A_0ede!(21) = V_157b!   '@357f6
+    A_0f68!(21) = V_157f!   '@35816
+    A_0f96!(21) = V_1583!   '@35836
+    A_0e82!(22) = V_1587!   '@35856
+    A_0eb0!(22) = V_158b!   '@35876
+    A_0ede!(22) = V_158f!   '@35896
+    A_0f68!(22) = V_1593!   '@358b6
+    A_0f96!(22) = V_1597!   '@358d6
+    A_0e82!(23) = V_159b!   '@358f6
+    A_0eb0!(23) = V_159f!   '@35916
+    A_0ede!(23) = V_15a3!   '@35936
+    A_0f68!(23) = V_15a7!   '@35956
+    A_0f96!(23) = V_15ab!   '@35976
+    A_0e82!(24) = V_15af!   '@35996
+    A_0eb0!(24) = V_15b3!   '@359b6
+    A_0ede!(24) = V_15b7!   '@359d6
+    A_0f68!(24) = V_15bb!   '@359f6
+    A_0f96!(24) = V_15bf!   '@35a16
+    A_0e82!(25) = V_15c3!   '@35a36
+    A_0eb0!(25) = V_15c7!   '@35a56
+    A_0ede!(25) = V_15cb!   '@35a76
+    A_0f68!(25) = V_15cf!   '@35a96
+    A_0f96!(25) = V_15d3!   '@35ab6
+    A_0e82!(26) = V_15d7!   '@35ad6
+    A_0eb0!(26) = V_15db!   '@35af6
+    A_0ede!(26) = V_15df!   '@35b16
+    A_0f68!(26) = V_15e3!   '@35b36
+    A_0f96!(26) = V_15e7!   '@35b56
+    A_0e82!(27) = V_15eb!   '@35b76
+    A_0eb0!(27) = V_15ef!   '@35b96
+    A_0ede!(27) = V_15f3!   '@35bb6
+    A_0f68!(27) = V_15f7!   '@35bd6
+    A_0f96!(27) = V_15fb!   '@35bf6
+    A_0e82!(28) = V_15ff!   '@35c16
+    A_0eb0!(28) = V_1603!   '@35c36
+    A_0ede!(28) = V_1607!   '@35c56
+    A_0f68!(28) = V_160b!   '@35c76
+    A_0f96!(28) = V_160f!   '@35c96
+    A_0e82!(29) = V_1613!   '@35cb6
+    A_0eb0!(29) = V_1617!   '@35cd6
+    A_0ede!(29) = V_161b!   '@35cf6
+    A_0f68!(29) = V_161f!   '@35d16
+    A_0f96!(29) = V_1623!   '@35d36
+    A_0e82!(30) = V_1627!   '@35d56
+    A_0eb0!(30) = V_162b!   '@35d76
+    A_0ede!(30) = V_162f!   '@35d96
+    A_0f68!(30) = V_1633!   '@35db6
+    A_0f96!(30) = V_1637!   '@35dd6
+    A_0fc4!(0) = V_163b!   '@35df6
+    A_0fc4!(1) = V_163f!   '@35e15
+    ' END SUB   '@35e32
+END SUB
+
+SUB S_35e47   ' entrada de SUB/FUNCTION (B$ENRA, locais 0 bytes) (0x35e47)
+    ' ---- FUN_3000_5e47 @0x35e47  (035e47_FUN_3000_5e47.lift.txt; evidence_id (assembly): ev_534201efbeee521a2a727f93d8fd0de2753cef04a5e6cc4caaf2440ed0822676)
+    V_12f8$ = RT_FIX$(V_0dfc$, 20)   '@35e54 (string fixa)
+    V_130c$ = RT_FIX$(RT_MID$((RT_DATE$), (1), (5)), 5)   '@35e6f (string fixa)
+    V_1311% = V_0e08%   '@35e9a
+    V_1313% = V_0e0a%   '@35ea5
+    V_1315% = V_0e0c%   '@35eb0
+    V_1317% = V_0e0e%   '@35ebb
+    V_1319% = V_0e10%   '@35ec6
+    V_131b% = A_0f0c%(0)   '@35ed1
+    V_131d% = A_0f3a%(0)   '@35eeb
+    V_131f! = A_0e26!(0)   '@35f05
+    V_1323! = A_0e54!(0)   '@35f24
+    V_1327% = A_0f0c%(1)   '@35f43
+    V_1329% = A_0f3a%(1)   '@35f5b
+    V_132b! = A_0e26!(1)   '@35f73
+    V_132f! = A_0e54!(1)   '@35f90
+    V_1333% = A_0f0c%(2)   '@35fad
+    V_1335% = A_0f3a%(2)   '@35fc8
+    V_1337! = A_0e26!(2)   '@35fe3
+    V_133b! = A_0e54!(2)   '@36003
+    V_133f% = A_0f0c%(3)   '@36023
+    V_1341% = A_0f3a%(3)   '@3603e
+    V_1343! = A_0e26!(3)   '@36059
+    V_1347! = A_0e54!(3)   '@36079
+    V_134b% = A_0f0c%(4)   '@36099
+    V_134d% = A_0f3a%(4)   '@360b4
+    V_134f! = A_0e26!(4)   '@360cf
+    V_1353! = A_0e54!(4)   '@360ef
+    V_1357% = A_0f0c%(5)   '@3610f
+    V_1359% = A_0f3a%(5)   '@3612a
+    V_135b! = A_0e26!(5)   '@36145
+    V_135f! = A_0e54!(5)   '@36165
+    V_1363% = A_0f0c%(6)   '@36185
+    V_1365% = A_0f3a%(6)   '@361a0
+    V_1367! = A_0e26!(6)   '@361bb
+    V_136b! = A_0e54!(6)   '@361db
+    V_136f% = A_0f0c%(7)   '@361fb
+    V_1371% = A_0f3a%(7)   '@36216
+    V_1373! = A_0e26!(7)   '@36231
+    V_1377! = A_0e54!(7)   '@36251
+    V_137b% = A_0f0c%(8)   '@36271
+    V_137d% = A_0f3a%(8)   '@3628c
+    V_137f! = A_0e26!(8)   '@362a7
+    V_1383! = A_0e54!(8)   '@362c7
+    V_1387% = A_0f0c%(9)   '@362e7
+    V_1389% = A_0f3a%(9)   '@36302
+    V_138b! = A_0e26!(9)   '@3631d
+    V_138f! = A_0e54!(9)   '@3633d
+    V_1393% = A_0f0c%(10)   '@3635d
+    V_1395% = A_0f3a%(10)   '@36378
+    V_1397! = A_0e26!(10)   '@36393
+    V_139b! = A_0e54!(10)   '@363b3
+    V_139f% = A_0f0c%(11)   '@363d3
+    V_13a1% = A_0f3a%(11)   '@363ee
+    V_13a3! = A_0e26!(11)   '@36409
+    V_13a7! = A_0e54!(11)   '@36429
+    V_13ab% = A_0f0c%(12)   '@36449
+    V_13ad% = A_0f3a%(12)   '@36464
+    V_13af! = A_0e26!(12)   '@3647f
+    V_13b3! = A_0e54!(12)   '@3649f
+    V_13b7% = A_0f0c%(13)   '@364bf
+    V_13b9% = A_0f3a%(13)   '@364da
+    V_13bb! = A_0e26!(13)   '@364f5
+    V_13bf! = A_0e54!(13)   '@36515
+    V_13cf! = A_0e82!(0)   '@36535
+    V_13d3! = A_0eb0!(0)   '@36554
+    V_13d7! = A_0ede!(0)   '@36573
+    V_13db! = A_0f68!(0)   '@36592
+    V_13df! = A_0f96!(0)   '@365b1
+    V_13e3! = A_0e82!(1)   '@365d0
+    V_13e7! = A_0eb0!(1)   '@365ed
+    V_13eb! = A_0ede!(1)   '@3660a
+    V_13ef! = A_0f68!(1)   '@36627
+    V_13f3! = A_0f96!(1)   '@36644
+    V_13f7! = A_0e82!(2)   '@36661
+    V_13fb! = A_0eb0!(2)   '@36681
+    V_13ff! = A_0ede!(2)   '@366a1
+    V_1403! = A_0f68!(2)   '@366c1
+    V_1407! = A_0f96!(2)   '@366e1
+    V_140b! = A_0e82!(3)   '@36701
+    V_140f! = A_0eb0!(3)   '@36721
+    V_1413! = A_0ede!(3)   '@36741
+    V_1417! = A_0f68!(3)   '@36761
+    V_141b! = A_0f96!(3)   '@36781
+    V_141f! = A_0e82!(4)   '@367a1
+    V_1423! = A_0eb0!(4)   '@367c1
+    V_1427! = A_0ede!(4)   '@367e1
+    V_142b! = A_0f68!(4)   '@36801
+    V_142f! = A_0f96!(4)   '@36821
+    V_1433! = A_0e82!(5)   '@36841
+    V_1437! = A_0eb0!(5)   '@36861
+    V_143b! = A_0ede!(5)   '@36881
+    V_143f! = A_0f68!(5)   '@368a1
+    V_1443! = A_0f96!(5)   '@368c1
+    V_1447! = A_0e82!(6)   '@368e1
+    V_144b! = A_0eb0!(6)   '@36901
+    V_144f! = A_0ede!(6)   '@36921
+    V_1453! = A_0f68!(6)   '@36941
+    V_1457! = A_0f96!(6)   '@36961
+    V_145b! = A_0e82!(7)   '@36981
+    V_145f! = A_0eb0!(7)   '@369a1
+    V_1463! = A_0ede!(7)   '@369c1
+    V_1467! = A_0f68!(7)   '@369e1
+    V_146b! = A_0f96!(7)   '@36a01
+    V_146f! = A_0e82!(8)   '@36a21
+    V_1473! = A_0eb0!(8)   '@36a41
+    V_1477! = A_0ede!(8)   '@36a61
+    V_147b! = A_0f68!(8)   '@36a81
+    V_147f! = A_0f96!(8)   '@36aa1
+    V_1483! = A_0e82!(9)   '@36ac1
+    V_1487! = A_0eb0!(9)   '@36ae1
+    V_148b! = A_0ede!(9)   '@36b01
+    V_148f! = A_0f68!(9)   '@36b21
+    V_1493! = A_0f96!(9)   '@36b41
+    V_1497! = A_0e82!(10)   '@36b61
+    V_149b! = A_0eb0!(10)   '@36b81
+    V_149f! = A_0ede!(10)   '@36ba1
+    V_14a3! = A_0f68!(10)   '@36bc1
+    V_14a7! = A_0f96!(10)   '@36be1
+    V_14ab! = A_0e82!(11)   '@36c01
+    V_14af! = A_0eb0!(11)   '@36c21
+    V_14b3! = A_0ede!(11)   '@36c41
+    V_14b7! = A_0f68!(11)   '@36c61
+    V_14bb! = A_0f96!(11)   '@36c81
+    V_14bf! = A_0e82!(12)   '@36ca1
+    V_14c3! = A_0eb0!(12)   '@36cc1
+    V_14c7! = A_0ede!(12)   '@36ce1
+    V_14cb! = A_0f68!(12)   '@36d01
+    V_14cf! = A_0f96!(12)   '@36d21
+    V_14d3! = A_0e82!(13)   '@36d41
+    V_14d7! = A_0eb0!(13)   '@36d61
+    V_14db! = A_0ede!(13)   '@36d81
+    V_14df! = A_0f68!(13)   '@36da1
+    V_14e3! = A_0f96!(13)   '@36dc1
+    V_14e7! = A_0e82!(14)   '@36de1
+    V_14eb! = A_0eb0!(14)   '@36e01
+    V_14ef! = A_0ede!(14)   '@36e21
+    V_14f3! = A_0f68!(14)   '@36e41
+    V_14f7! = A_0f96!(14)   '@36e61
+    V_14fb! = A_0e82!(15)   '@36e81
+    V_14ff! = A_0eb0!(15)   '@36ea1
+    V_1503! = A_0ede!(15)   '@36ec1
+    V_1507! = A_0f68!(15)   '@36ee1
+    V_150b! = A_0f96!(15)   '@36f01
+    V_150f! = A_0e82!(16)   '@36f21
+    V_1513! = A_0eb0!(16)   '@36f41
+    V_1517! = A_0ede!(16)   '@36f61
+    V_151b! = A_0f68!(16)   '@36f81
+    V_151f! = A_0f96!(16)   '@36fa1
+    V_1523! = A_0e82!(17)   '@36fc1
+    V_1527! = A_0eb0!(17)   '@36fe1
+    V_152b! = A_0ede!(17)   '@37001
+    V_152f! = A_0f68!(17)   '@37021
+    V_1533! = A_0f96!(17)   '@37041
+    V_1537! = A_0e82!(18)   '@37061
+    V_153b! = A_0eb0!(18)   '@37081
+    V_153f! = A_0ede!(18)   '@370a1
+    V_1543! = A_0f68!(18)   '@370c1
+    V_1547! = A_0f96!(18)   '@370e1
+    V_154b! = A_0e82!(19)   '@37101
+    V_154f! = A_0eb0!(19)   '@37121
+    V_1553! = A_0ede!(19)   '@37141
+    V_1557! = A_0f68!(19)   '@37161
+    V_155b! = A_0f96!(19)   '@37181
+    V_155f! = A_0e82!(20)   '@371a1
+    V_1563! = A_0eb0!(20)   '@371c1
+    V_1567! = A_0ede!(20)   '@371e1
+    V_156b! = A_0f68!(20)   '@37201
+    V_156f! = A_0f96!(20)   '@37221
+    V_1573! = A_0e82!(21)   '@37241
+    V_1577! = A_0eb0!(21)   '@37261
+    V_157b! = A_0ede!(21)   '@37281
+    V_157f! = A_0f68!(21)   '@372a1
+    V_1583! = A_0f96!(21)   '@372c1
+    V_1587! = A_0e82!(22)   '@372e1
+    V_158b! = A_0eb0!(22)   '@37301
+    V_158f! = A_0ede!(22)   '@37321
+    V_1593! = A_0f68!(22)   '@37341
+    V_1597! = A_0f96!(22)   '@37361
+    V_159b! = A_0e82!(23)   '@37381
+    V_159f! = A_0eb0!(23)   '@373a1
+    V_15a3! = A_0ede!(23)   '@373c1
+    V_15a7! = A_0f68!(23)   '@373e1
+    V_15ab! = A_0f96!(23)   '@37401
+    V_15af! = A_0e82!(24)   '@37421
+    V_15b3! = A_0eb0!(24)   '@37441
+    V_15b7! = A_0ede!(24)   '@37461
+    V_15bb! = A_0f68!(24)   '@37481
+    V_15bf! = A_0f96!(24)   '@374a1
+    V_15c3! = A_0e82!(25)   '@374c1
+    V_15c7! = A_0eb0!(25)   '@374e1
+    V_15cb! = A_0ede!(25)   '@37501
+    V_15cf! = A_0f68!(25)   '@37521
+    V_15d3! = A_0f96!(25)   '@37541
+    V_15d7! = A_0e82!(26)   '@37561
+    V_15db! = A_0eb0!(26)   '@37581
+    V_15df! = A_0ede!(26)   '@375a1
+    V_15e3! = A_0f68!(26)   '@375c1
+    V_15e7! = A_0f96!(26)   '@375e1
+    V_15eb! = A_0e82!(27)   '@37601
+    V_15ef! = A_0eb0!(27)   '@37621
+    V_15f3! = A_0ede!(27)   '@37641
+    V_15f7! = A_0f68!(27)   '@37661
+    V_15fb! = A_0f96!(27)   '@37681
+    V_15ff! = A_0e82!(28)   '@376a1
+    V_1603! = A_0eb0!(28)   '@376c1
+    V_1607! = A_0ede!(28)   '@376e1
+    V_160b! = A_0f68!(28)   '@37701
+    V_160f! = A_0f96!(28)   '@37721
+    V_1613! = A_0e82!(29)   '@37741
+    V_1617! = A_0eb0!(29)   '@37761
+    V_161b! = A_0ede!(29)   '@37781
+    V_161f! = A_0f68!(29)   '@377a1
+    V_1623! = A_0f96!(29)   '@377c1
+    V_1627! = A_0e82!(30)   '@377e1
+    V_162b! = A_0eb0!(30)   '@37801
+    V_162f! = A_0ede!(30)   '@37821
+    V_1633! = A_0f68!(30)   '@37841
+    V_1637! = A_0f96!(30)   '@37861
+    V_163b! = A_0fc4!(0)   '@37881
+    V_163f! = A_0fc4!(1)   '@378a0
+    ' END SUB   '@378bd
+END SUB
+
+SUB S_40243   ' entrada de SUB/FUNCTION (B$ENSA, STATIC, locais 38 bytes) (0x40243)
+    DIM L_BP0c%
+    DIM L_BP0e%
+    DIM L_BP10%
+    DIM L_BP12%
+    DIM L_BP14%
+    DIM L_BP16%
+    DIM L_BP18%
+    DIM L_BP1a%
+    DIM L_BP1c%
+    DIM L_BP1e%
+    DIM L_BP20%
+    DIM L_BP22%
+    DIM L_BP24%
+    DIM L_BP26%
+    DIM L_BP28%
+    DIM L_BP2a%
+    DIM L_BP2c%
+    DIM L_BP2e%
+    DIM L_BP30%
+    ' ---- FUN_4000_0243 @0x40243  (040243_FUN_4000_0243.lift.txt; evidence_id (assembly): ev_a1c61db6be89743004bc19be2a1e9a8e1317ebfccf835297a62fd1269fb54bdc)
+    V_1998! = 0: V_199c! = 0: ST_19a0!(0) = 0   '@402c3 (ERASE de matriz estatica: descritor em DS:4b00 (3 elementos de 4 bytes em DS:1998))
+    REDIM A_18b0!(-32768 TO -32768)   '@402d1
+    REDIM A_18c2!(-32768 TO -32768)   '@402da
+    REDIM A_18d4!(-32768 TO -32768)   '@402e3
+    REDIM A_18e6!(-32768 TO -32768, -32768 TO -32768)   '@402ec
+    REDIM A_18b0!(0 TO 14)   '@402f5
+    REDIM A_18c2!(0 TO 14)   '@40312
+    REDIM A_18d4!(0 TO 14)   '@4032f
+    REDIM A_18e6!(0 TO 14, 0 TO 2)   '@4034c
+    PRINT "   Aguarde ...   ";   '@40370 DS:4b12
+    V_1c1c% = V_0e08%   '@4037e
+    FOR V_1c14% = 1 TO V_1c1c%   '@40389
+    V_1c08! = 0.0   '@40390 DS:4b28
+    A_18e6!(V_1c14%, 0) = 0.0   '@403a1 DS:4b28
+    A_18e6!(V_1c14%, 1) = 0.0   '@403c4 DS:4b28
+    ST_1a1c!(V_1c14%) = 0.0   '@403e8 DS:4b28
+    ST_1a54!(V_1c14%) = 0.0   '@40401 DS:4b28
+    IF NOT (A_0f0c%(V_1c14%) = 0) THEN GOTO L_40442   '@4041a
+    GOTO L_40a2f   '@4043a
+L_40442:
+    V_1c1e% = A_0f3a%(V_1c14%)   '@40442
+    FOR V_1c16% = 1 + (A_0f3a%(V_1c14%) - A_0f0c%(V_1c14%)) TO V_1c1e%   '@4045d
+    A_18e6!(V_1c14%, 0) = (FX##(A_0eb0!(V_1c16%)) - V_1c08!) * A_0e82!(V_1c16%) * (A_0e26!(V_1c14%) - (FX##(A_0eb0!(V_1c16%)) + V_1c08!) / 2.0) / A_0e26!(V_1c14%) + A_18e6!(V_1c14%, 0)   '@40488 DS:4b2c
+    A_18e6!(V_1c14%, 1) = (FX##(A_0eb0!(V_1c16%)) - V_1c08!) * A_0e82!(V_1c16%) * (FX##(A_0eb0!(V_1c16%)) + V_1c08!) / (FX##(A_0e26!(V_1c14%)) * 2.0) + A_18e6!(V_1c14%, 1)   '@4052a DS:4b2c
+    ST_1a1c!(V_1c14%) = ST_1a1c!(V_1c14%) + (RT_POT##((FX##(A_0eb0!(V_1c16%))), (2.0)) * RT_POT##((FX##(A_0e26!(V_1c14%)) * 2.0 - A_0eb0!(V_1c16%)), (2.0)) - RT_POT##((FX##(V_1c08!)), (2.0)) * RT_POT##((FX##(A_0e26!(V_1c14%)) * 2.0 - V_1c08!), (2.0))) * A_0e82!(V_1c16%) / (RT_POT##((FX##(A_0e26!(V_1c14%))), (2.0)) * 4.0)   '@405ba DS:4b2c,4b30
+    ST_1a54!(V_1c14%) = ST_1a54!(V_1c14%) + (RT_POT##((FX##(A_0eb0!(V_1c16%))), (2.0)) * (RT_POT##((FX##(A_0e26!(V_1c14%))), (2.0)) * 2.0 - RT_POT##((FX##(A_0eb0!(V_1c16%))), (2.0))) - RT_POT##((FX##(V_1c08!)), (2.0)) * (RT_POT##((FX##(A_0e26!(V_1c14%))), (2.0)) * 2.0 - RT_POT##((FX##(V_1c08!)), (2.0)))) * A_0e82!(V_1c16%) / (RT_POT##((FX##(A_0e26!(V_1c14%))), (2.0)) * 4.0)   '@406a9 DS:4b2c,4b30
+    A_18e6!(V_1c14%, 0) = (FX##(A_0e26!(V_1c14%)) - A_0eb0!(V_1c16%)) * A_0ede!(V_1c16%) / A_0e26!(V_1c14%) + A_18e6!(V_1c14%, 0)   '@407b9
+    A_18e6!(V_1c14%, 1) = FX##(A_0eb0!(V_1c16%)) * A_0ede!(V_1c16%) / A_0e26!(V_1c14%) + A_18e6!(V_1c14%, 1)   '@40835
+    ST_1a1c!(V_1c14%) = ST_1a1c!(V_1c14%) + FX##(A_0ede!(V_1c16%)) * A_0eb0!(V_1c16%) * (FX##(A_0e26!(V_1c14%)) - A_0eb0!(V_1c16%)) * (FX##(A_0e26!(V_1c14%)) * 2.0 - A_0eb0!(V_1c16%)) / RT_POT##((FX##(A_0e26!(V_1c14%))), (2.0))   '@4089f DS:4b2c
+    ST_1a54!(V_1c14%) = ST_1a54!(V_1c14%) + FX##(A_0ede!(V_1c16%)) * A_0eb0!(V_1c16%) * (FX##(A_0e26!(V_1c14%)) - A_0eb0!(V_1c16%)) * (FX##(A_0e26!(V_1c14%)) + A_0eb0!(V_1c16%)) / RT_POT##((FX##(A_0e26!(V_1c14%))), (2.0))   '@4094f DS:4b2c
+    V_1c08! = A_0eb0!(V_1c16%)   '@409fa
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c16%   '@40a1a
+L_40a2f:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c14%   '@40a34
+    A_18b0!(0) = 0.0   '@40a49 DS:4b28
+    A_18b0!(V_0e08%) = 0.0   '@40a68 DS:4b28
+    A_18e6!(0, 1) = 0.0   '@40a88 DS:4b28
+    A_18e6!(V_0e08% + 1, 0) = 0.0   '@40aab DS:4b28
+    A_18d4!(0) = 0.0   '@40acf DS:4b28
+    A_18d4!(V_0e08% + 1) = 0.0   '@40aee DS:4b28
+    A_18e6!(0, 0) = 0.0   '@40b0f DS:4b28
+    A_18e6!(V_0e08% + 1, 1) = 0.0   '@40b2f DS:4b28
+    IF NOT (V_0e0a% = 0) THEN GOTO L_40b6b   '@40b54
+    GOTO L_40d24   '@40b63
+L_40b6b:
+    V_1c08! = 0.0   '@40b6b DS:4b28
+    IF NOT (A_0f0c%(0) = 0) THEN GOTO L_40ba3   '@40b7c
+    GOTO L_40d24   '@40b9b
+L_40ba3:
+    FOR V_1c16% = A_0f3a%(0) TO 1 STEP -1   '@40ba3
+    A_18b0!(0) = A_18b0!(0) - RT_POT##((FX##(A_0eb0!(V_1c16%)) - V_1c08!), (2.0)) * A_0e82!(V_1c16%) / 2.0 - (FX##(A_0eb0!(V_1c16%)) - V_1c08!) * A_0e82!(V_1c16%) * V_1c08! - FX##(A_0ede!(V_1c16%)) * A_0eb0!(V_1c16%)   '@40bbe DS:4b2c
+    A_18e6!(0, 1) = (FX##(A_0eb0!(V_1c16%)) - V_1c08!) * A_0e82!(V_1c16%) + A_18e6!(0, 1) + A_0ede!(V_1c16%)   '@40c7d
+    V_1c08! = A_0eb0!(V_1c16%)   '@40cf0
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c16%   '@40d10
+L_40d24:
+    IF NOT (V_0e0c% = 0) THEN GOTO L_40d40   '@40d29
+    GOTO L_40f16   '@40d38
+L_40d40:
+    V_1c08! = 0.0   '@40d40 DS:4b28
+    IF NOT (A_0f0c%(V_0e08% + 1) = 0) THEN GOTO L_40d7a   '@40d51
+    GOTO L_40f16   '@40d72
+L_40d7a:
+    V_1c20% = A_0f3a%(V_0e08% + 1)   '@40d7a
+    FOR V_1c16% = 1 + A_0f3a%(V_0e08%) TO V_1c20%   '@40d96
+    A_18b0!(V_0e08%) = A_18b0!(V_0e08%) - RT_POT##((FX##(A_0eb0!(V_1c16%)) - V_1c08!), (2.0)) * A_0e82!(V_1c16%) / 2.0 - (FX##(A_0eb0!(V_1c16%)) - V_1c08!) * A_0e82!(V_1c16%) * V_1c08! - FX##(A_0ede!(V_1c16%)) * A_0eb0!(V_1c16%)   '@40dae DS:4b2c
+    A_18e6!(1 + V_0e08%, 0) = (FX##(A_0eb0!(V_1c16%)) - V_1c08!) * A_0e82!(V_1c16%) + A_18e6!(1 + V_0e08%, 0) + A_0ede!(V_1c16%)   '@40e6c
+    V_1c08! = A_0eb0!(V_1c16%)   '@40ee1
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c16%   '@40f01
+L_40f16:
+    ST_19a0!(2) = 0.5   '@40f1b DS:4b34
+    IF NOT (V_0e0e% = 0) THEN GOTO L_40f4c   '@40f2c
+    ST_19a0!(2) = 0.0   '@40f3b DS:4b28
+L_40f4c:
+    ST_19e0!(V_0e08%) = 0.5   '@40f4c DS:4b34
+    IF NOT (V_0e10% = 0) THEN GOTO L_40f8d   '@40f65
+    ST_19e0!(V_0e08%) = 0.0   '@40f74 DS:4b28
+L_40f8d:
+    IF NOT (V_0e08% = 1) THEN GOTO L_40fa4   '@40f8d
+    GOTO L_410e0   '@40f9c
+L_40fa4:
+    V_1c22% = V_0e08%   '@40fa4
+    FOR V_1c14% = 2 TO V_1c22%   '@40faf
+    ST_19a0!(1 + V_1c14%) = 1.0 / (FX##(A_0e26!(V_1c14% - 1)) * A_0e54!(V_1c14%) * (2.0 - FX##(ST_19a0!(V_1c14%))) / (FX##(A_0e54!(V_1c14% - 1)) * A_0e26!(V_1c14%)) + 2.0)   '@40fb6 DS:4b2c,4b38
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c14%   '@41030
+    FOR V_1c14% = V_0e08% - 1 TO 1 STEP -1   '@41045
+    ST_19e0!(V_1c14%) = 1.0 / (FX##(A_0e26!(V_1c14% + 1)) * A_0e54!(V_1c14%) * (2.0 - FX##(ST_19e0!(1 + V_1c14%))) / (FX##(A_0e54!(V_1c14% + 1)) * A_0e26!(V_1c14%)) + 2.0)   '@41052 DS:4b2c,4b38
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c14%   '@410cc
+L_410e0:
+    L_BP0c% = (V_12c2$ = "N")   '@410e5 DS:4b3c
+    IF NOT ((V_12c6$ = "S" AND L_BP0c%) <> 0) THEN GOTO L_4115f   '@4110a DS:4b42
+    A_18b0!(0) = FX##(A_18b0!(0)) + A_0fc4!(0)   '@4111f
+L_4115f:
+    IF NOT (V_0e10% = 0 AND V_0e08% = 1) THEN GOTO L_4118b   '@4115f
+    GOTO L_41255   '@41183
+L_4118b:
+    V_1c24% = V_0e10% + V_0e08% - 1   '@4118b
+    FOR V_1c14% = 1 TO V_1c24%   '@4119b
+    A_18b0!(V_1c14%) = ST_19e0!(V_1c14%) * (FX##(ST_19a0!(1 + V_1c14%)) * ST_1a1c!(V_1c14%) - ST_1a54!(V_1c14%)) / (1.0 - FX##(ST_19e0!(V_1c14%)) * ST_19a0!(1 + V_1c14%))   '@411a2 DS:4b38
+    A_18b0!(V_1c14%) = A_18b0!(V_1c14%) - FX##(ST_19e0!(V_1c14%)) * A_18b0!(V_1c14% - 1)   '@411f1
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c14%   '@41240
+L_41255:
+    L_BP0e% = (V_12c2$ = "N")   '@4125a DS:4b3c
+    IF NOT ((V_12c6$ = "S" AND L_BP0e%) <> 0) THEN GOTO L_412ce   '@4127f DS:4b42
+    A_18b0!(V_0e08%) = FX##(A_18b0!(V_0e08%)) + A_0fc4!(1)   '@41294
+L_412ce:
+    V_1c04! = A_18b0!(V_0e08%)   '@412ce
+    IF NOT (V_0e10% = 1) THEN GOTO L_4134f   '@412ee
+    L_BP10% = (V_12c2$ = "N")   '@412fd DS:4b3c
+    V_1c04! = -(V_12c6$ = "S" AND L_BP10%) * FX##(A_0fc4!(1))   '@41322 DS:4b42
+L_4134f:
+    IF NOT (V_0e0e% = 0 AND V_0e08% = 1) THEN GOTO L_4137b   '@4134f
+    GOTO L_41453   '@41373
+L_4137b:
+    V_1c26% = 2 - V_0e0e%   '@4137b
+    FOR V_1c14% = V_0e08% TO V_1c26% STEP -1   '@4138a
+    V_1c10! = ST_19a0!(1 + V_1c14%) * (FX##(ST_19e0!(V_1c14%)) * ST_1a54!(V_1c14%) - ST_1a1c!(V_1c14%)) / (1.0 - FX##(ST_19e0!(V_1c14%)) * ST_19a0!(1 + V_1c14%))   '@41390 DS:4b38
+    A_18b0!(V_1c14% - 1) = V_1c10! - FX##(ST_19a0!(1 + V_1c14%)) * V_1c04! + A_18b0!(V_1c14% - 1)   '@413d0
+    V_1c04! = V_1c10! - FX##(ST_19a0!(1 + V_1c14%)) * V_1c04!   '@41418
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c14%   '@4143e
+L_41453:
+    IF NOT (1 - V_0e0e% <= V_0e10% + V_0e08% - 1) THEN GOTO L_414e2   '@41458
+    V_1c14% = 0   '@41474
+    V_1c28% = V_0e10% + V_0e08% - 1   '@4147f
+    FOR V_1c14% = 1 - V_0e0e% TO V_1c28%   '@4148f
+    A_18b0!(V_1c14%) = FX##(A_18b0!(V_1c14%)) * V_0e18!   '@4149a
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c14%   '@414cb
+L_414e2:
+    V_1afc! = 0.0   '@414e2 DS:4b28
+    V_1c18! = 1.0   '@414f3 DS:4b38
+    V_1c2a% = V_0e08%   '@41504
+    FOR V_1c14% = 1 TO V_1c2a%   '@4150f
+    V_1bf0! = 1.0   '@41516 DS:4b38
+    IF NOT (V_0e0e% = 0 AND (V_0e0a% = 0 AND V_1c14% = 1)) THEN GOTO L_41569   '@41527
+    V_1bf0! = 0.0   '@41558 DS:4b28
+L_41569:
+    V_1bf4! = 1.0   '@41569 DS:4b38
+    IF NOT (V_0e10% = 0 AND (V_0e0c% = 0 AND V_0e08% = V_1c14%)) THEN GOTO L_415be   '@4157a
+    V_1bf4! = 0.0   '@415ad DS:4b28
+L_415be:
+    V_1c04! = -(((FX##(V_1bf0!) + V_1bf4!) * ST_1a1c!(V_1c14%) * V_1bf0! - FX##(ST_1a54!(V_1c14%)) * V_1bf0! * V_1bf4!) / (FX##(V_1bf0!) + V_1bf4! + 1.0))   '@415be DS:4b38
+    ST_1b78!(RT_CINT%(FX##(V_1c18!))) = (FX##(ST_1a1c!(V_1c14%)) * V_1bf0! - FX##(ST_1a54!(V_1c14%)) * V_1bf4!) * (FX##(V_1bf0!) + V_1bf4!) / (FX##(A_0e26!(V_1c14%)) * 2.0) + A_18e6!(V_1c14%, 0)   '@4160d DS:4b2c
+    L_BP12% = (V_12c2$ = "N")   '@41688 DS:4b3c
+    IF NOT ((V_12c6$ = "S" AND L_BP12%) <> 0) THEN GOTO L_41886   '@416ad DS:4b42
+    IF NOT (V_1c14% = 1) THEN GOTO L_41797   '@416c2
+    V_1c04! = FX##(A_0fc4!(0)) + V_1c04!   '@416d1
+    ST_1b78!(RT_CINT%(FX##(V_1c18!))) = ST_1b78!(RT_CINT%(FX##(V_1c18!))) + ((V_1bf4! = 0.0) + FX##((V_1bf4! = 1.0) * 3) / 2.0) * A_0fc4!(0) / A_0e26!(V_1c14%)   '@416f5 DS:4b28,4b2c,4b38
+L_41797:
+    IF NOT (V_0e08% = V_1c14%) THEN GOTO L_41881   '@41797
+    IF NOT (V_1c14% > 1) THEN GOTO L_417e1   '@417a8
+    V_1c04! = V_1c04! - FX##(A_0fc4!(1)) / 2.0   '@417b7 DS:4b2c
+L_417e1:
+    ST_1b78!(RT_CINT%(FX##(V_1c18!))) = ST_1b78!(RT_CINT%(FX##(V_1c18!))) - ((V_1bf0! = 0.0) + FX##((V_1bf0! = 1.0) * 3) / 2.0) * A_0fc4!(1) / A_0e26!(V_1c14%)   '@417e1 DS:4b28,4b2c,4b38
+L_41881:
+L_41886:
+    V_1c0c! = ST_1b78!(RT_CINT%(FX##(V_1c18!)))   '@41886
+    IF NOT (V_1c14% = 1) THEN GOTO L_418e1   '@418a7
+    V_1998! = -((FX##(ST_1a1c!(V_1c14%)) * 2.0 - ST_1a54!(V_1c14%)) / 3.0)   '@418b6 DS:4b2c,4b48
+L_418e1:
+    IF NOT (V_0e08% = V_1c14%) THEN GOTO L_4191d   '@418e1
+    V_199c! = -((FX##(ST_1a54!(V_1c14%)) * 2.0 - ST_1a1c!(V_1c14%)) / 3.0)   '@418f2 DS:4b2c,4b48
+L_4191d:
+    GOSUB L_45ed7   '@4191d
+    ST_1b50!(RT_CINT%(FX##(V_1c18!))) = V_1c14%   '@4192a
+    ST_1b00!(RT_CINT%(FX##(V_1c18!))) = V_1c10!   '@4194e
+    ST_1b28!(RT_CINT%(FX##(V_1c18!))) = V_1c04!   '@4196f
+    ST_1b78!(RT_CINT%(FX##(V_1c18!)) + 10) = FX##(A_18e6!(V_1c14%, 1)) - ST_1b78!(RT_CINT%(FX##(V_1c18!))) + A_18e6!(V_1c14%, 0)   '@41990
+    V_1c04! = A_18b0!(V_1c14% - 1)   '@419f3
+    A_18e6!(V_1c14%, 0) = (FX##(A_18b0!(V_1c14%)) - A_18b0!(V_1c14% - 1)) / A_0e26!(V_1c14%) + A_18e6!(V_1c14%, 0)   '@41a14
+    A_18e6!(V_1c14%, 1) = (FX##(A_18b0!(V_1c14% - 1)) - A_18b0!(V_1c14%)) / A_0e26!(V_1c14%) + A_18e6!(V_1c14%, 1)   '@41a81
+    V_1c0c! = A_18e6!(V_1c14%, 0)   '@41aec
+    GOSUB L_45ed7   '@41b0f
+    A_18c2!(V_1c14%) = V_1c10!   '@41b1c
+    A_18d4!(V_1c14%) = V_1c04!   '@41b3c
+    IF NOT (FX##(ST_1b28!(RT_CINT%(FX##(V_1c18!)))) > A_18d4!(V_1c14%) * 1.0099999904632568359375##) THEN GOTO L_41bc7   '@41b5c DS:4b4c
+    V_1afc! = FX##(V_1afc!) + 1.0   '@41b9b DS:4b38
+    V_1c18! = FX##(V_1c18!) + 1.0   '@41bb1 DS:4b38
+L_41bc7:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c14%   '@41bc7
+    REDIM A_1924!(-32768 TO -32768)   '@41bdc
+    REDIM A_1936!(-32768 TO -32768)   '@41bea
+    REDIM A_1948!(-32768 TO -32768)   '@41bf3
+    REDIM A_195a!(-32768 TO -32768)   '@41bfc
+    REDIM A_196c!(-32768 TO -32768, -32768 TO -32768)   '@41c05
+    REDIM A_1982!(-32768 TO -32768, -32768 TO -32768)   '@41c0e
+    REDIM A_0ff2!(-32768 TO -32768)   '@41c17
+    REDIM A_1020!(-32768 TO -32768, -32768 TO -32768)   '@41c20
+    ST_1a8c!(0) = 0: ST_1a8c!(1) = 0: ST_1a8c!(2) = 0: ST_1a8c!(3) = 0: ST_1a8c!(4) = 0: ST_1a8c!(5) = 0: ST_1a8c!(6) = 0: ST_1a8c!(7) = 0
+    ST_1a8c!(8) = 0: ST_1a8c!(9) = 0: ST_1a8c!(10) = 0: ST_1a8c!(11) = 0: ST_1a8c!(12) = 0: ST_1a8c!(13) = 0: ST_1a8c!(14) = 0: ST_1a8c!(15) = 0
+    ST_1a8c!(16) = 0: ST_1a8c!(17) = 0: ST_1a8c!(18) = 0: ST_1a8c!(19) = 0: ST_1a8c!(20) = 0: ST_1a8c!(21) = 0: ST_1a8c!(22) = 0: ST_1a8c!(23) = 0
+    ST_1a8c!(24) = 0: ST_1a8c!(25) = 0: ST_1a8c!(26) = 0: ST_1a8c!(27) = 0   '@41c29 (ERASE de matriz estatica: descritor em DS:4b50 (28 elementos de 4 bytes em DS:1A8C))
+    REDIM A_1924!(0 TO 14)   '@41c32
+    REDIM A_1936!(0 TO 14)   '@41c4f
+    REDIM A_1948!(0 TO 14)   '@41c6c
+    REDIM A_195a!(0 TO 14)   '@41c89
+    REDIM A_196c!(0 TO 14, 0 TO 4)   '@41ca6
+    REDIM A_1982!(0 TO 14, 0 TO 2)   '@41cc7
+    REDIM A_0ff2!(0 TO 12)   '@41ceb
+    REDIM A_1020!(0 TO 12, 0 TO 2)   '@41d08
+    V_1c2c% = V_0e08% + 1   '@41d2c
+    FOR V_1c14% = 0 TO V_1c2c%   '@41d38
+    A_1924!(V_1c14%) = A_18b0!(V_1c14%)   '@41d3e
+    A_1936!(V_1c14%) = A_18b0!(V_1c14%)   '@41d6a
+    A_1948!(V_1c14%) = A_18c2!(V_1c14%)   '@41d96
+    A_195a!(V_1c14%) = A_18d4!(V_1c14%)   '@41dc2
+    A_196c!(V_1c14%, 0) = A_18e6!(V_1c14%, 0)   '@41dee
+    A_196c!(V_1c14%, 1) = A_18e6!(V_1c14%, 1)   '@41e23
+    A_196c!(V_1c14%, 2) = A_18e6!(V_1c14%, 0)   '@41e5a
+    A_196c!(V_1c14%, 3) = A_18e6!(V_1c14%, 0)   '@41e8a
+    A_196c!(V_1c14%, 4) = A_18e6!(V_1c14%, 1)   '@41ec0
+    IF NOT (V_0e08% + 1 > V_1c14% AND V_1c14% > 0) THEN GOTO L_41f85   '@41ef7
+    A_1982!(V_1c14%, 0) = A_18e6!(V_1c14%, 0)   '@41f1f
+    A_1982!(V_1c14%, 1) = A_18b0!(V_1c14% - 1)   '@41f54
+L_41f85:
+    IF NOT (V_0e08% + 1 > V_1c14%) THEN GOTO L_4204a   '@41f85
+    A_0ff2!(V_1c14%) = FX##(A_18e6!(V_1c14%, 1)) + A_18e6!(V_1c14% + 1, 0)   '@41f97
+    A_1020!(V_1c14%, 0) = A_0ff2!(V_1c14%)   '@41fe3
+    A_1020!(V_1c14%, 1) = A_0ff2!(V_1c14%)   '@42015
+L_4204a:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c14%   '@4204a
+    V_1c2e% = V_0e08%   '@4205f
+    FOR V_1c14% = 1 TO V_1c2e%   '@4206a
+    L_BP14% = V_1c14% - 1   '@42070 DS:4b2c,4b48
+    ST_1a8c!(V_1c14%) = RT_POT##((FX##(A_18c2!(V_1c14%))), (2.0)) * A_18b0!(V_1c14% - 1) / 2.0 - RT_POT##((FX##(A_18c2!(V_1c14%))), (3.0)) * A_18b0!(L_BP14%) / (FX##(A_0e26!(V_1c14%)) * 6.0) - FX##(A_18b0!(L_BP14%)) * A_0e26!(V_1c14%) * A_18c2!(V_1c14%) / 3.0   '@420ce DS:4b48,4b66
+    ST_1a8c!(V_1c14%) = ST_1a8c!(V_1c14%) + (RT_POT##((FX##(A_18c2!(V_1c14%))), (3.0)) * A_18b0!(V_1c14%) / (FX##(A_0e26!(V_1c14%)) * 6.0) - FX##(A_18b0!(V_1c14%)) * A_0e26!(V_1c14%) * A_18c2!(V_1c14%) / 6.0)   '@4214b DS:4b48,4b66
+    V_1c00! = 0.0   '@421ef DS:4b28
+    V_1c10! = A_18c2!(V_1c14%)   '@42200
+    GOSUB L_464ab   '@42220
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c14%   '@4222d
+    IF NOT (V_12c2$ = "N") THEN GOTO L_42261   '@42242 DS:4b3c
+    GOTO L_44234   '@42259
+L_42261:
+    PRINT " envoltoria de carga acidental ..."   '@42266 DS:4b6a
+    V_1c30! = V_0e08% - (V_12c6$ = "S") * 2 + V_0e0c%   '@42274 DS:4b42
+    FOR V_1c00! = 1 - V_0e0a% TO V_1c30!   '@422a6 DS:4b38
+    REDIM A_18fc!(-32768 TO -32768)   '@422b6
+    REDIM A_190e!(-32768 TO -32768, -32768 TO -32768)   '@422c4
+    ST_1a1c!(0) = 0: ST_1a1c!(1) = 0: ST_1a1c!(2) = 0: ST_1a1c!(3) = 0: ST_1a1c!(4) = 0: ST_1a1c!(5) = 0: ST_1a1c!(6) = 0: ST_1a1c!(7) = 0
+    ST_1a1c!(8) = 0: ST_1a1c!(9) = 0: ST_1a1c!(10) = 0: ST_1a1c!(11) = 0: ST_1a1c!(12) = 0: ST_1a1c!(13) = 0   '@422cd (ERASE de matriz estatica: descritor em DS:4b90 (14 elementos de 4 bytes em DS:1A1C))
+    ST_1a54!(0) = 0: ST_1a54!(1) = 0: ST_1a54!(2) = 0: ST_1a54!(3) = 0: ST_1a54!(4) = 0: ST_1a54!(5) = 0: ST_1a54!(6) = 0: ST_1a54!(7) = 0
+    ST_1a54!(8) = 0: ST_1a54!(9) = 0: ST_1a54!(10) = 0: ST_1a54!(11) = 0: ST_1a54!(12) = 0: ST_1a54!(13) = 0   '@422d6 (ERASE de matriz estatica: descritor em DS:4ba2 (14 elementos de 4 bytes em DS:1A54))
+    REDIM A_18fc!(0 TO 14)   '@422df
+    REDIM A_190e!(0 TO 14, 0 TO 2)   '@422fc
+    IF NOT (V_0e0c% + V_0e08% < V_1c00!) THEN GOTO L_4234a   '@42320
+    GOTO L_429c1   '@42342
+L_4234a:
+    V_1c34% = V_0e08%   '@4234a
+    FOR V_1c14% = 1 TO V_1c34%   '@42355
+    V_1c08! = 0.0   '@4235c DS:4b28
+    IF NOT (V_1c14% <> V_1c00! OR A_0f0c%(V_1c14%) = 0) THEN GOTO L_423bb   '@4236d
+    GOTO L_429a7   '@423b3
+L_423bb:
+    V_1c36% = A_0f3a%(V_1c14%)   '@423bb
+    FOR V_1c16% = 1 + (A_0f3a%(V_1c14%) - A_0f0c%(V_1c14%)) TO V_1c36%   '@423d6
+    A_190e!(V_1c14%, 0) = (FX##(A_0eb0!(V_1c16%)) - V_1c08!) * A_0f68!(V_1c16%) * (A_0e26!(V_1c14%) - (FX##(A_0eb0!(V_1c16%)) + V_1c08!) / 2.0) / A_0e26!(V_1c14%) + A_190e!(V_1c14%, 0)   '@42400 DS:4b2c
+    A_190e!(V_1c14%, 1) = (FX##(A_0eb0!(V_1c16%)) - V_1c08!) * A_0f68!(V_1c16%) * (FX##(A_0eb0!(V_1c16%)) + V_1c08!) / (FX##(A_0e26!(V_1c14%)) * 2.0) + A_190e!(V_1c14%, 1)   '@424a2 DS:4b2c
+    ST_1a1c!(V_1c14%) = ST_1a1c!(V_1c14%) + (RT_POT##((FX##(A_0eb0!(V_1c16%))), (2.0)) * RT_POT##((FX##(A_0e26!(V_1c14%)) * 2.0 - A_0eb0!(V_1c16%)), (2.0)) - RT_POT##((FX##(V_1c08!)), (2.0)) * RT_POT##((FX##(A_0e26!(V_1c14%)) * 2.0 - V_1c08!), (2.0))) * A_0f68!(V_1c16%) / (RT_POT##((FX##(A_0e26!(V_1c14%))), (2.0)) * 4.0)   '@42532 DS:4b2c,4b30
+    ST_1a54!(V_1c14%) = ST_1a54!(V_1c14%) + (RT_POT##((FX##(A_0eb0!(V_1c16%))), (2.0)) * (RT_POT##((FX##(A_0e26!(V_1c14%))), (2.0)) * 2.0 - RT_POT##((FX##(A_0eb0!(V_1c16%))), (2.0))) - RT_POT##((FX##(V_1c08!)), (2.0)) * (RT_POT##((FX##(A_0e26!(V_1c14%))), (2.0)) * 2.0 - RT_POT##((FX##(V_1c08!)), (2.0)))) * A_0f68!(V_1c16%) / (RT_POT##((FX##(A_0e26!(V_1c14%))), (2.0)) * 4.0)   '@42621 DS:4b2c,4b30
+    A_190e!(V_1c14%, 0) = (FX##(A_0e26!(V_1c14%)) - A_0eb0!(V_1c16%)) * A_0f96!(V_1c16%) / A_0e26!(V_1c14%) + A_190e!(V_1c14%, 0)   '@42731
+    A_190e!(V_1c14%, 1) = FX##(A_0eb0!(V_1c16%)) * A_0f96!(V_1c16%) / A_0e26!(V_1c14%) + A_190e!(V_1c14%, 1)   '@427ad
+    ST_1a1c!(V_1c14%) = ST_1a1c!(V_1c14%) + FX##(A_0f96!(V_1c16%)) * A_0eb0!(V_1c16%) * (FX##(A_0e26!(V_1c14%)) - A_0eb0!(V_1c16%)) * (FX##(A_0e26!(V_1c14%)) * 2.0 - A_0eb0!(V_1c16%)) / RT_POT##((FX##(A_0e26!(V_1c14%))), (2.0))   '@42817 DS:4b2c
+    ST_1a54!(V_1c14%) = ST_1a54!(V_1c14%) + FX##(A_0f96!(V_1c16%)) * A_0eb0!(V_1c16%) * (FX##(A_0e26!(V_1c14%)) - A_0eb0!(V_1c16%)) * (FX##(A_0e26!(V_1c14%)) + A_0eb0!(V_1c16%)) / RT_POT##((FX##(A_0e26!(V_1c14%))), (2.0))   '@428c7 DS:4b2c
+    V_1c08! = A_0eb0!(V_1c16%)   '@42972
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c16%   '@42992
+L_429a7:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c14%   '@429ac
+L_429c1:
+    IF NOT (V_0e0c% + V_0e08% < V_1c00!) THEN GOTO L_42a6e   '@429c6
+    IF NOT (V_0e0c% + V_0e08% + 1 = V_1c00!) THEN GOTO L_42a40   '@429e8
+    A_18fc!(0) = A_0fc4!(0)   '@42a0b
+    GOTO L_42a69   '@42a38
+L_42a40:
+    A_18fc!(V_0e08%) = A_0fc4!(1)   '@42a40
+L_42a69:
+L_42a6e:
+    IF NOT (V_0e0a% = 0) THEN GOTO L_42a85   '@42a6e
+    GOTO L_42c60   '@42a7d
+L_42a85:
+    V_1c08! = 0.0   '@42a85 DS:4b28
+    IF NOT (V_1c00! <> 0.0 OR A_0f0c%(0) = 0) THEN GOTO L_42ae0   '@42a96 DS:4b28
+    GOTO L_42c60   '@42ad8
+L_42ae0:
+    FOR V_1c16% = A_0f3a%(0) TO 1 STEP -1   '@42ae0
+    A_18fc!(0) = A_18fc!(0) - RT_POT##((FX##(A_0eb0!(V_1c16%)) - V_1c08!), (2.0)) * A_0f68!(V_1c16%) / 2.0 - (FX##(A_0eb0!(V_1c16%)) - V_1c08!) * A_0f68!(V_1c16%) * V_1c08! - FX##(A_0f96!(V_1c16%)) * A_0eb0!(V_1c16%)   '@42afa DS:4b2c
+    A_190e!(0, 1) = (FX##(A_0eb0!(V_1c16%)) - V_1c08!) * A_0f68!(V_1c16%) + A_190e!(0, 1) + A_0f96!(V_1c16%)   '@42bb9
+    V_1c08! = A_0eb0!(V_1c16%)   '@42c2c
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c16%   '@42c4c
+L_42c60:
+    IF NOT (V_0e0c% = 0) THEN GOTO L_42c7c   '@42c65
+    GOTO L_42e7c   '@42c74
+L_42c7c:
+    V_1c08! = 0.0   '@42c7c DS:4b28
+    IF NOT (V_0e08% + 1 <> V_1c00! OR A_0f0c%(V_0e08% + 1) = 0) THEN GOTO L_42cdf   '@42c8d
+    GOTO L_42e7c   '@42cd7
+L_42cdf:
+    V_1c38% = A_0f3a%(V_0e08% + 1)   '@42cdf
+    FOR V_1c16% = 1 + A_0f3a%(V_0e08%) TO V_1c38%   '@42cfb
+    A_18fc!(V_0e08%) = A_18fc!(V_0e08%) - RT_POT##((FX##(A_0eb0!(V_1c16%)) - V_1c08!), (2.0)) * A_0f68!(V_1c16%) / 2.0 - (FX##(A_0eb0!(V_1c16%)) - V_1c08!) * A_0f68!(V_1c16%) * V_1c08! - FX##(A_0f96!(V_1c16%)) * A_0eb0!(V_1c16%)   '@42d14 DS:4b2c
+    A_190e!(1 + V_0e08%, 0) = (FX##(A_0eb0!(V_1c16%)) - V_1c08!) * A_0f68!(V_1c16%) + A_190e!(1 + V_0e08%, 0) + A_0f96!(V_1c16%)   '@42dd2
+    V_1c08! = A_0eb0!(V_1c16%)   '@42e47
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c16%   '@42e67
+L_42e7c:
+    ST_19a0!(2) = 0.5   '@42e81 DS:4b34
+    IF NOT (V_0e0c% + V_0e08% + 1 = V_1c00! OR V_0e0e% = 0) THEN GOTO L_42ee0   '@42e92
+    ST_19a0!(2) = 0.0   '@42ecf DS:4b28
+L_42ee0:
+    ST_19e0!(V_0e08%) = 0.5   '@42ee0 DS:4b34
+    IF NOT (V_0e0c% + V_0e08% + 2 = V_1c00! OR V_0e10% = 0) THEN GOTO L_42f51   '@42ef9
+    ST_19e0!(V_0e08%) = 0.0   '@42f38 DS:4b28
+L_42f51:
+    IF NOT (V_0e08% = 1) THEN GOTO L_42f68   '@42f51
+    GOTO L_430a4   '@42f60
+L_42f68:
+    V_1c3a% = V_0e08%   '@42f68
+    FOR V_1c14% = 2 TO V_1c3a%   '@42f73
+    ST_19a0!(1 + V_1c14%) = 1.0 / (FX##(A_0e26!(V_1c14% - 1)) * A_0e54!(V_1c14%) * (2.0 - FX##(ST_19a0!(V_1c14%))) / (FX##(A_0e54!(V_1c14% - 1)) * A_0e26!(V_1c14%)) + 2.0)   '@42f7a DS:4b2c,4b38
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c14%   '@42ff4
+    FOR V_1c14% = V_0e08% - 1 TO 1 STEP -1   '@43009
+    ST_19e0!(V_1c14%) = 1.0 / (FX##(A_0e26!(V_1c14% + 1)) * A_0e54!(V_1c14%) * (2.0 - FX##(ST_19e0!(1 + V_1c14%))) / (FX##(A_0e54!(V_1c14% + 1)) * A_0e26!(V_1c14%)) + 2.0)   '@43016 DS:4b2c,4b38
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c14%   '@43090
+L_430a4:
+    IF NOT (V_0e10% = 0 AND V_0e08% = 1) THEN GOTO L_430d5   '@430a9
+    GOTO L_431c5   '@430cd
+L_430d5:
+    V_1c3c% = V_0e08% - (V_0e0c% + V_0e08% + 2 <> V_1c00!) * V_0e10% - 1   '@430d5
+    FOR V_1c14% = 1 TO V_1c3c%   '@4310b
+    A_18fc!(V_1c14%) = ST_19e0!(V_1c14%) * (FX##(ST_19a0!(1 + V_1c14%)) * ST_1a1c!(V_1c14%) - ST_1a54!(V_1c14%)) / (1.0 - FX##(ST_19e0!(V_1c14%)) * ST_19a0!(1 + V_1c14%))   '@43112 DS:4b38
+    A_18fc!(V_1c14%) = A_18fc!(V_1c14%) - FX##(ST_19e0!(V_1c14%)) * A_18fc!(V_1c14% - 1)   '@43161
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c14%   '@431b0
+L_431c5:
+    V_1c04! = A_18fc!(V_0e08%)   '@431ca
+    IF NOT (V_0e0c% + V_0e08% + 2 <> V_1c00! AND V_0e0c% = 0) THEN GOTO L_4323a   '@431ea
+    V_1c04! = 0.0   '@43229 DS:4b28
+L_4323a:
+    IF NOT (V_0e0e% = 0 AND V_0e08% = 1) THEN GOTO L_43266   '@4323a
+    GOTO L_4335d   '@4325e
+L_43266:
+    V_1c3e% = (V_0e0c% + V_0e08% + 1 <> V_1c00!) * V_0e0e% + 2   '@43266
+    FOR V_1c14% = V_0e08% TO V_1c3e% STEP -1   '@43294
+    V_1c10! = ST_19a0!(1 + V_1c14%) * (FX##(ST_19e0!(V_1c14%)) * ST_1a54!(V_1c14%) - ST_1a1c!(V_1c14%)) / (1.0 - FX##(ST_19e0!(V_1c14%)) * ST_19a0!(1 + V_1c14%))   '@4329a DS:4b38
+    A_18fc!(V_1c14% - 1) = V_1c10! - FX##(ST_19a0!(1 + V_1c14%)) * V_1c04! + A_18fc!(V_1c14% - 1)   '@432da
+    V_1c04! = V_1c10! - FX##(ST_19a0!(1 + V_1c14%)) * V_1c04!   '@43322
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c14%   '@43348
+L_4335d:
+    IF NOT (V_0e0c% + V_0e08% >= V_1c00! AND 1 - V_0e0e% <= V_0e10% + V_0e08% - 1) THEN GOTO L_43416   '@43362
+    V_1c14% = 0   '@433a8
+    V_1c40% = V_0e10% + V_0e08% - 1   '@433b3
+    FOR V_1c14% = 1 - V_0e0e% TO V_1c40%   '@433c3
+    A_18fc!(V_1c14%) = FX##(A_18fc!(V_1c14%)) * V_0e18!   '@433ce
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c14%   '@433ff
+L_43416:
+    V_1c42% = V_0e08%   '@43416
+    FOR V_1c14% = 1 TO V_1c42%   '@43421
+    A_190e!(V_1c14%, 0) = (FX##(A_18fc!(V_1c14%)) - A_18fc!(V_1c14% - 1)) / A_0e26!(V_1c14%) + A_190e!(V_1c14%, 0)   '@43428
+    A_190e!(V_1c14%, 1) = (FX##(A_18fc!(V_1c14% - 1)) - A_18fc!(V_1c14%)) / A_0e26!(V_1c14%) + A_190e!(V_1c14%, 1)   '@43495
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c14%   '@43500
+    V_1c44% = V_0e08% + 1   '@43515
+    FOR V_1c14% = 0 TO V_1c44%   '@43521
+    IF NOT (V_0e0c% + V_0e08% < V_1c00!) THEN GOTO L_43550   '@43526
+    GOTO L_43aa3   '@43548
+L_43550:
+    IF NOT (A_18fc!(V_1c14%) > 0.0) THEN GOTO L_435b7   '@43550 DS:4b28
+    A_1924!(V_1c14%) = FX##(A_1924!(V_1c14%)) - A_18fc!(V_1c14%)   '@4357a
+L_435b7:
+    IF NOT (V_1c14% + 1 = V_1c00!) THEN GOTO L_43613   '@435b7
+    A_1936!(V_1c14%) = FX##(A_1936!(V_1c14%)) - A_18fc!(V_1c14%)   '@435d6
+L_43613:
+    IF NOT (A_190e!(V_1c14%, 0) < 0.0) THEN GOTO L_4368c   '@43613 DS:4b28
+    A_196c!(V_1c14%, 0) = FX##(A_196c!(V_1c14%, 0)) - A_190e!(V_1c14%, 0)   '@43640
+L_4368c:
+    IF NOT (A_190e!(V_1c14%, 1) < 0.0) THEN GOTO L_43709   '@4368c DS:4b28
+    A_196c!(V_1c14%, 1) = FX##(A_196c!(V_1c14%, 1)) - A_190e!(V_1c14%, 1)   '@436ba
+L_43709:
+    IF NOT (V_1c14% = V_1c00!) THEN GOTO L_4376c   '@43709
+    A_196c!(V_1c14%, 2) = FX##(A_196c!(V_1c14%, 2)) - A_190e!(V_1c14%, 0)   '@43727
+L_4376c:
+    IF NOT (A_190e!(V_1c14%, 0) > 0.0) THEN GOTO L_437e7   '@4376c DS:4b28
+    A_196c!(V_1c14%, 3) = FX##(A_196c!(V_1c14%, 3)) - A_190e!(V_1c14%, 0)   '@43799
+L_437e7:
+    IF NOT (A_190e!(V_1c14%, 1) > 0.0) THEN GOTO L_43864   '@437e7 DS:4b28
+    A_196c!(V_1c14%, 4) = FX##(A_196c!(V_1c14%, 4)) - A_190e!(V_1c14%, 1)   '@43815
+L_43864:
+    IF NOT (V_0e08% + 1 > V_1c14%) THEN GOTO L_439a3   '@43864
+    IF NOT (FX##(A_190e!(V_1c14%, 1)) + A_190e!(V_1c14% + 1, 0) < FX##(0.0)) THEN GOTO L_4392e   '@43876 DS:4b28
+    A_1020!(V_1c14%, 0) = A_1020!(V_1c14%, 0) - (FX##(A_190e!(V_1c14%, 1)) + A_190e!(V_1c14% + 1, 0))   '@438bd
+    GOTO L_4399e   '@43926
+L_4392e:
+    A_1020!(V_1c14%, 1) = A_1020!(V_1c14%, 1) - (FX##(A_190e!(V_1c14%, 1)) + A_190e!(V_1c14% + 1, 0))   '@4392e
+L_4399e:
+L_439a3:
+    IF NOT ((FX##(V_1c14%) + V_1c00!) / 2.0 = INT((FX##(V_1c14%) + V_1c00!) / 2.0)) THEN GOTO L_439e7   '@439a3 DS:4b2c
+    GOTO L_441ee   '@439df
+L_439e7:
+    IF NOT (V_1c14% > 0) THEN GOTO L_43a42   '@439e7
+    A_1982!(V_1c14%, 0) = FX##(A_1982!(V_1c14%, 0)) - A_190e!(V_1c14%, 0)   '@439f6
+L_43a42:
+    IF NOT (V_1c14% > 0) THEN GOTO L_43a9b   '@43a42
+    A_1982!(V_1c14%, 1) = FX##(A_1982!(V_1c14%, 1)) - A_18fc!(V_1c14% - 1)   '@43a51
+L_43a9b:
+    GOTO L_441ee   '@43a9b
+L_43aa3:
+    IF NOT (A_18fc!(V_1c14%) < 0.0) THEN GOTO L_43b0f   '@43aa8 DS:4b28
+    A_1924!(V_1c14%) = FX##(A_1924!(V_1c14%)) + A_18fc!(V_1c14%)   '@43ad2
+L_43b0f:
+    IF NOT (A_18fc!(V_1c14%) < 0.0) THEN GOTO L_43b7d   '@43b0f DS:4b28
+    A_1936!(V_1c14%) = FX##(A_1936!(RT_CINT%(FX##(V_1c46!)))) + A_18fc!(V_1c14%)   '@43b39
+L_43b7d:
+    IF NOT (A_190e!(V_1c14%, 0) > 0.0) THEN GOTO L_43bf6   '@43b7d DS:4b28
+    A_196c!(V_1c14%, 0) = FX##(A_196c!(V_1c14%, 0)) + A_190e!(V_1c14%, 0)   '@43baa
+L_43bf6:
+    IF NOT (A_190e!(V_1c14%, 1) > 0.0) THEN GOTO L_43c73   '@43bf6 DS:4b28
+    A_196c!(V_1c14%, 1) = FX##(A_196c!(V_1c14%, 1)) + A_190e!(V_1c14%, 1)   '@43c24
+L_43c73:
+    IF NOT (A_190e!(V_1c14%, 0) > 0.0) THEN GOTO L_43ce5   '@43c73 DS:4b28
+    A_196c!(V_1c14%, 2) = FX##(A_196c!(V_1c14%, 2)) + A_190e!(V_1c14%, 0)   '@43ca0
+L_43ce5:
+    IF NOT (A_190e!(V_1c14%, 0) < 0.0) THEN GOTO L_43d60   '@43ce5 DS:4b28
+    A_196c!(V_1c14%, 3) = FX##(A_196c!(V_1c14%, 3)) + A_190e!(V_1c14%, 0)   '@43d12
+L_43d60:
+    IF NOT (A_190e!(V_1c14%, 1) < 0.0) THEN GOTO L_43ddd   '@43d60 DS:4b28
+    A_196c!(V_1c14%, 4) = FX##(A_196c!(V_1c14%, 4)) + A_190e!(V_1c14%, 1)   '@43d8e
+L_43ddd:
+    IF NOT (V_0e08% + 1 > V_1c14%) THEN GOTO L_43f16   '@43ddd
+    IF NOT (FX##(A_190e!(V_1c14%, 1)) + A_190e!(V_1c14% + 1, 0) > FX##(0.0)) THEN GOTO L_43ea4   '@43def DS:4b28
+    A_1020!(V_1c14%, 0) = FX##(A_190e!(V_1c14%, 1)) + A_190e!(V_1c14% + 1, 0) + A_1020!(V_1c14%, 0)   '@43e36
+    GOTO L_43f11   '@43e9c
+L_43ea4:
+    A_1020!(V_1c14%, 1) = FX##(A_190e!(V_1c14%, 1)) + A_190e!(V_1c14% + 1, 0) + A_1020!(V_1c14%, 1)   '@43ea4
+L_43f11:
+L_43f16:
+    L_BP16% = (V_0e0c% + V_0e08% + 1 = V_1c00!)   '@43f16 DS:4b28,4b2c
+    L_BP18% = (A_18fc!(0) < 0.0)   '@43f77
+    L_BP1a% = FX##(V_1c14%) / 2.0 = INT(FX##(V_1c14%) / 2.0) AND L_BP18%   '@43f7c DS:4b28,4b2c
+    L_BP1c% = V_1c14% + 1   '@43fd3 DS:4b2c
+    L_BP1e% = (A_18fc!(0) > 0.0)   '@43fe0
+    IF NOT (((FX##(L_BP1c%) / 2.0 = INT(FX##(V_1c14% + 1) / 2.0) AND L_BP1e% OR L_BP1a%) AND L_BP16%) <> 0) THEN GOTO L_4401c   '@43fe5 DS:4b2c
+    GOTO L_44135   '@44014
+L_4401c:
+    L_BP20% = (A_18fc!(V_0e08%) < 0.0)   '@4401c DS:4b28
+    L_BP22% = (V_0e0c% + V_0e08% + 2 = V_1c00!)   '@4407a
+    L_BP24% = V_0e08% - V_1c14% + 1   '@4407f DS:4b2c
+    L_BP26% = V_0e08% - V_1c14%   '@4408c
+    L_BP28% = FX##(L_BP24%) / 2.0 = INT(FX##(V_0e08% - V_1c14% + 1) / 2.0) AND L_BP20%   '@44091 DS:4b28,4b2c
+    L_BP2a% = (A_18fc!(V_0e08%) > 0.0)   '@440e7 DS:4b2c
+    IF NOT (((FX##(L_BP26%) / 2.0 = INT(FX##(L_BP26%) / 2.0) AND L_BP2a% OR L_BP28%) AND L_BP22%) <> 0) THEN GOTO L_4412d   '@440f6 DS:4b2c
+    GOTO L_44135   '@44125
+L_4412d:
+    GOTO L_441ee   '@4412d
+L_44135:
+    IF NOT (V_1c14% > 0) THEN GOTO L_44195   '@4413a
+    A_1982!(V_1c14%, 0) = FX##(A_1982!(V_1c14%, 0)) + A_190e!(V_1c14%, 0)   '@44149
+L_44195:
+    IF NOT (V_1c14% > 0) THEN GOTO L_441ee   '@44195
+    A_1982!(V_1c14%, 1) = FX##(A_1982!(V_1c14%, 1)) + A_18fc!(V_1c14% - 1)   '@441a4
+L_441ee:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c14%   '@441f3
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c00!   '@44208 DS:4b38
+L_44234:
+    V_1c4a% = V_0e08%   '@44239
+    FOR V_1c14% = 1 TO V_1c4a%   '@44244
+    V_1c04! = A_1982!(V_1c14%, 1)   '@4424a
+    V_1c0c! = A_1982!(V_1c14%, 0)   '@4426e
+    GOSUB L_45ed7   '@44291
+    A_1948!(V_1c14%) = V_1c10!   '@4429e
+    A_195a!(V_1c14%) = V_1c04!   '@442be
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c14%   '@442de
+    IF NOT (V_12c2$ = "S") THEN GOTO L_4466b   '@442f3 DS:4b42
+    V_1c4c% = V_0e08%   '@4430a
+    FOR V_1c14% = 1 TO V_1c4c%   '@44315
+    ST_1a8c!(V_1c14% + 14) = RT_POT##((FX##(A_1948!(V_1c14%))), (2.0)) * A_1982!(V_1c14%, 1) / 2.0 - RT_POT##((FX##(A_1948!(V_1c14%))), (3.0)) * A_1982!(V_1c14%, 1) / (FX##(A_0e26!(V_1c14%)) * 6.0) - FX##(A_1982!(V_1c14%, 1)) * A_0e26!(V_1c14%) * A_1948!(V_1c14%) / 3.0   '@4431c DS:4b2c,4b48,4b66
+    V_1c10! = FX##(A_1982!(V_1c14%, 0)) * A_0e26!(V_1c14%) + A_1982!(V_1c14%, 1)   '@4440a
+    V_1c08! = 0.0   '@44456 DS:4b28
+    V_1c4e% = A_0f3a%(V_1c14%)   '@44467
+    FOR V_1c16% = 1 + A_0f3a%(V_1c14% - 1) TO V_1c4e%   '@44482
+    V_1c10! = V_1c10! - RT_POT##((FX##(A_0eb0!(V_1c16%)) - V_1c08!), (2.0)) * A_0e82!(V_1c16%) / 2.0 - ((FX##(A_0eb0!(V_1c16%)) - V_1c08!) * A_0e82!(V_1c16%) + A_0ede!(V_1c16%)) * (FX##(A_0e26!(V_1c14%)) - A_0eb0!(V_1c16%))   '@4449c DS:4b2c
+    V_1c08! = A_0eb0!(V_1c16%)   '@4454e
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c16%   '@4456e
+    ST_1a8c!(V_1c14% + 14) = ST_1a8c!(V_1c14% + 14) + (RT_POT##((FX##(A_1948!(V_1c14%))), (3.0)) / (FX##(A_0e26!(V_1c14%)) * 6.0) * V_1c10! - FX##(A_0e26!(V_1c14%)) * A_1948!(V_1c14%) * V_1c10! / 6.0)   '@44583 DS:4b48,4b66
+    V_1c00! = 1.0   '@44613 DS:4b38
+    V_1c10! = A_1948!(V_1c14%)   '@44624
+    GOSUB L_464ab   '@44644
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c14%   '@44651
+L_4466b:
+    COLOR 7   '@44670
+    PRINT ""   '@44686 DS:4bb4
+    PRINT ""   '@44694 DS:4bb4
+    PRINT RT_TAB$(15); ""; "         APOIO          M-("; V_0ddc$; V_0dd8$; ")        R("; V_0ddc$; ")"   '@446a2 DS:4bb4,4bb8,4bd8,4be8
+    PRINT RT_TAB$(15); ""; RT_STRINGC$((52), (46))   '@446ef DS:4bb4
+    V_1c10! = 0.0   '@44719 DS:4b28
+    IF NOT (V_0e1c! = 1.0) THEN GOTO L_447de   '@4472a DS:4b38
+    RT_LPTABRE: RT_LPS "": RT_LPFIM   '@44745 DS:4bb4
+    RT_LPTABRE: RT_LPTAB 15: RT_LPS "": RT_LPS "         APOIO          M-(": RT_LPS V_0ddc$: RT_LPS V_0dd8$: RT_LPS ")        R(": RT_LPS V_0ddc$: RT_LPS ")": RT_LPFIM   '@44758 DS:4bb4,4bb8,4bd8,4be8
+    RT_LPTABRE: RT_LPTAB 15: RT_LPS "": RT_LPS RT_STRINGC$((52), (46)): RT_LPFIM   '@447aa DS:4bb4
+L_447de:
+    V_1c50% = V_0e08%   '@447de
+    FOR V_1c16% = 0 TO V_1c50%   '@447e9
+    V_12ae$ = "          ##      ########.##  #######.##  \       \"   '@447ee DS:4bee
+    V_12b6$ = "              max ########.##  #######.## #####.##"   '@44800 DS:4c26
+    V_1c10! = FX##(A_0ff2!(V_1c16%)) + V_1c10!   '@44812
+    IF NOT (V_104e! = 0.0) THEN GOTO L_4486c   '@44837 DS:4b28
+    V_12b2$ = " "   '@44852 DS:4c5c
+    GOTO L_448eb   '@44864
+L_4486c:
+    V_12b2$ = "  P" + STR$(A_1052%(RT_CINT%(FX##(V_1080!)), V_1c16%))   '@4486c DS:4c62
+    IF NOT (A_1052%(RT_CINT%(FX##(V_1080!)), V_1c16%) = 471) THEN GOTO L_448e6   '@448a8
+    V_12b2$ = " "   '@448d4 DS:4c5c
+L_448e6:
+L_448eb:
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@448eb
+    PRINT TAB(15); "";: PRINT USING V_12ae$; RT_PU#(V_1c16%, V_12ae$, 1); RT_PU#(A_18b0!(V_1c16%), V_12ae$, 2); RT_PU#(A_0ff2!(V_1c16%), V_12ae$, 3); V_12b2$   '@44908 DS:4bb4
+    IF NOT (V_12c2$ = "S") THEN GOTO L_44a3c   '@44972 DS:4b42
+    COLOR 14   '@44989
+    PRINT TAB(15); "";: PRINT USING V_12b6$; RT_PU#(A_1924!(V_1c16%), V_12b6$, 1); RT_PU#(A_1020!(V_1c16%, 0), V_12b6$, 2); RT_PU#(A_1020!(V_1c16%, 1), V_12b6$, 3)   '@4499f DS:4bb4
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@44a1a
+L_44a3c:
+    IF NOT (V_0e1c! = 1.0) THEN GOTO L_44b62   '@44a3c DS:4b38
+    RT_LPTABRE: RT_LPTAB 15: RT_LPS "": PRINT #RT_LPT, USING V_12ae$; RT_PU#(V_1c16%, V_12ae$, 1); RT_PU#(A_18b0!(V_1c16%), V_12ae$, 2); RT_PU#(A_0ff2!(V_1c16%), V_12ae$, 3); V_12b2$: RT_LPTQUEBRA 0   '@44a57 DS:4bb4
+    IF NOT (V_12c2$ = "S") THEN GOTO L_44b5d   '@44ac6 DS:4b42
+    RT_LPTABRE: RT_LPTAB 15: RT_LPS "": PRINT #RT_LPT, USING V_12b6$; RT_PU#(A_1924!(V_1c16%), V_12b6$, 1); RT_PU#(A_1020!(V_1c16%, 0), V_12b6$, 2); RT_PU#(A_1020!(V_1c16%, 1), V_12b6$, 3): RT_LPTQUEBRA 0   '@44add DS:4bb4
+L_44b5d:
+L_44b62:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c16%   '@44b62
+    COLOR 7   '@44b77
+    PRINT ""   '@44b8d DS:4bb4
+    PRINT TAB(22); "";: PRINT USING "soma das reacoes estaticas ######.## \\"; RT_PU#(V_1c10!, "soma das reacoes estaticas ######.## \\", 1); V_0ddc$   '@44b9b DS:4bb4,4c6a
+    IF NOT (V_0e18! < 1.0) THEN GOTO L_44c2e   '@44bd1 DS:4b38
+    PRINT RT_TAB$(22); ""; "negativos reduzidos a "; RT_SNG!(FX##(V_0e18!) * 100.0); "%"   '@44bec DS:4bb4,4c96,4cb0,4cb4
+L_44c2e:
+    IF NOT (V_0e1c! = 1.0) THEN GOTO L_44cfe   '@44c2e DS:4b38
+    RT_LPTABRE: RT_LPS "": RT_LPFIM   '@44c49 DS:4bb4
+    RT_LPTABRE: RT_LPTAB 22: RT_LPS "": PRINT #RT_LPT, USING "soma das reacoes estaticas ######.## \\"; RT_PU#(V_1c10!, "soma das reacoes estaticas ######.## \\", 1); V_0ddc$: RT_LPTQUEBRA 0   '@44c5c DS:4bb4,4c6a
+    IF NOT (V_0e18! < 1.0) THEN GOTO L_44cf9   '@44c97 DS:4b38
+    RT_LPTABRE: RT_LPTAB 22: RT_LPS "": RT_LPS "negativos reduzidos a ": RT_LPS STR$(RT_SNG!(FX##(V_0e18!) * 100.0)) + " ": RT_LPS "%": RT_LPFIM   '@44cb2 DS:4bb4,4c96,4cb0,4cb4
+L_44cf9:
+L_44cfe:
+    IF NOT (V_12e4$ = "S") THEN GOTO L_44d7a   '@44cfe DS:4b42
+    CALL MIXT_07f1_LimpaTeclado   '@44d15
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    COLOR 3   '@44d1f
+    PRINT " Continua ...";   '@44d35 DS:4cba
+    V_12ae$ = RT_INPUT$(1)   '@44d43
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    LOCATE , 1   '@44d5f
+L_44d7a:
+    COLOR 7   '@44d7a
+    PRINT RT_TAB$(70); ""; ""   '@44d90 DS:4bb4
+    PRINT RT_TAB$(10); ""; "   TRAMO     Ve("; V_0ddc$; ")      x("; V_0dd8$; ")     M+("; V_0ddc$; V_0dd8$; ")     Vd("; V_0ddc$; ")    f*EJ"   '@44db0 DS:4bb4,4ccc,4ce0,4cee,4cfc,4d0a
+    PRINT RT_TAB$(10); ""; RT_STRINGC$((60), (46))   '@44e21 DS:4bb4
+    IF NOT (V_0e1c! = 1.0) THEN GOTO L_44f23   '@44e4b DS:4b38
+    RT_LPTABRE: RT_LPS "": RT_LPFIM   '@44e66 DS:4bb4
+    RT_LPTABRE: RT_LPTAB 10: RT_LPS "": RT_LPS "   TRAMO     Ve(": RT_LPS V_0ddc$: RT_LPS ")      x(": RT_LPS V_0dd8$: RT_LPS ")     M+(": RT_LPS V_0ddc$: RT_LPS V_0dd8$: RT_LPS ")     Vd(": RT_LPS V_0ddc$: RT_LPS ")    f*EJ": RT_LPFIM   '@44e79 DS:4bb4,4ccc,4ce0,4cee,4cfc,4d0a
+    RT_LPTABRE: RT_LPTAB 10: RT_LPS "": RT_LPS RT_STRINGC$((60), (46)): RT_LPFIM   '@44eef DS:4bb4
+L_44f23:
+    IF NOT (V_0e0e% = 0 AND V_0e08% > 0) THEN GOTO L_4501b   '@44f23
+    V_12ae$ = "   Momento Engastamento Perfeito apoio(0) " + STR$(RT_SNG!(INT(FX##(V_1998!) * 100.0) / 100.0)) + " " + V_0ddc$ + V_0dd8$   '@44f47 DS:4c5c,4cb0,4d18
+    COLOR 2   '@44fa3
+    PRINT RT_TAB$(10); ""; V_12ae$   '@44fb6 DS:4bb4
+    IF NOT (V_0e1c! = 1.0) THEN GOTO L_45016   '@44fd6 DS:4b38
+    RT_LPTABRE: RT_LPTAB 10: RT_LPS "": RT_LPS V_12ae$: RT_LPFIM   '@44ff1 DS:4bb4
+L_45016:
+L_4501b:
+    IF NOT (V_0e0a% = 0) THEN GOTO L_45032   '@4501b
+    GOTO L_4510f   '@4502a
+L_45032:
+    V_12ae$ = "     ##                                ######.##"   '@45032 DS:4d46
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@45044
+    PRINT TAB(10); "";: PRINT USING V_12ae$; RT_PU#(0, V_12ae$, 1); RT_PU#(A_18e6!(0, 1), V_12ae$, 2)   '@45061 DS:4bb4
+    IF NOT (V_0e1c! = 1.0) THEN GOTO L_4510f   '@450a8 DS:4b38
+    RT_LPTABRE: RT_LPTAB 10: RT_LPS "": PRINT #RT_LPT, USING V_12ae$; RT_PU#(0, V_12ae$, 1); RT_PU#(A_18e6!(0, 1), V_12ae$, 2): RT_LPTQUEBRA 0   '@450c3 DS:4bb4
+L_4510f:
+    V_1c52% = V_0e08%   '@45114
+    FOR V_1c16% = 1 TO V_1c52%   '@4511f
+    V_12ae$ = "     ## ######.##  #####.## #######.## ######.## #####.##"   '@45126 DS:4d7a
+    V_12b6$ = "     max######.##  #####.## #######.## ######.## #####.##"   '@45138 DS:4db8
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@4514a
+    PRINT TAB(10); "";: PRINT USING V_12ae$; RT_PU#(V_1c16%, V_12ae$, 1); RT_PU#(A_18e6!(V_1c16%, 0), V_12ae$, 2); RT_PU#(A_18c2!(V_1c16%), V_12ae$, 3); RT_PU#(A_18d4!(V_1c16%), V_12ae$, 4); RT_PU#(A_18e6!(V_1c16%, 1), V_12ae$, 5); RT_PU#(RT_SNG!(ST_1a8c!(V_1c16%) * RT_POT##((FX##(V_0de0!)), (3.0)) * V_0de4!), V_12ae$, 6)   '@45167 DS:4b48,4bb4
+    IF NOT (V_12c2$ = "S") THEN GOTO L_4540a   '@4523c DS:4b42
+    COLOR 14   '@45253
+    V_1bf8! = A_196c!(V_1c16%, 0)   '@45269
+    IF NOT (ABS(FX##(A_196c!(V_1c16%, 3))) > FX##(V_1bf8!)) THEN GOTO L_452e1   '@4528c
+    V_1bf8! = A_196c!(V_1c16%, 3)   '@452bd
+L_452e1:
+    V_1bfc! = A_196c!(V_1c16%, 1)   '@452e1
+    IF NOT (ABS(FX##(A_196c!(V_1c16%, 4))) > FX##(V_1bfc!)) THEN GOTO L_4535a   '@45305
+    V_1bfc! = A_196c!(V_1c16%, 4)   '@45336
+L_4535a:
+    PRINT TAB(10); "";: PRINT USING V_12b6$; RT_PU#(V_1bf8!, V_12b6$, 1); RT_PU#(A_1948!(V_1c16%), V_12b6$, 2); RT_PU#(A_195a!(V_1c16%), V_12b6$, 3); RT_PU#(V_1bfc!, V_12b6$, 4); RT_PU#(RT_SNG!(ST_1a8c!(V_1c16% + 14) * RT_POT##((FX##(V_0de0!)), (3.0)) * V_0de4!), V_12b6$, 5)   '@4535a DS:4b48,4bb4
+L_4540a:
+    IF NOT (V_0e1c! = 1.0) THEN GOTO L_455cb   '@4540a DS:4b38
+    RT_LPTABRE: RT_LPTAB 10: RT_LPS "": PRINT #RT_LPT, USING V_12ae$; RT_PU#(V_1c16%, V_12ae$, 1); RT_PU#(A_18e6!(V_1c16%, 0), V_12ae$, 2); RT_PU#(A_18c2!(V_1c16%), V_12ae$, 3); RT_PU#(A_18d4!(V_1c16%), V_12ae$, 4); RT_PU#(A_18e6!(V_1c16%, 1), V_12ae$, 5); RT_PU#(RT_SNG!(ST_1a8c!(V_1c16%) * RT_POT##((FX##(V_0de0!)), (3.0)) * V_0de4!), V_12ae$, 6): RT_LPTQUEBRA 0   '@45425 DS:4b48,4bb4
+    IF NOT (V_12c2$ = "S") THEN GOTO L_455c6   '@454ff DS:4b42
+    RT_LPTABRE: RT_LPTAB 10: RT_LPS "": PRINT #RT_LPT, USING V_12b6$; RT_PU#(V_1bf8!, V_12b6$, 1); RT_PU#(A_1948!(V_1c16%), V_12b6$, 2); RT_PU#(A_195a!(V_1c16%), V_12b6$, 3); RT_PU#(V_1bfc!, V_12b6$, 4); RT_PU#(RT_SNG!(ST_1a8c!(V_1c16% + 14) * RT_POT##((FX##(V_0de0!)), (3.0)) * V_0de4!), V_12b6$, 5): RT_LPTQUEBRA 0   '@45516 DS:4b48,4bb4
+L_455c6:
+L_455cb:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c16%   '@455cb
+    IF NOT (V_0e0c% = 0) THEN GOTO L_455f7   '@455e0
+    GOTO L_456dc   '@455ef
+L_455f7:
+    V_12ae$ = "     ## ######.##"   '@455f7 DS:4df6
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@45609
+    L_BP2c% = V_0e08% + 1   '@45626 DS:4bb4
+    PRINT TAB(10); "";: PRINT USING V_12ae$; RT_PU#(V_0e08% + 1, V_12ae$, 1); RT_PU#(A_18e6!(L_BP2c%, 0), V_12ae$, 2)   '@45626
+    IF NOT (V_0e1c! = 1.0) THEN GOTO L_456dc   '@45671 DS:4b38
+    L_BP2e% = V_0e08% + 1   '@4568c DS:4bb4
+    RT_LPTABRE: RT_LPTAB 10: RT_LPS "": PRINT #RT_LPT, USING V_12ae$; RT_PU#(V_0e08% + 1, V_12ae$, 1); RT_PU#(A_18e6!(L_BP2e%, 0), V_12ae$, 2): RT_LPTQUEBRA 0   '@4568c
+L_456dc:
+    IF NOT (V_0e10% = 0 AND V_0e08% > 0) THEN GOTO L_45801   '@456e1
+    V_12ae$ = "   Momento Engastamento Perfeito apoio(" + RT_MID2$((STR$(V_0e08%)), (2)) + ") " + STR$(RT_SNG!(INT(FX##(V_199c!) * 100.0) / 100.0)) + " " + V_0ddc$ + V_0dd8$   '@45705 DS:4c5c,4cb0,4e0c,4e38
+    COLOR 2   '@45789
+    PRINT RT_TAB$(10); ""; V_12ae$   '@4579c DS:4bb4
+    IF NOT (V_0e1c! = 1.0) THEN GOTO L_457fc   '@457bc DS:4b38
+    RT_LPTABRE: RT_LPTAB 10: RT_LPS "": RT_LPS V_12ae$: RT_LPFIM   '@457d7 DS:4bb4
+L_457fc:
+L_45801:
+    COLOR 7   '@45801
+    PRINT ""   '@45817 DS:4bb4
+    IF NOT (V_0e1c! = 1.0) THEN GOTO L_45853   '@45825 DS:4b38
+    RT_LPTABRE: RT_LPS "": RT_LPFIM   '@45840 DS:4bb4
+L_45853:
+    IF NOT (V_1afc! = 0.0) THEN GOTO L_45876   '@45853 DS:4b28
+    GOTO L_45b0f   '@4586e
+L_45876:
+    V_12ae$ = "         Esforcos de Engastamento Perfeito"   '@45876 DS:4e3e
+    PRINT RT_TAB$(10); ""; V_12ae$   '@45888 DS:4bb4
+    PRINT ""   '@458a8 DS:4bb4
+    IF NOT (V_0e1c! = 1.0) THEN GOTO L_45909   '@458b6 DS:4b38
+    RT_LPTABRE: RT_LPTAB 10: RT_LPS "": RT_LPS V_12ae$: RT_LPFIM   '@458d1 DS:4bb4
+    RT_LPTABRE: RT_LPS "": RT_LPFIM   '@458f6 DS:4bb4
+L_45909:
+    V_1c54! = V_1afc!   '@45909
+    FOR V_1c18! = 1.0 TO V_1c54!   '@4591b DS:4b38
+    V_12ae$ = "     ## ######.##  #####.## #######.## ######.##"   '@45922 DS:4e6c
+    COLOR RT_CINT%(FX##(V_0dc0!))   '@45934
+    PRINT TAB(10); "";: PRINT USING V_12ae$; RT_PU#(ST_1b50!(RT_CINT%(FX##(V_1c18!))), V_12ae$, 1); RT_PU#(ST_1b78!(RT_CINT%(FX##(V_1c18!))), V_12ae$, 2); RT_PU#(ST_1b00!(RT_CINT%(FX##(V_1c18!))), V_12ae$, 3); RT_PU#(ST_1b28!(RT_CINT%(FX##(V_1c18!))), V_12ae$, 4); RT_PU#(ST_1b78!(RT_CINT%(FX##(V_1c18!)) + 10), V_12ae$, 5)   '@45951 DS:4bb4
+    IF NOT (V_0e1c! = 1.0) THEN GOTO L_45ae3   '@45a0a DS:4b38
+    RT_LPTABRE: RT_LPTAB 10: RT_LPS "": PRINT #RT_LPT, USING V_12ae$; RT_PU#(ST_1b50!(RT_CINT%(FX##(V_1c18!))), V_12ae$, 1); RT_PU#(ST_1b78!(RT_CINT%(FX##(V_1c18!))), V_12ae$, 2); RT_PU#(ST_1b00!(RT_CINT%(FX##(V_1c18!))), V_12ae$, 3); RT_PU#(ST_1b28!(RT_CINT%(FX##(V_1c18!))), V_12ae$, 4); RT_PU#(ST_1b78!(RT_CINT%(FX##(V_1c18!)) + 10), V_12ae$, 5): RT_LPTQUEBRA 0   '@45a25 DS:4bb4
+L_45ae3:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c18!   '@45ae3 DS:4b38
+L_45b0f:
+    COLOR 7   '@45b14
+    V_12ae$ = RT_STRINGC$((60), (46))   '@45b2a
+    PRINT RT_TAB$(10); ""; V_12ae$   '@45b46 DS:4bb4
+    PRINT RT_TAB$(12); ""; RT_DATE$; RT_VIRG$; RT_MID$((RT_TIME$), (1), (5))   '@45b66 DS:4bb4
+    PRINT RT_TAB$(12); ""; V_1d70$   '@45ba1 DS:4bb4
+    IF NOT (V_0e1c! = 1.0) THEN GOTO L_45c7e   '@45bc1 DS:4b38
+    RT_LPTABRE: RT_LPTAB 10: RT_LPS "": RT_LPS V_12ae$: RT_LPFIM   '@45bdc DS:4bb4
+    RT_LPTABRE: RT_LPTAB 12: RT_LPS "": RT_LPS RT_DATE$: RT_LPVIRG: RT_LPS RT_MID$((RT_TIME$), (1), (5)): RT_LPFIM   '@45c01 DS:4bb4
+    RT_LPTABRE: RT_LPTAB 12: RT_LPS "": RT_LPS V_1d70$: RT_LPFIM   '@45c41 DS:4bb4
+    RT_LPTABRE: RT_LPS V_12d4$: RT_LPFIM   '@45c66
+L_45c7e:
+    L_BP30% = (V_0e1c! = 1.0)   '@45c7e DS:4b38
+    IF NOT ((V_12e4$ <> "S" OR L_BP30%) <> 0) THEN GOTO L_45cc4   '@45ca7 DS:4b42
+    GOTO L_45d0b   '@45cbc
+L_45cc4:
+    PRINT ""   '@45cc4 DS:4bb4
+    PRINT " Qualquer Tecla para Continuar ";   '@45cd2 DS:4ea0
+    CALL MIXT_07f1_LimpaTeclado   '@45ce0
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    V_12ae$ = RT_INPUT$(1)   '@45cea
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+L_45d0b:
+    A_0fc4!(2) = INT(FX##(V_1084%) * 100.0 * V_1998!) / 10000.0   '@45d10 DS:4cb0,4ec4
+    IF NOT (V_0e0c% = 1 AND V_0e08% = 0 OR V_0e0e% = 1) THEN GOTO L_45dab   '@45d49
+    A_0fc4!(2) = ABS(FX##(A_1924!(0)))   '@45d7a
+L_45dab:
+    IF NOT (V_0e0a% = 1 AND V_0e08% > 0) THEN GOTO L_45def   '@45dab
+    A_0fc4!(2) = 0.0   '@45dcf DS:4b28
+L_45def:
+    A_0fc4!(3) = INT(FX##(V_1084%) * 100.0 * V_199c!) / 10000.0   '@45def DS:4cb0,4ec4
+    IF NOT (V_0e0a% = 1 AND V_0e08% = 0 OR V_0e10% = 1) THEN GOTO L_45e8b   '@45e28
+    A_0fc4!(3) = ABS(FX##(A_1924!(V_0e08%)))   '@45e59
+L_45e8b:
+    IF NOT (V_0e0c% = 1 AND V_0e08% > 0) THEN GOTO L_45ecf   '@45e8b
+    A_0fc4!(3) = 0.0   '@45eaf DS:4b28
+L_45ecf:
+    GOTO L_472fd   '@45ecf
+    ' ---- F_45ed7 @0x45ed7  (045ed7_F_45ed7.lift.txt; evidence_id (assembly): ev_3919406745a88a6c74fc7f4334ac70c8bbae2f206f758ab5b7f1b96f48d534a5)
+L_45ed7:   ' sub-rotina (alvo de GOSUB); entrada vinda de 040243_FUN_4000_0243
+    A_0e82!(0) = V_1c0c!   '@45edc
+    V_1c08! = 0.0   '@45efb DS:4b28
+    V_1c10! = 0.0   '@45f0c DS:4b28
+    V_1c58% = A_0f3a%(V_1c14%)   '@45f1d
+    FOR V_1c16% = 1 + (A_0f3a%(V_1c14%) - A_0f0c%(V_1c14%)) TO V_1c58%   '@45f38
+    IF NOT (V_1c0c! - (FX##(A_0eb0!(V_1c16%)) - V_1c08!) * A_0e82!(V_1c16%) <= FX##(0.0)) THEN GOTO L_45fc3   '@45f62 DS:4b28
+    V_1c10! = 1.0   '@45faa DS:4b38
+    GOTO L_460b9   '@45fbb
+L_45fc3:
+    IF NOT (V_1c0c! - (FX##(A_0eb0!(V_1c16%)) - V_1c08!) * A_0e82!(V_1c16%) - A_0ede!(V_1c16%) <= FX##(0.0)) THEN GOTO L_46035   '@45fc3 DS:4b28
+    V_1c10! = 2.0   '@4601c DS:4b2c
+    GOTO L_460b9   '@4602d
+L_46035:
+    V_1c0c! = V_1c0c! - (FX##(A_0eb0!(V_1c16%)) - V_1c08!) * A_0e82!(V_1c16%) - A_0ede!(V_1c16%)   '@46035
+    V_1c08! = A_0eb0!(V_1c16%)   '@46084
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c16%   '@460a4
+L_460b9:
+    IF NOT (V_1c10! = 1.0) THEN GOTO L_460e1   '@460be DS:4b38
+    GOTO L_46130   '@460d9
+L_460e1:
+    IF NOT (V_1c10! = 2.0) THEN GOTO L_46104   '@460e1 DS:4b2c
+    GOTO L_46167   '@460fc
+L_46104:
+    V_1c10! = 0.0   '@46104 DS:4b28
+    V_1c04! = 0.0   '@46115 DS:4b28
+    RETURN   '@46126
+L_46130:
+    V_1c10! = FX##(V_1c0c!) / A_0e82!(V_1c16%) + V_1c08!   '@46135
+    GOTO L_4618c   '@4615f
+L_46167:
+    V_1c10! = A_0eb0!(V_1c16%)   '@4616c
+L_4618c:
+    IF NOT (A_0e26!(V_1c14%) < V_1c10! OR V_1c10! < 0.0) THEN GOTO L_46211   '@46191 DS:4b28
+    V_1c10! = 0.0   '@461e0 DS:4b28
+    V_1c04! = 0.0   '@461f1 DS:4b28
+    RETURN   '@46202
+L_46211:
+    V_1c0c! = A_0e82!(0)   '@46211
+    V_1c08! = 0.0   '@46230 DS:4b28
+    V_1c04! = FX##(V_1c0c!) * V_1c10! + V_1c04!   '@46241
+    V_1c0c! = 0.0   '@4625c DS:4b28
+    V_1c5a% = A_0f3a%(V_1c14%)   '@4626d
+    FOR V_1c16% = 1 + (A_0f3a%(V_1c14%) - A_0f0c%(V_1c14%)) TO V_1c5a%   '@46288
+    IF NOT (A_0eb0!(V_1c16%) >= V_1c10!) THEN GOTO L_462f5   '@462b2
+    V_1c0c! = 1.0   '@462dc DS:4b38
+    GOTO L_46411   '@462ed
+L_462f5:
+    V_1c04! = V_1c04! - RT_POT##((FX##(A_0eb0!(V_1c16%)) - V_1c08!), (2.0)) * A_0e82!(V_1c16%) / 2.0   '@462f5 DS:4b2c
+    V_1c04! = V_1c04! - (FX##(A_0eb0!(V_1c16%)) - V_1c08!) * A_0e82!(V_1c16%) * (FX##(V_1c10!) - A_0eb0!(V_1c16%))   '@46347
+    V_1c04! = V_1c04! - (FX##(V_1c10!) - A_0eb0!(V_1c16%)) * A_0ede!(V_1c16%)   '@4639e
+    V_1c08! = A_0eb0!(V_1c16%)   '@463dc
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c16%   '@463fc
+L_46411:
+    IF NOT (V_1c0c! = 1.0) THEN GOTO L_46439   '@46416 DS:4b38
+    GOTO L_46454   '@46431
+L_46439:
+    V_1c04! = 0.0   '@46439 DS:4b28
+    RETURN   '@4644a
+L_46454:
+    V_1c04! = V_1c04! - RT_POT##((FX##(V_1c10!) - V_1c08!), (2.0)) * A_0e82!(V_1c16%) / 2.0   '@46459 DS:4b2c
+    RETURN   '@4649c
+L_464ab:   ' sub-rotina (alvo de GOSUB); entrada vinda de 040243_FUN_4000_0243
+    V_1c08! = 0.0   '@464b0 DS:4b28
+    V_1c5c% = A_0f3a%(V_1c14%)   '@464c1
+    FOR V_1c16% = 1 + A_0f3a%(V_1c14% - 1) TO V_1c5c%   '@464dc
+    IF NOT (A_0eb0!(V_1c16%) >= V_1c10!) THEN GOTO L_4692a   '@464f6
+    ST_1a8c!(RT_CINT%(FX##(V_1c00!)) * 14 + V_1c14%) = ST_1a8c!(RT_CINT%(FX##(V_1c00!)) * 14 + V_1c14%) + (FX##(A_0e26!(V_1c14%)) - A_0eb0!(V_1c16%)) * A_0ede!(V_1c16%) * RT_POT##((FX##(V_1c10!)), (3.0)) / (FX##(A_0e26!(V_1c14%)) * 6.0)   '@46520 DS:4b48,4b66
+    ST_1a8c!(RT_CINT%(FX##(V_1c00!)) * 14 + V_1c14%) = ST_1a8c!(RT_CINT%(FX##(V_1c00!)) * 14 + V_1c14%) + (RT_POT##((FX##(A_0eb0!(V_1c16%))), (2.0)) * A_0ede!(V_1c16%) / 2.0 - RT_POT##((FX##(A_0eb0!(V_1c16%))), (3.0)) * A_0ede!(V_1c16%) / (FX##(A_0e26!(V_1c14%)) * 6.0) - FX##(A_0ede!(V_1c16%)) * A_0eb0!(V_1c16%) * A_0e26!(V_1c14%) / 3.0) * V_1c10!   '@465c9 DS:4b2c,4b48,4b66
+    ST_1a8c!(RT_CINT%(FX##(V_1c00!)) * 14 + V_1c14%) = ST_1a8c!(RT_CINT%(FX##(V_1c00!)) * 14 + V_1c14%) + FX##(A_0e82!(V_1c16%)) * A_0eb0!(V_1c16%) * (A_0e26!(V_1c14%) - FX##(A_0eb0!(V_1c16%)) / 2.0) * RT_POT##((FX##(V_1c10!)), (3.0)) / (FX##(A_0e26!(V_1c14%)) * 6.0)   '@466d2 DS:4b2c,4b48,4b66
+    ST_1a8c!(RT_CINT%(FX##(V_1c00!)) * 14 + V_1c14%) = ST_1a8c!(RT_CINT%(FX##(V_1c00!)) * 14 + V_1c14%) - RT_POT##((FX##(V_1c10!)), (4.0)) * A_0e82!(V_1c16%) / 24.0   '@46797 DS:4b30,4ec8
+    ST_1a8c!(RT_CINT%(FX##(V_1c00!)) * 14 + V_1c14%) = ST_1a8c!(RT_CINT%(FX##(V_1c00!)) * 14 + V_1c14%) + (-A_0e82!(V_1c16%) * RT_POT##((FX##(A_0eb0!(V_1c16%))), (4.0)) / (FX##(A_0e26!(V_1c14%)) * 24.0) - RT_POT##((FX##(A_0eb0!(V_1c16%))), (2.0)) * A_0e82!(V_1c16%) * A_0e26!(V_1c14%) / 6.0 + RT_POT##((FX##(A_0eb0!(V_1c16%))), (3.0)) * A_0e82!(V_1c16%) / 6.0) * V_1c10!   '@46804 DS:4b2c,4b30,4b48,4b66,4ec8
+    GOTO L_46e18   '@46922
+L_4692a:
+    ST_1a8c!(RT_CINT%(FX##(V_1c00!)) * 14 + V_1c14%) = ST_1a8c!(RT_CINT%(FX##(V_1c00!)) * 14 + V_1c14%) - FX##(A_0ede!(V_1c16%)) * A_0eb0!(V_1c16%) * RT_POT##((FX##(V_1c10!)), (3.0)) / (FX##(A_0e26!(V_1c14%)) * 6.0) + FX##(A_0ede!(V_1c16%)) * A_0eb0!(V_1c16%) * RT_POT##((FX##(V_1c10!)), (2.0)) / 2.0   '@4692a DS:4b2c,4b48,4b66
+    ST_1a8c!(RT_CINT%(FX##(V_1c00!)) * 14 + V_1c14%) = ST_1a8c!(RT_CINT%(FX##(V_1c00!)) * 14 + V_1c14%) - (RT_POT##((FX##(A_0eb0!(V_1c16%))), (3.0)) * A_0ede!(V_1c16%) / (FX##(A_0e26!(V_1c14%)) * 6.0) + FX##(A_0ede!(V_1c16%)) * A_0eb0!(V_1c16%) * A_0e26!(V_1c14%) / 3.0) * V_1c10! + RT_POT##((FX##(A_0eb0!(V_1c16%))), (3.0)) * A_0ede!(V_1c16%) / 6.0   '@46a00 DS:4b48,4b66
+    ST_1a8c!(RT_CINT%(FX##(V_1c00!)) * 14 + V_1c14%) = ST_1a8c!(RT_CINT%(FX##(V_1c00!)) * 14 + V_1c14%) - RT_POT##((FX##(A_0eb0!(V_1c16%))), (2.0)) * A_0e82!(V_1c16%) * RT_POT##((FX##(V_1c10!)), (3.0)) / (FX##(A_0e26!(V_1c14%)) * 12.0) + RT_POT##((FX##(A_0eb0!(V_1c16%))), (2.0)) * A_0e82!(V_1c16%) * RT_POT##((FX##(V_1c10!)), (2.0)) / 4.0   '@46b09 DS:4b2c,4b30,4b48,4ecc
+    ST_1a8c!(RT_CINT%(FX##(V_1c00!)) * 14 + V_1c14%) = ST_1a8c!(RT_CINT%(FX##(V_1c00!)) * 14 + V_1c14%) + (-A_0e82!(V_1c16%) * RT_POT##((FX##(A_0eb0!(V_1c16%))), (4.0)) / (FX##(A_0e26!(V_1c14%)) * 24.0) - RT_POT##((FX##(A_0eb0!(V_1c16%))), (2.0)) * A_0e82!(V_1c16%) * A_0e26!(V_1c14%) / 6.0) * V_1c10!   '@46bfd DS:4b2c,4b30,4b66,4ec8
+    ST_1a8c!(RT_CINT%(FX##(V_1c00!)) * 14 + V_1c14%) = ST_1a8c!(RT_CINT%(FX##(V_1c00!)) * 14 + V_1c14%) - RT_POT##((FX##(A_0eb0!(V_1c16%))), (2.0)) * A_0e82!(V_1c16%) * RT_POT##((FX##(A_0e26!(V_1c14%))), (2.0)) / 6.0 + RT_POT##((FX##(A_0eb0!(V_1c16%))), (4.0)) * A_0e82!(V_1c16%) / 24.0 + RT_POT##((FX##(A_0eb0!(V_1c16%))), (2.0)) * A_0e82!(V_1c16%) * RT_POT##((FX##(A_0e26!(V_1c14%))), (2.0)) / 6.0   '@46ce2 DS:4b2c,4b30,4b66,4ec8
+L_46e18:
+    V_1c5e! = 0.0   '@46e18 DS:4b28
+    IF NOT (V_1c08! > 0.0) THEN GOTO L_47205   '@46e29 DS:4b28
+    IF NOT (V_1c10! <= V_1c08!) THEN GOTO L_46fe0   '@46e44
+    V_1c5e! = (A_0e26!(V_1c14%) - FX##(V_1c08!) / 2.0) * A_0e82!(V_1c16%) * RT_POT##((FX##(V_1c10!)), (3.0)) / (FX##(A_0e26!(V_1c14%)) * 6.0) * V_1c08!   '@46e5f DS:4b2c,4b48,4b66
+    V_1c5e! = V_1c5e! - RT_POT##((FX##(V_1c10!)), (4.0)) * A_0e82!(V_1c16%) / 24.0   '@46ed2 DS:4b30,4ec8
+    V_1c5e! = (-A_0e82!(V_1c16%) * RT_POT##((FX##(V_1c08!)), (4.0)) / (FX##(A_0e26!(V_1c14%)) * 24.0) - RT_POT##((FX##(V_1c08!)), (2.0)) * A_0e82!(V_1c16%) * A_0e26!(V_1c14%) / 6.0 + RT_POT##((FX##(V_1c08!)), (3.0)) * A_0e82!(V_1c16%) / 6.0) * V_1c10! + V_1c5e!   '@46f10 DS:4b2c,4b30,4b48,4b66,4ec8
+    GOTO L_47200   '@46fd8
+L_46fe0:
+    V_1c5e! = -A_0e82!(V_1c16%) * RT_POT##((FX##(V_1c08!)), (2.0)) * RT_POT##((FX##(V_1c10!)), (3.0)) / (FX##(A_0e26!(V_1c14%)) * 12.0) + RT_POT##((FX##(V_1c08!)), (2.0)) * A_0e82!(V_1c16%) * RT_POT##((FX##(V_1c10!)), (2.0)) / 4.0   '@46fe0 DS:4b2c,4b30,4b48,4ecc
+    V_1c5e! = (-A_0e82!(V_1c16%) * RT_POT##((FX##(V_1c08!)), (4.0)) / (FX##(A_0e26!(V_1c14%)) * 24.0) - RT_POT##((FX##(V_1c08!)), (2.0)) * A_0e82!(V_1c16%) * A_0e26!(V_1c14%) / 6.0) * V_1c10! + V_1c5e!   '@47088 DS:4b2c,4b30,4b66,4ec8
+    V_1c5e! = V_1c5e! - RT_POT##((FX##(V_1c08!)), (2.0)) * A_0e82!(V_1c16%) * RT_POT##((FX##(A_0e26!(V_1c14%))), (2.0)) / 6.0 + RT_POT##((FX##(V_1c08!)), (4.0)) * A_0e82!(V_1c16%) / 24.0 + RT_POT##((FX##(V_1c08!)), (2.0)) * A_0e82!(V_1c16%) * RT_POT##((FX##(A_0e26!(V_1c14%))), (2.0)) / 6.0   '@47123 DS:4b2c,4b30,4b66,4ec8
+L_47200:
+L_47205:
+    ST_1a8c!(RT_CINT%(FX##(V_1c00!)) * 14 + V_1c14%) = FX##(ST_1a8c!(RT_CINT%(FX##(V_1c00!)) * 14 + V_1c14%)) - V_1c5e!   '@47205
+    V_1c08! = A_0eb0!(V_1c16%)   '@4724a
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT V_1c16%   '@4726a
+    V_1c62! = 0.0   '@4727f DS:4b28
+    V_1c66! = -ST_1a8c!(RT_CINT%(FX##(V_1c00!)) * 14 + V_1c14%)   '@47291
+    CALL MIXT_082a_Maior(V_1c62!, V_1c66!, V_1c6a!)   '@472b8
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    ST_1a8c!(RT_CINT%(FX##(V_1c00!)) * 14 + V_1c14%) = V_1c6a!   '@472ca
+    RETURN   '@472ee
+L_472fd:   ' entrada vinda de 040243_FUN_4000_0243
+    ' END SUB   '@472fd
+END SUB
+
+SUB S_4730d   ' entrada de SUB/FUNCTION (B$ENRA, locais 448 bytes) (0x4730d)
+    DIM L_BP32!
+    DIM L_BP36!
+    DIM L_BP3a!
+    DIM L_BP3e!
+    DIM L_BP42!
+    DIM L_BP46!
+    DIM L_BP4a!
+    DIM L_BP4e!
+    DIM L_BP52!
+    DIM L_BP56!
+    DIM L_BP5a!
+    DIM L_BP5e!
+    DIM L_BP62!
+    DIM L_BP66!
+    DIM L_BP6a!
+    DIM L_BP6e!
+    DIM L_BP72!
+    DIM L_BP76!
+    DIM L_BP7a!
+    DIM L_BP7e!
+    DIM L_BP82!
+    DIM L_BP86!
+    DIM L_BP8a!
+    DIM L_BP8e!
+    DIM L_BP92!
+    DIM L_BP96!
+    DIM L_BP9a!
+    DIM L_BP9e!
+    DIM L_BPa2!
+    DIM L_BPa6!
+    DIM L_BPaa!
+    DIM L_BPae!
+    DIM L_BPb0%
+    DIM L_BPb2%
+    DIM L_BPb6!
+    DIM L_BPba!
+    DIM L_BPbe!
+    DIM L_BPc2!
+    DIM L_BPc6!
+    DIM L_BPc8%
+    DIM L_BPcc!
+    DIM L_BPd0!
+    DIM L_BPd4!
+    DIM L_BPd8!
+    DIM L_BPdc!
+    DIM L_BPe0!
+    DIM L_BPe4!
+    DIM L_BPe8!
+    DIM L_BPec!
+    DIM L_BPf0!
+    DIM L_BPf2%
+    DIM L_BPf4%
+    DIM L_BPf6%
+    DIM L_BPf8%
+    DIM L_BPfc!
+    REDIM L_BP1c!(-32768 TO -32768)   ' matriz local: ainda nao dimensionada
+    REDIM L_BP2e!(-32768 TO -32768)   ' matriz local: ainda nao dimensionada
+    ' ---- FUN_4000_730d @0x4730d  (04730d_FUN_4000_730d.lift.txt; evidence_id (assembly): ev_d9ce6d064d1717f1dfabe1bf2a0e03d74eb8ddd048138009e8e9fc15a0167c6d)
+    REDIM L_BP1c!(0 TO 61)   '@4731f
+    REDIM L_BP2e!(0 TO 61)   '@4733c
+    L_BPb2% = (V_0dcc$ = "CGA")   '@47372 DS:4ed0
+    IF NOT ((V_0dcc$ = "MCG" OR L_BPb2%) <> 0) THEN GOTO L_47466   '@47398 DS:4ed8
+    L_BP7e! = VAL(V_12e8$) / (FX##(V_0de0!) * 100.0#) * 22.6261997222900390625##   '@473ae DS:4ee0,4ee8
+    L_BPb6! = 7.0   '@473d9 DS:4ef0
+    L_BPba! = 7.0   '@473ea DS:4ef0
+    L_BPbe! = 7.0   '@473fb DS:4ef0
+    L_BPc2! = 7.0   '@4740c DS:4ef0
+    L_BPc6! = 7.0   '@4741d DS:4ef0
+    L_BP8e! = 639.0   '@4742e DS:4ef4
+    L_BP92! = 180.0   '@4743f DS:4ef8
+    L_BP96! = 20.0   '@47450 DS:4efc
+L_47466:
+    L_BPc8% = (V_0dcc$ = "EGA")   '@47466 DS:4f00
+    IF NOT ((V_0dcc$ = "VGA" OR L_BPc8%) <> 0) THEN GOTO L_4755a   '@4748c DS:4f08
+    L_BP7e! = VAL(V_12e8$) / (FX##(V_0de0!) * 100.0#) * 22.6261997222900390625##   '@474a2 DS:4ee0,4ee8
+    L_BPb6! = 15.0   '@474cd DS:4f10
+    L_BPba! = 10.0   '@474de DS:4f14
+    L_BPbe! = 14.0   '@474ef DS:4f18
+    L_BPc2! = 12.0   '@47500 DS:4ecc
+    L_BPc6! = 11.0   '@47511 DS:4f1c
+    L_BP8e! = 639.0   '@47522 DS:4ef4
+    L_BP92! = 315.0   '@47533 DS:4f20
+    L_BP96! = 35.0   '@47544 DS:4f24
+L_4755a:
+    IF NOT (V_0dcc$ = "HER") THEN GOTO L_47629   '@4755a DS:4f28
+    L_BP7e! = VAL(V_12e8$) / (FX##(V_0de0!) * 100.0#) * 25.4545001983642578125##   '@47571 DS:4ee0,4f30
+    L_BPb6! = 7.0   '@4759c DS:4ef0
+    L_BPba! = 7.0   '@475ad DS:4ef0
+    L_BPbe! = 7.0   '@475be DS:4ef0
+    L_BPc2! = 7.0   '@475cf DS:4ef0
+    L_BPc6! = 7.0   '@475e0 DS:4ef0
+    L_BP8e! = 719.0   '@475f1 DS:4f38
+    L_BP92! = 315.0   '@47602 DS:4f20
+    L_BP96! = 35.0   '@47613 DS:4f24
+L_47629:
+    IF NOT (VAL(V_12e8$) = 0.0#) THEN GOTO L_4771e   '@47629 DS:4f3c
+    L_BPa6! = 0.0   '@4764d DS:4b28
+    L_BPcc! = V_0e0c% + V_0e08%   '@4765e
+    FOR L_BPa2! = 1 - V_0e0a% TO L_BPcc!   '@47676 DS:4b38
+    L_BPa6! = FX##(A_0e26!(RT_CINT%(FX##(L_BPa2!)))) + L_BPa6!   '@47686
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BPa2!   '@476b2 DS:4b38
+    L_BP7e! = L_BPa6! * 1.019999980926513671875##   '@476db DS:4f44
+    IF NOT (V_12e8$ <> "FOTO") THEN GOTO L_47719   '@476f0 DS:4f48
+    V_12e8$ = "VIDEO"   '@47707 DS:4f50
+L_47719:
+L_4771e:
+    L_BP1c!(0) = 0.0   '@4771e DS:4b28
+    IF NOT (A_0e26!(0) > L_BP7e!) THEN GOTO L_47784   '@4773d
+    L_BP1c!(0) = 1.0   '@47765 DS:4b38
+L_47784:
+    L_BP2e!(0) = A_0e26!(0)   '@47784
+    L_BP36! = 0.0   '@477b1 DS:4b28
+    L_BP32! = ABS(FX##(A_1924!(0)))   '@477c1
+    IF NOT (A_196c!(0, 1) > L_BP32!) THEN GOTO L_47830   '@477e2
+    L_BP32! = A_196c!(0, 1)   '@4780e
+L_47830:
+    L_BPd0! = V_0e08%   '@47830
+    FOR L_BPa2! = 1.0 TO L_BPd0!   '@47845 DS:4b38
+    L_BP2e!(RT_CINT%(FX##(L_BPa2!))) = FX##(L_BP2e!(RT_CINT%(FX##(L_BPa2!) - 1.0))) + A_0e26!(RT_CINT%(FX##(L_BPa2!)))   '@4784c DS:4f5a
+    IF NOT (A_195a!(RT_CINT%(FX##(L_BPa2!))) > L_BP36!) THEN GOTO L_478ff   '@478a9
+    L_BP36! = A_195a!(RT_CINT%(FX##(L_BPa2!)))   '@478d9
+L_478ff:
+    IF NOT (A_196c!(RT_CINT%(FX##(L_BPa2!)), 0) > L_BP36!) THEN GOTO L_4795b   '@478ff
+    L_BP36! = A_196c!(RT_CINT%(FX##(L_BPa2!)), 0)   '@47932
+L_4795b:
+    IF NOT (ABS(FX##(A_196c!(RT_CINT%(FX##(L_BPa2!)), 4))) > FX##(L_BP36!)) THEN GOTO L_479bf   '@4795b
+    L_BP36! = ABS(FX##(A_196c!(RT_CINT%(FX##(L_BPa2!)), 4)))   '@47992
+L_479bf:
+    IF NOT (ABS(FX##(A_1924!(RT_CINT%(FX##(L_BPa2!))))) > FX##(L_BP32!)) THEN GOTO L_47a1b   '@479bf
+    L_BP32! = ABS(FX##(A_1924!(RT_CINT%(FX##(L_BPa2!)))))   '@479f2
+L_47a1b:
+    IF NOT (A_196c!(RT_CINT%(FX##(L_BPa2!)), 1) > L_BP32!) THEN GOTO L_47a79   '@47a1b
+    L_BP32! = A_196c!(RT_CINT%(FX##(L_BPa2!)), 1)   '@47a4f
+L_47a79:
+    IF NOT (ABS(FX##(A_196c!(RT_CINT%(FX##(L_BPa2!)), 3))) > FX##(L_BP32!)) THEN GOTO L_47add   '@47a79
+    L_BP32! = ABS(FX##(A_196c!(RT_CINT%(FX##(L_BPa2!)), 3)))   '@47ab0
+L_47add:
+    L_BPd4! = A_0f3a%(RT_CINT%(FX##(L_BPa2!)))   '@47add
+    FOR L_BP9e! = 1 + (A_0f3a%(RT_CINT%(FX##(L_BPa2!))) - A_0f0c%(RT_CINT%(FX##(L_BPa2!)))) TO L_BPd4!   '@47b09 DS:4b38
+    IF NOT (A_0ede!(RT_CINT%(FX##(L_BP9e!))) >= 0.0) THEN GOTO L_47b81   '@47b48 DS:4b28
+    GOTO L_47cdd   '@47b79
+L_47b81:
+    L_BPd8! = A_0eb0!(RT_CINT%(FX##(L_BP9e!))) - 0.00999999977648258209228515625##   '@47b81 DS:4f5e
+    GOSUB L_4a074   '@47bad
+    IF NOT (L_BP5a! < 0.0) THEN GOTO L_47c0d   '@47bba DS:4b28
+    L_BPdc! = ABS(FX##(L_BP5a!))   '@47bd4
+    CALL MIXT_082a_Maior(L_BP32!, L_BPdc!, L_BPe0!)   '@47be7
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    L_BP32! = L_BPe0!   '@47bfb
+    GOTO L_47c2f   '@47c05
+L_47c0d:
+    CALL MIXT_082a_Maior(L_BP36!, L_BP5a!, L_BPe4!)   '@47c0d
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    L_BP36! = L_BPe4!   '@47c25
+L_47c2f:
+    L_BPd8! = A_0eb0!(RT_CINT%(FX##(L_BP9e!))) + 0.00999999977648258209228515625##   '@47c2f DS:4f62
+    GOSUB L_4a074   '@47c5b
+    IF NOT (L_BP5a! < 0.0) THEN GOTO L_47cbb   '@47c68 DS:4b28
+    L_BPe8! = ABS(FX##(L_BP5a!))   '@47c82
+    CALL MIXT_082a_Maior(L_BP32!, L_BPe8!, L_BPec!)   '@47c95
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    L_BP32! = L_BPec!   '@47ca9
+    GOTO L_47cdd   '@47cb3
+L_47cbb:
+    CALL MIXT_082a_Maior(L_BP36!, L_BP5a!, L_BPf0!)   '@47cbb
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    L_BP36! = L_BPf0!   '@47cd3
+L_47cdd:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP9e!   '@47ce2 DS:4b38
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BPa2!   '@47d0e DS:4b38
+    L_BP2e!(1 + V_0e08%) = FX##(L_BP2e!(V_0e08%)) + A_0e26!(1 + V_0e08%)   '@47d3a
+    IF NOT (A_196c!(V_0e08% + 1, 0) > L_BP36!) THEN GOTO L_47dcc   '@47d7c
+    L_BP36! = A_196c!(V_0e08% + 1, 0)   '@47da9
+L_47dcc:
+    L_BP32! = FX##(L_BP32!) * V_0de0! * V_0de4!   '@47dcc
+    L_BP36! = FX##(L_BP36!) * V_0de0! * V_0de4!   '@47de5
+    L_BP3a! = 0.20000000298023223876953125##   '@47dfe DS:4f66
+    IF NOT (FX##(L_BP32!) + L_BP36! > FX##(2.0)) THEN GOTO L_47e3c   '@47e0e DS:4b2c
+    L_BP3a! = 0.5   '@47e2c DS:4b34
+L_47e3c:
+    IF NOT (FX##(L_BP32!) + L_BP36! > FX##(5.0)) THEN GOTO L_47e6a   '@47e3c DS:4f6a
+    L_BP3a! = 1.0   '@47e5a DS:4b38
+L_47e6a:
+    IF NOT (FX##(L_BP32!) + L_BP36! > FX##(10.0)) THEN GOTO L_47e98   '@47e6a DS:4f14
+    L_BP3a! = 2.0   '@47e88 DS:4b2c
+L_47e98:
+    IF NOT (FX##(L_BP32!) + L_BP36! > FX##(20.0)) THEN GOTO L_47ec6   '@47e98 DS:4efc
+    L_BP3a! = 5.0   '@47eb6 DS:4f6a
+L_47ec6:
+    IF NOT (FX##(L_BP32!) + L_BP36! > FX##(50.0)) THEN GOTO L_47ef4   '@47ec6 DS:4f6e
+    L_BP3a! = 10.0   '@47ee4 DS:4f14
+L_47ef4:
+    IF NOT (FX##(L_BP32!) + L_BP36! > FX##(100.0)) THEN GOTO L_47f22   '@47ef4 DS:4cb0
+    L_BP3a! = 20.0   '@47f12 DS:4efc
+L_47f22:
+    IF NOT (FX##(L_BP32!) + L_BP36! > FX##(180.0)) THEN GOTO L_47f50   '@47f22 DS:4ef8
+    L_BP3a! = 40.0   '@47f40 DS:4f72
+L_47f50:
+    IF NOT (FX##(L_BP32!) + L_BP36! > FX##(220.0)) THEN GOTO L_47f7e   '@47f50 DS:4f76
+    L_BP3a! = 60.0   '@47f6e DS:4f7a
+L_47f7e:
+    IF NOT (FX##(L_BP32!) + L_BP36! > FX##(300.0)) THEN GOTO L_47fac   '@47f7e DS:4f7e
+    L_BP3a! = 100.0   '@47f9c DS:4cb0
+L_47fac:
+    IF NOT (FX##(L_BP32!) + L_BP36! > FX##(500.0)) THEN GOTO L_47fda   '@47fac DS:4f82
+    L_BP3a! = 120.0   '@47fca DS:4f86
+L_47fda:
+    IF NOT (FX##(L_BP32!) + L_BP36! > FX##(800.0)) THEN GOTO L_48008   '@47fda DS:4f8a
+    L_BP3a! = 200.0   '@47ff8 DS:4f8e
+L_48008:
+    L_BP32! = L_BP32! / (FX##(V_0de0!) * V_0de4!)   '@48008
+    L_BP36! = L_BP36! / (FX##(V_0de0!) * V_0de4!)   '@48024
+    L_BP3a! = L_BP3a! / (FX##(V_0de0!) * V_0de4!)   '@48040
+    IF NOT (L_BP3a! > 1.0) THEN GOTO L_4809c   '@4805c DS:4b38
+    L_BP3a! = RT_CLNG&(FX##(L_BP3a!)) \ 1&   '@48076
+L_4809c:
+    L_BPaa! = INT(FX##(L_BP2e!(V_0e0c% + V_0e08%)) / L_BP7e!)   '@4809c
+    L_BPa2! = 0.0   '@480cb DS:4b28
+    L_BP56! = 0.0   '@480dc DS:4b28
+    IF NOT (VAL(V_12e8$) > 0.0#) THEN GOTO L_481d6   '@480ec DS:4f3c
+    L_BPf2% = (V_0e1c! = 0.0)   '@48110 DS:4b28
+    IF NOT ((V_12f0$ <> "I" AND L_BPf2%) <> 0) THEN GOTO L_4818e   '@4813a DS:4f92
+    RT_LPTABRE: RT_LPS CHR$(12)   '@48150
+    RT_LPTABRE: RT_LPS V_12e0$   '@4816e
+    GOTO L_481d1   '@48186
+L_4818e:
+    RT_LPTABRE: RT_LPS "": RT_LPFIM   '@4818e DS:4bb4
+    RT_LPTABRE: RT_LPS "": RT_LPFIM   '@481a1 DS:4bb4
+    RT_LPTABRE: RT_LPS V_12e0$   '@481b4
+L_481d1:
+L_481d6:
+    L_BPf4% = (V_12e8$ = "FOTO")   '@481d6 DS:4f48
+    IF NOT ((V_12f4$ <> "*" AND L_BPf4%) <> 0) THEN GOTO L_482e4   '@481fc DS:4f98
+    RT_LPTABRE: RT_LPS V_12e0$: RT_LPFIM   '@48212
+    L_BPf6% = (V_0e1c! = 0.0)   '@48225 DS:4b28
+    L_BPf8% = FX##(V_12ec!) / 2.0 = RT_CLNG&(FX##(V_12ec!)) \ 2& AND L_BPf6%   '@48245 DS:4b2c
+    IF NOT ((V_12f0$ <> "I" AND L_BPf8%) <> 0) THEN GOTO L_482b9   '@4828a DS:4f92
+    RT_LPTABRE: RT_LPS CHR$(12): RT_LPFIM   '@482a0
+L_482b9:
+    RT_LPTABRE: RT_LPS "": RT_LPFIM   '@482b9 DS:4bb4
+    RT_LPTABRE: RT_LPS "": RT_LPFIM   '@482cc DS:4bb4
+L_482e4:
+    L_BPfc! = FX##(L_BPaa!) + 1.0   '@482e4 DS:4b38
+    FOR L_BP9e! = 1.0 TO L_BPfc!   '@482fb DS:4b38
+L_48302:
+    IF NOT (V_0e0c% + V_0e08% + FX##(L_BPaa!) < FX##(L_BPa2!)) THEN GOTO L_48346   '@48307
+    L_BP3e! = 0.0   '@4832e DS:4b28
+    GOTO L_48507   '@4833e
+L_48346:
+    IF NOT (FX##(L_BP2e!(RT_CINT%(FX##(L_BPa2!)))) < FX##(L_BP9e!) * L_BP7e!) THEN GOTO L_483c0   '@48346
+    L_BP1c!(RT_CINT%(FX##(L_BPa2!))) = 0.0   '@4837b DS:4b28
+    L_BPa2! = FX##(L_BPa2!) + 1.0   '@483a2 DS:4b38
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_48302   '@483b8
+L_483c0:
+    L_BP100! = L_BPa2!   '@483c0
+    FOR L_BP9a! = V_0e0c% + V_0e08% + FX##(L_BP56!) TO L_BP100! STEP -1.0   '@483d1 DS:4f5a
+    L_BP2e!(RT_CINT%(FX##(L_BP9a!) + 1.0)) = L_BP2e!(RT_CINT%(FX##(L_BP9a!)))   '@483e4 DS:4b38
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP9a!   '@48426 DS:4f5a
+    L_BP2e!(RT_CINT%(FX##(L_BPa2!))) = FX##(L_BP9e!) * L_BP7e!   '@4844f
+    L_BP1c!(RT_CINT%(FX##(L_BPa2!))) = 1.0   '@4847a DS:4b38
+    L_BP56! = FX##(L_BP56!) + 1.0   '@484a1 DS:4b38
+    L_BPa2! = FX##(L_BPa2!) + 1.0   '@484b5 DS:4b38
+    L_BP3e! = 1.0   '@484cb DS:4b38
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP9e!   '@484db DS:4b38
+L_48507:
+    IF NOT (L_BP3e! = 1.0) THEN GOTO L_48559   '@4850c DS:4b38
+    L_BP1c!(RT_CINT%(V_0e0c% + V_0e08% + FX##(L_BPaa!))) = 0.0   '@48526 DS:4b28
+L_48559:
+    L_BP3e! = 0.0   '@48559 DS:4b28
+    L_BP42! = 0.0   '@48569 DS:4b28
+    L_BP46! = 0.0   '@48579 DS:4b28
+    L_BP5a! = 0.0   '@48589 DS:4b28
+    L_BP66! = 0.0   '@48599 DS:4b28
+    L_BP4e! = 0.0   '@485a9 DS:4b28
+    L_BP4a! = 0.0   '@485b9 DS:4b28
+    L_BP6a! = 0.0   '@485c9 DS:4b28
+    L_BP6e! = 0.0   '@485d9 DS:4b28
+    L_BP52! = 0.0   '@485e9 DS:4b28
+    L_BP5e! = 0.0   '@485f9 DS:4b28
+    L_BP86! = (FX##(L_BP92!) - L_BP96!) / (FX##(L_BP32!) + L_BP36!)   '@48609
+    L_BP82! = FX##(L_BP8e!) / L_BP7e!   '@4862a
+    GOSUB L_49838   '@4863f
+    LOCATE 1, 1   '@4864c
+    PRINT "OBRA - "; V_0e00$   '@48661 DS:4f9e
+    LOCATE 2, 1   '@48678
+    PRINT "VIGA - "; V_0dfc$   '@48693 DS:4faa
+    LOCATE 1, 17   '@486aa
+    PRINT "ESCALA 1/"; V_12e8$   '@486c2 DS:4fb6
+    L_BPa2! = 1.0   '@486d9 DS:4b38
+    GOSUB L_4a074   '@486ea
+    L_BPa2! = 1 - V_0e0a%   '@486f7
+    L_BP9e! = 1 - V_0e0a%   '@4870f
+    IF NOT (V_0e0a% = 0) THEN GOTO L_48743   '@48727
+    GOSUB L_4a532   '@48736
+L_48743:
+    IF NOT (V_0e0c% + V_0e08% + FX##(L_BPaa!) < FX##(L_BP9e!)) THEN GOTO L_48777   '@48748
+    GOTO L_494ad   '@4876f
+L_48777:
+    IF NOT (L_BP1c!(RT_CINT%(FX##(L_BP9e!))) = 1.0) THEN GOTO L_487b0   '@48777 DS:4b38
+    GOTO L_48df2   '@487a8
+L_487b0:
+    GOSUB L_4a831   '@487b0
+    RT_PSET RT_SNG!(FX##(L_BP42!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP66!) * L_BP86! + L_BP96!), 0, 0   '@487bd
+    L_BP104! = A_0e26!(RT_CINT%(FX##(L_BPa2!))) + 0.00999999977648258209228515625##   '@487fb DS:4f62
+    L_BP108! = (FX##(A_0e26!(RT_CINT%(FX##(L_BPa2!)))) - L_BP3e!) / 20.0   '@48828 DS:4efc
+    L_BPd8! = L_BP3e!   '@48853
+    GOTO L_488fa_v   '@48853
+L_4885a:
+    GOSUB L_49a9a   '@4885a
+    RT_LINE 0, 0, RT_SNG!(FX##(L_BP42!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP66!) * L_BP86! + L_BP96!), 8, RT_CINT%(FX##(L_BPba!)), 0   '@48867
+    L_BP42! = (FX##(A_0e26!(RT_CINT%(FX##(L_BPa2!)))) - L_BP3e!) / 20.0 + L_BP42!   '@488b7 DS:4efc
+L_488f9:
+    L_BPd8! = FX##(L_BPd8!) + L_BP108!   '@488fa
+L_488fa_v:   ' juncao: valor vindo dos GOTO 'leva'
+    IF NOT (L_BP108! < 0.0) THEN GOTO L_4892f   '@48901 DS:4b28
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    IF NOT (L_BPd8! < L_BP104!) THEN GOTO L_4885a   '@48917
+    GOTO L_48945   '@4892c
+L_4892f:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    IF NOT (L_BPd8! > L_BP104!) THEN GOTO L_4885a   '@48930
+L_48945:
+    L_BP42! = L_BP42! - (FX##(A_0e26!(RT_CINT%(FX##(L_BPa2!)))) - L_BP3e!) / 20.0   '@48945 DS:4efc
+    L_BPd8! = L_BP3e!   '@4897b
+    GOSUB L_4a074   '@4898b
+    RT_PSET RT_SNG!(FX##(L_BP46!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP5a!) * L_BP86! + L_BP96!), 0, 0   '@48998
+    IF NOT (A_0f0c%(RT_CINT%(FX##(L_BPa2!))) = 0) THEN GOTO L_48a05   '@489d6
+    GOTO L_48cac   '@489fd
+L_48a05:
+    L_BP10c! = A_0f3a%(RT_CINT%(FX##(L_BPa2!)))   '@48a05
+    FOR L_BPa6! = 1 + (A_0f3a%(RT_CINT%(FX##(L_BPa2!))) - A_0f0c%(RT_CINT%(FX##(L_BPa2!)))) TO L_BP10c!   '@48a31 DS:4b38
+    IF NOT (FX##(A_0eb0!(RT_CINT%(FX##(L_BPa6!)))) + L_BP3e! <= FX##(A_0e26!(0)) AND L_BPa2! = 0.0) THEN GOTO L_48b1a   '@48a70 DS:4b28
+    L_BPd8! = FX##(A_0e26!(0)) - A_0eb0!(RT_CINT%(FX##(L_BPa6!)))   '@48ad8
+    GOTO L_48b9c   '@48b12
+L_48b1a:
+    IF NOT (L_BPa2! = 0.0) THEN GOTO L_48b3d   '@48b1a DS:4b28
+    GOTO L_48c7b   '@48b35
+L_48b3d:
+    IF NOT (A_0eb0!(RT_CINT%(FX##(L_BPa6!))) <= L_BP3e!) THEN GOTO L_48b75   '@48b3d
+    GOTO L_48c7b   '@48b6d
+L_48b75:
+    L_BPd8! = A_0eb0!(RT_CINT%(FX##(L_BPa6!)))   '@48b75
+L_48b9c:
+    GOSUB L_4a074   '@48ba1
+    RT_LINE 0, 0, RT_SNG!((FX##(L_BPd8!) - L_BP3e! + L_BP46!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP5a!) * L_BP86! + L_BP96!), 8, RT_CINT%(FX##(L_BPbe!)), 0   '@48bae
+    RT_LINE 0, 0, RT_SNG!((FX##(L_BPd8!) - L_BP3e! + L_BP46!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP5a! - A_0ede!(RT_CINT%(FX##(L_BPa6!)))) * L_BP86! + L_BP96!), 8, RT_CINT%(FX##(L_BPbe!)), 0   '@48c07
+L_48c7b:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BPa6!   '@48c80 DS:4b38
+L_48cac:
+    RT_LINE 0, 0, RT_SNG!(FX##(L_BP42!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - A_18e6!(RT_CINT%(FX##(L_BPa2!)), 1)) * L_BP86! + L_BP96!), 8, RT_CINT%(FX##(L_BPbe!)), 0   '@48cb1
+    IF NOT (V_0e08% + 1 <= L_BPa2!) THEN GOTO L_48d43   '@48d1c
+    GOTO L_494f7   '@48d3b
+L_48d43:
+    GOSUB L_4a532   '@48d43
+    RT_PSET RT_SNG!(FX##(L_BP42!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP66!) * L_BP86! + L_BP96!), 0, 0   '@48d50
+    L_BP3e! = 0.0   '@48d8e DS:4b28
+    L_BPd8! = 0.0   '@48d9e DS:4b28
+    L_BP46! = L_BP42!   '@48daf
+    L_BPa2! = FX##(L_BPa2!) + 1.0   '@48dbe DS:4b38
+    L_BP9e! = FX##(L_BP9e!) + 1.0   '@48dd4 DS:4b38
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_48743   '@48dea
+L_48df2:
+    L_BP8a! = FX##(L_BP7e!) - L_BP42!   '@48df7
+    GOSUB L_4bb61   '@48e0b
+    RT_PSET RT_SNG!(FX##(L_BP42!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP66!) * L_BP86! + L_BP96!), 0, 0   '@48e18
+    L_BP110! = FX##(L_BP3e!) + L_BP8a! + (0.00999999977648258209228515625## - FX##(L_BP8a!) / 20.0)   '@48e56 DS:4efc,4f62
+    L_BP114! = FX##(L_BP8a!) / 20.0   '@48e81 DS:4efc
+    L_BPd8! = L_BP3e!   '@48e92
+    GOTO L_48f1e_v   '@48e92
+L_48e98:
+    GOSUB L_49a9a   '@48e98
+    RT_LINE 0, 0, RT_SNG!(FX##(L_BP42!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP66!) * L_BP86! + L_BP96!), 8, RT_CINT%(FX##(L_BPba!)), 0   '@48ea5
+    L_BP42! = FX##(L_BP8a!) / 20.0 + L_BP42!   '@48ef5 DS:4efc
+L_48f1d:
+    L_BPd8! = FX##(L_BPd8!) + L_BP114!   '@48f1e
+L_48f1e_v:   ' juncao: valor vindo dos GOTO 'leva'
+    IF NOT (L_BP114! < 0.0) THEN GOTO L_48f53   '@48f25 DS:4b28
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    IF NOT (L_BPd8! < L_BP110!) THEN GOTO L_48e98   '@48f3b
+    GOTO L_48f69   '@48f50
+L_48f53:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    IF NOT (L_BPd8! > L_BP110!) THEN GOTO L_48e98   '@48f54
+L_48f69:
+    L_BPd8! = FX##(L_BP3e!) + L_BP8a!   '@48f69
+    GOSUB L_49a9a   '@48f7e
+    RT_LINE 0, 0, L_BP8e!, RT_SNG!((FX##(L_BP32!) - L_BP66!) * L_BP86! + L_BP96!), 8, RT_CINT%(FX##(L_BPba!)), 0   '@48f8b
+    L_BPd8! = L_BP3e!   '@48fd0
+    GOSUB L_4a074   '@48fe0
+    RT_PSET RT_SNG!(FX##(L_BP46!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP5a!) * L_BP86! + L_BP96!), 0, 0   '@48fed
+    IF NOT (A_0f0c%(RT_CINT%(FX##(L_BPa2!))) = 0) THEN GOTO L_49065   '@49036
+    GOTO L_4939a   '@4905d
+L_49065:
+    L_BP118! = A_0f3a%(RT_CINT%(FX##(L_BPa2!)))   '@49065
+    FOR L_BPa6! = 1 + (A_0f3a%(RT_CINT%(FX##(L_BPa2!))) - A_0f0c%(RT_CINT%(FX##(L_BPa2!)))) TO L_BP118!   '@49091 DS:4b38
+    IF NOT ((FX##(A_0e26!(0)) - A_0eb0!(RT_CINT%(FX##(L_BPa6!))) <= FX##(L_BP3e!) + L_BP8a! OR FX##(A_0eb0!(RT_CINT%(FX##(L_BPa6!)))) + L_BP3e! <= FX##(A_0e26!(0))) AND L_BPa2! = 0.0) THEN GOTO L_491c9   '@490d0 DS:4b28
+    L_BPd8! = FX##(A_0e26!(0)) - A_0eb0!(RT_CINT%(FX##(L_BPa6!)))   '@49182
+    GOTO L_4928a   '@491bc
+L_491c9:
+    IF NOT (L_BPa2! = 0.0) THEN GOTO L_491ec   '@491c9 DS:4b28
+    GOTO L_49369   '@491e4
+L_491ec:
+    IF NOT (FX##(A_0eb0!(RT_CINT%(FX##(L_BPa6!)))) >= FX##(L_BP3e!) + L_BP8a! OR A_0eb0!(RT_CINT%(FX##(L_BPa6!))) <= L_BP3e!) THEN GOTO L_49263   '@491ec
+    GOTO L_49369   '@4925b
+L_49263:
+    L_BPd8! = A_0eb0!(RT_CINT%(FX##(L_BPa6!)))   '@49263
+L_4928a:
+    GOSUB L_4a074   '@4928f
+    RT_LINE 0, 0, RT_SNG!((FX##(L_BPd8!) - L_BP3e! + L_BP46!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP5a!) * L_BP86! + L_BP96!), 8, RT_CINT%(FX##(L_BPbe!)), 0   '@4929c
+    RT_LINE 0, 0, RT_SNG!((FX##(L_BPd8!) - L_BP3e! + L_BP46!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP5a! - A_0ede!(RT_CINT%(FX##(L_BPa6!)))) * L_BP86! + L_BP96!), 8, RT_CINT%(FX##(L_BPbe!)), 0   '@492f5
+L_49369:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BPa6!   '@4936e DS:4b38
+L_4939a:
+    L_BPd8! = FX##(L_BP3e!) + L_BP8a!   '@4939f
+    GOSUB L_4a074   '@493b4
+    RT_LINE 0, 0, L_BP8e!, RT_SNG!((FX##(L_BP32!) - L_BP5a!) * L_BP86! + L_BP96!), 8, RT_CINT%(FX##(L_BPbe!)), 0   '@493c1
+    RT_ROTINA_109C   '@49406 (rotina em assembly ligada ao EXE (SUB_7109c); gerada no fim do programa)
+    GOSUB L_49838   '@49410
+    L_BP42! = 0.0   '@4941d DS:4b28
+    L_BP46! = 0.0   '@4942d DS:4b28
+    RT_PSET RT_SNG!(FX##(L_BP42!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP66!) * L_BP86! + L_BP96!), 0, 0   '@4943d
+    L_BP3e! = FX##(L_BP3e!) + L_BP8a!   '@4947b
+    L_BP9e! = FX##(L_BP9e!) + 1.0   '@4948f DS:4b38
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_48743   '@494a5
+L_494ad:
+    IF NOT (L_BP1c!(RT_CINT%(V_0e0c% + V_0e08% + FX##(L_BPaa!))) = 1.0) THEN GOTO L_494f7   '@494b2 DS:4b38
+    GOTO L_49779   '@494ef
+L_494f7:
+    L_BP11a% = (V_0dcc$ = "EGA")   '@494fc DS:4f00
+    RT_LINE RT_SNG!(FX##(L_BP42!) * L_BP82!), RT_SNG!(FX##(L_BP32!) * L_BP86! + L_BP96!), L_BP8e!, RT_SNG!(FX##(L_BP32!) * L_BP86! + L_BP96!), 9, (-(V_0dcc$ = "VGA" OR L_BP11a%)), 0   '@49577 DS:4f08
+    L_BP11c% = (V_0dcc$ = "EGA")   '@49595 DS:4f00,4f5a
+    RT_LINE RT_SNG!(FX##(L_BP42!) * L_BP82!), RT_SNG!(FX##(L_BP96!) - 1.0 + FX##(L_BP32!) * L_BP86!), L_BP8e!, RT_SNG!(FX##(L_BP96!) - 1.0 + FX##(L_BP32!) * L_BP86!), 9, (-(V_0dcc$ = "VGA" OR L_BP11c%)), 0   '@49620 DS:4f08
+    L_BP11e% = (V_0dcc$ = "EGA")   '@4963e DS:4b38,4f00
+    RT_LINE RT_SNG!(FX##(L_BP42!) * L_BP82!), RT_SNG!(FX##(L_BP96!) + 1.0 + FX##(L_BP32!) * L_BP86!), L_BP8e!, RT_SNG!(FX##(L_BP96!) + 1.0 + FX##(L_BP32!) * L_BP86!), 9, (-(V_0dcc$ = "VGA" OR L_BP11e%)), 0   '@496c9 DS:4f08
+    IF NOT (VAL(V_12e8$) <> 0.0#) THEN GOTO L_49722   '@496e7 DS:4f3c
+    RT_ROTINA_109C   '@4970b (rotina em assembly ligada ao EXE (SUB_7109c); gerada no fim do programa)
+    GOTO L_497d5   '@49715
+L_49722:
+    IF NOT (V_12e8$ = "FOTO") THEN GOTO L_49779   '@49722 DS:4f48
+    V_12ec! = FX##(V_12ec!) + 1.0   '@49739 DS:4b38
+    RT_LPTABRE: RT_LPS "": RT_LPFIM   '@4974f DS:4bb4
+    RT_ROTINA_0F20   '@49762 (rotina em assembly ligada ao EXE (SUB_70f20); gerada no fim do programa)
+    GOTO L_497d5   '@4976c
+L_49779:
+    LOCATE 25, 3   '@4977e
+    CALL MIXT_07f1_LimpaTeclado   '@4979c
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    PRINT "Qualquer Tecla para Continuar ";   '@497a6 DS:4fc4
+    V_12ae$ = RT_INPUT$(1)   '@497b4
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+L_497d5:
+    RT_SCREEN 0   '@497da
+    COLOR 7, RT_CINT%(FX##(V_0dc4!)), RT_CINT%(FX##(V_0dc4!))   '@497ef
+    RT_CLS 0   '@49823
+    GOTO L_4d99d   '@49830
+    ' ---- F_49838 @0x49838  (049838_F_49838.lift.txt; evidence_id (assembly): ev_9193db90e5cb76a333821ca32dc802514bba73c0c5a23650c01a39224036551f)
+L_49838:   ' sub-rotina (alvo de GOSUB); entrada vinda de 04730d_FUN_4000_730d
+    IF NOT (V_0dcc$ = "HER") THEN GOTO L_4986f   '@4983d DS:4f28
+    RT_SCREEN 3   '@49854
+L_4986f:
+    L_BP120% = (V_0dcc$ = "CGA")   '@4986f DS:4ed0
+    IF NOT ((V_0dcc$ = "MCG" OR L_BP120%) <> 0) THEN GOTO L_498c3   '@49895 DS:4ed8
+    RT_SCREEN 2   '@498ab
+L_498c3:
+    L_BP122% = (V_0dcc$ = "EGA")   '@498c3 DS:4f00
+    IF NOT ((V_0dcc$ = "VGA" OR L_BP122%) <> 0) THEN GOTO L_49930   '@498e9 DS:4f08
+    RT_SCREEN 9   '@498ff
+    COLOR , 1   '@49915
+L_49930:
+    RT_CLS -1   '@49930
+    RT_LINE 0.0, RT_SNG!(FX##(L_BP32!) * L_BP86! + L_BP96!), L_BP8e!, RT_SNG!(FX##(L_BP32!) * L_BP86! + L_BP96!), 9, RT_CINT%(FX##(L_BPb6!)), 0   '@4993e DS:4b28
+    RT_LINE 0.0, RT_SNG!(FX##(L_BP96!) - 1.0 + FX##(L_BP32!) * L_BP86!), L_BP8e!, RT_SNG!(FX##(L_BP96!) - 1.0 + FX##(L_BP32!) * L_BP86!), 9, RT_CINT%(FX##(L_BPb6!)), 0   '@499a4 DS:4b28,4f5a
+    RT_LINE 0.0, RT_SNG!(FX##(L_BP96!) + 1.0 + FX##(L_BP32!) * L_BP86!), L_BP8e!, RT_SNG!(FX##(L_BP96!) + 1.0 + FX##(L_BP32!) * L_BP86!), 9, RT_CINT%(FX##(L_BPb6!)), 0   '@49a1a DS:4b28,4b38
+    RETURN   '@49a90
+L_49a9a:   ' sub-rotina (alvo de GOSUB); entrada vinda de 04730d_FUN_4000_730d
+    IF NOT (L_BPa2! > 0.0) THEN GOTO L_49ac2   '@49a9f DS:4b28
+    GOTO L_49dea   '@49aba
+L_49ac2:
+    L_BP66! = 0.0   '@49ac2 DS:4b28
+    IF NOT (A_0f0c%(0) = 0) THEN GOTO L_49afb   '@49ad2
+    RETURN   '@49af1
+L_49afb:
+    L_BP126! = A_0f0c%(0)   '@49afb
+    FOR L_BP12a! = 1.0 TO L_BP126!   '@49b1f DS:4b38
+    IF NOT (A_0f0c%(0) = L_BP12a!) THEN GOTO L_49b6b   '@49b26
+    L_BP7a! = 0.0   '@49b53 DS:4b28
+    GOTO L_49b96   '@49b63
+L_49b6b:
+    L_BP7a! = A_0eb0!(RT_CINT%(FX##(L_BP12a!) + 1.0))   '@49b6b DS:4b38
+L_49b96:
+    IF NOT (FX##(A_0e26!(0)) - L_BP7a! < FX##(L_BPd8!)) THEN GOTO L_49bd0   '@49b9b
+    GOTO L_49c9d   '@49bc8
+L_49bd0:
+    L_BP66! = RT_POT##((A_0eb0!(RT_CINT%(FX##(L_BP12a!))) - (FX##(A_0e26!(0)) - L_BPd8!)), (2.0)) * A_0e82!(RT_CINT%(FX##(L_BP12a!))) / 2.0 + L_BP66! + (A_0eb0!(RT_CINT%(FX##(L_BP12a!))) - (FX##(A_0e26!(0)) - L_BPd8!)) * A_0ede!(RT_CINT%(FX##(L_BP12a!)))   '@49bd0 DS:4b2c
+    GOTO L_49ddb   '@49c95
+L_49c9d:
+    L_BP66! = RT_POT##((FX##(A_0eb0!(RT_CINT%(FX##(L_BP12a!)))) - L_BP7a!), (2.0)) * A_0e82!(RT_CINT%(FX##(L_BP12a!))) / 2.0 + L_BP66! + (A_0eb0!(RT_CINT%(FX##(L_BP12a!))) - (FX##(A_0e26!(0)) - L_BPd8!)) * A_0ede!(RT_CINT%(FX##(L_BP12a!))) + (FX##(A_0eb0!(RT_CINT%(FX##(L_BP12a!)))) - L_BP7a!) * A_0e82!(RT_CINT%(FX##(L_BP12a!))) * (L_BP7a! - (FX##(A_0e26!(0)) - L_BPd8!))   '@49ca2 DS:4b2c
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP12a!   '@49daf DS:4b38
+L_49ddb:
+    RETURN   '@49de0
+L_49dea:
+    L_BP66! = -(FX##(A_18e6!(RT_CINT%(FX##(L_BPa2!)), 0)) * L_BPd8!) - A_18b0!(RT_CINT%(FX##(L_BPa2!) - 1.0))   '@49def DS:4f5a
+    L_BP7a! = 0.0   '@49e40 DS:4b28
+    L_BP12e! = A_0f3a%(RT_CINT%(FX##(L_BPa2!)))   '@49e50
+    FOR L_BP12a! = 1 + (A_0f3a%(RT_CINT%(FX##(L_BPa2!))) - A_0f0c%(RT_CINT%(FX##(L_BPa2!)))) TO L_BP12e!   '@49e7c DS:4b38
+    IF NOT (A_0eb0!(RT_CINT%(FX##(L_BP12a!))) > L_BPd8!) THEN GOTO L_49f3e   '@49ebc
+    L_BP66! = RT_POT##((FX##(L_BPd8!) - L_BP7a!), (2.0)) * A_0e82!(RT_CINT%(FX##(L_BP12a!))) / 2.0 + L_BP66!   '@49eed DS:4b2c
+    GOTO L_4a065   '@49f31
+L_49f3e:
+    L_BP66! = RT_POT##((FX##(A_0eb0!(RT_CINT%(FX##(L_BP12a!)))) - L_BP7a!), (2.0)) * A_0e82!(RT_CINT%(FX##(L_BP12a!))) / 2.0 + L_BP66! + ((FX##(A_0eb0!(RT_CINT%(FX##(L_BP12a!)))) - L_BP7a!) * A_0e82!(RT_CINT%(FX##(L_BP12a!))) + A_0ede!(RT_CINT%(FX##(L_BP12a!)))) * (FX##(L_BPd8!) - A_0eb0!(RT_CINT%(FX##(L_BP12a!))))   '@49f3e DS:4b2c
+    L_BP7a! = A_0eb0!(RT_CINT%(FX##(L_BP12a!)))   '@4a013
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP12a!   '@4a039 DS:4b38
+L_4a065:
+    RETURN   '@4a06a
+L_4a074:   ' sub-rotina (alvo de GOSUB); entrada vinda de 04730d_FUN_4000_730d
+    IF NOT (L_BPa2! > 0.0) THEN GOTO L_4a09c   '@4a079 DS:4b28
+    GOTO L_4a31a   '@4a094
+L_4a09c:
+    L_BP5a! = 0.0   '@4a09c DS:4b28
+    IF NOT (A_0f0c%(0) = 0) THEN GOTO L_4a0d5   '@4a0ac
+    RETURN   '@4a0cb
+L_4a0d5:
+    L_BP132! = A_0f0c%(0)   '@4a0d5
+    FOR L_BP12a! = 1.0 TO L_BP132!   '@4a0f9 DS:4b38
+    L_BP7a! = 0.0   '@4a100 DS:4b28
+    IF NOT (A_0f0c%(0) > L_BP12a!) THEN GOTO L_4a168   '@4a110
+    L_BP7a! = A_0eb0!(RT_CINT%(FX##(L_BP12a!) + 1.0))   '@4a13d DS:4b38
+L_4a168:
+    IF NOT (FX##(A_0e26!(0)) - L_BP7a! < FX##(L_BPd8!)) THEN GOTO L_4a19d   '@4a168
+    GOTO L_4a27b   '@4a195
+L_4a19d:
+    L_BP5a! = (A_0eb0!(RT_CINT%(FX##(L_BP12a!))) - (FX##(A_0e26!(0)) - L_BPd8!)) * A_0e82!(RT_CINT%(FX##(L_BP12a!))) + L_BP5a!   '@4a19d
+    IF NOT (FX##(A_0eb0!(RT_CINT%(FX##(L_BP12a!)))) = FX##(A_0e26!(0)) - L_BPd8!) THEN GOTO L_4a249   '@4a1fd
+    GOTO L_4a310   '@4a241
+L_4a249:
+    L_BP5a! = FX##(A_0ede!(RT_CINT%(FX##(L_BP12a!)))) + L_BP5a!   '@4a249
+    GOTO L_4a310   '@4a273
+L_4a27b:
+    L_BP5a! = (FX##(A_0eb0!(RT_CINT%(FX##(L_BP12a!)))) - L_BP7a!) * A_0e82!(RT_CINT%(FX##(L_BP12a!))) + L_BP5a! + A_0ede!(RT_CINT%(FX##(L_BP12a!)))   '@4a280
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP12a!   '@4a2e4 DS:4b38
+L_4a310:
+    RETURN   '@4a310
+L_4a31a:
+    L_BP5a! = -A_18e6!(RT_CINT%(FX##(L_BPa2!)), 0)   '@4a31f
+    L_BP7a! = 0.0   '@4a34b DS:4b28
+    L_BP136! = A_0f3a%(RT_CINT%(FX##(L_BPa2!)))   '@4a35b
+    FOR L_BP12a! = 1 + (A_0f3a%(RT_CINT%(FX##(L_BPa2!))) - A_0f0c%(RT_CINT%(FX##(L_BPa2!)))) TO L_BP136!   '@4a387 DS:4b38
+    IF NOT (A_0eb0!(RT_CINT%(FX##(L_BP12a!))) >= L_BPd8!) THEN GOTO L_4a432   '@4a3c6
+    L_BP5a! = (FX##(L_BPd8!) - L_BP7a!) * A_0e82!(RT_CINT%(FX##(L_BP12a!))) + L_BP5a!   '@4a3f7
+    GOTO L_4a528   '@4a42a
+L_4a432:
+    IF NOT (A_0eb0!(RT_CINT%(FX##(L_BP12a!))) < L_BPd8!) THEN GOTO L_4a4ac   '@4a432
+    L_BP5a! = (FX##(A_0eb0!(RT_CINT%(FX##(L_BP12a!)))) - L_BP7a!) * A_0e82!(RT_CINT%(FX##(L_BP12a!))) + L_BP5a!   '@4a463
+L_4a4ac:
+    L_BP5a! = FX##(A_0ede!(RT_CINT%(FX##(L_BP12a!)))) + L_BP5a!   '@4a4ac
+    L_BP7a! = A_0eb0!(RT_CINT%(FX##(L_BP12a!)))   '@4a4d6
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP12a!   '@4a4fc DS:4b38
+L_4a528:
+    RETURN   '@4a528
+L_4a532:   ' sub-rotina (alvo de GOSUB); entrada vinda de 04730d_FUN_4000_730d
+    RT_LINE RT_SNG!(FX##(L_BP42!) * L_BP82!), L_BP96!, RT_SNG!(FX##(L_BP42!) * L_BP82!), L_BP92!, 9, RT_CINT%(FX##(L_BPb6!)), 0   '@4a537
+    L_BP13a! = INT(FX##(L_BP36!) / L_BP3a!) * L_BP3a!   '@4a593
+    L_BP13e! = L_BP3a!   '@4a5b3
+    L_BP12a! = -INT(FX##(L_BP32!) / L_BP3a!) * L_BP3a!   '@4a5be
+    GOTO L_4a7b2_v   '@4a5be
+L_4a5d6:
+    IF NOT (L_BP12a! < L_BP3a! AND -L_BP3a! < L_BP12a!) THEN GOTO L_4a61d   '@4a5d6
+    GOTO L_4a79d   '@4a615
+L_4a61d:
+    L_BP142! = 0.0   '@4a61d DS:4b28
+    L_BP146! = FX##(L_BP42!) * L_BP82! - 4.0   '@4a62f DS:4fe6
+    CALL MIXT_082a_Maior(L_BP142!, L_BP146!, L_BP14a!)   '@4a643
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    L_BP14e! = FX##(L_BP42!) * L_BP82! + 4.0   '@4a657 DS:4b30
+    CALL MIXT_0877_Menor(L_BP8e!, L_BP14e!, L_BP152!)   '@4a696
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    RT_LINE L_BP14a!, RT_SNG!((FX##(L_BP32!) + L_BP12a!) * L_BP86! + L_BP96!), L_BP152!, RT_SNG!((FX##(L_BP32!) + L_BP12a!) * L_BP86! + L_BP96!), 1, 0, 0   '@4a6aa
+    V_12ae$ = STR$(L_BP12a!)   '@4a6e1
+    L_BP156! = FX##(L_BP42!) * L_BP82! + 8.0   '@4a6fd DS:4fea
+    L_BP15a! = FX##(L_BP8e!) - LEN(V_12ae$) * 8   '@4a718
+    CALL MIXT_0877_Menor(L_BP156!, L_BP15a!, L_BP15e!)   '@4a73a
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    L_BP162! = L_BP15e!   '@4a74f
+    L_BP166! = FX##(L_BP96!) + 2.0 + (FX##(L_BP32!) + L_BP12a!) * L_BP86!   '@4a75a DS:4b2c
+    CALL MIXT_08c4_TextoGrafico(L_BP162!, L_BP166!, V_12ae$, V_0dcc$)   '@4a781
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+L_4a79d:
+L_4a7b1:
+    L_BP12a! = FX##(L_BP12a!) + L_BP13e!   '@4a7b2
+L_4a7b2_v:   ' juncao: valor vindo dos GOTO 'leva'
+    IF NOT (L_BP13e! < 0.0) THEN GOTO L_4a7e7   '@4a7b9 DS:4b28
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    IF NOT (L_BP12a! < L_BP13a!) THEN GOTO L_4a5d6   '@4a7cf
+    GOTO L_4a7fd   '@4a7e4
+L_4a7e7:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    IF NOT (L_BP12a! > L_BP13a!) THEN GOTO L_4a5d6   '@4a7e8
+L_4a7fd:
+    RT_PSET RT_SNG!(FX##(L_BP42!) * L_BP82!), L_BP96!, 0, 0   '@4a7fd
+    RETURN   '@4a827
+L_4a831:   ' sub-rotina (alvo de GOSUB); entrada vinda de 04730d_FUN_4000_730d
+    IF NOT (V_0e08% + 1 = L_BPa2! OR (L_BPa2! = 0.0 OR V_12c2$ = "N")) THEN GOTO L_4a89c   '@4a836 DS:4b28,4b3c
+    RETURN   '@4a892
+L_4a89c:
+    L_BP4e! = L_BP42!   '@4a89c
+    RT_PSET RT_SNG!(FX##(L_BP4e!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP6a!) * L_BP86! + L_BP96!), 0, 0   '@4a8ab
+    L_BP16a! = L_BP6a!   '@4a8e9
+    L_BP16e! = A_0e26!(RT_CINT%(FX##(L_BPa2!))) + 0.00999999977648258209228515625##   '@4a8f9 DS:4f62
+    L_BP172! = (FX##(A_0e26!(RT_CINT%(FX##(L_BPa2!)))) - L_BP3e!) / 20.0   '@4a926 DS:4efc
+    L_BPd8! = L_BP3e!   '@4a951
+    GOTO L_4aac4_v   '@4a951
+L_4a958:
+    GOSUB L_4c916   '@4a958
+    IF NOT (L_BP6a! > 0.0 AND L_BP16a! > 0.0) THEN GOTO L_4a9f2   '@4a965 DS:4b28
+    RT_LINE 0, 0, RT_SNG!(FX##(L_BP4e!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP6a!) * L_BP86! + L_BP96!), 8, RT_CINT%(FX##(L_BPc2!)), 0   '@4a9a2
+L_4a9f2:
+    L_BP4e! = (FX##(A_0e26!(RT_CINT%(FX##(L_BPa2!)))) - L_BP3e!) / 20.0 + L_BP4e!   '@4a9f2 DS:4efc
+    L_BP16a! = L_BP6a!   '@4aa25
+    IF NOT (L_BP6a! > 0.0) THEN GOTO L_4aab4   '@4aa35 DS:4b28
+    RT_PSET RT_SNG!((L_BP4e! - (FX##(A_0e26!(RT_CINT%(FX##(L_BPa2!)))) - L_BP3e!) / 20.0) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP6a!) * L_BP86! + L_BP96!), 0, 0   '@4aa4f DS:4efc
+L_4aab4:
+L_4aac3:
+    L_BPd8! = FX##(L_BPd8!) + L_BP172!   '@4aac4
+L_4aac4_v:   ' juncao: valor vindo dos GOTO 'leva'
+    IF NOT (L_BP172! < 0.0) THEN GOTO L_4aaf9   '@4aacb DS:4b28
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    IF NOT (L_BPd8! < L_BP16e!) THEN GOTO L_4a958   '@4aae1
+    GOTO L_4ab0f   '@4aaf6
+L_4aaf9:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    IF NOT (L_BPd8! > L_BP16e!) THEN GOTO L_4a958   '@4aafa
+L_4ab0f:
+    L_BP4a! = L_BP42!   '@4ab0f
+    RT_PSET RT_SNG!(FX##(L_BP4a!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP6e!) * L_BP86! + L_BP96!), 0, 0   '@4ab1e
+    L_BP16a! = L_BP6e!   '@4ab5c
+    L_BP176! = A_0e26!(RT_CINT%(FX##(L_BPa2!))) + 0.00999999977648258209228515625##   '@4ab6c DS:4f62
+    L_BP17a! = (FX##(A_0e26!(RT_CINT%(FX##(L_BPa2!)))) - L_BP3e!) / 20.0   '@4ab99 DS:4efc
+    L_BPd8! = L_BP3e!   '@4abc4
+    GOTO L_4ad36_v   '@4abc4
+L_4abca:
+    GOSUB L_4d3ce   '@4abca
+    IF NOT (L_BP6e! < 0.0 AND L_BP16a! < 0.0) THEN GOTO L_4ac64   '@4abd7 DS:4b28
+    RT_LINE 0, 0, RT_SNG!(FX##(L_BP4a!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP6e!) * L_BP86! + L_BP96!), 8, RT_CINT%(FX##(L_BPc2!)), 0   '@4ac14
+L_4ac64:
+    L_BP4a! = (FX##(A_0e26!(RT_CINT%(FX##(L_BPa2!)))) - L_BP3e!) / 20.0 + L_BP4a!   '@4ac64 DS:4efc
+    L_BP16a! = L_BP6e!   '@4ac97
+    IF NOT (L_BP6e! < 0.0) THEN GOTO L_4ad26   '@4aca7 DS:4b28
+    RT_PSET RT_SNG!((L_BP4a! - (FX##(A_0e26!(RT_CINT%(FX##(L_BPa2!)))) - L_BP3e!) / 20.0) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP6e!) * L_BP86! + L_BP96!), 0, 0   '@4acc1 DS:4efc
+L_4ad26:
+L_4ad35:
+    L_BPd8! = FX##(L_BPd8!) + L_BP17a!   '@4ad36
+L_4ad36_v:   ' juncao: valor vindo dos GOTO 'leva'
+    IF NOT (L_BP17a! < 0.0) THEN GOTO L_4ad6b   '@4ad3d DS:4b28
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    IF NOT (L_BPd8! < L_BP176!) THEN GOTO L_4abca   '@4ad53
+    GOTO L_4ad81   '@4ad68
+L_4ad6b:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    IF NOT (L_BPd8! > L_BP176!) THEN GOTO L_4abca   '@4ad6c
+L_4ad81:
+    L_BPb0% = 0   '@4ad81
+    GOSUB L_4b83b   '@4ad8c
+    L_BP52! = L_BP46!   '@4ad99
+    L_BP72! = L_BP3e!   '@4ada8
+    L_BPd8! = L_BP3e!   '@4adb7
+    GOSUB L_4b49a   '@4adc7
+    L_BP5a! = L_BP5e!   '@4add4
+    IF NOT (L_BPb0% = 1) THEN GOTO L_4ae0e   '@4ade3
+    GOSUB L_4b5e5   '@4adf2
+    L_BP5a! = L_BP62!   '@4adff
+L_4ae0e:
+    RT_PSET RT_SNG!(FX##(L_BP52!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP5a!) * L_BP86! + L_BP96!), 0, 0   '@4ae0e
+    L_BP17e! = A_0f3a%(RT_CINT%(FX##(L_BPa2!)))   '@4ae4c
+    FOR L_BPa6! = 1 + (A_0f3a%(RT_CINT%(FX##(L_BPa2!))) - A_0f0c%(RT_CINT%(FX##(L_BPa2!)))) TO L_BP17e!   '@4ae78 DS:4b38
+    IF NOT (A_0eb0!(RT_CINT%(FX##(L_BPa6!))) <= L_BP3e!) THEN GOTO L_4aef0   '@4aeb8
+    GOTO L_4b45f   '@4aee8
+L_4aef0:
+    L_BPd8! = A_0eb0!(RT_CINT%(FX##(L_BPa6!)))   '@4aef5
+    IF NOT (A_18c2!(RT_CINT%(FX##(L_BPa2!))) <= L_BPd8! AND A_18c2!(RT_CINT%(FX##(L_BPa2!))) > L_BP72!) THEN GOTO L_4afae   '@4af1c
+    L_BPd8! = A_18c2!(RT_CINT%(FX##(L_BPa2!)))   '@4af87
+L_4afae:
+    GOSUB L_4b49a   '@4afae
+    L_BP5a! = L_BP5e!   '@4afbb
+    IF NOT (L_BPb0% > 0) THEN GOTO L_4b019   '@4afca
+    GOSUB L_4b5e5   '@4afd9
+    IF NOT (ABS(FX##(L_BP62!)) > ABS(FX##(L_BP5e!))) THEN GOTO L_4b014   '@4afe6
+    L_BP5a! = L_BP62!   '@4b005
+L_4b014:
+L_4b019:
+    IF NOT (ABS(FX##(L_BP5e!)) > ABS(FX##(L_BP62!)) AND L_BPb0% = 1) THEN GOTO L_4b157   '@4b019
+    L_BPd8! = L_BP72! + 0.20000000298023223876953125##   '@4b04f DS:4f66
+L_4b064:
+    GOSUB L_4b49a   '@4b069
+    GOSUB L_4b5e5   '@4b076
+    IF NOT (FX##(L_BP5e!) * L_BP62! < FX##(0.0) OR ABS(FX##(L_BP5e!)) > ABS(FX##(L_BP62!))) THEN GOTO L_4b0db   '@4b083 DS:4b28
+    L_BPb0% = 0   '@4b0c8
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_4aef0   '@4b0d3
+L_4b0db:
+    RT_LINE 0, 0, RT_SNG!((FX##(L_BPd8!) - L_BP3e! + L_BP52!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP62!) * L_BP86! + L_BP96!), 8, RT_CINT%(FX##(L_BPc6!)), 0   '@4b0db
+    L_BPd8! = L_BPd8! + 0.20000000298023223876953125##   '@4b134 DS:4f66
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_4b064   '@4b14a
+L_4b157:
+    IF NOT (ABS(FX##(L_BP5e!)) < ABS(FX##(L_BP62!)) AND L_BPb0% = 2) THEN GOTO L_4b295   '@4b157
+    L_BPd8! = L_BP72! + 0.20000000298023223876953125##   '@4b18d DS:4f66
+L_4b1a2:
+    GOSUB L_4b49a   '@4b1a7
+    GOSUB L_4b5e5   '@4b1b4
+    IF NOT (FX##(L_BP62!) * L_BP5e! < FX##(0.0) OR ABS(FX##(L_BP62!)) > ABS(FX##(L_BP5e!))) THEN GOTO L_4b219   '@4b1c1 DS:4b28
+    L_BPb0% = 1   '@4b206
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_4aef0   '@4b211
+L_4b219:
+    RT_LINE 0, 0, RT_SNG!((FX##(L_BPd8!) - L_BP3e! + L_BP52!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP5e!) * L_BP86! + L_BP96!), 8, RT_CINT%(FX##(L_BPc6!)), 0   '@4b219
+    L_BPd8! = L_BPd8! + 0.20000000298023223876953125##   '@4b272 DS:4f66
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_4b1a2   '@4b288
+L_4b295:
+    RT_LINE 0, 0, RT_SNG!((FX##(L_BPd8!) - L_BP3e! + L_BP52!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP5a!) * L_BP86! + L_BP96!), 8, RT_CINT%(FX##(L_BPc6!)), 0   '@4b295
+    L_BP72! = L_BPd8!   '@4b2ee
+    L_BPd8! = L_BPd8! + 0.001000000047497451305389404296875##   '@4b2fe DS:4fee
+    GOSUB L_4b49a   '@4b314
+    L_BP5a! = L_BP5e!   '@4b321
+    IF NOT (L_BPb0% > 0) THEN GOTO L_4b37f   '@4b330
+    GOSUB L_4b5e5   '@4b33f
+    IF NOT (ABS(FX##(L_BP62!)) > ABS(FX##(L_BP5e!))) THEN GOTO L_4b37a   '@4b34c
+    L_BP5a! = L_BP62!   '@4b36b
+L_4b37a:
+L_4b37f:
+    L_BPd8! = L_BP72!   '@4b37f
+    RT_PSET RT_SNG!((FX##(L_BPd8!) - L_BP3e! + L_BP52!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP5a!) * L_BP86! + L_BP96!), 0, 0   '@4b38f
+    IF NOT (A_0eb0!(RT_CINT%(FX##(L_BPa6!))) > A_18c2!(RT_CINT%(FX##(L_BPa2!))) AND A_18c2!(RT_CINT%(FX##(L_BPa2!))) = L_BP72!) THEN GOTO L_4b45f   '@4b3d6
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_4aef0   '@4b457
+L_4b45f:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BPa6!   '@4b464 DS:4b38
+    RETURN   '@4b490
+L_4b49a:   ' sub-rotina (alvo de GOSUB)
+    GOSUB L_4a074   '@4b49f
+    L_BP5a! = FX##(-L_BP5a!) * (ABS(FX##(L_BP5a!)) > 0.001000000047497451305389404296875## OR A_18c2!(RT_CINT%(FX##(L_BPa2!))) <> L_BPd8!)   '@4b4ac DS:4fee
+    L_BP5e! = L_BP5a! - (L_BP5a! > 0.0) * (FX##(A_196c!(RT_CINT%(FX##(L_BPa2!)), 1)) - A_18e6!(RT_CINT%(FX##(L_BPa2!)), 1)) + (L_BP5a! <= 0.0) * (FX##(A_196c!(RT_CINT%(FX##(L_BPa2!)), 0)) - A_18e6!(RT_CINT%(FX##(L_BPa2!)), 0))   '@4b510 DS:4b28
+    RETURN   '@4b5db
+L_4b5e5:   ' sub-rotina (alvo de GOSUB)
+    L_BP62! = -L_BPae!   '@4b5ea
+    L_BP7a! = 0.0   '@4b5fd DS:4b28
+    L_BP182! = A_0f3a%(RT_CINT%(FX##(L_BPa2!)))   '@4b60d
+    FOR L_BP12a! = 1 + (A_0f3a%(RT_CINT%(FX##(L_BPa2!))) - A_0f0c%(RT_CINT%(FX##(L_BPa2!)))) TO L_BP182!   '@4b639 DS:4b38
+    IF NOT (A_0eb0!(RT_CINT%(FX##(L_BP12a!))) >= L_BPd8!) THEN GOTO L_4b702   '@4b678
+    L_BP62! = (FX##(A_0e82!(RT_CINT%(FX##(L_BP12a!)))) - A_0f68!(RT_CINT%(FX##(L_BP12a!)))) * (FX##(L_BPd8!) - L_BP7a!) + L_BP62!   '@4b6a9
+    GOTO L_4b831   '@4b6fa
+L_4b702:
+    IF NOT (A_0eb0!(RT_CINT%(FX##(L_BP12a!))) < L_BPd8!) THEN GOTO L_4b79a   '@4b702
+    L_BP62! = (FX##(A_0e82!(RT_CINT%(FX##(L_BP12a!)))) - A_0f68!(RT_CINT%(FX##(L_BP12a!)))) * (FX##(A_0eb0!(RT_CINT%(FX##(L_BP12a!)))) - L_BP7a!) + L_BP62!   '@4b733
+L_4b79a:
+    L_BP62! = FX##(A_0ede!(RT_CINT%(FX##(L_BP12a!)))) - A_0f96!(RT_CINT%(FX##(L_BP12a!))) + L_BP62!   '@4b79a
+    L_BP7a! = A_0eb0!(RT_CINT%(FX##(L_BP12a!)))   '@4b7df
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP12a!   '@4b805 DS:4b38
+L_4b831:
+    RETURN   '@4b831
+L_4b83b:   ' sub-rotina (alvo de GOSUB)
+    IF NOT (A_196c!(RT_CINT%(FX##(L_BPa2!)), 3) < A_18e6!(RT_CINT%(FX##(L_BPa2!)), 0) AND A_196c!(RT_CINT%(FX##(L_BPa2!)), 3) < 0.0) THEN GOTO L_4b908   '@4b840 DS:4b28
+    L_BPb0% = 1   '@4b8cd
+    L_BPae! = A_196c!(RT_CINT%(FX##(L_BPa2!)), 3)   '@4b8d8
+L_4b908:
+    IF NOT (A_196c!(RT_CINT%(FX##(L_BPa2!)), 4) < A_18e6!(RT_CINT%(FX##(L_BPa2!)), 1) AND A_196c!(RT_CINT%(FX##(L_BPa2!)), 4) < 0.0) THEN GOTO L_4bb57   '@4b908 DS:4b28
+    L_BPb0% = 2   '@4b996
+    L_BPae! = 0.0   '@4b9a1 DS:4b28
+    L_BP7a! = 0.0   '@4b9b2 DS:4b28
+    L_BP186! = A_0f3a%(RT_CINT%(FX##(L_BPa2!)))   '@4b9c2
+    FOR L_BPa6! = 1 + (A_0f3a%(RT_CINT%(FX##(L_BPa2!))) - A_0f0c%(RT_CINT%(FX##(L_BPa2!)))) TO L_BP186!   '@4b9ee DS:4b38
+    L_BPae! = (FX##(A_0e82!(RT_CINT%(FX##(L_BPa6!)))) - A_0f68!(RT_CINT%(FX##(L_BPa6!)))) * (FX##(A_0eb0!(RT_CINT%(FX##(L_BPa6!)))) - L_BP7a!) + L_BPae! + (FX##(A_0ede!(RT_CINT%(FX##(L_BPa6!)))) - A_0f96!(RT_CINT%(FX##(L_BPa6!))))   '@4ba2e
+    L_BP7a! = A_0eb0!(RT_CINT%(FX##(L_BPa6!)))   '@4bad0
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BPa6!   '@4baf6 DS:4b38
+    L_BPae! = FX##(L_BPae!) - A_196c!(RT_CINT%(FX##(L_BPa2!)), 4)   '@4bb22
+L_4bb57:
+    RETURN   '@4bb57
+L_4bb61:   ' sub-rotina (alvo de GOSUB); entrada vinda de 04730d_FUN_4000_730d
+    IF NOT (V_0e08% + 1 = L_BPa2! OR (L_BPa2! = 0.0 OR V_12c2$ = "N")) THEN GOTO L_4bbcc   '@4bb66 DS:4b28,4b3c
+    RETURN   '@4bbc2
+L_4bbcc:
+    L_BP4e! = L_BP42!   '@4bbcc
+    RT_PSET RT_SNG!(FX##(L_BP4e!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP6a!) * L_BP86! + L_BP96!), 0, 0   '@4bbdb
+    L_BP16a! = L_BP6a!   '@4bc19
+    L_BP18a! = FX##(L_BP3e!) + L_BP8a! + (0.00999999977648258209228515625## - FX##(L_BP8a!) / 20.0)   '@4bc29 DS:4efc,4f62
+    L_BP18e! = FX##(L_BP8a!) / 20.0   '@4bc54 DS:4efc
+    L_BPd8! = L_BP3e!   '@4bc65
+    GOTO L_4bda4_v   '@4bc65
+L_4bc6c:
+    GOSUB L_4c916   '@4bc6c
+    IF NOT (L_BP6a! > 0.0 AND L_BP16a! > 0.0) THEN GOTO L_4bd06   '@4bc79 DS:4b28
+    RT_LINE 0, 0, RT_SNG!(FX##(L_BP4e!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP6a!) * L_BP86! + L_BP96!), 8, RT_CINT%(FX##(L_BPc2!)), 0   '@4bcb6
+L_4bd06:
+    L_BP4e! = FX##(L_BP8a!) / 20.0 + L_BP4e!   '@4bd06 DS:4efc
+    L_BP16a! = L_BP6a!   '@4bd1f
+    IF NOT (L_BP6a! > 0.0) THEN GOTO L_4bd94   '@4bd2f DS:4b28
+    RT_PSET RT_SNG!((L_BP4e! - FX##(L_BP8a!) / 20.0) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP6a!) * L_BP86! + L_BP96!), 0, 0   '@4bd49 DS:4efc
+L_4bd94:
+L_4bda3:
+    L_BPd8! = FX##(L_BPd8!) + L_BP18e!   '@4bda4
+L_4bda4_v:   ' juncao: valor vindo dos GOTO 'leva'
+    IF NOT (L_BP18e! < 0.0) THEN GOTO L_4bdd9   '@4bdab DS:4b28
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    IF NOT (L_BPd8! < L_BP18a!) THEN GOTO L_4bc6c   '@4bdc1
+    GOTO L_4bdef   '@4bdd6
+L_4bdd9:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    IF NOT (L_BPd8! > L_BP18a!) THEN GOTO L_4bc6c   '@4bdda
+L_4bdef:
+    L_BPd8! = FX##(L_BP3e!) + L_BP8a!   '@4bdef
+    GOSUB L_4c916   '@4be04
+    IF NOT (L_BP6a! > 0.0 AND L_BP16a! > 0.0) THEN GOTO L_4be93   '@4be11 DS:4b28
+    RT_LINE 0, 0, L_BP8e!, RT_SNG!((FX##(L_BP32!) - L_BP6a!) * L_BP86! + L_BP96!), 8, RT_CINT%(FX##(L_BPc2!)), 0   '@4be4e
+L_4be93:
+    L_BP4a! = L_BP42!   '@4be93
+    RT_PSET RT_SNG!(FX##(L_BP4a!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP6e!) * L_BP86! + L_BP96!), 0, 0   '@4bea2
+    L_BP16a! = L_BP6e!   '@4bee0
+    L_BP192! = FX##(L_BP3e!) + L_BP8a! + (0.00999999977648258209228515625## - FX##(L_BP8a!) / 20.0)   '@4bef0 DS:4efc,4f62
+    L_BP196! = FX##(L_BP8a!) / 20.0   '@4bf1b DS:4efc
+    L_BPd8! = L_BP3e!   '@4bf2c
+    GOTO L_4c06a_v   '@4bf2c
+L_4bf32:
+    GOSUB L_4d3ce   '@4bf32
+    IF NOT (L_BP6e! < 0.0 AND L_BP16a! < 0.0) THEN GOTO L_4bfcc   '@4bf3f DS:4b28
+    RT_LINE 0, 0, RT_SNG!(FX##(L_BP4a!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP6e!) * L_BP86! + L_BP96!), 8, RT_CINT%(FX##(L_BPc2!)), 0   '@4bf7c
+L_4bfcc:
+    L_BP4a! = FX##(L_BP8a!) / 20.0 + L_BP4a!   '@4bfcc DS:4efc
+    L_BP16a! = L_BP6e!   '@4bfe5
+    IF NOT (L_BP6e! < 0.0) THEN GOTO L_4c05a   '@4bff5 DS:4b28
+    RT_PSET RT_SNG!((L_BP4a! - FX##(L_BP8a!) / 20.0) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP6e!) * L_BP86! + L_BP96!), 0, 0   '@4c00f DS:4efc
+L_4c05a:
+L_4c069:
+    L_BPd8! = FX##(L_BPd8!) + L_BP196!   '@4c06a
+L_4c06a_v:   ' juncao: valor vindo dos GOTO 'leva'
+    IF NOT (L_BP196! < 0.0) THEN GOTO L_4c09f   '@4c071 DS:4b28
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    IF NOT (L_BPd8! < L_BP192!) THEN GOTO L_4bf32   '@4c087
+    GOTO L_4c0b5   '@4c09c
+L_4c09f:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    IF NOT (L_BPd8! > L_BP192!) THEN GOTO L_4bf32   '@4c0a0
+L_4c0b5:
+    L_BPd8! = FX##(L_BP3e!) + L_BP8a!   '@4c0b5
+    GOSUB L_4d3ce   '@4c0ca
+    IF NOT (L_BP6e! < 0.0 AND L_BP16a! < 0.0) THEN GOTO L_4c159   '@4c0d7 DS:4b28
+    RT_LINE 0, 0, L_BP8e!, RT_SNG!((FX##(L_BP32!) - L_BP6e!) * L_BP86! + L_BP96!), 8, RT_CINT%(FX##(L_BPc2!)), 0   '@4c114
+L_4c159:
+    L_BPb0% = 0   '@4c159
+    GOSUB L_4b83b   '@4c164
+    L_BP52! = L_BP46!   '@4c171
+    L_BP72! = L_BP3e!   '@4c180
+    L_BPd8! = L_BP3e!   '@4c18f
+    GOSUB L_4b49a   '@4c19f
+    L_BP5a! = L_BP5e!   '@4c1ac
+    IF NOT (L_BPb0% = 1) THEN GOTO L_4c1e6   '@4c1bb
+    GOSUB L_4b5e5   '@4c1ca
+    L_BP5a! = L_BP62!   '@4c1d7
+L_4c1e6:
+    RT_PSET RT_SNG!(FX##(L_BP52!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP5a!) * L_BP86! + L_BP96!), 0, 0   '@4c1e6
+    L_BP19a! = A_0f3a%(RT_CINT%(FX##(L_BPa2!)))   '@4c224
+    FOR L_BPa6! = 1 + (A_0f3a%(RT_CINT%(FX##(L_BPa2!))) - A_0f0c%(RT_CINT%(FX##(L_BPa2!)))) TO L_BP19a!   '@4c250 DS:4b38
+    IF NOT (A_0eb0!(RT_CINT%(FX##(L_BPa6!))) <= L_BP3e!) THEN GOTO L_4c2c8   '@4c290
+    GOTO L_4c820   '@4c2c0
+L_4c2c8:
+    L_BPd8! = A_0eb0!(RT_CINT%(FX##(L_BPa6!)))   '@4c2cd
+    IF NOT (A_18c2!(RT_CINT%(FX##(L_BPa2!))) <= L_BPd8! AND A_18c2!(RT_CINT%(FX##(L_BPa2!))) > L_BP72!) THEN GOTO L_4c386   '@4c2f4
+    L_BPd8! = A_18c2!(RT_CINT%(FX##(L_BPa2!)))   '@4c35f
+L_4c386:
+    IF NOT (FX##(L_BP3e!) + L_BP8a! >= FX##(L_BPd8!)) THEN GOTO L_4c6a1   '@4c386
+    GOSUB L_4b49a   '@4c3a5
+    L_BP5a! = L_BP5e!   '@4c3b2
+    IF NOT (L_BPb0% > 0) THEN GOTO L_4c410   '@4c3c1
+    GOSUB L_4b5e5   '@4c3d0
+    IF NOT (ABS(FX##(L_BP62!)) > ABS(FX##(L_BP5e!))) THEN GOTO L_4c40b   '@4c3dd
+    L_BP5a! = L_BP62!   '@4c3fc
+L_4c40b:
+L_4c410:
+    IF NOT (ABS(FX##(L_BP5e!)) >= ABS(FX##(L_BP62!)) AND L_BPb0% = 1) THEN GOTO L_4c528   '@4c410
+    L_BPd8! = L_BP72! + 0.20000000298023223876953125##   '@4c446 DS:4f66
+L_4c45b:
+    GOSUB L_4b49a   '@4c460
+    GOSUB L_4b5e5   '@4c46d
+    IF NOT (ABS(FX##(L_BP5e!)) > ABS(FX##(L_BP62!))) THEN GOTO L_4c4ac   '@4c47a
+    L_BPb0% = 0   '@4c499
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_4c2c8   '@4c4a4
+L_4c4ac:
+    RT_LINE 0, 0, RT_SNG!((FX##(L_BPd8!) - L_BP3e! + L_BP52!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP62!) * L_BP86! + L_BP96!), 8, RT_CINT%(FX##(L_BPc6!)), 0   '@4c4ac
+    L_BPd8! = L_BPd8! + 0.20000000298023223876953125##   '@4c505 DS:4f66
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_4c45b   '@4c51b
+L_4c528:
+    IF NOT (ABS(FX##(L_BP5e!)) <= ABS(FX##(L_BP62!)) AND L_BPb0% = 2) THEN GOTO L_4c640   '@4c528
+    L_BPd8! = L_BP72! + 0.20000000298023223876953125##   '@4c55e DS:4f66
+L_4c573:
+    GOSUB L_4b49a   '@4c578
+    GOSUB L_4b5e5   '@4c585
+    IF NOT (ABS(FX##(L_BP62!)) > ABS(FX##(L_BP5e!))) THEN GOTO L_4c5c4   '@4c592
+    L_BPb0% = 1   '@4c5b1
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_4c2c8   '@4c5bc
+L_4c5c4:
+    RT_LINE 0, 0, RT_SNG!((FX##(L_BPd8!) - L_BP3e! + L_BP52!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP5e!) * L_BP86! + L_BP96!), 8, RT_CINT%(FX##(L_BPc6!)), 0   '@4c5c4
+    L_BPd8! = L_BPd8! + 0.20000000298023223876953125##   '@4c61d DS:4f66
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_4c573   '@4c633
+L_4c640:
+    RT_LINE 0, 0, RT_SNG!((FX##(L_BPd8!) - L_BP3e! + L_BP52!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP5a!) * L_BP86! + L_BP96!), 8, RT_CINT%(FX##(L_BPc6!)), 0   '@4c640
+    GOTO L_4c6ae   '@4c699
+L_4c6a1:
+    GOTO L_4c820   '@4c6a1
+L_4c6ae:
+    L_BP72! = L_BPd8!   '@4c6ae
+    L_BPd8! = L_BPd8! + 0.001000000047497451305389404296875##   '@4c6be DS:4fee
+    GOSUB L_4b49a   '@4c6d4
+    L_BP5a! = L_BP5e!   '@4c6e1
+    IF NOT (L_BPb0% > 0) THEN GOTO L_4c73f   '@4c6f0
+    GOSUB L_4b5e5   '@4c6ff
+    IF NOT (ABS(FX##(L_BP62!)) > ABS(FX##(L_BP5e!))) THEN GOTO L_4c73a   '@4c70c
+    L_BP5a! = L_BP62!   '@4c72b
+L_4c73a:
+L_4c73f:
+    L_BPd8! = L_BP72!   '@4c73f
+    RT_PSET RT_SNG!((FX##(L_BPd8!) - L_BP3e! + L_BP52!) * L_BP82!), RT_SNG!((FX##(L_BP32!) - L_BP5a!) * L_BP86! + L_BP96!), 0, 0   '@4c74f
+    IF NOT (A_0eb0!(RT_CINT%(FX##(L_BPa6!))) > A_18c2!(RT_CINT%(FX##(L_BPa2!))) AND A_18c2!(RT_CINT%(FX##(L_BPa2!))) = L_BPd8!) THEN GOTO L_4c820   '@4c796
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    GOTO L_4c2c8   '@4c818
+L_4c820:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BPa6!   '@4c825 DS:4b38
+    L_BPd8! = FX##(L_BP3e!) + L_BP8a!   '@4c851
+    GOSUB L_4b49a   '@4c866
+    L_BP5a! = L_BP5e!   '@4c873
+    IF NOT (L_BPb0% > 0) THEN GOTO L_4c8d1   '@4c882
+    GOSUB L_4b5e5   '@4c891
+    IF NOT (ABS(FX##(L_BP62!)) > ABS(FX##(L_BP5e!))) THEN GOTO L_4c8cc   '@4c89e
+    L_BP5a! = L_BP62!   '@4c8bd
+L_4c8cc:
+L_4c8d1:
+    RT_LINE 0, 0, L_BP8e!, RT_SNG!((FX##(L_BP32!) - L_BP5a!) * L_BP86! + L_BP96!), 0, 0, 0   '@4c8d1
+    RETURN   '@4c90c
+L_4c916:   ' sub-rotina (alvo de GOSUB)
+    IF NOT (L_BPa2! > 0.0) THEN GOTO L_4c93e   '@4c91b DS:4b28
+    GOTO L_4cc61   '@4c936
+L_4c93e:
+    L_BP6a! = 0.0   '@4c93e DS:4b28
+    IF NOT (A_0f0c%(0) = 0) THEN GOTO L_4c977   '@4c94e
+    RETURN   '@4c96d
+L_4c977:
+    L_BP19e! = A_0f0c%(0)   '@4c977
+    FOR L_BP12a! = 1.0 TO L_BP19e!   '@4c99b DS:4b38
+    IF NOT (A_0f0c%(0) = L_BP12a!) THEN GOTO L_4c9e7   '@4c9a2
+    L_BP7a! = 0.0   '@4c9cf DS:4b28
+    GOTO L_4ca12   '@4c9df
+L_4c9e7:
+    L_BP7a! = A_0eb0!(RT_CINT%(FX##(L_BP12a!) + 1.0))   '@4c9e7 DS:4b38
+L_4ca12:
+    IF NOT (FX##(A_0e26!(0)) - L_BP7a! < FX##(L_BPd8!)) THEN GOTO L_4ca4c   '@4ca17
+    GOTO L_4cb19   '@4ca44
+L_4ca4c:
+    L_BP6a! = RT_POT##((A_0eb0!(RT_CINT%(FX##(L_BP12a!))) - (FX##(A_0e26!(0)) - L_BPd8!)), (2.0)) * A_0e82!(RT_CINT%(FX##(L_BP12a!))) / 2.0 + L_BP6a! + (A_0eb0!(RT_CINT%(FX##(L_BP12a!))) - (FX##(A_0e26!(0)) - L_BPd8!)) * A_0ede!(RT_CINT%(FX##(L_BP12a!)))   '@4ca4c DS:4b2c
+    GOTO L_4cc57   '@4cb11
+L_4cb19:
+    L_BP6a! = RT_POT##((FX##(A_0eb0!(RT_CINT%(FX##(L_BP12a!)))) - L_BP7a!), (2.0)) * A_0e82!(RT_CINT%(FX##(L_BP12a!))) / 2.0 + L_BP6a! + (A_0eb0!(RT_CINT%(FX##(L_BP12a!))) - (FX##(A_0e26!(0)) - L_BPd8!)) * A_0ede!(RT_CINT%(FX##(L_BP12a!))) + (FX##(A_0eb0!(RT_CINT%(FX##(L_BP12a!)))) - L_BP7a!) * A_0e82!(RT_CINT%(FX##(L_BP12a!))) * (L_BP7a! - (FX##(A_0e26!(0)) - L_BPd8!))   '@4cb1e DS:4b2c
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP12a!   '@4cc2b DS:4b38
+L_4cc57:
+    RETURN   '@4cc57
+L_4cc61:
+    L_BP6a! = -(FX##(A_196c!(RT_CINT%(FX##(L_BPa2!)), 0)) * L_BPd8!) - A_1924!(RT_CINT%(FX##(L_BPa2!) - 1.0))   '@4cc66 DS:4f5a
+    L_BP76! = -A_196c!(RT_CINT%(FX##(L_BPa2!)), 1) * (FX##(A_0e26!(RT_CINT%(FX##(L_BPa2!)))) - L_BPd8!) - A_1924!(RT_CINT%(FX##(L_BPa2!)))   '@4ccb7
+    L_BP1a2! = -(FX##(A_196c!(RT_CINT%(FX##(L_BPa2!)), 2)) * L_BPd8!) - A_1936!(RT_CINT%(FX##(L_BPa2!) - 1.0))   '@4cd22 DS:4f5a
+    L_BP7a! = 0.0   '@4cd72 DS:4b28
+    L_BP1a6! = A_0f3a%(RT_CINT%(FX##(L_BPa2!)))   '@4cd82
+    FOR L_BP12a! = 1 + (A_0f3a%(RT_CINT%(FX##(L_BPa2!))) - A_0f0c%(RT_CINT%(FX##(L_BPa2!)))) TO L_BP1a6!   '@4cdae DS:4b38
+    IF NOT (A_0eb0!(RT_CINT%(FX##(L_BP12a!))) > L_BPd8!) THEN GOTO L_4ced4   '@4cdee
+    L_BP6a! = RT_POT##((FX##(L_BPd8!) - L_BP7a!), (2.0)) * A_0e82!(RT_CINT%(FX##(L_BP12a!))) / 2.0 + L_BP6a!   '@4ce1f DS:4b2c
+    L_BP1a2! = (FX##(A_0e82!(RT_CINT%(FX##(L_BP12a!)))) - A_0f68!(RT_CINT%(FX##(L_BP12a!)))) * RT_POT##((FX##(L_BPd8!) - L_BP7a!), (2.0)) / 2.0 + L_BP1a2!   '@4ce63 DS:4b2c
+    GOTO L_4d12c   '@4cec7
+L_4ced4:
+    L_BP6a! = RT_POT##((FX##(A_0eb0!(RT_CINT%(FX##(L_BP12a!)))) - L_BP7a!), (2.0)) * A_0e82!(RT_CINT%(FX##(L_BP12a!))) / 2.0 + L_BP6a! + ((FX##(A_0eb0!(RT_CINT%(FX##(L_BP12a!)))) - L_BP7a!) * A_0e82!(RT_CINT%(FX##(L_BP12a!))) + A_0ede!(RT_CINT%(FX##(L_BP12a!)))) * (FX##(L_BPd8!) - A_0eb0!(RT_CINT%(FX##(L_BP12a!))))   '@4ced4 DS:4b2c
+    L_BP1a2! = (FX##(A_0e82!(RT_CINT%(FX##(L_BP12a!)))) - A_0f68!(RT_CINT%(FX##(L_BP12a!)))) * RT_POT##((FX##(A_0eb0!(RT_CINT%(FX##(L_BP12a!)))) - L_BP7a!), (2.0)) / 2.0 + L_BP1a2! + ((FX##(A_0e82!(RT_CINT%(FX##(L_BP12a!)))) - A_0f68!(RT_CINT%(FX##(L_BP12a!)))) * (FX##(A_0eb0!(RT_CINT%(FX##(L_BP12a!)))) - L_BP7a!) + (FX##(A_0ede!(RT_CINT%(FX##(L_BP12a!)))) - A_0f96!(RT_CINT%(FX##(L_BP12a!))))) * (FX##(L_BPd8!) - A_0eb0!(RT_CINT%(FX##(L_BP12a!))))   '@4cfa9 DS:4b2c
+    L_BP7a! = A_0eb0!(RT_CINT%(FX##(L_BP12a!)))   '@4d0da
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP12a!   '@4d100 DS:4b38
+L_4d12c:
+    L_BP7a! = 0.0   '@4d12c DS:4b28
+    L_BP1aa! = A_0f3a%(RT_CINT%(FX##(L_BPa2!)))   '@4d13c
+    FOR L_BP12a! = 1 + (A_0f3a%(RT_CINT%(FX##(L_BPa2!))) - A_0f0c%(RT_CINT%(FX##(L_BPa2!)))) TO L_BP1aa!   '@4d168 DS:4b38
+    IF NOT (A_0eb0!(RT_CINT%(FX##(L_BP12a!))) <= L_BPd8!) THEN GOTO L_4d1e1   '@4d1a8
+    GOTO L_4d337   '@4d1d9
+L_4d1e1:
+    CALL MIXT_082a_Maior(L_BP7a!, L_BPd8!, L_BP1ae!)   '@4d1e1
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    CALL MIXT_082a_Maior(L_BP7a!, L_BPd8!, L_BP1b2!)   '@4d1f9
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    CALL MIXT_082a_Maior(L_BP7a!, L_BPd8!, L_BP1b6!)   '@4d20c
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    CALL MIXT_082a_Maior(L_BP7a!, L_BPd8!, L_BP1ba!)   '@4d21f
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    L_BP76! = RT_POT##((FX##(A_0eb0!(RT_CINT%(FX##(L_BP12a!)))) - L_BP1ae!), (2.0)) * A_0e82!(RT_CINT%(FX##(L_BP12a!))) / 2.0 + L_BP76! + (FX##(A_0eb0!(RT_CINT%(FX##(L_BP12a!)))) - L_BP1b2!) * A_0e82!(RT_CINT%(FX##(L_BP12a!))) * (FX##(L_BP1b6!) - L_BPd8!) + (FX##(A_0eb0!(RT_CINT%(FX##(L_BP12a!)))) - L_BP1ba!) * A_0ede!(RT_CINT%(FX##(L_BP12a!)))   '@4d233 DS:4b2c
+    L_BP7a! = A_0eb0!(RT_CINT%(FX##(L_BP12a!)))   '@4d311
+L_4d337:
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP12a!   '@4d33c DS:4b38
+    CALL MIXT_082a_Maior(L_BP6a!, L_BP76!, L_BP1be!)   '@4d368
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    L_BP6a! = L_BP1be!   '@4d380
+    IF NOT (V_12c2$ = "S") THEN GOTO L_4d3c4   '@4d38a DS:4b42
+    CALL MIXT_082a_Maior(L_BP6a!, L_BP1a2!, L_BP1c2!)   '@4d3a1
+    IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY dentro da SUB
+    L_BP6a! = L_BP1c2!   '@4d3ba
+L_4d3c4:
+    RETURN   '@4d3c4
+L_4d3ce:   ' sub-rotina (alvo de GOSUB)
+    IF NOT (L_BPa2! > 0.0) THEN GOTO L_4d3f6   '@4d3d3 DS:4b28
+    GOTO L_4d719   '@4d3ee
+L_4d3f6:
+    L_BP6e! = 0.0   '@4d3f6 DS:4b28
+    IF NOT (A_0f0c%(0) = 0) THEN GOTO L_4d42f   '@4d406
+    RETURN   '@4d425
+L_4d42f:
+    L_BP1c6! = A_0f0c%(0)   '@4d42f
+    FOR L_BP12a! = 1.0 TO L_BP1c6!   '@4d453 DS:4b38
+    IF NOT (A_0f0c%(0) = L_BP12a!) THEN GOTO L_4d49f   '@4d45a
+    L_BP7a! = 0.0   '@4d487 DS:4b28
+    GOTO L_4d4ca   '@4d497
+L_4d49f:
+    L_BP7a! = A_0eb0!(RT_CINT%(FX##(L_BP12a!) + 1.0))   '@4d49f DS:4b38
+L_4d4ca:
+    IF NOT (FX##(A_0e26!(0)) - L_BP7a! < FX##(L_BPd8!)) THEN GOTO L_4d504   '@4d4cf
+    GOTO L_4d5d1   '@4d4fc
+L_4d504:
+    L_BP6e! = RT_POT##((A_0eb0!(RT_CINT%(FX##(L_BP12a!))) - (FX##(A_0e26!(0)) - L_BPd8!)), (2.0)) * A_0e82!(RT_CINT%(FX##(L_BP12a!))) / 2.0 + L_BP6e! + (A_0eb0!(RT_CINT%(FX##(L_BP12a!))) - (FX##(A_0e26!(0)) - L_BPd8!)) * A_0ede!(RT_CINT%(FX##(L_BP12a!)))   '@4d504 DS:4b2c
+    GOTO L_4d70f   '@4d5c9
+L_4d5d1:
+    L_BP6e! = RT_POT##((FX##(A_0eb0!(RT_CINT%(FX##(L_BP12a!)))) - L_BP7a!), (2.0)) * A_0e82!(RT_CINT%(FX##(L_BP12a!))) / 2.0 + L_BP6e! + (A_0eb0!(RT_CINT%(FX##(L_BP12a!))) - (FX##(A_0e26!(0)) - L_BPd8!)) * A_0ede!(RT_CINT%(FX##(L_BP12a!))) + (FX##(A_0eb0!(RT_CINT%(FX##(L_BP12a!)))) - L_BP7a!) * A_0e82!(RT_CINT%(FX##(L_BP12a!))) * (L_BP7a! - (FX##(A_0e26!(0)) - L_BPd8!))   '@4d5d6 DS:4b2c
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP12a!   '@4d6e3 DS:4b38
+L_4d70f:
+    RETURN   '@4d70f
+L_4d719:
+    L_BP6e! = -(FX##(A_1982!(RT_CINT%(FX##(L_BPa2!)), 0)) * L_BPd8!) - A_1982!(RT_CINT%(FX##(L_BPa2!)), 1)   '@4d71e
+    L_BP7a! = 0.0   '@4d76e DS:4b28
+    L_BP1ca! = A_0f3a%(RT_CINT%(FX##(L_BPa2!)))   '@4d77e
+    FOR L_BP12a! = 1 + (A_0f3a%(RT_CINT%(FX##(L_BPa2!))) - A_0f0c%(RT_CINT%(FX##(L_BPa2!)))) TO L_BP1ca!   '@4d7aa DS:4b38
+    IF NOT (A_0eb0!(RT_CINT%(FX##(L_BP12a!))) > L_BPd8!) THEN GOTO L_4d867   '@4d7ea
+    L_BP6e! = RT_POT##((FX##(L_BPd8!) - L_BP7a!), (2.0)) * A_0e82!(RT_CINT%(FX##(L_BP12a!))) / 2.0 + L_BP6e!   '@4d81b DS:4b2c
+    GOTO L_4d98e   '@4d85f
+L_4d867:
+    L_BP6e! = RT_POT##((FX##(A_0eb0!(RT_CINT%(FX##(L_BP12a!)))) - L_BP7a!), (2.0)) * A_0e82!(RT_CINT%(FX##(L_BP12a!))) / 2.0 + L_BP6e! + ((FX##(A_0eb0!(RT_CINT%(FX##(L_BP12a!)))) - L_BP7a!) * A_0e82!(RT_CINT%(FX##(L_BP12a!))) + A_0ede!(RT_CINT%(FX##(L_BP12a!)))) * (FX##(L_BPd8!) - A_0eb0!(RT_CINT%(FX##(L_BP12a!))))   '@4d867 DS:4b2c
+    L_BP7a! = A_0eb0!(RT_CINT%(FX##(L_BP12a!)))   '@4d93c
+    IF RT_ROT_ATIVO THEN RT_EVCK: IF RT_EVENTO THEN IF RT_ONKEY_FICA%(RT_EVENTO) THEN RT_EVENTO = 0 ELSE EXIT SUB   ' ON KEY no laco (B$EVCK)
+    NEXT L_BP12a!   '@4d962 DS:4b38
+L_4d98e:
+    RETURN   '@4d98e
+L_4d99d:   ' entrada vinda de 04730d_FUN_4000_730d
+    ERASE L_BP2e!   '@4d99d
+    ERASE L_BP1c!   '@4d9a6
+    ' END SUB   '@4d9af
+END SUB
+
+SUB S_50042   ' entrada de SUB/FUNCTION (B$ENRA, locais 6 bytes) (0x50042)
+    DIM L_BP0e$
+    ' ---- FUN_5000_0042 @0x50042  (050042_FUN_5000_0042.lift.txt; evidence_id (assembly): ev_ef2738ba5db1ee8c445b00b9db4d658f834232e4ec64b59deacfdafe5af9eb9e)
+    V_1d70$ = "OpenStrut (eng. reversa)"   '@5004f DS:5000
+    L_BP0e$ = ""   '@50061 DS:501c
+    ' PROTECAO (removido)
+    ' PROTECAO (removido)
+    ' PROTECAO (removido)
+    ' PROTECAO (removido)
+    GOTO L_5025c   ' PROTECAO: verificacao de licenca do original desativada
+    ' PROTECAO (removido)
+L_5025c:
+    ' PROTECAO (removido)
+    ' PROTECAO (removido)
+    ' PROTECAO (removido)
+L_502b2:
+    GOTO L_502e0   ' PROTECAO: verificacao de licenca do original desativada
+    ' PROTECAO (removido)
+L_502d1:
+    ' PROTECAO (removido)
+L_502e0:
+    ' @502e0 libera strings locais (L_BP0e)
+    ' END SUB   '@502e9
+END SUB
+
+'$INCLUDE: '../comum/RT45.BM'
+'$INCLUDE: '../comum/RT45GFX.BM'
+'$INCLUDE: 'COMUM_VIGA.BM'
+'$INCLUDE: '../comum/MIXT.BM'

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <!-- OpenStrut V1: perfil I branco sobre o azul das telas do SISTRUT 4.0 (DOS) -->
+  <rect x="8" y="8" width="240" height="240" rx="44" fill="#0b2c96"/>
+  <path d="M52 44h140v30h-55v100h55v30H52v-30h55V74H52z" fill="#ffffff"/>
+  <circle cx="190" cy="190" r="50" fill="#f5b800" stroke="#0b2c96" stroke-width="8"/>
+  <path d="M178 172l16-10v58" fill="none" stroke="#0b2c96" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

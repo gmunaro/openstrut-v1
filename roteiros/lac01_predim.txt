@@ -1,0 +1,14 @@
+# exe: PILAR
+# LACUNA 1: PILAREDI predimensionamento de secao (3.9). Obra FLUXO com .COL proprio (3 niveis, 2 colunas).
+# P (menu de calculo 3.4) -> 1 (Predimensionamento) -> posicao 1 (P4: N 30/70/110 tf, Mx 1,5 no TIPO, My 1 no TERREO).
+# Secao retangular B = 20, H = ? -> conta a mao (SISTRUT.PIP: 0,6 Fck = 0,09 tf/cm2; peso proprio 2,5 t/m3):
+#   TERREO: (110 - 1,35 + 0,045 H)/(20 H) <= 0,09 -> H >= 61,9 -> 65 (H = 60 da 0,0928). Proposta 20x65, CARGA 111,58.
+# V: nova secao a partir do nivel 2 (TIPO), ?,? -> 30x30; Ex = 10 cm aumenta a de baixo. M: Ex volta a 0.
+# E: elimina a secao 2. A: aceita (grava 20x65 no .COL e FLUXO.PRD). De novo 1 -> "Coluna ja predimensionada" -> N.
+{TELA a01_abertura}{ENTER}{TELA a02_pilar}8{TELA a03_obra}{ENTER}{TELA a04_menu}P{TELA a05_calc}1{TELA a06_lista}1{ENTER}
+{TELA a07_tipo}1{TELA a08_dims}20,?{ENTER}{TELA a09_calculo}{ENTER}{TELA a10_opcoes}
+V{TELA a11_varia}2{ENTER}{TELA a12_confirma}{ENTER}{TELA a13_tipo2}1?,?{ENTER}{TELA a14_exc}{BS}{BS}{BS}10,0{ENTER}
+{TELA a15_calculo2}{ENTER}{TELA a16_opcoes2}
+M{TELA a17_exc}{BS}2{ENTER}{BS}{BS}{BS}{BS}0,0{ENTER}{TELA a18_exc2}{ENTER}{TELA a19_calculo3}{ENTER}{TELA a20_opcoes3}
+E{TELA a21_elim}{BS}2{ENTER}{TELA a22_elim_conf}{ENTER}{TELA a23_calculo4}{ENTER}{TELA a24_opcoes4}
+A{TELA a25_menu}1{TELA a26_lista}1{ENTER}{TELA a27_ja}N{ENTER}{TELA a28_menu}6{TELA a29_principal}{ESC}{TELA a30_fim}{F2}{F2}

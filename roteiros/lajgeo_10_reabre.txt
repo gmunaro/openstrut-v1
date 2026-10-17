@@ -1,0 +1,12 @@
+# exe: LAJEGEOM
+# lajgeo_10_reabre: nova execucao sobre o TESTE.LAJ gravado por lajgeo_09_recarga (L1 g = 0.14).
+# Base: roteiros/lajgeo_10_reabre.dados. Menu 3 sem digitar cargas: g de L1 deve continuar 0.14 no .LAJ
+# (a parcela de 0.04 nao e reaplicada ao reabrir).
+{TELA c10_01_menu_inicial}
+3
+{TELA c10_02_menu3_reaberto}
+F
+9
+S
+{TELA c10_03_retorno}
+{ENTER}

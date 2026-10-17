@@ -1,0 +1,1770 @@
+' ============================================================================
+'  RT45.BM - rotinas de apoio que reproduzem o runtime BRUN45 do QuickBASIC 4.5
+'  onde o QB64 PE se comporta diferente. Tabela B$ -> QB64: docs/RETRADUCAO.md.
+' ============================================================================
+
+' Valor em precisao estendida (x87, 64 bits de mantissa). O QB4.5 calcula toda a
+' expressao na pilha do x87 e so arredonda ao gravar a variavel; o QB64 calcula
+' SINGLE em float e DOUBLE em double. Um operando _FLOAT em cada operacao basta
+' para o C++ fazer a conta em long double (ver docs/RETRADUCAO.md, teste T2Q).
+FUNCTION FX## (x AS _FLOAT)
+    FX## = x
+END FUNCTION
+
+' Valor estendido arredondado para SINGLE/DOUBLE (o FSTP do QB4.5). O CSNG/CDBL do QB64 de um
+' _FLOAT nao arredonda quando o valor vai para um parametro DOUBLE (RT_PU#).
+FUNCTION RT_SNG! (x AS _FLOAT)
+    RT_SNG! = x
+END FUNCTION
+
+FUNCTION RT_DBL# (x AS _FLOAT)
+    RT_DBL# = x
+END FUNCTION
+
+' ---------------------------------------------------------------- inicio e fim
+' Chamada na primeira linha do programa: le o COMMON do arquivo de troca (CHAIN),
+' restaura a tela de texto, volta para a pasta de quem chamou e abre o roteiro.
+SUB RT_INICIO (prog AS STRING)
+    DIM troca AS STRING, p AS LONG, f AS INTEGER
+    RT_PROG = prog
+    RT_LOG "inicio " + COMMAND$
+    RT_SEG = -1
+    CHDIR _STARTDIR$
+    RT_SAIDA = ENVIRON$("SISTRUT_SAIDA")
+    IF RT_SAIDA <> "" THEN IF RIGHT$(RT_SAIDA, 1) <> "\" AND RIGHT$(RT_SAIDA, 1) <> "/" THEN RT_SAIDA = RT_SAIDA + "\"
+    IF ENVIRON$("SISTRUT_ROTEIRO") <> "" THEN RT_ROT_CARREGA ENVIRON$("SISTRUT_ROTEIRO") ELSE _SCREENSHOW
+    p = INSTR(COMMAND$, "/CHAIN:")
+    IF p > 0 THEN
+        troca = MID$(COMMAND$, p + 7)
+        IF LEFT$(troca, 1) = CHR$(34) THEN troca = MID$(troca, 2)
+        IF INSTR(troca, CHR$(34)) THEN troca = LEFT$(troca, INSTR(troca, CHR$(34)) - 1)
+        IF _FILEEXISTS(troca) THEN
+            f = FREEFILE
+            OPEN troca FOR BINARY AS #f
+            RT_TROCA_LE_CAB f
+            RT_COMMON_LE f
+            CLOSE #f
+            KILL troca
+        END IF
+    END IF
+END SUB
+
+' END do original: o BRUN45 volta ao DOS sem esperar tecla (o END do QB64 espera).
+SUB RT_FIM
+    RT_LOG "fim"
+    RT_LPTQUEBRA 0
+    IF RT_LPT THEN CLOSE #RT_LPT
+    IF RT_ROT_ATIVO THEN RT_ROT_TELAS_PENDENTES
+    SYSTEM
+END SUB
+
+' ---------------------------------------------------------------- CHAIN / COMMON
+' CHAIN prog$ do QB4.5: termina este programa e roda prog$.EXE com o mesmo COMMON.
+' O QB64 nao passa o COMMON para outro EXE como o BRUN45 (que mantem o bloco na
+' memoria); aqui ele vai num arquivo de troca, junto com a tela de texto e a posicao
+' do roteiro. Se o EXE nao existe: erro 53, como o original (o ON ERROR do programa
+' trata, ex.: " Modulo nao encontrado em ").
+SUB RT_CHAIN (prog AS STRING)
+    DIM exe AS STRING, troca AS STRING, f AS INTEGER
+    exe = RT_ACHA_EXE(prog)
+    IF exe = "" THEN
+        ERROR 53
+        EXIT SUB
+    END IF
+    troca = RT_TROCA_NOME$
+    f = FREEFILE
+    OPEN troca FOR BINARY AS #f
+    RT_TROCA_GRAVA_CAB f
+    RT_COMMON_GRAVA f
+    CLOSE #f
+    RT_LPTQUEBRA 0
+    IF RT_LPT THEN CLOSE #RT_LPT: RT_LPT = 0
+    RT_LOG "CHAIN " + exe
+    SHELL _DONTWAIT CHR$(34) + exe + CHR$(34) + " /CHAIN:" + CHR$(34) + troca + CHR$(34)
+    SYSTEM
+END SUB
+
+FUNCTION RT_TROCA_NOME$
+    DIM t AS STRING
+    t = ENVIRON$("TEMP")
+    IF t = "" THEN t = "."
+    RT_TROCA_NOME$ = t + "\SISTRUT_" + RT_PROG + "_" + LTRIM$(STR$(INT(TIMER * 100))) + ".CHN"
+END FUNCTION
+
+' Acha o executavel de um CHAIN/RUN (prog$ e o caminho DOS do original, sem .EXE).
+' 1) O caminho pedido, depois de RT_ARQ$ (SISTRUT_C), com .exe/.EXE.
+' 2) O mesmo nome na pasta deste executavel (onde a V1 instala todos os EXE), mas so se a
+'    pasta pedida existe no original: a pasta dos modulos (SISTRUT_EXEC, padrao
+'    C:\SISTRUT\EXEC40\), a do gerenciador (a pasta acima dela, C:\SISTRUT\), ou uma pasta
+'    que exista de fato depois do RT_ARQ$. Assim C:\SISTRUT\EXEC32\ (versao 3.2, que nao esta
+'    instalada) da erro 53 como no original ("Erro de Operacao" no SISTRUT).
+' "" = nao achou (o chamador da ERROR 53).
+FUNCTION RT_ACHA_EXE$ (progdos AS STRING)
+    DIM prog AS STRING, nome AS STRING, p AS INTEGER, dir AS STRING, pasta AS STRING, exec AS STRING
+    prog = RT_ARQ$(progdos)
+    IF _FILEEXISTS(prog + ".exe") THEN RT_ACHA_EXE$ = prog + ".exe": EXIT FUNCTION
+    IF _FILEEXISTS(prog + ".EXE") THEN RT_ACHA_EXE$ = prog + ".EXE": EXIT FUNCTION
+    nome = progdos: pasta = ""
+    DO
+        p = INSTR(nome, "\")
+        IF p = 0 THEN p = INSTR(nome, "/")
+        IF p = 0 THEN p = INSTR(nome, ":")
+        IF p = 0 THEN EXIT DO
+        pasta = pasta + LEFT$(nome, p): nome = MID$(nome, p + 1)
+    LOOP
+    exec = UCASE$(ENVIRON$("SISTRUT_EXEC"))
+    IF exec = "" THEN exec = "C:\SISTRUT\EXEC40\"
+    IF RIGHT$(exec, 1) <> "\" THEN exec = exec + "\"
+    FOR p = LEN(exec) - 1 TO 1 STEP -1
+        IF MID$(exec, p, 1) = "\" THEN EXIT FOR
+    NEXT
+    IF UCASE$(pasta) <> exec AND UCASE$(pasta) <> LEFT$(exec, p) THEN
+        IF pasta = "" OR NOT _DIREXISTS(RT_ARQ$(pasta)) THEN RT_ACHA_EXE$ = "": EXIT FUNCTION
+    END IF
+    dir = COMMAND$(0)
+    FOR p = LEN(dir) TO 1 STEP -1
+        IF MID$(dir, p, 1) = "\" OR MID$(dir, p, 1) = "/" THEN EXIT FOR
+    NEXT
+    dir = LEFT$(dir, p)
+    IF _FILEEXISTS(dir + nome + ".exe") THEN RT_ACHA_EXE$ = dir + nome + ".exe": EXIT FUNCTION
+    RT_ACHA_EXE$ = ""
+END FUNCTION
+
+' Cabecalho do arquivo de troca: assinatura, posicao do roteiro, tela de texto (80x25,
+' caractere e atributo), cursor e modo, e o estado de tela que o BRUN45 mantem entre
+' programas (versao 2): VIEW PRINT e, em modo grafico, paleta, cor, VIEW, WINDOW e a pagina
+' (pixel a pixel). O CHAIN do QB4.5 nao limpa a tela nem troca o modo: o LAJEMONT nao tem
+' SCREEN e desenha sobre a tela grafica do LAJEGEOM.
+SUB RT_TROCA_GRAVA_CAB (f AS INTEGER)
+    DIM s AS STRING * 16, r AS INTEGER, c AS INTEGER, b AS _UNSIGNED _BYTE, n AS LONG
+    ' versao do arquivo de troca: mude o numero quando mudar o que se grava (o RT_TROCA_LE_CAB
+    ' recusa outra versao; todos os EXE de uma cadeia tem de ser compilados com o mesmo RT45)
+    s = "SISTRUT CHAIN 3"
+    PUT #f, , s
+    n = RT_ROT_I: PUT #f, , n
+    r = RT_TELA_N: PUT #f, , r
+    r = RT_MODO: PUT #f, , r
+    r = CSRLIN: PUT #f, , r
+    r = POS(0): PUT #f, , r
+    FOR r = 1 TO 25
+        FOR c = 1 TO 80
+            IF RT_MODO = 0 THEN b = SCREEN(r, c) ELSE b = 32
+            PUT #f, , b
+            IF RT_MODO = 0 THEN b = SCREEN(r, c, 1) ELSE b = 7
+            PUT #f, , b
+        NEXT
+    NEXT
+    PUT #f, , RT_VP1: PUT #f, , RT_VP2
+    IF RT_MODO <> 0 THEN RT_TROCA_GRAVA_GRAF f
+END SUB
+
+' Parte grafica do arquivo de troca: paleta, cor do texto, VIEW, WINDOW e os bytes da pagina.
+SUB RT_TROCA_GRAVA_GRAF (f AS INTEGER)
+    DIM m AS _MEM, buf AS STRING, n AS LONG, i AS INTEGER, cor AS _UNSIGNED LONG
+    n = RT_PALETA_N
+    PUT #f, , n
+    FOR i = 0 TO n - 1
+        cor = _PALETTECOLOR(i, 0): PUT #f, , cor
+    NEXT
+    cor = _DEFAULTCOLOR(0): PUT #f, , cor
+    PUT #f, , RT_VW_T: PUT #f, , RT_VW()
+    PUT #f, , RT_WIN_T: PUT #f, , RT_WIN()
+    m = _MEMIMAGE(0)
+    n = m.SIZE
+    buf = SPACE$(n)
+    _MEMGET m, m.OFFSET, buf
+    _MEMFREE m
+    PUT #f, , n
+    PUT #f, , buf
+END SUB
+
+SUB RT_TROCA_LE_CAB (f AS INTEGER)
+    DIM s AS STRING * 16, r AS INTEGER, c AS INTEGER, b AS _UNSIGNED _BYTE, a AS _UNSIGNED _BYTE
+    DIM n AS LONG, modo AS INTEGER, lin AS INTEGER, col AS INTEGER, vp1 AS INTEGER, vp2 AS INTEGER
+    GET #f, , s
+    IF LEFT$(s, 14) <> "SISTRUT CHAIN " THEN EXIT SUB
+    ' 1 = semente do gerenciador (tools/troca_semente.py, so a tela de texto); 3 = este RT45
+    IF MID$(s, 15, 1) <> "1" AND MID$(s, 15, 1) <> "3" THEN
+        RT_LOG "arquivo de troca da versao " + MID$(s, 15, 1) + "; este EXE le a 3: recompile todos os EXE da cadeia com o mesmo RT45"
+        PRINT "Arquivo de troca do CHAIN de outra versao do RT45 ("; MID$(s, 15, 1); "; este EXE le a 3)."
+        PRINT "Compile todos os EXE da cadeia com o mesmo src-original/comum/RT45."
+        IF RT_ROT_ATIVO = 0 THEN SLEEP
+        SYSTEM
+    END IF
+    GET #f, , n
+    IF RT_ROT_ATIVO THEN RT_ROT_I = n
+    GET #f, , r: RT_TELA_N = r
+    GET #f, , modo
+    GET #f, , lin
+    GET #f, , col
+    FOR r = 1 TO 25
+        FOR c = 1 TO 80
+            GET #f, , b
+            GET #f, , a
+            IF modo = 0 THEN
+                COLOR a AND 15, (a \ 16) AND 7
+                LOCATE r, c: PRINT CHR$(b);
+            END IF
+        NEXT
+    NEXT
+    IF modo = 0 THEN COLOR 7, 0
+    IF MID$(s, 15, 1) = "3" THEN
+        GET #f, , vp1: GET #f, , vp2
+        IF modo <> 0 THEN RT_TROCA_LE_GRAF f, modo
+        IF vp1 > 0 THEN RT_VIEWPRINT vp1, vp2
+    END IF
+    LOCATE lin, col
+END SUB
+
+' Restaura o modo grafico do programa anterior (RT_TROCA_GRAVA_GRAF).
+SUB RT_TROCA_LE_GRAF (f AS INTEGER, modo AS INTEGER)
+    DIM m AS _MEM, buf AS STRING, n AS LONG, i AS INTEGER, cor AS _UNSIGNED LONG
+    RT_SCREEN modo
+    GET #f, , n
+    FOR i = 0 TO n - 1
+        GET #f, , cor: _PALETTECOLOR i, cor, 0
+    NEXT
+    GET #f, , cor: COLOR cor
+    GET #f, , RT_VW_T: GET #f, , RT_VW()
+    GET #f, , RT_WIN_T: GET #f, , RT_WIN()
+    GET #f, , n
+    buf = SPACE$(n)
+    GET #f, , buf
+    m = _MEMIMAGE(0)
+    IF n = m.SIZE THEN _MEMPUT m, m.OFFSET, buf
+    _MEMFREE m
+    ' VIEW sem cor nem borda (a pagina ja tem o que o VIEW do outro programa pintou)
+    IF RT_VW_T THEN RT_VIEW RT_VW_T, RT_VW(1), RT_VW(2), RT_VW(3), RT_VW(4), -1, -1
+    IF RT_WIN_T THEN RT_WINDOW RT_WIN_T, RT_WIN(1), RT_WIN(2), RT_WIN(3), RT_WIN(4)
+END SUB
+
+' Item de COMMON escalar: endereco DS, tipo e tamanho dos dados que seguem.
+SUB RT_CG_ITEM (f AS INTEGER, ender AS LONG, tipo AS STRING, tam AS LONG)
+    DIM t AS STRING * 1, nd AS INTEGER
+    t = tipo
+    PUT #f, , ender
+    PUT #f, , t
+    PUT #f, , nd
+    PUT #f, , tam
+END SUB
+
+SUB RT_CG_STR (f AS INTEGER, s AS STRING)
+    DIM n AS LONG
+    n = LEN(s)
+    PUT #f, , n
+    IF n THEN PUT #f, , s
+END SUB
+
+' Item de COMMON matriz: limites de cada dimensao; o tamanho e preenchido em RT_CG_FECHA.
+SUB RT_CG_MATRIZ (f AS INTEGER, ender AS LONG, tipo AS STRING, nd AS INTEGER, l1 AS LONG, u1 AS LONG, l2 AS LONG, u2 AS LONG, l3 AS LONG, u3 AS LONG)
+    DIM t AS STRING * 1, tam AS LONG
+    t = tipo
+    PUT #f, , ender
+    PUT #f, , t
+    PUT #f, , nd
+    PUT #f, , l1: PUT #f, , u1
+    IF nd > 1 THEN PUT #f, , l2: PUT #f, , u2
+    IF nd > 2 THEN PUT #f, , l3: PUT #f, , u3
+    RT_CG_POSTAM = SEEK(f)
+    PUT #f, , tam
+END SUB
+
+SUB RT_CG_FECHA (f AS INTEGER)
+    DIM fim AS LONG, tam AS LONG
+    fim = SEEK(f)
+    tam = fim - RT_CG_POSTAM - 4
+    PUT #f, RT_CG_POSTAM, tam
+    SEEK #f, fim
+END SUB
+
+FUNCTION RT_CL_ITEM% (f AS INTEGER, ender AS LONG, tipo AS STRING * 1, nd AS INTEGER, lb() AS LONG, ub() AS LONG, tam AS LONG)
+    DIM i AS INTEGER
+    IF SEEK(f) > LOF(f) THEN RT_CL_ITEM% = 0: EXIT FUNCTION
+    GET #f, , ender
+    GET #f, , tipo
+    GET #f, , nd
+    FOR i = 1 TO nd
+        GET #f, , lb(i)
+        GET #f, , ub(i)
+    NEXT
+    GET #f, , tam
+    RT_CL_ITEM% = -1
+END FUNCTION
+
+FUNCTION RT_CL_STR$ (f AS INTEGER)
+    DIM n AS LONG, s AS STRING
+    GET #f, , n
+    s = SPACE$(n)
+    IF n THEN GET #f, , s
+    RT_CL_STR$ = s
+END FUNCTION
+
+' ---------------------------------------------------------------- tela
+' SCREEN do QB4.5. O modo 3 (Hercules 720x348, texto 80x25 em celulas 9x14) nao existe
+' no QB64: e emulado com uma tela 720x350 de 256 cores e fonte 8x14 (a coluna de texto
+' tem 8 pixels em vez de 9). Os demais modos usados (0, 2, 9) sao nativos.
+SUB RT_SCREEN (m AS INTEGER)
+    IF m = 3 THEN
+        SCREEN _NEWIMAGE(720, 350, 256)
+        _FONT 14
+    ELSE
+        SCREEN m
+    END IF
+    RT_MODO = m
+    RT_VP1 = 0: RT_VP2 = 0: RT_VW_T = 0: RT_WIN_T = 0
+END SUB
+
+' Entradas da paleta do modo corrente (para o arquivo de troca).
+FUNCTION RT_PALETA_N&
+    SELECT CASE RT_MODO
+        CASE 2: RT_PALETA_N& = 2
+        CASE 1: RT_PALETA_N& = 4
+        CASE 7, 8, 9, 12: RT_PALETA_N& = 16
+        CASE ELSE: RT_PALETA_N& = 256
+    END SELECT
+END FUNCTION
+
+' VIEW PRINT a TO b (a = 0: VIEW PRINT sem argumentos). Guarda o estado para o CHAIN.
+SUB RT_VIEWPRINT (a AS INTEGER, b AS INTEGER)
+    IF a = 0 THEN VIEW PRINT ELSE VIEW PRINT a TO b
+    RT_VP1 = a: RT_VP2 = b
+END SUB
+
+' WINDOW do original: t = 0 sem argumentos, 1 = WINDOW SCREEN, 2 = WINDOW. Guarda o estado.
+SUB RT_WINDOW (t AS INTEGER, x1 AS SINGLE, y1 AS SINGLE, x2 AS SINGLE, y2 AS SINGLE)
+    IF t = 0 THEN
+        WINDOW
+    ELSEIF t = 1 THEN
+        WINDOW SCREEN (x1, y1)-(x2, y2)
+    ELSE
+        WINDOW (x1, y1)-(x2, y2)
+    END IF
+    RT_WIN_T = t: RT_WIN(1) = x1: RT_WIN(2) = y1: RT_WIN(3) = x2: RT_WIN(4) = y2
+END SUB
+
+' VIEW do original: t = 0 sem argumentos, 1 = VIEW SCREEN, 2 = VIEW; cor/borda -1 = ausente
+' (como no B$VIEW). Guarda o estado (sem cor nem borda) para o CHAIN.
+SUB RT_VIEW (t AS INTEGER, x1 AS INTEGER, y1 AS INTEGER, x2 AS INTEGER, y2 AS INTEGER, cor AS INTEGER, borda AS INTEGER)
+    IF t = 0 THEN
+        VIEW
+    ELSEIF t = 1 THEN
+        IF cor < 0 AND borda < 0 THEN
+            VIEW SCREEN (x1, y1)-(x2, y2)
+        ELSEIF borda < 0 THEN
+            VIEW SCREEN (x1, y1)-(x2, y2), cor
+        ELSEIF cor < 0 THEN
+            VIEW SCREEN (x1, y1)-(x2, y2), , borda
+        ELSE
+            VIEW SCREEN (x1, y1)-(x2, y2), cor, borda
+        END IF
+    ELSE
+        IF cor < 0 AND borda < 0 THEN
+            VIEW (x1, y1)-(x2, y2)
+        ELSEIF borda < 0 THEN
+            VIEW (x1, y1)-(x2, y2), cor
+        ELSEIF cor < 0 THEN
+            VIEW (x1, y1)-(x2, y2), , borda
+        ELSE
+            VIEW (x1, y1)-(x2, y2), cor, borda
+        END IF
+    END IF
+    RT_VW_T = t: RT_VW(1) = x1: RT_VW(2) = y1: RT_VW(3) = x2: RT_VW(4) = y2
+END SUB
+
+' DEF SEG: o original so usa &HB000 (texto do Hercules/MDA, MIXT 0DBE); a memoria de
+' texto emulada do QB64 fica em &HB800.
+SUB RT_DEFSEG (s AS LONG)
+    RT_SEG = s
+    IF s = -1 THEN
+        DEF SEG
+    ELSEIF s = &HB000& THEN
+        DEF SEG = &HB800
+    ELSE
+        DEF SEG = s
+    END IF
+END SUB
+
+SUB RT_POKE (ender AS LONG, v AS INTEGER)
+    POKE ender, v
+END SUB
+
+' FRE("") do BRUN45 devolve o espaco livre de strings; o valor nao e reproduzivel
+' (depende da memoria do DOS). Os programas so o guardam numa variavel de rascunho.
+FUNCTION RT_FRE& (x AS STRING)
+    RT_FRE& = 32000
+END FUNCTION
+
+' ---------------------------------------------------------------- impressora
+' LPRINT: o original manda para LPT1 (DOS). Aqui vai para um arquivo, byte a byte igual
+' ao que a impressora receberia (inclui os codigos ESC). Arquivo: SISTRUT_IMPRESSORA,
+' ou <SISTRUT_SAIDA>impressora.prn com roteiro, ou IMPRESSORA.PRN na pasta corrente.
+SUB RT_LPTABRE
+    DIM nome AS STRING
+    IF RT_LPT THEN EXIT SUB
+    nome = ENVIRON$("SISTRUT_IMPRESSORA")
+    IF nome = "" THEN
+        IF RT_SAIDA <> "" THEN nome = RT_SAIDA + "impressora.prn" ELSE nome = "IMPRESSORA.PRN"
+    END IF
+    RT_LPT_NOME = nome
+    ' numero fixo fora da faixa dos programas (o BRUN45 nao usa numero de arquivo para a LPT1;
+    ' com FREEFILE a impressora pegava o #1 e o OPEN ... AS #1 do VIGA dava erro 55)
+    RT_LPT = 255
+    OPEN nome FOR APPEND AS #RT_LPT
+    RT_LPT_POS = LOF(RT_LPT)
+END SUB
+
+' Largura da LPT1 (padrao 80, WIDTH LPRINT): o BRUN45 conta a coluna de tudo o que o LPRINT
+' manda e, ao chegar na largura, manda CR LF (LPRINT STRING$(80, 95) sai com uma linha em
+' branco a mais: caso retrad_laje_calc). O PRINT # do QB64 nao quebra; aqui os bytes que o
+' LPRINT gravou desde a ultima passada sao reescritos com as quebras, em bloco, antes de
+' fechar o arquivo e antes/depois da copia da tela (que vai pela BIOS e nao conta coluna).
+' CR zera a coluna, BS volta uma, os demais caracteres de controle nao contam.
+' sopula = -1: so marca os bytes atuais como ja vistos (copia da tela).
+SUB RT_LPTQUEBRA (sopula AS INTEGER)
+    DIM f AS INTEGER, n AS LONG, b AS STRING, o AS STRING, i AS LONG, c AS INTEGER, larg AS INTEGER
+    IF RT_LPT = 0 THEN EXIT SUB
+    CLOSE #RT_LPT
+    f = FREEFILE
+    OPEN RT_LPT_NOME FOR BINARY AS #f
+    n = LOF(f) - RT_LPT_POS
+    IF n > 0 AND sopula = 0 THEN
+        larg = RT_LPT_LARG
+        IF larg = 0 THEN larg = 80
+        b = SPACE$(n)
+        GET #f, RT_LPT_POS + 1, b
+        o = ""
+        FOR i = 1 TO n
+            c = ASC(b, i)
+            o = o + CHR$(c)
+            IF c = 13 THEN
+                RT_LPT_COL = 0
+            ELSEIF c = 8 THEN
+                IF RT_LPT_COL > 0 THEN RT_LPT_COL = RT_LPT_COL - 1
+            ELSEIF c >= 32 THEN
+                RT_LPT_COL = RT_LPT_COL + 1
+                IF larg < 255 AND RT_LPT_COL >= larg THEN o = o + CHR$(13) + CHR$(10): RT_LPT_COL = 0
+            END IF
+        NEXT
+        IF LEN(o) <> n THEN PUT #f, RT_LPT_POS + 1, o
+    END IF
+    RT_LPT_POS = LOF(f)
+    CLOSE #f
+    OPEN RT_LPT_NOME FOR APPEND AS #RT_LPT
+END SUB
+
+' Copia da tela grafica para a impressora (Epson de 9 agulhas, pela BIOS: INT 17h), feita no
+' original por rotinas em assembly ligadas aos EXE. O tradutor le os parametros do codigo e do
+' DS de cada EXE e gera RT_ROTINA_xxxx, que chama esta SUB. Versoes (desmontagens):
+'   A  LAJEPROC 0x30aea: faixas de 8 linhas (y = 0, 8, ...); um byte por coluna, y+7 no bit 0
+'      e y no bit 7; cada faixa vira uma linha de impressao com w bytes.
+'   B  VIGA 0x7109c: faixas de 8 colunas (x = 0, 8, ... ate w); um byte por linha da tela,
+'      x+7 no bit 0 e x no bit 7, da ultima linha (h-1) para a primeira: pagina deitada.
+'   C  DESIMP 0x50f20: como B, mas cada linha de impressao junta a faixa x e a faixa x+meio
+'      (2h bytes); x vai de 0 ate meio.
+' Em todas: entrelinha (ini$) no comeco; faixa com algum ponto sai como margem$ + cab$ (ESC L n)
+' + bytes + crlf$; faixa vazia nao sai; fim$ no fim. No modo 10h (EGA, SCREEN 9) le so o plano 0
+' (bit 0 da cor), como o assembly que le A000 sem escolher plano.
+SUB RT_COPIA_TELA (versao AS STRING, w AS LONG, h AS LONG, meio AS LONG, margem AS STRING, cab AS STRING, ini AS STRING, crlf AS STRING, fim AS STRING)
+    DIM x AS LONG, y AS LONG, linha AS STRING
+    RT_LPTABRE
+    RT_LPTQUEBRA 0
+    PRINT #RT_LPT, ini;
+    IF versao = "A" THEN
+        FOR y = 0 TO h - 8 STEP 8
+            linha = RT_FAIXA_LINHAS(y, w)
+            IF RT_TEM_PONTO(linha) THEN PRINT #RT_LPT, margem + cab + linha + crlf;
+        NEXT
+    ELSEIF versao = "B" THEN
+        FOR x = 0 TO w - 8 STEP 8
+            linha = RT_FAIXA_COLUNAS(x, h)
+            IF RT_TEM_PONTO(linha) THEN PRINT #RT_LPT, margem + cab + linha + crlf;
+        NEXT
+    ELSE
+        FOR x = 0 TO meio - 8 STEP 8
+            linha = RT_FAIXA_COLUNAS(x, h) + RT_FAIXA_COLUNAS(x + meio, h)
+            IF RT_TEM_PONTO(linha) THEN PRINT #RT_LPT, margem + cab + linha + crlf;
+        NEXT
+    END IF
+    PRINT #RT_LPT, fim;
+    RT_LPTQUEBRA -1
+END SUB
+
+FUNCTION RT_TEM_PONTO% (linha AS STRING)
+    DIM i AS LONG
+    FOR i = 1 TO LEN(linha)
+        IF ASC(linha, i) THEN RT_TEM_PONTO% = -1: EXIT FUNCTION
+    NEXT
+END FUNCTION
+
+' Bit do pixel para a impressora: aceso = cor diferente de 0 (no EGA, bit 0 da cor).
+FUNCTION RT_BIT_PONTO% (x AS LONG, y AS LONG)
+    DIM cor AS LONG
+    cor = RT_PONTO(x, y)
+    IF RT_MODO = 9 THEN cor = cor AND 1
+    RT_BIT_PONTO% = (cor <> 0)
+END FUNCTION
+
+' Versao A: w bytes, um por coluna; bit k = pixel (x, y + 7 - k).
+FUNCTION RT_FAIXA_LINHAS$ (y AS LONG, w AS LONG)
+    DIM s AS STRING, x AS LONG, k AS INTEGER, b AS INTEGER
+    s = SPACE$(w)
+    FOR x = 0 TO w - 1
+        b = 0
+        FOR k = 0 TO 7
+            IF RT_BIT_PONTO(x, y + 7 - k) THEN b = b OR (2 ^ k)
+        NEXT
+        MID$(s, x + 1, 1) = CHR$(b)
+    NEXT
+    RT_FAIXA_LINHAS$ = s
+END FUNCTION
+
+' Versoes B e C: h bytes, da linha h-1 ate a 0; bit k = pixel (x + 7 - k, linha).
+FUNCTION RT_FAIXA_COLUNAS$ (x AS LONG, h AS LONG)
+    DIM s AS STRING, y AS LONG, k AS INTEGER, b AS INTEGER
+    s = SPACE$(h)
+    FOR y = h - 1 TO 0 STEP -1
+        b = 0
+        FOR k = 0 TO 7
+            IF RT_BIT_PONTO(x + 7 - k, y) THEN b = b OR (2 ^ k)
+        NEXT
+        MID$(s, h - y, 1) = CHR$(b)
+    NEXT
+    RT_FAIXA_COLUNAS$ = s
+END FUNCTION
+
+' Cor do pixel fisico (x, y), sem a transformacao do WINDOW.
+FUNCTION RT_PONTO& (x AS LONG, y AS LONG)
+    DIM m AS _MEM, w AS LONG
+    IF x < 0 OR y < 0 OR x >= _WIDTH(0) OR y >= _HEIGHT(0) THEN RT_PONTO& = 0: EXIT FUNCTION
+    m = _MEMIMAGE(0)
+    w = _WIDTH(0)
+    RT_PONTO& = _MEMGET(m, m.OFFSET + y * w + x, _UNSIGNED _BYTE)
+    _MEMFREE m
+END FUNCTION
+
+' ---------------------------------------------------------------- PRINT USING
+' O PRINT USING do QB4.5 arredonda pelo decimal de 16 algarismos do valor (como STR$
+' de um DOUBLE), metade para longe do zero: 2.675# -> 2.68, 1.005# -> 1.01, e um SINGLE
+' passa pelo mesmo caminho (2.675! = 2.67499995... -> 2.67). O QB64 arredonda o valor
+' binario exato (2.675# -> 2.67). RT_PU# devolve o valor ja arredondado no decimal do
+' k-esimo campo numerico do formato, e o PRINT USING do QB64 so o escreve.
+' Testes: docs/RETRADUCAO.md (T1 no QB4.5 x T1Q no QB64).
+' Zero com sinal: o PRINT USING do QB4.5 escreve -0 sem o sinal (" 0.00"); um negativo que arredonda
+' a zero sai "-0.00" nos dois (sonda tests/retraducao/QB45_T20.BAS, linhas U1 a U4; VIGA f*EJ).
+FUNCTION RT_PU# (v AS DOUBLE, fmt AS STRING, k AS INTEGER)
+    DIM dec AS INTEGER, s AS STRING, p AS INTEGER, e AS INTEGER, q AS INTEGER
+    DIM dig AS STRING, ip AS INTEGER, keep AS INTEGER, r AS STRING, i AS INTEGER, d AS INTEGER
+    DIM carry AS INTEGER, n AS STRING
+    dec = RT_PU_DEC(fmt, k)
+    IF dec < 0 THEN RT_PU# = v: EXIT FUNCTION   ' com expoente (^^^^): -0 nao medido
+    IF v = 0 THEN RT_PU# = 0: EXIT FUNCTION   ' -0 sai " 0.00" no QB4.5 e "-0.00" no QB64 (sonda T20, U1/U4)
+    s = LTRIM$(STR$(ABS(v)))
+    p = INSTR(s, "D"): IF p = 0 THEN p = INSTR(s, "E")
+    IF p THEN e = VAL(MID$(s, p + 1)): s = LEFT$(s, p - 1)
+    q = INSTR(s, ".")
+    IF q = 0 THEN dig = s: ip = LEN(s) ELSE dig = LEFT$(s, q - 1) + MID$(s, q + 1): ip = q - 1
+    ip = ip + e
+    keep = ip + dec
+    IF keep >= LEN(dig) THEN RT_PU# = v: EXIT FUNCTION
+    IF keep < 0 THEN RT_PU# = v: EXIT FUNCTION
+    r = LEFT$(dig, keep)
+    IF MID$(dig, keep + 1, 1) >= "5" THEN
+        carry = 1
+        i = keep
+        DO WHILE i > 0 AND carry
+            d = ASC(MID$(r, i, 1)) - 48 + 1
+            IF d = 10 THEN
+                MID$(r, i, 1) = "0"
+            ELSE
+                MID$(r, i, 1) = CHR$(48 + d): carry = 0
+            END IF
+            i = i - 1
+        LOOP
+        IF carry THEN r = "1" + r: ip = ip + 1
+    END IF
+    IF VAL(r) = 0 THEN RT_PU# = v: EXIT FUNCTION
+    ' r tem os algarismos; ip deles ficam antes do ponto
+    IF ip <= 0 THEN
+        n = "0." + STRING$(-ip, "0") + r
+    ELSEIF ip >= LEN(r) THEN
+        n = r + STRING$(ip - LEN(r), "0")
+    ELSE
+        n = LEFT$(r, ip) + "." + MID$(r, ip + 1)
+    END IF
+    IF v < 0 THEN RT_PU# = -VAL(n) ELSE RT_PU# = VAL(n)
+END FUNCTION
+
+' Casas decimais do k-esimo campo numerico do formato (ciclico); -1 = exponencial.
+FUNCTION RT_PU_DEC% (fmt AS STRING, k AS INTEGER)
+    DIM i AS INTEGER, n AS INTEGER, c AS STRING, campo AS STRING, total AS INTEGER, alvo AS INTEGER
+    DIM decs(1 TO 40) AS INTEGER, j AS INTEGER, ponto AS INTEGER, dd AS INTEGER, exps AS INTEGER
+    i = 1
+    DO WHILE i <= LEN(fmt)
+        c = MID$(fmt, i, 1)
+        IF c = "_" THEN
+            i = i + 2
+        ELSEIF c = "\" THEN
+            j = INSTR(i + 1, fmt, "\")
+            IF j = 0 THEN j = i
+            i = j + 1
+        ELSEIF c = "#" OR (c = "." AND MID$(fmt, i + 1, 1) = "#") OR (c = "+" AND MID$(fmt, i + 1, 1) = "#") OR MID$(fmt, i, 2) = "**" OR MID$(fmt, i, 2) = "$$" THEN
+            ponto = 0: dd = 0: exps = 0
+            DO WHILE i <= LEN(fmt)
+                c = MID$(fmt, i, 1)
+                IF c = "#" THEN
+                    IF ponto THEN dd = dd + 1
+                ELSEIF c = "." THEN
+                    IF ponto THEN EXIT DO
+                    ponto = -1
+                ELSEIF c = "," OR c = "*" OR c = "$" OR c = "+" THEN
+                ELSEIF MID$(fmt, i, 4) = "^^^^" THEN
+                    exps = -1: i = i + 3
+                ELSEIF c = "-" THEN
+                    i = i + 1: EXIT DO
+                ELSE
+                    EXIT DO
+                END IF
+                i = i + 1
+            LOOP
+            IF n < 40 THEN n = n + 1: decs(n) = dd: IF exps THEN decs(n) = -1
+        ELSE
+            i = i + 1
+        END IF
+    LOOP
+    IF n = 0 THEN RT_PU_DEC% = -1: EXIT FUNCTION
+    alvo = ((k - 1) MOD n) + 1
+    RT_PU_DEC% = decs(alvo)
+END FUNCTION
+
+' ---------------------------------------------------------------- teclado
+' INKEY$, INPUT$(n) e LINE INPUT do original. Sem roteiro usam o teclado do QB64.
+' Com SISTRUT_ROTEIRO, as teclas vem do roteiro no formato do oraculo (pasta do oraculo,
+' README "Formato do roteiro"), e {TELA nome} grava a tela no momento em que o programa
+' pede a proxima tecla (o oraculo grava quando a tela para). Fim do roteiro = fim do programa.
+FUNCTION RT_INKEY$
+    DIM t AS STRING
+    IF RT_ROT_ATIVO = 0 THEN RT_INKEY$ = INKEY$: EXIT FUNCTION
+    RT_ULT_LEITURA = TIMER(0.001)
+    ' o KEYFEED so poe a tecla depois que a tela para; o programa costuma esvaziar o
+    ' buffer antes de ler (MIXT 07F1). Aqui: as 2 primeiras consultas seguidas voltam vazias.
+    ' Consulta depois de o programa escrever (o cursor mudou de lugar) recomeca a conta: o
+    ' 07F1 chamado varias vezes com PRINT no meio nao pega a tecla (PILAR P11, 0x303a9). Depois
+    ' de 20 consultas vazias a tecla sai de qualquer jeito (laco que escreve em lugares alternados).
+    STATIC ultpos AS LONG
+    DIM p AS LONG
+    p = CSRLIN * 256& + POS(0)
+    IF p <> ultpos THEN RT_ROT_VAZIOS = 0: ultpos = p
+    RT_ROT_VAZIOS = RT_ROT_VAZIOS + 1
+    RT_ROT_VAZIOS_TOT = RT_ROT_VAZIOS_TOT + 1
+    IF (RT_ROT_VAZIOS <= 2 AND RT_ROT_VAZIOS_TOT <= 20) OR RT_EVENTO THEN RT_INKEY$ = "": EXIT FUNCTION
+    t = RT_ROT_TECLA$
+    IF RT_TECLA_PRESA(t) THEN t = ""   ' com INKEY$ o ON KEY dispara logo depois do comando
+    RT_INKEY$ = t
+END FUNCTION
+
+FUNCTION RT_INPUT$ (n AS INTEGER)
+    DIM s AS STRING, t AS STRING
+    IF RT_ROT_ATIVO = 0 THEN RT_INPUT$ = INPUT$(n): EXIT FUNCTION
+    DO WHILE LEN(s) < n
+        t = RT_ROT_TECLA$
+        ' tecla presa: o BRUN45 a engole e o INPUT$ continua esperando; o ON KEY roda depois
+        ' do comando (oraculo runs/teclas_qb-20261014-195816)
+        IF NOT RT_TECLA_PRESA(t) THEN s = s + t
+    LOOP
+    RT_INPUT$ = LEFT$(s, n)
+END FUNCTION
+
+' ---------------------------------------------------------------- ON KEY pelo roteiro
+' O BRUN45 so atende o ON KEY entre comandos (oraculo, runs/teclas_qb-20261014-195816): com
+' INPUT$/LINE INPUT esperando, a tecla presa e engolida, a leitura continua e devolve a tecla
+' seguinte, e o GOSUB roda depois do comando; com INKEY$ a tecla nao chega (INKEY$ = "") e o
+' GOSUB roda logo depois. Com roteiro, a tecla de hardware ({ESC}, {F1}..{F12}, {HW x}) que
+' bate com uma tecla ligada (KEY(n) ON) vira RT_EVENTO = indice do GOSUB; depois de cada
+' comando de leitura do nivel de modulo o tradutor poe
+'   IF RT_EVENTO THEN RT_EV = RT_EVENTO: RT_EVENTO = 0: ON RT_EV GOSUB ...
+' Sem roteiro vale o ON KEY nativo do QB64. Teclas: 1-10 = F1-F10, 11-14 = setas, 15-25 = KEY n, CHR$(flags) +
+' CHR$(scan), 30-31 = F11-F12. As teclas do roteiro vao sem flags de Shift/Ctrl/Lock (0).
+SUB RT_ONKEY (n AS INTEGER, indice AS INTEGER)
+    IF n >= 1 AND n <= 31 THEN RT_KEY_ALVO(n) = indice
+END SUB
+
+SUB RT_KEYESTADO (n AS INTEGER, estado AS INTEGER)
+    IF n >= 1 AND n <= 31 THEN RT_KEY_LIGADA(n) = estado
+END SUB
+
+SUB RT_KEYDEF (n AS INTEGER, defin AS STRING)
+    IF n >= 15 AND n <= 25 THEN RT_KEY_DEF(n) = defin
+END SUB
+
+FUNCTION RT_SCAN% (t AS STRING)
+    DIM c AS INTEGER, i AS INTEGER, letras AS STRING
+    IF LEN(t) = 2 THEN RT_SCAN% = ASC(t, 2): EXIT FUNCTION
+    IF LEN(t) <> 1 THEN EXIT FUNCTION
+    c = ASC(UCASE$(t))
+    SELECT CASE c
+        CASE 27: RT_SCAN% = 1
+        CASE 8: RT_SCAN% = 14
+        CASE 9: RT_SCAN% = 15
+        CASE 13: RT_SCAN% = 28
+        CASE 32: RT_SCAN% = 57
+        CASE 49 TO 57: RT_SCAN% = c - 47
+        CASE 48: RT_SCAN% = 11
+        CASE 65 TO 90
+            letras = "QWERTYUIOPASDFGHJKLZXCVBNM"
+            i = INSTR(letras, CHR$(c))
+            IF i <= 10 THEN RT_SCAN% = 15 + i ELSE IF i <= 19 THEN RT_SCAN% = 19 + i ELSE RT_SCAN% = 24 + i
+    END SELECT
+END FUNCTION
+
+' -1 se a tecla t esta presa por um ON KEY ligado (e marca RT_EVENTO).
+FUNCTION RT_TECLA_PRESA% (t AS STRING)
+    DIM n AS INTEGER
+    IF t = "" OR RT_ROT_HW = 0 THEN EXIT FUNCTION   ' so tecla pelo controlador ({HW}, Esc, Fn)
+    n = RT_TECLA_ALVO%(t)
+    IF n = 0 THEN EXIT FUNCTION
+    RT_EVENTO = RT_KEY_ALVO(n)
+    RT_LOG "ON KEY(" + LTRIM$(STR$(n)) + ") pelo roteiro"
+    RT_TECLA_PRESA% = -1
+END FUNCTION
+
+' Numero da tecla ligada (KEY(n) ON com ON KEY(n) GOSUB) que a tecla t dispara, ou 0. Sem efeito.
+FUNCTION RT_TECLA_ALVO% (t AS STRING)
+    DIM n AS INTEGER, sc AS INTEGER
+    sc = RT_SCAN(t)
+    FOR n = 1 TO 31
+        IF RT_KEY_LIGADA(n) = 1 AND RT_KEY_ALVO(n) > 0 THEN
+            SELECT CASE n
+                CASE 1 TO 10: IF LEN(t) = 2 AND sc = 58 + n THEN RT_TECLA_ALVO% = n: EXIT FUNCTION
+                CASE 11: IF t = CHR$(0) + CHR$(72) THEN RT_TECLA_ALVO% = n: EXIT FUNCTION
+                CASE 12: IF t = CHR$(0) + CHR$(75) THEN RT_TECLA_ALVO% = n: EXIT FUNCTION
+                CASE 13: IF t = CHR$(0) + CHR$(77) THEN RT_TECLA_ALVO% = n: EXIT FUNCTION
+                CASE 14: IF t = CHR$(0) + CHR$(80) THEN RT_TECLA_ALVO% = n: EXIT FUNCTION
+                CASE 15 TO 25
+                    IF LEN(RT_KEY_DEF(n)) = 2 THEN
+                        IF ASC(RT_KEY_DEF(n), 1) = 0 AND ASC(RT_KEY_DEF(n), 2) = sc THEN RT_TECLA_ALVO% = n: EXIT FUNCTION
+                    END IF
+                CASE 30: IF t = CHR$(0) + CHR$(133) THEN RT_TECLA_ALVO% = n: EXIT FUNCTION
+                CASE 31: IF t = CHR$(0) + CHR$(134) THEN RT_TECLA_ALVO% = n: EXIT FUNCTION
+            END SELECT
+        END IF
+    NEXT
+END FUNCTION
+
+' B$EVCK do original: os modulos foram compilados com /V, e o BRUN45 verifica os eventos no inicio
+' de cada comando; o ON KEY interrompe ate um laco que nao le o teclado (LAJECALC R3, caso
+' v2par_laje_r3; PILAR opcao 6, v2par_pilar_trava). Com roteiro, o tradutor chama RT_EVCK antes de
+' cada salto para tras (GOTO, IF ... GOTO, NEXT), por onde todo laco passa, e depois faz o mesmo
+' desvio do ON KEY das leituras. A tecla presa seguinte do roteiro ({ESC}, {Fn}, {HW x} de uma
+' tecla ligada; antes dela so {TELA}) e entregue como o KEYFEED do oraculo a entrega: com o
+' programa sem consultar o teclado e a tela parada ha 0,3 s (o KEYFEED espera 5 tiques). As
+' {TELA} pendentes sao gravadas nesse momento. Tela que nao para (texto que pisca): a tecla sai
+' 10 s depois da ultima consulta ao teclado, o limite do KEYFEED. Sem roteiro vale o ON KEY nativo.
+SUB RT_EVCK
+    STATIC n AS LONG, ult AS DOUBLE, t0 AS DOUBLE, h0 AS _UNSIGNED LONG
+    DIM agora AS DOUBLE, h AS _UNSIGNED LONG, i AS LONG, t AS STRING
+    IF RT_EVENTO THEN EXIT SUB
+    n = n + 1
+    IF n < 1000 THEN EXIT SUB
+    n = 0
+    agora = TIMER(0.001)
+    IF agora < ult THEN ult = agora: t0 = 0   ' meia-noite
+    IF agora - ult < 0.05 THEN EXIT SUB
+    ult = agora
+    IF RT_ULT_LEITURA = 0 THEN RT_ULT_LEITURA = agora   ' EXE recem-aberto (CHAIN/RUN): conta daqui
+    ' proxima tecla do roteiro, depois das {TELA}; um {ESPERA texto} no caminho tem de estar na tela
+    ' (o KEYFEED so manda a tecla depois); em modo grafico o texto nao e conferido e a tecla fica
+    i = RT_ROT_I
+    DO WHILE i < RT_ROT_N
+        t = RT_ROT_FILA(i)
+        IF LEFT$(t, 8) = "{ESPERA " THEN
+            IF RT_MODO <> 0 THEN t0 = 0: EXIT SUB
+            IF INSTR(RT_TELA_TEXTO$, MID$(t, 9, LEN(t) - 9)) = 0 THEN t0 = 0: EXIT SUB
+        ELSEIF LEFT$(t, 6) <> "{TELA " THEN
+            EXIT DO
+        END IF
+        i = i + 1
+    LOOP
+    IF i >= RT_ROT_N THEN t0 = 0: EXIT SUB
+    t = RT_ROT_FILA(i)
+    IF LEFT$(t, 1) <> CHR$(254) THEN t0 = 0: EXIT SUB
+    IF RT_TECLA_ALVO%(MID$(t, 2)) = 0 THEN t0 = 0: EXIT SUB
+    h = RT_TELA_HASH~&
+    IF agora < RT_ULT_LEITURA THEN RT_ULT_LEITURA = agora
+    IF agora - RT_ULT_LEITURA < 10 THEN   ' o KEYFEED espera a tela parar no maximo 10 s (maxset)
+        IF t0 = 0 OR h <> h0 THEN t0 = agora: h0 = h: EXIT SUB
+        IF agora - t0 < 0.3 OR agora - RT_ULT_LEITURA < 0.3 THEN EXIT SUB
+    END IF
+    t0 = 0
+    RT_LOG "tecla do roteiro entregue num laco sem leitura (B$EVCK)"
+    t = RT_ROT_TECLA$
+    IF RT_TECLA_PRESA(t) = 0 THEN RT_LOG "tecla descartada num laco sem leitura"
+END SUB
+
+' Texto da tela (modo texto), linha a linha separadas por CHR$(10), para o {ESPERA} do RT_EVCK.
+FUNCTION RT_TELA_TEXTO$
+    DIM r AS INTEGER, c AS INTEGER, l AS STRING
+    FOR r = 1 TO 25
+        FOR c = 1 TO 80
+            l = l + CHR$(SCREEN(r, c))
+        NEXT
+        l = l + CHR$(10)
+    NEXT
+    RT_TELA_TEXTO$ = l
+END FUNCTION
+
+' Soma simples do conteudo da tela (texto: caractere e atributo; grafico: pixels) para RT_EVCK.
+FUNCTION RT_TELA_HASH~& ()
+    DIM m AS _MEM, k AS _OFFSET, h AS _UNSIGNED LONG, v AS _UNSIGNED LONG
+    m = _MEMIMAGE(0)
+    h = 2166136261
+    k = 0
+    DO WHILE k + 4 <= m.SIZE
+        v = _MEMGET(m, m.OFFSET + k, _UNSIGNED LONG)
+        h = (h XOR v) * 16777619
+        k = k + 4
+    LOOP
+    _MEMFREE m
+    RT_TELA_HASH~& = h
+END FUNCTION
+
+SUB RT_LINEINPUT (prompt AS STRING, v AS STRING)
+    RT_LINEINPUT_X prompt, v, 0
+END SUB
+
+' LINE INPUT ; (B$LNIN com opcao 3): depois do ENTER o cursor fica na mesma linha, sem CR LF.
+SUB RT_LINEINPUTPV (prompt AS STRING, v AS STRING)
+    RT_LINEINPUT_X prompt, v, -1
+END SUB
+
+' Cursor do LINE INPUT em modo grafico: o BRUN45 desenha um bloco cheio na celula do cursor
+' enquanto espera a tecla (LAJECALC, caso retrad_laje_calc2, tela k04). liga = -1 desenha e
+' guarda os pixels da celula; 0 devolve os pixels. Direto na memoria da tela (sem WINDOW/VIEW).
+SUB RT_CURSOR_GRAF (liga AS INTEGER)
+    STATIC guardado AS STRING, x0 AS LONG, y0 AS LONG
+    DIM m AS _MEM, w AS LONG, h AS LONG, y AS LONG, cor AS _UNSIGNED _BYTE, t8 AS STRING * 8
+    IF RT_MODO = 0 THEN EXIT SUB
+    m = _MEMIMAGE(0)
+    w = _WIDTH(0): h = _FONTHEIGHT
+    IF liga THEN
+        x0 = (POS(0) - 1) * 8: y0 = (CSRLIN - 1) * h
+        IF x0 + 8 > w OR (y0 + h) * w > m.SIZE THEN guardado = "": _MEMFREE m: EXIT SUB
+        guardado = SPACE$(8 * h)
+        cor = _DEFAULTCOLOR(0)
+        FOR y = 0 TO h - 1
+            _MEMGET m, m.OFFSET + (y0 + y) * w + x0, t8
+            MID$(guardado, y * 8 + 1, 8) = t8
+            _MEMPUT m, m.OFFSET + (y0 + y) * w + x0, STRING$(8, cor)
+        NEXT
+    ELSEIF LEN(guardado) THEN
+        FOR y = 0 TO h - 1
+            _MEMPUT m, m.OFFSET + (y0 + y) * w + x0, MID$(guardado, y * 8 + 1, 8)
+        NEXT
+        guardado = ""
+    END IF
+    _MEMFREE m
+END SUB
+
+SUB RT_LINEINPUT_X (prompt AS STRING, v AS STRING, pv AS INTEGER)
+    DIM s AS STRING, t AS STRING
+    IF RT_ROT_ATIVO = 0 THEN
+        PRINT prompt;
+        IF pv THEN LINE INPUT ; "", s ELSE LINE INPUT "", s
+        v = s
+        EXIT SUB
+    END IF
+    PRINT prompt;
+    DO
+        RT_CURSOR_GRAF -1
+        t = RT_ROT_TECLA$
+        RT_CURSOR_GRAF 0
+        IF RT_TECLA_PRESA(t) THEN t = ""   ' engolida; a linha continua (ON KEY depois do comando)
+        IF t = CHR$(13) THEN EXIT DO
+        IF t = CHR$(8) THEN
+            IF LEN(s) THEN s = LEFT$(s, LEN(s) - 1): LOCATE , POS(0) - 1: PRINT " ";: LOCATE , POS(0) - 1
+        ELSEIF t = CHR$(27) THEN
+            IF LEN(s) THEN LOCATE , POS(0) - LEN(s): PRINT SPACE$(LEN(s));: LOCATE , POS(0) - LEN(s): s = ""
+        ELSEIF LEN(t) = 1 THEN
+            IF ASC(t) >= 32 THEN s = s + t: PRINT t;
+        END IF
+    LOOP
+    IF pv = 0 THEN PRINT
+    v = s
+END SUB
+
+' Proxima tecla do roteiro; antes grava as telas pedidas ({TELA}).
+FUNCTION RT_ROT_TECLA$
+    DIM t AS STRING
+    RT_ULT_LEITURA = TIMER(0.001)
+    RT_ROT_VAZIOS = 0: RT_ROT_VAZIOS_TOT = 0
+    RT_LOG "tecla pedida (posicao" + STR$(RT_ROT_I) + ")"
+    DO
+        IF RT_ROT_I >= RT_ROT_N THEN RT_ROT_TELAS_PENDENTES: RT_FIM
+        t = RT_ROT_FILA(RT_ROT_I)
+        RT_ROT_I = RT_ROT_I + 1
+        RT_ROT_HW = 0
+        IF LEFT$(t, 1) = CHR$(254) THEN RT_ROT_HW = -1: t = MID$(t, 2)
+        IF LEFT$(t, 6) = "{TELA " THEN
+            RT_TELA_N = RT_TELA_N + 1
+            RT_GRAVA_TELA MID$(t, 7, LEN(t) - 7)
+        ELSEIF LEFT$(t, 8) = "{ESPERA " THEN
+        ELSE
+            RT_ROT_TECLA$ = t
+            EXIT FUNCTION
+        END IF
+    LOOP
+END FUNCTION
+
+SUB RT_ROT_TELAS_PENDENTES
+    DIM t AS STRING
+    DO WHILE RT_ROT_I < RT_ROT_N
+        t = RT_ROT_FILA(RT_ROT_I)
+        IF LEFT$(t, 8) = "{ESPERA " THEN
+            RT_ROT_I = RT_ROT_I + 1
+        ELSE
+            IF LEFT$(t, 6) <> "{TELA " THEN EXIT DO
+            RT_ROT_I = RT_ROT_I + 1
+            RT_TELA_N = RT_TELA_N + 1
+            RT_GRAVA_TELA MID$(t, 7, LEN(t) - 7)
+        END IF
+    LOOP
+END SUB
+
+' Le o roteiro (formato do oraculo): '#' no inicio da linha = comentario; quebras de
+' linha nao contam; {ESPERA}/{PAUSA}/{ESTAVEL}/{LIMITE} nao se aplicam (aqui a tecla
+' so e lida quando o programa pede).
+SUB RT_ROT_CARREGA (arq AS STRING)
+    DIM f AS INTEGER, l AS STRING, txt AS STRING, i AS LONG, j AS LONG, tk AS STRING, u AS STRING
+    DIM nome AS STRING, arg AS STRING, t AS STRING, p AS INTEGER
+    IF NOT _FILEEXISTS(arq) THEN RT_LOG "roteiro nao encontrado: " + arq: EXIT SUB
+    f = FREEFILE
+    OPEN arq FOR INPUT AS #f
+    DO WHILE NOT EOF(f)
+        LINE INPUT #f, l
+        IF LEFT$(l, 1) <> "#" THEN txt = txt + l
+    LOOP
+    CLOSE #f
+    REDIM RT_ROT_FILA(LEN(txt) + 1) AS STRING
+    i = 1
+    DO WHILE i <= LEN(txt)
+        IF MID$(txt, i, 1) = "{" THEN
+            j = INSTR(i, txt, "}")
+            IF j = 0 THEN RT_LOG "roteiro: marca sem } na posicao" + STR$(i): EXIT DO
+            tk = MID$(txt, i + 1, j - i - 1)
+            i = j + 1
+            p = INSTR(tk, " ")
+            IF p THEN nome = UCASE$(LEFT$(tk, p - 1)): arg = MID$(tk, p + 1) ELSE nome = UCASE$(tk): arg = ""
+            t = RT_ROT_NOMEADA$(nome)
+            IF t <> "" AND arg = "" THEN
+                ' Esc e F1..F12 vao pelo controlador de teclado (disparam ON KEY), como no oraculo
+                IF nome = "ESC" OR (LEFT$(nome, 1) = "F" AND LEN(nome) >= 2 AND VAL(MID$(nome, 2)) >= 1) THEN t = CHR$(254) + t
+                RT_ROT_ADD t
+            ELSEIF nome = "HW" THEN
+                t = RT_ROT_NOMEADA$(UCASE$(LTRIM$(RTRIM$(arg))))
+                IF t = "" AND LEN(LTRIM$(RTRIM$(arg))) = 1 THEN t = LTRIM$(RTRIM$(arg))
+                IF t = "" THEN RT_LOG "roteiro: marca nao entendida {" + tk + "}" ELSE RT_ROT_ADD CHR$(254) + t
+            ELSEIF nome = "BIOS" THEN
+                t = RT_ROT_NOMEADA$(UCASE$(LTRIM$(RTRIM$(arg))))
+                IF t = "" THEN RT_LOG "roteiro: marca nao entendida {" + tk + "}" ELSE RT_ROT_ADD t
+            ELSEIF nome = "TELA" THEN
+                RT_ROT_ADD "{TELA " + arg + "}"
+            ELSEIF nome = "CTRL" AND LEN(arg) = 1 THEN
+                RT_ROT_ADD CHR$(ASC(UCASE$(arg)) - 64)
+            ELSEIF nome = "ALT" AND LEN(arg) = 1 THEN
+                RT_ROT_ADD CHR$(0) + CHR$(RT_SCAN(arg))
+            ELSEIF nome = "ESPERA" THEN
+                ' a leitura nao espera (a tecla e lida quando o programa pede); o RT_EVCK confere o texto
+                p = INSTR(arg, "|"): IF p THEN arg = LEFT$(arg, p - 1)
+                RT_ROT_ADD "{ESPERA " + arg + "}"
+            ELSEIF nome = "PAUSA" OR nome = "ESTAVEL" OR nome = "LIMITE" OR nome = "DISCO" THEN
+                ' so valem no oraculo (aqui a tecla e lida quando o programa pede)
+            ELSE
+                RT_LOG "roteiro: marca nao entendida {" + tk + "}"
+            END IF
+        ELSE
+            RT_ROT_ADD MID$(txt, i, 1)
+            i = i + 1
+        END IF
+    LOOP
+    RT_ROT_ATIVO = -1
+END SUB
+
+' Tecla nomeada do roteiro como o INKEY$ devolve; "" se o nome nao existe.
+FUNCTION RT_ROT_NOMEADA$ (nome AS STRING)
+    DIM n AS INTEGER
+    SELECT CASE nome
+        CASE "ENTER": RT_ROT_NOMEADA$ = CHR$(13)
+        CASE "ESC": RT_ROT_NOMEADA$ = CHR$(27)
+        CASE "BS": RT_ROT_NOMEADA$ = CHR$(8)
+        CASE "TAB": RT_ROT_NOMEADA$ = CHR$(9)
+        CASE "SPACE": RT_ROT_NOMEADA$ = " "
+        CASE "CHAVE": RT_ROT_NOMEADA$ = "{"
+        CASE "UP": RT_ROT_NOMEADA$ = CHR$(0) + CHR$(72)
+        CASE "DOWN": RT_ROT_NOMEADA$ = CHR$(0) + CHR$(80)
+        CASE "LEFT": RT_ROT_NOMEADA$ = CHR$(0) + CHR$(75)
+        CASE "RIGHT": RT_ROT_NOMEADA$ = CHR$(0) + CHR$(77)
+        CASE "HOME": RT_ROT_NOMEADA$ = CHR$(0) + CHR$(71)
+        CASE "END": RT_ROT_NOMEADA$ = CHR$(0) + CHR$(79)
+        CASE "PGUP": RT_ROT_NOMEADA$ = CHR$(0) + CHR$(73)
+        CASE "PGDN": RT_ROT_NOMEADA$ = CHR$(0) + CHR$(81)
+        CASE "INS": RT_ROT_NOMEADA$ = CHR$(0) + CHR$(82)
+        CASE "DEL": RT_ROT_NOMEADA$ = CHR$(0) + CHR$(83)
+        CASE "F11": RT_ROT_NOMEADA$ = CHR$(0) + CHR$(133)
+        CASE "F12": RT_ROT_NOMEADA$ = CHR$(0) + CHR$(134)
+        CASE ELSE
+            IF LEFT$(nome, 1) = "F" AND LEN(nome) >= 2 AND LEN(nome) <= 3 THEN
+                n = VAL(MID$(nome, 2))
+                IF n >= 1 AND n <= 10 AND MID$(nome, 2) = LTRIM$(STR$(n)) THEN RT_ROT_NOMEADA$ = CHR$(0) + CHR$(58 + n)
+            END IF
+    END SELECT
+END FUNCTION
+
+SUB RT_ROT_ADD (t AS STRING)
+    IF RT_ROT_N > UBOUND(RT_ROT_FILA) THEN REDIM _PRESERVE RT_ROT_FILA(RT_ROT_N + 100) AS STRING
+    RT_ROT_FILA(RT_ROT_N) = t
+    RT_ROT_N = RT_ROT_N + 1
+END SUB
+
+' Grava a tela como o oraculo: telas/NNN_nome.txt (25 linhas de 80 caracteres em CP437),
+' NNN_nome.realce.txt (so os caracteres com atributo diferente do mais comum, como o
+' oraculo) e, em modo grafico, NNN_nome.png (imagem opaca de 32 bits).
+SUB RT_GRAVA_TELA (nome AS STRING)
+    DIM arq AS STRING, f AS INTEGER, r AS INTEGER, c AS INTEGER, l AS STRING, rl AS STRING
+    DIM conta(255) AS LONG, comum AS INTEGER, img AS LONG
+    IF RT_SAIDA = "" THEN EXIT SUB
+    IF NOT _DIREXISTS(RT_SAIDA + "telas") THEN MKDIR RT_SAIDA + "telas"
+    arq = RT_SAIDA + "telas\" + RIGHT$("00" + LTRIM$(STR$(RT_TELA_N)), 3) + "_" + nome
+    IF RT_MODO <> 0 THEN
+        img = _NEWIMAGE(_WIDTH(0), _HEIGHT(0), 32)
+        _PUTIMAGE , 0, img
+        _SETALPHA 255, , img
+        _SAVEIMAGE arq + ".png", img
+        _FREEIMAGE img
+    END IF
+    f = FREEFILE
+    OPEN arq + ".txt" FOR OUTPUT AS #f
+    FOR r = 1 TO 25
+        l = ""
+        FOR c = 1 TO 80
+            IF RT_MODO = 0 THEN l = l + CHR$(SCREEN(r, c)): conta(SCREEN(r, c, 1)) = conta(SCREEN(r, c, 1)) + 1 ELSE l = l + " "
+        NEXT
+        PRINT #f, l
+    NEXT
+    CLOSE #f
+    IF RT_MODO <> 0 THEN EXIT SUB
+    FOR c = 1 TO 255
+        IF conta(c) > conta(comum) THEN comum = c
+    NEXT
+    OPEN arq + ".realce.txt" FOR OUTPUT AS #f
+    FOR r = 1 TO 25
+        rl = ""
+        FOR c = 1 TO 80
+            IF SCREEN(r, c, 1) <> comum THEN rl = rl + CHR$(SCREEN(r, c)) ELSE rl = rl + " "
+        NEXT
+        PRINT #f, RTRIM$(rl)
+    NEXT
+    CLOSE #f
+    ' atributo de cada celula em hexadecimal (formato de tests/retraducao/sistema/atr_oraculo.py)
+    OPEN arq + ".atr.txt" FOR OUTPUT AS #f
+    FOR r = 1 TO 25
+        rl = ""
+        FOR c = 1 TO 80
+            rl = rl + RIGHT$("0" + HEX$(SCREEN(r, c, 1)), 2)
+        NEXT
+        PRINT #f, rl
+    NEXT
+    CLOSE #f
+END SUB
+
+' ---------------------------------------------------------------- arquivos
+' Caminho de arquivo do original (DOS). Sem SISTRUT_C, fica como esta (relativo a pasta
+' corrente ou com a unidade do Windows). Com SISTRUT_C=<pasta>, "C:\..." vira "<pasta>\...":
+' assim a obra e os .INI de um teste ficam numa pasta qualquer sem mudar o programa.
+FUNCTION RT_ARQ$ (p AS STRING)
+    DIM raiz AS STRING, d AS STRING
+    IF RT_DISP_IMP%(p) THEN
+        IF RT_LPT_NOME = "" THEN RT_LPTABRE
+        RT_ARQ$ = RT_LPT_NOME: EXIT FUNCTION
+    END IF
+    IF RT_DISP_NUL%(p) THEN RT_ARQ$ = "NUL": EXIT FUNCTION
+    d = RT_ARQ_DOS$(p)
+    raiz = ENVIRON$("SISTRUT_C")
+    IF raiz <> "" AND UCASE$(LEFT$(d, 2)) = "C:" THEN
+        IF RIGHT$(raiz, 1) = "\" OR RIGHT$(raiz, 1) = "/" THEN raiz = LEFT$(raiz, LEN(raiz) - 1)
+        IF MID$(d, 3, 1) = "\" THEN RT_ARQ$ = raiz + MID$(d, 3) ELSE RT_ARQ$ = raiz + "\" + MID$(d, 3)
+    ELSE
+        RT_ARQ$ = d
+    END IF
+END FUNCTION
+
+' RUN prog$: como o CHAIN, mas sem COMMON (o RUN do QB4.5 apaga as variaveis).
+SUB RT_RUN (prog AS STRING)
+    DIM exe AS STRING, troca AS STRING, f AS INTEGER
+    exe = RT_ACHA_EXE(prog)
+    IF exe = "" THEN
+        ERROR 53
+        EXIT SUB
+    END IF
+    ' o arquivo de troca leva so o cabecalho (posicao do roteiro, numero de telas, tela):
+    ' o roteiro e um so; as variaveis nao passam (o RUN do QB4.5 apaga tudo)
+    troca = RT_TROCA_NOME$
+    f = FREEFILE
+    OPEN troca FOR BINARY AS #f
+    RT_TROCA_GRAVA_CAB f
+    CLOSE #f
+    RT_LPTQUEBRA 0
+    IF RT_LPT THEN CLOSE #RT_LPT: RT_LPT = 0
+    RT_LOG "RUN " + exe
+    SHELL _DONTWAIT CHR$(34) + exe + CHR$(34) + " /CHAIN:" + CHR$(34) + troca + CHR$(34)
+    SYSTEM
+END SUB
+
+' SHELL do original (ex.: "Acesso ao DOS" abre o interpretador de comandos).
+SUB RT_SHELL (cmd AS STRING)
+    IF RT_ROT_ATIVO THEN EXIT SUB
+    IF cmd = "" THEN SHELL ELSE SHELL cmd
+END SUB
+
+' FRE(n) numerico do BRUN45 (-1 = memoria livre fora do DGROUP, -2 = pilha): sem
+' equivalente; valor fixo.
+FUNCTION RT_FREN& (x AS LONG)
+    IF x = -2 THEN RT_FREN& = 1500 ELSE RT_FREN& = 300000
+END FUNCTION
+
+' Registro de depuracao (SISTRUT_LOG=arquivo): inicio, teclas pedidas, CHAIN e fim.
+SUB RT_LOG (msg AS STRING)
+    DIM f AS INTEGER, arq AS STRING
+    arq = ENVIRON$("SISTRUT_LOG")
+    IF arq = "" THEN EXIT SUB
+    f = FREEFILE
+    OPEN arq FOR APPEND AS #f
+    PRINT #f, TIME$; " "; RT_PROG; ": "; msg
+    CLOSE #f
+END SUB
+
+' CLEAR do QB4.5: fecha os arquivos e zera todas as variaveis do programa, inclusive o
+' COMMON. O CLEAR do QB64 apagaria tambem o estado deste RT45 (roteiro, impressora), que no
+' original fica no BRUN45; por isso as variaveis sao zeradas uma a uma (listas geradas).
+SUB RT_CLEAR
+    CLOSE
+    RT_LPT = 0
+    RT_COMMON_LIMPA
+    RT_PROG_LIMPA
+END SUB
+
+' FILES do QB4.5: linha com a pasta corrente da unidade (forma DOS), os arquivos no formato
+' NOME    .EXT (4 por linha, 18 colunas) e " n Bytes free". Com SISTRUT_C a pasta sai como
+' C:\...; o espaco livre vem de SISTRUT_LIVRE (o DOS nao passa de 2 GB; o DOSBox-X do
+' oraculo informa 2013265920).
+SUB RT_FILES (espec AS STRING)
+    DIM e AS STRING, dirdos AS STRING, raiz AS STRING, cwd AS STRING, nome AS STRING, k AS INTEGER
+    DIM pt AS INTEGER, n AS STRING, x AS STRING, livre AS STRING
+    e = espec
+    IF e = "" THEN e = "*.*"
+    raiz = ENVIRON$("SISTRUT_C")
+    cwd = _CWD$
+    dirdos = cwd
+    IF raiz <> "" THEN
+        IF RIGHT$(raiz, 1) = "\" THEN raiz = LEFT$(raiz, LEN(raiz) - 1)
+        IF UCASE$(LEFT$(cwd, LEN(raiz))) = UCASE$(raiz) THEN dirdos = "C:" + MID$(cwd, LEN(raiz) + 1)
+    END IF
+    ' o FILES do QB4.5 escreve o diretorio sem a barra final, menos na raiz (C:\)
+    IF RIGHT$(dirdos, 1) = "\" AND LEN(dirdos) > 3 THEN dirdos = LEFT$(dirdos, LEN(dirdos) - 1)
+    IF RIGHT$(dirdos, 1) = ":" THEN dirdos = dirdos + "\"
+    PRINT dirdos
+    RT_ARQ_CURINGA = -1: nome = _FILES$(RT_ARQ$(e)): RT_ARQ_CURINGA = 0
+    DO WHILE LEN(nome)
+        IF RIGHT$(nome, 1) <> "\" AND RIGHT$(nome, 1) <> "/" THEN
+            pt = INSTR(nome, ".")
+            IF pt THEN n = LEFT$(nome, pt - 1): x = MID$(nome, pt + 1) ELSE n = nome: x = ""
+            PRINT LEFT$(UCASE$(n) + SPACE$(8), 8) + "." + LEFT$(UCASE$(x) + SPACE$(3), 3);
+            k = k + 1
+            IF k MOD 4 = 0 THEN PRINT ELSE PRINT SPACE$(6);
+        END IF
+        nome = _FILES$
+    LOOP
+    IF k = 0 THEN
+        ERROR 53
+        EXIT SUB
+    END IF
+    IF k MOD 4 THEN PRINT
+    livre = ENVIRON$("SISTRUT_LIVRE")
+    IF livre = "" THEN livre = "2013265920"
+    PRINT " " + livre + " Bytes free"
+END SUB
+
+' ---------------------------------------------------------------- strings fixas
+' Atribuicao a string de comprimento fixo (B$ASSN): completa com espacos ou corta.
+FUNCTION RT_FIX$ (s AS STRING, n AS LONG)
+    IF LEN(s) >= n THEN RT_FIX$ = LEFT$(s, n) ELSE RT_FIX$ = s + SPACE$(n - LEN(s))
+END FUNCTION
+
+' Leitura de string fixa: o QB4.5 inicia o campo com zeros (CHR$(0)) ate a primeira atribuicao.
+FUNCTION RT_FIXL$ (s AS STRING, n AS LONG)
+    IF LEN(s) >= n THEN RT_FIXL$ = LEFT$(s, n) ELSE RT_FIXL$ = s + STRING$(n - LEN(s), 0)
+END FUNCTION
+
+' WIDTH LPRINT n (B$LWID): guarda a largura; a quebra automatica de linha da impressora
+' ainda nao e reproduzida (ver RETRADUCAO.md).
+SUB RT_LPTLARGURA (n AS INTEGER)
+    RT_LPTQUEBRA 0
+    RT_LPT_LARG = n
+END SUB
+
+' ---------------------------------------------------------------- relogio
+' DATE$, TIME$ e TIMER do original. Com SISTRUT_DATA="AAAA-MM-DD HH:MM:SS" o relogio comeca
+' nesse instante e anda com o tempo real, como o DOS do oraculo (ORACULO_DATA); assim obra e
+' impressora saem iguais byte a byte. O instante de partida real fica em SISTRUT_DATA_REF
+' (segundos desde 1970), herdado pelos programas do CHAIN/RUN. Sem SISTRUT_DATA, o relogio
+' do Windows.
+FUNCTION RT_AGORA# ()
+    ' segundos (desde 1970-01-01) do relogio real
+    DIM d AS STRING
+    d = DATE$
+    RT_AGORA# = RT_DIAS&(VAL(MID$(d, 7, 4)), VAL(LEFT$(d, 2)), VAL(MID$(d, 4, 2))) * 86400# + TIMER(0.001)
+END FUNCTION
+
+FUNCTION RT_DIAS& (a AS LONG, m AS LONG, d AS LONG)
+    ' dias desde 1970-01-01 (calendario gregoriano)
+    DIM y AS LONG, mm AS LONG
+    y = a: mm = m
+    IF mm <= 2 THEN y = y - 1: mm = mm + 12
+    RT_DIAS& = 365& * y + y \ 4 - y \ 100 + y \ 400 + (153& * (mm - 3) + 2) \ 5 + d - 719469
+END FUNCTION
+
+FUNCTION RT_RELOGIO# ()
+    ' segundos (desde 1970) do relogio do programa
+    DIM fixo AS STRING, ref AS STRING
+    fixo = ENVIRON$("SISTRUT_DATA")
+    IF fixo = "" THEN RT_RELOGIO# = RT_AGORA#: EXIT FUNCTION
+    ref = ENVIRON$("SISTRUT_DATA_REF")
+    IF ref = "" THEN ref = LTRIM$(STR$(INT(RT_AGORA#))): ENVIRON "SISTRUT_DATA_REF=" + ref
+    RT_RELOGIO# = RT_DIAS&(VAL(LEFT$(fixo, 4)), VAL(MID$(fixo, 6, 2)), VAL(MID$(fixo, 9, 2))) * 86400# + _
+        VAL(MID$(fixo, 12, 2)) * 3600# + VAL(MID$(fixo, 15, 2)) * 60# + VAL(MID$(fixo, 18, 2)) + (RT_AGORA# - VAL(ref))
+END FUNCTION
+
+' Relogio de DATE$/TIME$. SISTRUT_RELOGIO=congelado (padrao do roda_retrad.sh, como o
+' ORACULO_RELOGIO do oraculo): data e hora param em SISTRUT_DATA; o TIMER continua andando.
+' "anda" (ou vazio): data e hora andam com o tempo real a partir de SISTRUT_DATA.
+FUNCTION RT_RELOGIO_DH# ()
+    DIM fixo AS STRING
+    fixo = ENVIRON$("SISTRUT_DATA")
+    IF fixo <> "" AND LCASE$(ENVIRON$("SISTRUT_RELOGIO")) = "congelado" THEN
+        RT_RELOGIO_DH# = RT_DIAS&(VAL(LEFT$(fixo, 4)), VAL(MID$(fixo, 6, 2)), VAL(MID$(fixo, 9, 2))) * 86400# + _
+            VAL(MID$(fixo, 12, 2)) * 3600# + VAL(MID$(fixo, 15, 2)) * 60# + VAL(MID$(fixo, 18, 2))
+    ELSE
+        RT_RELOGIO_DH# = RT_RELOGIO#
+    END IF
+END FUNCTION
+
+FUNCTION RT_DATE$
+    DIM t AS DOUBLE, z AS LONG, era AS LONG, doe AS LONG, yoe AS LONG, y AS LONG, doy AS LONG, mp AS LONG, d AS LONG, m AS LONG
+    t = RT_RELOGIO_DH#
+    z = INT(t / 86400#) + 719468
+    era = z \ 146097
+    doe = z - era * 146097
+    yoe = (doe - doe \ 1460 + doe \ 36524 - doe \ 146096) \ 365
+    y = yoe + era * 400
+    doy = doe - (365 * yoe + yoe \ 4 - yoe \ 100)
+    mp = (5 * doy + 2) \ 153
+    d = doy - (153 * mp + 2) \ 5 + 1
+    IF mp < 10 THEN m = mp + 3 ELSE m = mp - 9
+    IF m <= 2 THEN y = y + 1
+    RT_DATE$ = RIGHT$("0" + LTRIM$(STR$(m)), 2) + "-" + RIGHT$("0" + LTRIM$(STR$(d)), 2) + "-" + LTRIM$(STR$(y))
+END FUNCTION
+
+FUNCTION RT_TIME$
+    DIM s AS LONG
+    DIM t AS DOUBLE
+    t = RT_RELOGIO_DH#
+    s = INT(t - INT(t / 86400#) * 86400#)
+    RT_TIME$ = RIGHT$("0" + LTRIM$(STR$(s \ 3600)), 2) + ":" + RIGHT$("0" + LTRIM$(STR$((s \ 60) MOD 60)), 2) + ":" + RIGHT$("0" + LTRIM$(STR$(s MOD 60)), 2)
+END FUNCTION
+
+FUNCTION RT_TIMER!
+    DIM t AS DOUBLE
+    IF ENVIRON$("SISTRUT_DATA") = "" THEN RT_TIMER! = TIMER: EXIT FUNCTION
+    t = RT_RELOGIO#
+    RT_TIMER! = t - INT(t / 86400#) * 86400#
+END FUNCTION
+
+' CLOSE sem numero do original: fecha os arquivos do programa. A LPT1 do LPRINT e um
+' dispositivo do BRUN45 e continua aberta: o arquivo da impressora (#255) fica aberto.
+SUB RT_CLOSE
+    DIM i AS INTEGER
+    FOR i = 1 TO 254
+        CLOSE #i
+    NEXT
+END SUB
+
+' SPC(n) na tela: o QB4.5 escreve os n espacos na cor corrente e continua na linha seguinte
+' quando passa do fim da linha (VIGA 0x28b8b); o SPC do QB64 nao. Escreve o que cabe na linha
+' e devolve o resto.
+FUNCTION RT_SPC$ (n AS INTEGER)
+    DIM w AS INTEGER, r AS INTEGER, k AS INTEGER
+    IF RT_MODO = 0 THEN w = _WIDTH ELSE w = _WIDTH \ 8
+    k = n MOD w   ' o BRUN45 reduz n modulo a largura (sonda T15: SPC(90) = 10 espacos)
+    r = w - POS(0) + 1
+    DO WHILE k > r AND r > 0
+        PRINT SPACE$(r);
+        k = k - r
+        r = w
+    LOOP
+    RT_SPC$ = SPACE$(k)
+END FUNCTION
+
+' Erro de execucao sem ON ERROR do programa (o tradutor liga ON ERROR GOTO RT_ERRO_FATAL no
+' inicio). O BRUN45 escreve a mensagem e volta ao DOS; o QB64 abriria uma janela parada.
+' Grava no log (com a linha do .BAS) e termina; sem roteiro, espera uma tecla antes.
+SUB RT_ERRO_SEM_TRATADOR
+    DIM e AS INTEGER, l AS LONG
+    e = ERR: l = _ERRORLINE
+    RT_LOG "erro" + STR$(e) + " sem tratador na linha" + STR$(l) + " do .BAS"
+    IF RT_MODO <> 0 THEN SCREEN 0
+    PRINT
+    PRINT "Erro"; e; "(linha"; l; "do .BAS retraduzido)"
+    IF RT_ROT_ATIVO = 0 THEN PRINT "Tecle algo para voltar ao sistema": SLEEP
+    RT_FIM
+END SUB
+
+' Laco "L: GOTO L" do original, que so o ON KEY interrompe (tela de erro do LAJEMONT 0x13304,
+' "Acione <ESC> para Continuar"). Com roteiro, pega a tecla seguinte: tecla presa marca o
+' RT_EVENTO (o tradutor poe o desvio do ON KEY logo depois); as outras ficariam no buffer do
+' teclado do DOS e aqui sao descartadas (vai para o log). Sem roteiro, so cede a CPU.
+SUB RT_ESPERA_EVENTO
+    DIM t AS STRING
+    IF RT_ROT_ATIVO = 0 THEN _LIMIT 100: EXIT SUB
+    t = RT_ROT_TECLA$
+    IF RT_TECLA_PRESA(t) = 0 THEN RT_LOG "tecla descartada num laco sem leitura"
+END SUB
+
+' Formato de PRINT USING a partir do campo k + 1 (k campos ja usados; volta ao primeiro depois
+' do ultimo). Para o PRINT USING que o lift partiu em dois (VIGA 0x2a4bc/0x2a5a8): o QB64 ja
+' escreveu o texto fixo que segue o campo k no PRINT terminado em ";".
+FUNCTION RT_USING_RESTO$ (fmt AS STRING, k AS INTEGER)
+    DIM i AS INTEGER, j AS INTEGER, c AS STRING, n AS INTEGER, ini(1 TO 40) AS INTEGER
+    i = 1
+    DO WHILE i <= LEN(fmt)
+        c = MID$(fmt, i, 1)
+        IF c = "_" THEN
+            i = i + 2
+        ELSEIF c = "!" OR c = "&" THEN
+            IF n < 40 THEN n = n + 1: ini(n) = i
+            i = i + 1
+        ELSEIF c = "\" THEN
+            j = INSTR(i + 1, fmt, "\")
+            IF j = 0 THEN j = i
+            IF n < 40 THEN n = n + 1: ini(n) = i
+            i = j + 1
+        ELSEIF c = "#" OR (c = "." AND MID$(fmt, i + 1, 1) = "#") OR (c = "+" AND MID$(fmt, i + 1, 1) = "#") OR MID$(fmt, i, 2) = "**" OR MID$(fmt, i, 2) = "$$" THEN
+            IF n < 40 THEN n = n + 1: ini(n) = i
+            DO WHILE i <= LEN(fmt)
+                c = MID$(fmt, i, 1)
+                IF c = "#" OR c = "." OR c = "," OR c = "*" OR c = "$" OR c = "+" THEN
+                    i = i + 1
+                ELSEIF MID$(fmt, i, 4) = "^^^^" THEN
+                    i = i + 4
+                ELSEIF c = "-" THEN
+                    i = i + 1: EXIT DO
+                ELSE
+                    EXIT DO
+                END IF
+            LOOP
+        ELSE
+            i = i + 1
+        END IF
+    LOOP
+    IF n = 0 THEN RT_USING_RESTO$ = fmt: EXIT FUNCTION
+    RT_USING_RESTO$ = MID$(fmt, ini((k MOD n) + 1))
+END FUNCTION
+
+' ---------------------------------------------------------------- LPRINT pela coluna da LPT1
+' LPRINT sem USING: cada item passa por aqui (o tradutor emite RT_LPS/RT_LPTAB/RT_LPSPC/
+' RT_LPVIRG/RT_LPFIM). A coluna e a da LPT1 do BRUN45 (RT_LPT_COL): so caracteres >= 32 andam,
+' CR volta a 0, BS volta uma (FF e ESC nao andam: DESENHO D7). Item que nao cabe na linha
+' comeca na seguinte (VIGA R3: ESC N 6 e 79 tracos); ao chegar na largura, CR LF (LAJE P9).
+SUB RT_LPESCREVE (o AS STRING)
+    IF LEN(o) = 0 THEN EXIT SUB
+    PRINT #RT_LPT, o;
+    RT_LPT_POS = RT_LPT_POS + LEN(o)
+END SUB
+
+FUNCTION RT_LPLARG%
+    IF RT_LPT_LARG = 0 THEN RT_LPLARG% = 80 ELSE RT_LPLARG% = RT_LPT_LARG
+END FUNCTION
+
+' Escreve s contando a coluna e quebrando na largura.
+SUB RT_LPCONTA (s AS STRING)
+    DIM i AS LONG, c AS INTEGER, o AS STRING, larg AS INTEGER
+    larg = RT_LPLARG
+    FOR i = 1 TO LEN(s)
+        c = ASC(s, i)
+        o = o + CHR$(c)
+        IF c = 13 THEN
+            RT_LPT_COL = 0
+        ELSEIF c = 8 THEN
+            IF RT_LPT_COL > 0 THEN RT_LPT_COL = RT_LPT_COL - 1
+        ELSEIF c >= 32 THEN
+            RT_LPT_COL = RT_LPT_COL + 1
+            IF larg < 255 AND RT_LPT_COL >= larg THEN o = o + CHR$(13) + CHR$(10): RT_LPT_COL = 0
+        END IF
+    NEXT
+    RT_LPESCREVE o
+END SUB
+
+SUB RT_LPS (s AS STRING)
+    DIM larg AS INTEGER
+    larg = RT_LPLARG
+    IF larg < 255 AND RT_LPT_COL > 0 AND RT_LPT_COL + LEN(s) > larg THEN RT_LPESCREVE CHR$(13) + CHR$(10): RT_LPT_COL = 0
+    RT_LPCONTA s
+END SUB
+
+SUB RT_LPTAB (n AS INTEGER)
+    DIM alvo AS INTEGER
+    alvo = n - 1
+    IF alvo < 0 THEN alvo = 0
+    IF RT_LPT_COL > alvo THEN RT_LPESCREVE CHR$(13) + CHR$(10): RT_LPT_COL = 0
+    RT_LPCONTA SPACE$(alvo - RT_LPT_COL)
+END SUB
+
+SUB RT_LPSPC (n AS INTEGER)
+    IF n > 0 THEN RT_LPCONTA SPACE$(n MOD RT_LPLARG)
+END SUB
+
+SUB RT_LPVIRG
+    DIM alvo AS INTEGER
+    alvo = (RT_LPT_COL \ 14 + 1) * 14
+    IF alvo > RT_LPLARG - 14 THEN   ' zona que nao cabe inteira: linha seguinte (como RT_VIRG$)
+        RT_LPESCREVE CHR$(13) + CHR$(10): RT_LPT_COL = 0
+    ELSE
+        RT_LPCONTA SPACE$(alvo - RT_LPT_COL)
+    END IF
+END SUB
+
+SUB RT_LPFIM
+    RT_LPESCREVE CHR$(13) + CHR$(10)
+    RT_LPT_COL = 0
+END SUB
+
+' SQR de negativo: o x87 (com as excecoes mascaradas, como no oraculo) devolve NaN sem erro;
+' o SQR do QB64 da erro 5 (PILAR P12, PILAREDI 0x4aa1e: poligonal no sentido anti-horario).
+FUNCTION RT_SQR## (x AS _FLOAT)
+    DIM z AS _FLOAT
+    IF x < 0 THEN RT_SQR## = z / z ELSE RT_SQR## = rt45_fsqrt##(x)
+END FUNCTION
+
+' CINT/CLNG de NaN: o FISTP do x87 grava o "inteiro indefinido" (8000h / 80000000h) sem erro;
+' o QB64 da erro 6. So para expressoes com RT_SQR##.
+FUNCTION RT_CINT% (x AS _FLOAT)
+    ' FISTP do x87: arredonda ao par; NaN ou fora da faixa = 8000h, sem erro (sondas T17, T19)
+    IF x <> x OR x >= 32767.5 OR x < -32768.5 THEN RT_CINT% = -32768 ELSE RT_CINT% = CINT(x)
+END FUNCTION
+
+FUNCTION RT_CLNG& (x AS _FLOAT)
+    IF x <> x OR x >= 2147483647.5## OR x < -2147483648.5## THEN RT_CLNG& = -2147483648 ELSE RT_CLNG& = CLNG(x)
+END FUNCTION
+
+' TAB(n) na tela com o cursor depois da coluna n: o QB4.5 vai para a coluna n da linha seguinte
+' e so rola se ja estava na ultima linha da janela (VIEW PRINT); o QB64 rolava a tela com o
+' cursor na coluna 80 (FORMPLOT 0x11392, FORMA R1).
+FUNCTION RT_TAB$ (n AS INTEGER)
+    DIM w AS INTEGER, fim AS INTEGER, c AS INTEGER
+    IF RT_MODO = 0 THEN w = _WIDTH ELSE w = _WIDTH \ 8
+    c = n
+    IF c < 1 THEN c = 1
+    IF c > w THEN c = ((c - 1) MOD w) + 1
+    IF POS(0) <= c THEN RT_TAB$ = SPACE$(c - POS(0)): EXIT FUNCTION
+    fim = RT_VP2
+    IF RT_VP1 = 0 THEN fim = 24   ' sem VIEW PRINT a janela e 1..24; a linha 25 fica fora (sonda T15)
+    IF CSRLIN < fim THEN LOCATE CSRLIN + 1, c ELSE PRINT: LOCATE , c
+    RT_TAB$ = ""
+END FUNCTION
+
+' Nome de arquivo pelas regras do DOS (FORMA R3; sonda T14 no oraculo): nome com mais de 8
+' caracteres, nome vazio antes do ponto (".FRM"), mais de um ponto ou caractere que o DOS
+' recusa (" + , ; < = > [ ] | e controles) dao erro 64; extensao com mais de 3 e cortada; o
+' espaco some ("A B.TXT" grava AB.TXT); nome vazio da erro 52. Curingas passam (o FILES usa).
+FUNCTION RT_ARQ_DOS$ (p AS STRING)
+    ' depois de um erro devolve "?", que o Windows recusa: com RESUME NEXT no tratador do
+    ' programa o OPEN tambem falha e o comando todo fica sem efeito, como no original
+    DIM i AS INTEGER, ini AS INTEGER, parte AS STRING, r AS STRING, c AS STRING, q AS INTEGER, ruim AS INTEGER
+    DIM nivel AS INTEGER, e AS INTEGER
+    RT_ARQ_DOS$ = "?"
+    IF p = "" THEN
+        ERROR 52
+        EXIT FUNCTION
+    END IF
+    ini = 1
+    IF MID$(p, 2, 1) = ":" THEN r = LEFT$(p, 2): ini = 3
+    IF MID$(p, ini, 1) = "\" OR MID$(p, ini, 1) = "/" THEN nivel = 0 ELSE nivel = 99
+    FOR i = ini TO LEN(p) + 1
+        c = MID$(p, i, 1)
+        IF c = "\" OR c = "/" OR i > LEN(p) THEN
+            IF parte = ".." THEN
+                nivel = nivel - 1
+                IF nivel < 0 THEN e = 64
+            ELSEIF parte <> "" AND parte <> "." THEN
+                nivel = nivel + 1
+                q = INSTR(parte, ".")
+                ruim = (q = 1) OR (q > 0 AND INSTR(q + 1, parte, ".") > 0)
+                IF q THEN ruim = ruim OR q - 1 > 8 ELSE ruim = LEN(parte) > 8
+                IF ruim THEN e = 64
+                IF q THEN parte = LEFT$(parte, q) + LEFT$(MID$(parte, q + 1), 3)
+                IF RIGHT$(parte, 1) = "." THEN parte = LEFT$(parte, LEN(parte) - 1)
+            END IF
+            r = r + parte
+            IF i <= LEN(p) THEN r = r + c
+            parte = ""
+        ELSEIF c <> " " THEN
+            IF INSTR(CHR$(34) + "+,;<=>[]|", c) > 0 OR ASC(c) < 32 THEN e = 64
+            IF (c = "*" OR c = "?") AND RT_ARQ_CURINGA = 0 THEN e = 64
+            parte = parte + c
+        END IF
+        IF e THEN
+            ERROR e
+            EXIT FUNCTION
+        END IF
+    NEXT
+    RT_ARQ_DOS$ = r
+END FUNCTION
+
+' Dispositivos do DOS no OPEN (VIGA R9: OPEN "LPT1:" do VPCAD). Impressora (PRN, LPT1..3,
+' com ou sem ":") = o arquivo da impressora do RT45, em acrescimo, depois do que o LPRINT ja
+' mandou; COM1..4, AUX e NUL = NUL do Windows (o que se grava some).
+FUNCTION RT_DISP_IMP% (p AS STRING)
+    DIM u AS STRING
+    u = UCASE$(LTRIM$(RTRIM$(p)))
+    IF RIGHT$(u, 1) = ":" THEN u = LEFT$(u, LEN(u) - 1)
+    RT_DISP_IMP% = (u = "PRN" OR u = "LPT1" OR u = "LPT2" OR u = "LPT3")
+END FUNCTION
+
+FUNCTION RT_DISP_NUL% (p AS STRING)
+    DIM u AS STRING
+    u = UCASE$(LTRIM$(RTRIM$(p)))
+    IF RIGHT$(u, 1) = ":" THEN u = LEFT$(u, LEN(u) - 1)
+    RT_DISP_NUL% = (u = "NUL" OR u = "AUX" OR LEFT$(u, 3) = "COM" AND LEN(u) = 4)
+END FUNCTION
+
+' OPEN ... FOR OUTPUT de dispositivo: a impressora do LPRINT fecha (com as quebras de linha
+' acertadas) e o OPEN vai em acrescimo no mesmo arquivo; o proximo LPRINT reabre.
+FUNCTION RT_DISP% (p AS STRING)
+    IF RT_DISP_IMP%(p) THEN
+        RT_LPTABRE
+        RT_LPTQUEBRA 0
+        CLOSE #RT_LPT: RT_LPT = 0
+        RT_DISP% = -1
+    ELSEIF RT_DISP_NUL%(p) THEN
+        RT_DISP% = -1
+    END IF
+END FUNCTION
+
+' STR$/PRINT de DOUBLE como o B$STR8 do QB4.5 (VPLOTA R10; sondas T11/T12 no oraculo): 16
+' algarismos significativos, sem os zeros a direita; espaco ou "-" na frente, sem o 0 antes do
+' ponto; notacao fixa se couber em 16 algarismos inteiros ou 16 casas decimais, senao
+' mantissa + "D" + expoente com sinal e 2 algarismos (1D+16, 1.2345678901234D-05).
+FUNCTION RT_STR8$ (x AS DOUBLE)
+    DIM t AS STRING, m AS STRING, e AS INTEGER, p AS INTEGER, q AS INTEGER, sinal AS STRING, r AS STRING
+    IF x = 0 THEN RT_STR8$ = " 0": EXIT FUNCTION
+    ' infinito e NaN como o BRUN45 (sonda T17: 1.#INF, -1.#INF, -1.#IND)
+    IF x <> x THEN RT_STR8$ = "-1.#IND": EXIT FUNCTION
+    IF x > 1.7976931348623157D+308 THEN RT_STR8$ = " 1.#INF": EXIT FUNCTION
+    IF x < -1.7976931348623157D+308 THEN RT_STR8$ = "-1.#INF": EXIT FUNCTION
+    IF x < 0 THEN sinal = "-" ELSE sinal = " "
+    t = UCASE$(_TOSTR$(ABS(x), 16))
+    ' t: "ddd.ddd", ".ddd", "d.dddE+xx" ou "d.dddD-xx": algarismos em m, ponto decimal em e
+    q = INSTR(t, "E"): IF q = 0 THEN q = INSTR(t, "D")
+    IF q THEN e = VAL(MID$(t, q + 1)): t = LEFT$(t, q - 1) ELSE e = 0
+    p = INSTR(t, ".")
+    IF p = 0 THEN p = LEN(t) + 1 ELSE t = LEFT$(t, p - 1) + MID$(t, p + 1)
+    e = e + p - 1   ' algarismos antes do ponto
+    DO WHILE LEFT$(t, 1) = "0" AND LEN(t) > 1: t = MID$(t, 2): e = e - 1: LOOP
+    m = t
+    IF LEN(m) > 16 THEN m = LEFT$(m, 16)
+    DO WHILE RIGHT$(m, 1) = "0" AND LEN(m) > 1: m = LEFT$(m, LEN(m) - 1): LOOP
+    IF e >= 1 AND e <= 16 THEN
+        IF LEN(m) <= e THEN r = m + STRING$(e - LEN(m), "0") ELSE r = LEFT$(m, e) + "." + MID$(m, e + 1)
+    ELSEIF e <= 0 AND LEN(m) - e <= 16 THEN
+        r = "." + STRING$(-e, "0") + m
+    ELSE
+        r = LEFT$(m, 1)
+        IF LEN(m) > 1 THEN r = r + "." + MID$(m, 2)
+        q = e - 1
+        r = r + "D" + MID$("+-", 1 - (q < 0), 1) + RIGHT$("0" + LTRIM$(STR$(ABS(q))), 2)
+    END IF
+    RT_STR8$ = sinal + r
+END FUNCTION
+
+' Funcoes de texto com os erros do QB4.5 (VIGA R11; sonda T11): comprimento ou contagem
+' negativos e inicio menor que 1 dao erro 5 (o QB64 aceita).
+FUNCTION RT_MID$ (s AS STRING, p AS LONG, n AS LONG)
+    IF p < 1 OR n < 0 THEN
+        ERROR 5
+        EXIT FUNCTION
+    END IF
+    RT_MID$ = MID$(s, p, n)
+END FUNCTION
+
+FUNCTION RT_MID2$ (s AS STRING, p AS LONG)
+    IF p < 1 THEN
+        ERROR 5
+        EXIT FUNCTION
+    END IF
+    RT_MID2$ = MID$(s, p)
+END FUNCTION
+
+FUNCTION RT_LEFT$ (s AS STRING, n AS LONG)
+    IF n < 0 THEN
+        ERROR 5
+        EXIT FUNCTION
+    END IF
+    RT_LEFT$ = LEFT$(s, n)
+END FUNCTION
+
+FUNCTION RT_RIGHT$ (s AS STRING, n AS LONG)
+    IF n < 0 THEN
+        ERROR 5
+        EXIT FUNCTION
+    END IF
+    RT_RIGHT$ = RIGHT$(s, n)
+END FUNCTION
+
+FUNCTION RT_SPACE$ (n AS LONG)
+    IF n < 0 THEN
+        ERROR 5
+        EXIT FUNCTION
+    END IF
+    RT_SPACE$ = SPACE$(n)
+END FUNCTION
+
+FUNCTION RT_STRINGC$ (n AS LONG, c AS LONG)
+    IF n < 0 THEN
+        ERROR 5
+        EXIT FUNCTION
+    END IF
+    RT_STRINGC$ = STRING$(n, c AND 255)
+END FUNCTION
+
+FUNCTION RT_STRINGS$ (n AS LONG, c AS STRING)
+    IF n < 0 OR LEN(c) = 0 THEN
+        ERROR 5
+        EXIT FUNCTION
+    END IF
+    RT_STRINGS$ = STRING$(n, c)
+END FUNCTION
+
+FUNCTION RT_INSTR% (p AS LONG, a AS STRING, b AS STRING)
+    IF p < 1 THEN
+        ERROR 5
+        EXIT FUNCTION
+    END IF
+    RT_INSTR% = INSTR(p, a, b)
+END FUNCTION
+
+' Comando MID$(v$, p[, n]) = x: o mesmo erro 5 (n = 0 quando o comando nao tem comprimento).
+SUB RT_MIDCHK (p AS LONG, n AS LONG)
+    IF p < 1 OR n < 0 THEN ERROR 5
+END SUB
+
+' Divisao inteira e MOD: divisor zero da erro 11 no QB4.5; o QB64 trava o programa na divisao e
+' tambem no ERROR 11 (sonda T23Q), entao o RT45 levanta o erro 6, que o ON ERROR pega.
+' Resultado fora da faixa (-32768 \ -1) da a volta, como a aritmetica inteira do BC (T19).
+FUNCTION RT_IDIVI% (a AS INTEGER, b AS INTEGER)
+    IF b = 0 THEN
+        ERROR 6
+        EXIT FUNCTION
+    END IF
+    RT_IDIVI% = (CLNG(a) \ b) AND &HFFFF&
+END FUNCTION
+
+FUNCTION RT_IDIVL& (a AS LONG, b AS LONG)
+    IF b = 0 THEN
+        ERROR 6
+        EXIT FUNCTION
+    END IF
+    RT_IDIVL& = a \ b
+END FUNCTION
+
+FUNCTION RT_IMODI% (a AS INTEGER, b AS INTEGER)
+    IF b = 0 THEN
+        ERROR 6
+        EXIT FUNCTION
+    END IF
+    RT_IMODI% = a MOD b
+END FUNCTION
+
+FUNCTION RT_IMODL& (a AS LONG, b AS LONG)
+    IF b = 0 THEN
+        ERROR 6
+        EXIT FUNCTION
+    END IF
+    RT_IMODL& = a MOD b
+END FUNCTION
+
+' Potencia a ^ b: a rotina do BRUN45 (B$POW4 e B$POW8 sao o mesmo codigo, 0E7B:065D -> 0B75 ->
+' 0E07 -> 0EC4) calcula por logaritmo, sem caso especial para expoente inteiro, em 64 bits de
+' mantissa e arredondamento ao par: FYL2X; |t| >= 32767,5 da 0 (t < 0) ou erro 6; FRNDINT; f = t - n;
+' F2XM1 + 1; 1 / p se f < 0; FSCALE; base negativa so com expoente inteiro (erro 5), FCHS se impar;
+' expoente 0 da 1; base 0 da +0 ou erro 5; NaN/infinito, erro 5. O resultado fica em estendido.
+' A conta inteira esta em rt45_pot (RT45X87.h), com o modelo fixo do FYL2X e do F2XM1 que a V2 usa
+' (docs/RETRADUCAO.md, regra 9). Ex.: x ^ 2 nao e x * x, e x - SQR(x ^ 2) nao da 0 (LAJECALC
+' 0x14317: laje em balanco com As minimo 1,50 em vez de -1,00).
+FUNCTION RT_POT## (a AS _FLOAT, b AS _FLOAT)
+    DIM r AS _FLOAT
+    r = rt45_pot##(a, b)
+    SELECT CASE rt45_pot_erro%
+        CASE 5: ERROR 5: EXIT FUNCTION
+        CASE 6: ERROR 6: EXIT FUNCTION
+    END SELECT
+    RT_POT## = r
+END FUNCTION
+
+' SIN/COS/TAN: argumento com |x| >= 2^31 da erro 5 no BRUN45 (sonda T19: 2,147E9 calcula,
+' 2,2E9 da erro); o QB64 calcula.
+FUNCTION RT_SIN## (x AS _FLOAT)
+    IF ABS(x) >= 2147483648## THEN
+        ERROR 5
+        EXIT FUNCTION
+    END IF
+    RT_SIN## = SIN(x)
+END FUNCTION
+
+FUNCTION RT_COS## (x AS _FLOAT)
+    IF ABS(x) >= 2147483648## THEN
+        ERROR 5
+        EXIT FUNCTION
+    END IF
+    RT_COS## = COS(x)
+END FUNCTION
+
+FUNCTION RT_TAN## (x AS _FLOAT)
+    IF ABS(x) >= 2147483648## THEN
+        ERROR 5
+        EXIT FUNCTION
+    END IF
+    RT_TAN## = TAN(x)
+END FUNCTION
+
+' Virgula no PRINT da tela: zonas de 14 colunas; a zona que nao cabe inteira na linha (71) vai para a
+' linha seguinte (sonda T15: "A" na coluna 60 da linha 25, "B" vai para a linha seguinte);
+' o QB64 punha o item na coluna 71.
+FUNCTION RT_VIRG$
+    DIM w AS INTEGER, c AS INTEGER
+    IF RT_MODO = 0 THEN w = _WIDTH ELSE w = _WIDTH \ 8
+    DIM z AS INTEGER
+    c = POS(0)
+    z = ((c - 1) \ 14 + 1) * 14 + 1   ' inicio da zona seguinte; zona que nao cabe inteira = linha seguinte
+    IF z > w - 13 THEN PRINT: RT_VIRG$ = "": EXIT FUNCTION
+    RT_VIRG$ = SPACE$(z - c)
+END FUNCTION
+
+' CLS do original (n = -1: sem argumento). Em modo grafico, CLS, CLS 0 e CLS 1 poem o ultimo
+' ponto no centro da area do VIEW, como o BRUN45 (G4; sonda T16); CLS 2 nao mexe nele.
+SUB RT_CLS (n AS INTEGER)
+    IF n = -1 THEN CLS ELSE CLS n
+    IF RT_MODO <> 0 AND n <> 2 THEN RG_CLS
+END SUB
+
+' EXP: o x87 calcula em precisao estendida e o resultado so vira infinito ao ser gravado num
+' DOUBLE/SINGLE, sem erro (sonda T17: EXP(1000) = 1.#INF); o EXP do QB64 da erro 6 acima de ~709.
+FUNCTION RT_EXP## (x AS _FLOAT)
+    IF x < 700 THEN RT_EXP## = EXP(x) ELSE RT_EXP## = 2.718281828459045235360287471352662## ^ x
+END FUNCTION

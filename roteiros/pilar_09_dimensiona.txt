@@ -1,0 +1,5 @@
+# exe: PILAR
+# PILAREDI opcao S (Dimensiona), obra FLUXO, coluna 1 (P4 20x30), INI padrao em tf/cm2 (grandeza 1), N do TERREO = 100 tf (ajustado no .dados)
+# {BS} apaga o padrao (1) do campo numerico do nivel; sem ele o campo vira "11" e o nivel e ignorado.
+# Depois N (detalhe) do nivel 1. Compara com pilar_10_dimensiona_mpa.txt: INI em MPa (grandeza 0,01); resultados devem ser iguais
+{TELA p09_abertura}{ENTER}{TELA p09_obra}8{TELA p09_obra2}{ENTER}S{TELA p09_pos}1{ENTER}{TELA p09_dim}N{TELA p09_detpos}{BS}1{ENTER}{TELA p09_det}{ENTER}{TELA p09_volta}{ESC}{TELA p09_fim}{F2}{F2}

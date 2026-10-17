@@ -1,0 +1,5 @@
+# exe: FORMINIT
+# FORMINIT com a obra sem FLUXO.LAJ: o carregamento falha e a mensagem longa
+# (caminho completo) passa por FalhaProcessa, que deve quebrar em linhas.
+# Espera ESC no fim do aviso; saida esperada 0.
+{TELA falha}{ESC}

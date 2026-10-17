@@ -1,0 +1,9 @@
+' Rotinas que o tradutor gera por programa e que o RT45.BM chama (vazias no teste).
+SUB RT_PROG_LIMPA
+END SUB
+SUB RT_COMMON_LIMPA
+END SUB
+SUB RT_COMMON_LE (f AS INTEGER)
+END SUB
+SUB RT_COMMON_GRAVA (f AS INTEGER)
+END SUB

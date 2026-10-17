@@ -1,0 +1,197 @@
+' ============================================================================
+'  SISTELA.BM - janela ampliada (ver SISTELA.BI)
+' ============================================================================
+
+' Amplia a janela para ~90% da largura / 85% da altura da area util do
+' monitor onde ela esta (sem a barra de tarefas), centrada,
+' mantendo a proporcao da tela (escala inteira a partir de 2x, para o texto
+' ficar nitido). Chamada nos lacos de espera de tecla: so age quando a tela
+' muda de modo (SCREEN 0 <-> 12) ou quando a janela voltou ao tamanho natural;
+' um redimensionamento feito pelo usuario e respeitado.
+SUB TelaEscala
+    DIM hwnd AS _OFFSET, cr AS TelaRect, wr AS TelaRect, mi AS TelaMonInfo, r AS LONG, ml AS LONG, ma AS LONG
+    DIM nl AS LONG, na AS LONG, s AS DOUBLE, cl AS LONG, ca AS LONG, x AS LONG, y AS LONG
+    IF NOT _SCREENEXISTS THEN EXIT SUB
+    hwnd = _WINDOWHANDLE
+    IF hwnd = 0 THEN EXIT SUB
+    IF _PIXELSIZE(0) = 0 THEN
+        nl = _WIDTH(0) * _FONTWIDTH: na = _HEIGHT(0) * _FONTHEIGHT
+    ELSE
+        nl = _WIDTH(0): na = _HEIGHT(0)
+    END IF
+    IF nl <= 0 OR na <= 0 THEN EXIT SUB
+    ' _DESKTOPWIDTH nao e confiavel com escala de DPI; usa a area util do monitor
+    mi.tam = LEN(mi)
+    IF TelaGetMonitorInfo(TelaMonitorFromWindow(hwnd, 2), _OFFSET(mi)) = 0 THEN EXIT SUB
+    ml = mi.wx2 - mi.wx1: ma = mi.wy2 - mi.wy1
+    s = 0.9# * ml / nl
+    IF 0.85# * ma / na < s THEN s = 0.85# * ma / na
+    IF s >= 2 THEN s = INT(s)
+    IF s <= 1.05# THEN EXIT SUB
+    IF TelaGetClientRect(hwnd, _OFFSET(cr)) = 0 THEN EXIT SUB
+    cl = cr.x2 - cr.x1: ca = cr.y2 - cr.y1
+    IF nl = TelaNatL AND na = TelaNatA AND (cl <> nl OR ca <> na) THEN EXIT SUB
+    IF TelaGetWindowRect(hwnd, _OFFSET(wr)) = 0 THEN EXIT SUB
+    cl = CLNG(nl * s) + (wr.x2 - wr.x1) - cl
+    ca = CLNG(na * s) + (wr.y2 - wr.y1) - ca
+    x = mi.wx1 + (ml - cl) \ 2: IF x < mi.wx1 THEN x = mi.wx1
+    y = mi.wy1 + (ma - ca) \ 2: IF y < mi.wy1 THEN y = mi.wy1
+    r = TelaSetWindowPos(hwnd, 0, x, y, cl, ca, &H14) ' SWP_NOZORDER + SWP_NOACTIVATE
+    TelaNatL = nl: TelaNatA = na
+END SUB
+
+' Proxima tecla sem esperar ("" se nao ha), como INKEY$. Amplia a janela
+' (TelaEscala). No modo roteiro devolve sempre a proxima tecla do roteiro.
+FUNCTION TelaTecla$ ()
+    IF TelaRot$ <> "" THEN
+        TelaTecla$ = TelaRotProxima$
+    ELSE
+        TelaEscala
+        TelaTecla$ = INKEY$
+    END IF
+END FUNCTION
+
+' Le uma linha com eco na posicao do cursor (substitui LINE INPUT, que nao
+' passa por TelaTecla$). Enter confirma; Backspace apaga.
+FUNCTION TelaLinha$ ()
+    DIM s$, k$
+    DO
+        _LIMIT 30
+        k$ = TelaTecla$
+        IF k$ = CHR$(13) THEN
+            PRINT
+            TelaLinha$ = s$
+            EXIT FUNCTION
+        ELSEIF k$ = CHR$(8) THEN
+            IF LEN(s$) > 0 THEN
+                s$ = LEFT$(s$, LEN(s$) - 1)
+                LOCATE , POS(0) - 1: PRINT " ";: LOCATE , POS(0) - 1
+            END IF
+        ELSEIF LEN(k$) = 1 AND k$ >= " " THEN
+            s$ = s$ + k$: PRINT k$;
+        END IF
+    LOOP
+END FUNCTION
+
+' Nome do executavel sem pasta nem extensao (para log e nomes de arquivo).
+FUNCTION TelaRotExe$ ()
+    DIM s$, i%
+    s$ = COMMAND$(0)
+    FOR i% = LEN(s$) TO 1 STEP -1
+        IF MID$(s$, i%, 1) = "\" OR MID$(s$, i%, 1) = "/" THEN s$ = MID$(s$, i% + 1): EXIT FOR
+    NEXT
+    i% = INSTR(UCASE$(s$), ".EXE")
+    IF i% > 0 THEN s$ = LEFT$(s$, i% - 1)
+    TelaRotExe$ = UCASE$(s$)
+END FUNCTION
+
+' Acrescenta uma linha "<EXE>: texto" em <roteiro>.log.
+SUB TelaRotLog (t$)
+    DIM f%
+    f% = FREEFILE
+    OPEN TelaRot$ + ".log" FOR APPEND AS #f%
+    PRINT #f%, TelaRotExe$ + ": " + t$
+    CLOSE #f%
+END SUB
+
+' Grava a tela atual ao lado do roteiro: <pasta>\<nome>.txt com o texto
+' (modo texto) ou <nome>.png (modo grafico).
+SUB TelaRotDespeja (nome$)
+    DIM d$, i%, f%, r%, c%, l$
+    d$ = TelaRot$
+    FOR i% = LEN(d$) TO 1 STEP -1
+        IF MID$(d$, i%, 1) = "\" OR MID$(d$, i%, 1) = "/" THEN EXIT FOR
+    NEXT
+    d$ = LEFT$(d$, i%) + nome$
+    IF _PIXELSIZE(0) = 0 THEN
+        f% = FREEFILE
+        OPEN d$ + ".txt" FOR OUTPUT AS #f%
+        FOR r% = 1 TO _HEIGHT(0)
+            l$ = ""
+            FOR c% = 1 TO _WIDTH(0)
+                l$ = l$ + CHR$(SCREEN(r%, c%))
+            NEXT
+            PRINT #f%, RTRIM$(l$)
+        NEXT
+        CLOSE #f%
+    ELSE
+        _SAVEIMAGE d$ + ".png", 0
+    END IF
+    TelaRotLog "tela " + nome$
+END SUB
+
+' Proxima tecla do roteiro. O arquivo e lido uma vez; linhas que comecam
+' com # sao comentario e as quebras de linha sao ignoradas. Cada caractere
+' e uma tecla; marcas entre chaves:
+'   {ENTER} {ESC} {BS} {TAB} {SPACE} {F1}..{F10} {UP} {DOWN} {LEFT} {RIGHT}
+'   {PGUP} {PGDN} {HOME} {END} {INS} {DEL} {CHAVE} (o caractere "{")
+'   {TELA nome}  grava a tela (TelaRotDespeja) e segue
+' Fim do roteiro: grava "esgotado_<EXE>" e encerra com codigo 3.
+FUNCTION TelaRotProxima$ ()
+    DIM f%, p&, q&, l$, t$, k$, n%
+    IF TelaRotTxt$ = "" THEN
+        f% = FREEFILE
+        OPEN TelaRot$ FOR INPUT AS #f%
+        DO WHILE NOT EOF(f%)
+            LINE INPUT #f%, l$
+            IF LEFT$(LTRIM$(l$), 1) <> "#" THEN TelaRotTxt$ = TelaRotTxt$ + l$
+        LOOP
+        CLOSE #f%
+    END IF
+    p& = 1
+    IF _FILEEXISTS(TelaRot$ + ".pos") THEN
+        f% = FREEFILE
+        OPEN TelaRot$ + ".pos" FOR INPUT AS #f%
+        IF NOT EOF(f%) THEN INPUT #f%, p&
+        CLOSE #f%
+    END IF
+    DO
+        IF p& > LEN(TelaRotTxt$) THEN
+            TelaRotLog "roteiro esgotado"
+            TelaRotDespeja "esgotado_" + TelaRotExe$
+            SYSTEM 3
+        END IF
+        k$ = MID$(TelaRotTxt$, p&, 1)
+        IF k$ = "{" THEN
+            q& = INSTR(p&, TelaRotTxt$, "}")
+            IF q& = 0 THEN TelaRotLog "marca sem }": SYSTEM 5
+            l$ = MID$(TelaRotTxt$, p& + 1, q& - p& - 1): t$ = UCASE$(l$)
+            p& = q& + 1
+            SELECT CASE t$
+                CASE "ENTER": k$ = CHR$(13)
+                CASE "ESC": k$ = CHR$(27)
+                CASE "BS": k$ = CHR$(8)
+                CASE "TAB": k$ = CHR$(9)
+                CASE "SPACE": k$ = " "
+                CASE "CHAVE": k$ = "{"
+                CASE "UP": k$ = CHR$(0) + CHR$(72)
+                CASE "DOWN": k$ = CHR$(0) + CHR$(80)
+                CASE "LEFT": k$ = CHR$(0) + CHR$(75)
+                CASE "RIGHT": k$ = CHR$(0) + CHR$(77)
+                CASE "PGUP": k$ = CHR$(0) + CHR$(73)
+                CASE "PGDN": k$ = CHR$(0) + CHR$(81)
+                CASE "HOME": k$ = CHR$(0) + CHR$(71)
+                CASE "END": k$ = CHR$(0) + CHR$(79)
+                CASE "INS": k$ = CHR$(0) + CHR$(82)
+                CASE "DEL": k$ = CHR$(0) + CHR$(83)
+                CASE ELSE
+                    k$ = ""
+                    IF LEFT$(t$, 1) = "F" AND VAL(MID$(t$, 2)) >= 1 AND VAL(MID$(t$, 2)) <= 10 THEN
+                        n% = VAL(MID$(t$, 2))
+                        k$ = CHR$(0) + CHR$(58 + n%)
+                    ELSEIF LEFT$(t$, 5) = "TELA " THEN
+                        TelaRotDespeja LTRIM$(MID$(l$, 6))
+                    ELSE
+                        TelaRotLog "marca desconhecida {" + l$ + "}": SYSTEM 5
+                    END IF
+            END SELECT
+        ELSE
+            p& = p& + 1
+        END IF
+    LOOP WHILE k$ = ""
+    f% = FREEFILE
+    OPEN TelaRot$ + ".pos" FOR OUTPUT AS #f%
+    PRINT #f%, p&
+    CLOSE #f%
+    TelaRotProxima$ = k$
+END FUNCTION

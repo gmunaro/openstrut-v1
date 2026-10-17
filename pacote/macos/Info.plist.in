@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>pt-BR</string>
+	<key>CFBundleDisplayName</key>
+	<string>@NOME@</string>
+	<key>CFBundleName</key>
+	<string>@NOME@</string>
+	<key>CFBundleExecutable</key>
+	<string>@EXECUTAVEL@</string>
+	<key>CFBundleIdentifier</key>
+	<string>@ID@</string>
+	<key>CFBundleIconFile</key>
+	<string>@ICONE@</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>@VERSAO@</string>
+	<key>CFBundleVersion</key>
+	<string>@VERSAO@</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.productivity</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>13.0</string>
+	<key>LSUIElement</key>
+	<@SEM_DOCK@/>
+	<key>NSHighResolutionCapable</key>
+	<true/>
+	<key>NSHumanReadableCopyright</key>
+	<string>OpenStrut. Reconstrução independente do SISTRUT 4.0, sem vínculo com os autores do original.</string>
+</dict>
+</plist>

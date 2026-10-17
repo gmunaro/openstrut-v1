@@ -1,0 +1,8 @@
+# Teclas presas pelo ON KEY do VIGA (F_1115c): Esc numa LINE INPUT (opcao 3, OBRA; opcao 7, Nome
+# da Obra) volta ao menu principal com BEEP; Esc no menu dos parametros (INPUT$); F2 no menu
+# principal volta ao gerenciador (RUN SISTRUT). No QB4.5 a tecla presa numa leitura so e atendida
+# depois da tecla seguinte, por isso cada {ESC}/{F2} vem com um {ENTER}.
+{TELA k00}3{ESPERA OBRA}{PAUSA 2}{TELA k01}{ESC}{PAUSA 1}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA k02}
+7{ESPERA Nome da Obra}{PAUSA 2}{TELA k03}{ESC}{PAUSA 1}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA k04}
+8{ESPERA Correcao dos Parametros}{ESPERA Escolha opcao}{PAUSA 2}{TELA k05}{ESC}{PAUSA 1}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA k06}
+{F2}{PAUSA 1}{ENTER}{ESPERA Configuracao|60}{PAUSA 3}{TELA k07_gerenciador}

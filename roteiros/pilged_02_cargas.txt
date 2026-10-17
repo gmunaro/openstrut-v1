@@ -1,0 +1,48 @@
+# exe: PILGEEDI
+# pilged_02_cargas: PILGEEDI itens 5, 3, 4, 6 e 7 sobre a obra FLUXO de 2 niveis
+# (roteiros/pilged_02_cargas.dados: COBERTURA (topo, pe 3) e TERREO (pe 3); colunas
+# P4 P1 P5 P6 P2 P3, todas 20x30, pp = 0,45 tf por nivel).
+# Campo com valor padrao: a digitacao acrescenta; {BS} apaga o padrao antes.
+# Aviso (Espera) so sai com ENTER: cada aviso leva um {ENTER}.
+# Ordem: item 5 antes dos externos (item 5 reescreve N/Mx/My do nivel).
+
+# Item 5: arquivo inexistente no nivel 1 -> erro; o .COL e recarregado
+5NAOEXISTE{ENTER}TERREO{ENTER}{TELA p01_carga_inexistente}{ENTER}
+
+# Item 5: leitura certa; COBERTURA tem REP+RLP, TERREO tem REP+RLP zerado
+5COBERTURA{ENTER}TERREO{ENTER}{TELA p02_carga_lida}{ENTER}
+
+# Item 3: P4 nivel 1 N=1,0 Mx=2,0 My=0,5; nivel 2 N=0,4 Mx=0,3 My=0 (N do nivel 1 desce ao 2)
+3P4{ENTER}{BS}1{ENTER}{BS}2{ENTER}{BS}0.5{ENTER}{BS}0.4{ENTER}{BS}0.3{ENTER}{ENTER}{TELA p03_externos_P4}{ENTER}
+
+# Item 3: P2 nivel 1 N=-0,5 (negativo); nivel 2 zerado; coluna ZZ nao arquivada; nome vazio sai
+P2{ENTER}{BS}-0.5{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}
+ZZ{ENTER}{TELA p04_coluna_inexistente}{ENTER}{ENTER}S{TELA p05_grava_externos}
+
+# Item 4: vento no nivel 2 para T (todas): Mx=0,5 My=0,2
+4{BS}2{ENTER}{ENTER}{BS}0.5{ENTER}{BS}0.2{ENTER}{ENTER}
+# Item 4: nivel 5 fora do intervalo
+{BS}5{ENTER}{TELA p06_nivel_fora}{ENTER}
+# Item 4: coluna ZZ nao arquivada
+{BS}1{ENTER}{BS}ZZ{ENTER}{TELA p07_vento_coluna_inexistente}{ENTER}
+# Item 4: nivel 1, coluna P1: Mx=1,0 My=-0,4
+{BS}1{ENTER}{BS}P1{ENTER}{BS}1{ENTER}{BS}-0.4{ENTER}{TELA p08_vento_P1}{ENTER}
+# Item 4: nivel 0 sai ao menu e pergunta gravacao
+{BS}0{ENTER}S
+
+# Item 6: P4. Nivel 1: tipo x=7 (fora da faixa, recusado sem aviso) depois 3; tipo y=4.
+#         Nivel 2: tipo x=1; tipo y=0 com comprimento direto 2,5 m.
+6P4{ENTER}{BS}7{ENTER}{TELA p09_tipo7_recusado}{BS}3{ENTER}{BS}4{ENTER}{BS}1{ENTER}{BS}0{ENTER}{BS}2.5{ENTER}{TELA p10_travam_P4}{ENTER}
+
+# Item 6: P1. Nivel 1: tipo x=0 com lex 2,7; tipo y=0 mantendo 3 (padrao).
+#         Nivel 2: tipo x=0 mantendo 3; tipo y=2 (0,7 x pe 3 = 2,1).
+P1{ENTER}{ENTER}{BS}2.7{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{BS}2{ENTER}{TELA p11_travam_P1}{ENTER}
+
+# Item 6: coluna ZZ nao arquivada; nome vazio sai e pergunta gravacao
+ZZ{ENTER}{TELA p12_travam_inexistente}{ENTER}{ENTER}S
+
+# Item 7: impressao com geometria (LST final: N, Mx, My por nivel)
+7S{TELA p13_impressao_final}{ENTER}
+
+# Retorno ao menu principal
+{TELA p14_antes_de_sair}R

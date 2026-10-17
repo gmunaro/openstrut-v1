@@ -1,0 +1,15 @@
+d>=x-1  d=x-1  d<x 0 
+promovido: d>=x 0  d=x 0  d<x-1 
+IF 1 
+promovido: IF 0 
+VAL 1 
+promovido: VAL 0 
+ext>e 0  promovido:-1 
+SELECT d 2 
+SELECT x 1 
+FOR# 0 
+FOR! 1 
+WHILE 3 
+promovido: WHILE 0 
+DO 3 
+promovido: DO 0 

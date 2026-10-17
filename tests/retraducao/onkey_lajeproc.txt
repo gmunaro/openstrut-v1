@@ -1,0 +1,6 @@
+# Teste do ON KEY pelo roteiro (RT45): Esc+ENTER no pedido "*FIM*" volta ao menu do LAJEPROC
+# (KEY 22 = Esc sem flags, GOSUB L_1063e) e F2+ENTER no menu volta ao LAJE (ON KEY(2), L_10540).
+# O QB so atende o ON KEY entre comandos: a tecla presa e engolida e a leitura pega a seguinte.
+# Rodar: tools/roda_retrad.sh <bin> LAJE tests/retraducao/onkey_lajeproc.txt <saida> <pasta C: com E2E.LAJ>
+6{ESPERA Gravacao e Leitura}4{ESPERA *RETORNO*}E2E{ENTER}{ESPERA Continuo}{ENTER}{ESPERA escolha opcao}7{ESPERA LAJES EM REGIME}
+4{ESPERA Escolha de Armaduras}{TELA k00_menu}4{ESPERA *FIM*}{TELA k01_fim}{ESC}{ENTER}{TELA k02_apos_esc}{F2}{ENTER}{TELA k03_apos_f2}

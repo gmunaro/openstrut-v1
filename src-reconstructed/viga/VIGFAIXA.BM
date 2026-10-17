@@ -1,0 +1,62 @@
+' ============================================================================
+'  VIGFAIXA.BM - selecao de vigas pela lista "I/J/N a M/.../K" (VIGA opcao 2).
+'  Funcoes puras: recebem os nomes das vigas e devolvem as marcas. Sem tela.
+'  O original pedia posicoes; a reconstrucao pede nomes (V1, V2, ...). Um
+'  intervalo "N a M" vale nas duas ordens e compara o numero do nome (V10 vem
+'  depois de V9), entre nomes de mesmo prefixo.
+' ============================================================================
+
+' Separa o nome em prefixo e numero final: "V10" -> "V", 10. Sem numero no
+' fim, num = -1. O prefixo sai em maiusculas, sem espacos nas pontas.
+SUB FaixaParte (nome AS STRING, pre AS STRING, num AS LONG)
+    DIM s AS STRING, p AS INTEGER
+    s = UCASE$(LTRIM$(RTRIM$(nome)))
+    p = LEN(s)
+    DO WHILE p > 0
+        IF INSTR("0123456789", MID$(s, p, 1)) = 0 THEN EXIT DO
+        p = p - 1
+    LOOP
+    pre = LEFT$(s, p)
+    IF p < LEN(s) AND LEN(s) - p <= 9 THEN num = VAL(MID$(s, p + 1)) ELSE num = -1
+END SUB
+
+' Marca marc(i) = -1 nas vigas nomes(1..n) citadas na lista. Itens separados
+' por "/"; "A a B" (ou "B a A") marca as vigas de mesmo prefixo com numero
+' entre os dois. Devolve quantas vigas ficaram marcadas; em vazias, os itens
+' que nao acharam nenhuma viga, separados por ", ".
+FUNCTION FaixaMarca% (lista AS STRING, nomes() AS STRING, n AS INTEGER, marc() AS INTEGER, vazias AS STRING)
+    DIM s AS STRING, tok AS STRING, p AS INTEGER, i AS INTEGER, achou AS INTEGER, tot AS INTEGER
+    DIM preA AS STRING, preB AS STRING, preI AS STRING, numA AS LONG, numB AS LONG, numI AS LONG, t AS LONG
+    vazias = ""
+    s = lista
+    DO
+        p = INSTR(s, "/")
+        IF p > 0 THEN tok = LEFT$(s, p - 1): s = MID$(s, p + 1) ELSE tok = s: s = ""
+        tok = UCASE$(LTRIM$(RTRIM$(tok)))
+        achou = 0
+        p = INSTR(tok, " A ")
+        IF p > 0 THEN
+            FaixaParte LEFT$(tok, p - 1), preA, numA
+            FaixaParte MID$(tok, p + 3), preB, numB
+            IF preA = preB AND numA >= 0 AND numB >= 0 THEN
+                IF numA > numB THEN t = numA: numA = numB: numB = t
+                FOR i = 1 TO n
+                    FaixaParte nomes(i), preI, numI
+                    IF preI = preA AND numI >= numA AND numI <= numB THEN marc(i) = -1: achou = -1
+                NEXT
+            END IF
+        ELSEIF tok <> "" THEN
+            FOR i = 1 TO n
+                IF UCASE$(LTRIM$(RTRIM$(nomes(i)))) = tok THEN marc(i) = -1: achou = -1
+            NEXT
+        END IF
+        IF tok <> "" AND achou = 0 THEN
+            IF vazias <> "" THEN vazias = vazias + ", "
+            vazias = vazias + tok
+        END IF
+    LOOP WHILE s <> ""
+    FOR i = 1 TO n
+        IF marc(i) THEN tot = tot + 1
+    NEXT
+    FaixaMarca% = tot
+END FUNCTION

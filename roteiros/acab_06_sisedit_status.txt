@@ -1,0 +1,7 @@
+# exe: SISEDIT
+# acab_06_sisedit_status: linha de status do SISEDIT sem FRE(-1) (indisponivel no QB64-PE).
+# Deve aparecer "Memoria Livre disponivel: n/d" nas telas do editor. Base: sis_02_editor.txt.
+# Conferir em ed_*.txt. Saida esperada: 0.
+{TELA ed_pede_nome}PILAR.INI{ENTER}{TELA ed_lido}
+{END} TESTE{TELA ed_linha1}{DOWN}{HOME}{DEL}{TELA ed_del}{HOME}\{DOWN}{END}{ENTER}{BS}{TELA ed_enter_bs}
+{ESC}FS

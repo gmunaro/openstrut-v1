@@ -1,0 +1,18 @@
+# Sufixo (a partir do menu do ARMADURA): teclas presas pelo ON KEY (F1-F10 = BEEP, Esc = volta ao
+# menu, F2 = volta ao gerenciador). No oraculo {ESC}/{F1}/{F2} vao pelo controlador de teclado e o
+# QB atende o ON KEY depois da leitura em curso, por isso cada uma vai seguida de {ENTER}.
+# Esc no Fck (LINE INPUT), na posicao do Arquivar, no tipo de secao (INPUT$ em GOSUB), nas dimensoes
+# (LINE INPUT dentro do MIXT), no menu do Dimensionamento e no Mk (leituras dentro do ARMADAUX);
+# F2 no menu. Para a V1, a pasta dos EXE precisa do SISTRUT.exe retraduzido (familia sistema).
+{ESTAVEL 10}
+{F1}{ENTER}{PAUSA 2}{TELA k01}
+1{ESPERA Definicao dos Materiais}{PAUSA 1}{ESC}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA k02}
+2{ESPERA Arquivo de Secoes}{ESPERA Posicao}{PAUSA 1}{ESC}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA k03}
+2{ESPERA Arquivo de Secoes}{ESPERA Posicao}{PAUSA 1}{ENTER}{ESPERA Escolha o tipo}{PAUSA 1}{ESC}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA k04}
+2{ESPERA Arquivo de Secoes}{ESPERA Posicao}{PAUSA 1}{ENTER}{ESPERA Escolha o tipo}{PAUSA 1}R{ESPERA RETORNO}{PAUSA 1}{ESC}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA k05}
+6{ESPERA Dimensionamento de Secoes}{ESPERA escolha opcao}{PAUSA 2}{ESC}{ENTER}{PAUSA 3}{TELA k06}
+6{ESPERA Dimensionamento de Secoes}{ESPERA escolha opcao}{PAUSA 2}
+1{ESPERA Secao para Dimensionamento}{ESPERA Fck}{PAUSA 1}{ENTER}{ESPERA Fyk}{PAUSA 1}{ENTER}{ESPERA Tipo de Aco}{PAUSA 1}{ENTER}{ESPERA Escolha o tipo}{PAUSA 1}
+R{ESPERA RETORNO}{PAUSA 1}20,50{ENTER}{ESPERA Bf(cm)}{PAUSA 1}{ENTER}{ESPERA escolha opcao}{PAUSA 2}
+2{ESPERA *FIM*}{PAUSA 1}{ESC}{ENTER}{PAUSA 3}{TELA k07}5{PAUSA 3}{TELA k08}
+{F2}{ENTER}{ESPERA Configuracao|60}{PAUSA 2}{TELA k09}

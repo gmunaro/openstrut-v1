@@ -1,0 +1,25 @@
+# exe: LAJEGEOM
+# rev5_laje_esc: confirma achados do LAJEGEOM (Esc na edicao, continuidade, h=0, EEEE).
+# Padrao de campo: BS apaga o padrao (um caractere por BS), digitacao acrescenta.
+# Ordem: nome, x0, y0, lx, ly, h, bordos. F da tabela NAO grava; grava-se na opcao 9.
+REV5ESC{ENTER}
+2
+{TELA a00_tabela_vazia}
+I{ENTER}{ENTER}{ENTER}{BS}{BS}{BS}{BS}4{ENTER}{BS}{BS}{BS}{BS}5{ENTER}{BS}{BS}{BS}{BS}10{ENTER}{BS}{BS}{BS}{BS}EEEE{ENTER}
+{TELA a01_L1_EEEE_virou}
+I{ENTER}{BS}{BS}{BS}{BS}10{ENTER}{ENTER}{BS}{BS}{BS}{BS}4{ENTER}{BS}{BS}{BS}{BS}5{ENTER}{BS}{BS}{BS}{BS}10{ENTER}{ENTER}
+{TELA a02_L2_x10_isolada}
+E{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ESC}
+{TELA a03_E_L1_esc_bordos}
+I{ENTER}{BS}{BS}{BS}{BS}4{ENTER}{ENTER}{BS}{BS}{BS}{BS}4{ENTER}{BS}{BS}{BS}{BS}5{ENTER}{BS}{BS}{BS}{BS}0{ENTER}{ENTER}
+{TELA a04_L3_x4_adjacente_L1}
+{DOWN}
+E{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{BS}{BS}{BS}{BS}EEEE{ENTER}
+{TELA a05_E_L2_EEEE}
+F
+{TELA a06_apos_F_tabela}
+9
+{TELA a07_pergunta_grava}
+S
+{TELA a08_exit}
+{ENTER}

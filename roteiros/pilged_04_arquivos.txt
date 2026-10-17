@@ -1,0 +1,49 @@
+# exe: PIGRAEDI
+# pilged_04_arquivos: PIGRAEDI menu 1 a 6 e R, a partir da obra FLUXO (1 nivel, 6 colunas).
+# Fixture: roteiros/pilged_04_arquivos.dados (copia de roteiros/semente).
+# Campos com valor padrao: a digitacao acrescenta; {BS} apaga o padrao (12 basta).
+# Espera (aviso) so sai com ENTER: cada aviso leva um {ENTER}.
+# Ordem: 2, 4 e 5 antes de 1 (que troca a obra corrente para PILNOVO).
+# Item 7: so drive Z: inexistente com N (nao cria nada). Casos de diretorio ficam no pilged_05.
+
+{TELA p0_menu}
+
+# Item 2: arquivo inexistente -> aviso; depois ENTER vazio sai
+2NAOEXISTE{ENTER}{TELA p01_pesquisa_inexistente}{ENTER}{ENTER}
+# Item 2: FLUXO existe -> numero de niveis e colunas
+2FLUXO{ENTER}{TELA p02_pesquisa_FLUXO}{ENTER}
+
+# Item 4: arquivo inexistente -> aviso
+4NAOEXISTE{ENTER}{TELA p03_catalogo_inexistente}{ENTER}
+# Item 4: FLUXO -> lista das colunas (1 nivel, 6 colunas)
+4FLUXO{ENTER}{TELA p04_catalogo_FLUXO}{ENTER}
+
+# Item 5: pergunta de perda de dados; N cancela
+5{TELA p05_leitura_pergunta}N
+# Item 5: S, nome vazio sai
+5S{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{ENTER}
+# Item 5: S, arquivo inexistente -> aviso
+5S{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}NAOEXISTE{ENTER}{TELA p06_leitura_inexistente}{ENTER}
+# Item 5: S, FLUXO -> le as colunas para a memoria
+5S{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}FLUXO{ENTER}{TELA p07_leitura_FLUXO}{ENTER}
+
+# Item 3: nome padrao FLUXO aceito; N no Continuo nao grava
+3{ENTER}{TELA p08_gravacao_continuo}N
+# Item 3: S grava; FLUXO ja existe -> copia anterior para o backup
+3{ENTER}S{TELA p09_gravacao_aviso_bak}{ENTER}
+
+# Item 1: NAO CRIAR cancela (nao cria nada)
+1{TELA p10_criacao_prompt}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}NAO{SPACE}CRIAR{ENTER}
+# Item 1: nome novo PILNOVO -> cria PILNOVO.COL e troca a obra corrente
+1{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}PILNOVO{ENTER}{TELA p11_criacao_aviso}{ENTER}
+# Item 2: confere o arquivo recem criado (o que a tela mostrar; nao assumido)
+2PILNOVO{ENTER}{TELA p12_pesquisa_PILNOVO}{ENTER}{ENTER}
+
+# Item 6: acesso ao disco (stub, so aviso)
+6{TELA p13_espaco_disco}{ENTER}
+
+# Item 7: drive Z: inexistente, subdiretorio vazio, sem criar (N)
+7{BS}{BS}Z:{ENTER}{ENTER}{TELA p14_drive_Z_aviso}{ENTER}{TELA p15_drive_Z_pergunta}N{TELA p16_drive_Z_nao_cria}{ENTER}
+
+# Retorno ao menu principal
+{TELA p17_antes_de_sair}R

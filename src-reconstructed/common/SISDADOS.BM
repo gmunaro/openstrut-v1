@@ -1,0 +1,574 @@
+' ============================================================================
+'  SISDADOS.BM - leitura e gravacao dos arquivos de obra (contrato em
+'  docs/formats/DADOS.md). Estado e tipos em SISDADOS.BI.
+'  Leitores retornam -1 se ok, 0 se falhou (motivo em DadErro).
+'  Gravadores copiam o arquivo anterior para .BAK antes de sobrescrever.
+' ============================================================================
+
+' Nome sem espacos de preenchimento (campos STRING * n).
+FUNCTION DadNome$ (s AS STRING)
+    DadNome$ = RTRIM$(s)
+END FUNCTION
+
+' Copia <arq> para <arq>.BAK (ex.: OBRA.VIG.BAK) se existir: um backup por
+' extensao, para que gravar .VIG e depois .RLP nao perca o .VIG anterior.
+SUB DadBackup (arq AS STRING)
+    DIM bak AS STRING, fi AS INTEGER, fo AS INTEGER, buf AS STRING
+    IF NOT _FILEEXISTS(arq) THEN EXIT SUB
+    bak = arq + ".BAK"
+    fi = FREEFILE
+    OPEN arq FOR BINARY AS #fi
+    buf = SPACE$(LOF(fi))
+    GET #fi, , buf
+    CLOSE #fi
+    IF _FILEEXISTS(bak) THEN KILL bak
+    fo = FREEFILE
+    OPEN bak FOR BINARY AS #fo
+    PUT #fo, , buf
+    CLOSE #fo
+END SUB
+
+' Abre arq para leitura e confere o cabecalho do tipo dado. Devolve o numero
+' do arquivo aberto (posicionado apos o cabecalho) e a obra; 0 se falhou.
+FUNCTION DadAbreLeitura% (arq AS STRING, tipo AS STRING, obra AS STRING)
+    DIM f AS INTEGER, s1 AS STRING, s2 AS STRING, versao AS INTEGER
+    DadErro = ""
+    IF NOT _FILEEXISTS(arq) THEN DadErro = "Arquivo nao encontrado: " + arq: EXIT FUNCTION
+    f = FREEFILE
+    OPEN arq FOR INPUT AS #f
+    IF EOF(f) THEN CLOSE #f: DadErro = "Arquivo invalido ou de outra versao": EXIT FUNCTION
+    INPUT #f, s1, s2, versao, obra
+    IF s1 <> "SISTRUT40" OR s2 <> tipo OR versao <> DadVersao%(tipo) THEN
+        CLOSE #f: DadErro = "Arquivo invalido ou de outra versao": EXIT FUNCTION
+    END IF
+    DadAbreLeitura% = f
+END FUNCTION
+
+' Faz backup e abre arq para gravacao com o cabecalho. Devolve o numero do arquivo.
+FUNCTION DadAbreGravacao% (arq AS STRING, tipo AS STRING, obra AS STRING)
+    DIM f AS INTEGER
+    DadBackup arq
+    f = FREEFILE
+    OPEN arq FOR OUTPUT AS #f
+    WRITE #f, "SISTRUT40", tipo, DadVersao%(tipo), obra
+    DadAbreGravacao% = f
+END FUNCTION
+
+' Versao do formato por tipo: .SEC e .EDV sao v2 (gravam os apoios); os
+' demais sao v1. Arquivo de outra versao e recusado.
+FUNCTION DadVersao% (tipo AS STRING)
+    IF tipo = "SEC" OR tipo = "EDV" THEN DadVersao% = 2 ELSE DadVersao% = 1
+END FUNCTION
+
+' ---------------------------------------------------------------- .LAJ ------
+
+' Grava Laj(1..LajQtd) em .LAJ; inclui o bloco RES se alguma laje tiver resultado.
+' Bordos como gravados no .LAJ: E e L ficam; qualquer outro caractere (espaco,
+' NUL de campo nunca preenchido) vira A, que e como os leitores ja o tratam.
+FUNCTION LajBordosGrava$ (b AS STRING)
+    DIM k AS INTEGER, c AS STRING, r AS STRING
+    FOR k = 1 TO 4
+        c = UCASE$(MID$(b + "    ", k, 1))
+        IF c <> "E" AND c <> "L" THEN c = "A"
+        r = r + c
+    NEXT
+    LajBordosGrava$ = r
+END FUNCTION
+
+SUB LajGrava (arq AS STRING)
+    DIM f AS INTEGER, i AS INTEGER, temRes AS INTEGER, n AS INTEGER
+    f = DadAbreGravacao%(arq, "LAJ", LajObra)
+    WRITE #f, LajNivel, LajQtd
+    FOR i = 1 TO LajQtd
+        WRITE #f, RTRIM$(Laj(i).nome), Laj(i).x0, Laj(i).y0, Laj(i).lx, Laj(i).ly, Laj(i).h, LajBordosGrava$(Laj(i).bordos), Laj(i).g, Laj(i).q, RTRIM$(Laj(i).vigas)
+        IF Laj(i).temRes THEN temRes = -1
+    NEXT
+    IF temRes THEN
+        ' so as lajes com resultado; a leitura associa pelo nome
+        n = 0
+        FOR i = 1 TO LajQtd
+            IF Laj(i).temRes THEN n = n + 1
+        NEXT
+        WRITE #f, "RES", n
+        FOR i = 1 TO LajQtd
+            IF Laj(i).temRes THEN
+                WRITE #f, RTRIM$(Laj(i).nome), Laj(i).h, Laj(i).p, Laj(i).mx, Laj(i).my, Laj(i).x1, Laj(i).x2, Laj(i).x3, Laj(i).x4, Laj(i).asx, Laj(i).asy, Laj(i).as1, Laj(i).as2, Laj(i).as3, Laj(i).as4, Laj(i).flecha, Laj(i).r1, Laj(i).r2, Laj(i).r3, Laj(i).r4
+            END IF
+        NEXT
+    END IF
+    CLOSE #f
+END SUB
+
+' Le .LAJ para Laj(); resultados (bloco RES) marcam temRes = -1.
+FUNCTION LajLe% (arq AS STRING)
+    DIM f AS INTEGER, i AS INTEGER, j AS INTEGER, n AS INTEGER, s AS STRING, nome AS STRING, vigas AS STRING, bordos AS STRING
+    DIM r(1 TO 20) AS DOUBLE, k AS INTEGER
+    LajQtd = 0
+    f = DadAbreLeitura%(arq, "LAJ", LajObra)
+    IF f = 0 THEN EXIT FUNCTION
+    INPUT #f, LajNivel, n
+    IF n < 0 OR n > DAD_MAXLAJ THEN DadErro = "Numero maximo de lajes excedido": GOTO falha
+    FOR i = 1 TO n
+        IF EOF(f) THEN GOTO truncado
+        INPUT #f, nome, Laj(i).x0, Laj(i).y0, Laj(i).lx, Laj(i).ly, Laj(i).h, bordos, Laj(i).g, Laj(i).q, vigas
+        Laj(i).nome = nome: Laj(i).bordos = bordos: Laj(i).vigas = vigas
+        Laj(i).temRes = 0
+    NEXT
+    IF NOT EOF(f) THEN
+        INPUT #f, s, k
+        IF s = "RES" THEN
+            IF k > n THEN DadErro = "Bloco de resultados maior que o numero de lajes": GOTO falha
+            FOR j = 1 TO k
+                IF EOF(f) THEN GOTO truncado
+                INPUT #f, nome, r(1), r(2), r(3), r(4), r(5), r(6), r(7), r(8), r(9), r(10), r(11), r(12), r(13), r(14), r(15), r(16), r(17), r(18), r(19)
+                FOR i = 1 TO n
+                    IF RTRIM$(Laj(i).nome) = nome THEN
+                        Laj(i).h = r(1): Laj(i).p = r(2): Laj(i).mx = r(3): Laj(i).my = r(4)
+                        Laj(i).x1 = r(5): Laj(i).x2 = r(6): Laj(i).x3 = r(7): Laj(i).x4 = r(8)
+                        Laj(i).asx = r(9): Laj(i).asy = r(10)
+                        Laj(i).as1 = r(11): Laj(i).as2 = r(12): Laj(i).as3 = r(13): Laj(i).as4 = r(14)
+                        Laj(i).flecha = r(15): Laj(i).r1 = r(16): Laj(i).r2 = r(17): Laj(i).r3 = r(18): Laj(i).r4 = r(19)
+                        Laj(i).temRes = -1
+                        EXIT FOR
+                    END IF
+                NEXT
+            NEXT
+        END IF
+    END IF
+    CLOSE #f
+    LajQtd = n
+    LajLe% = -1
+    EXIT FUNCTION
+truncado:
+    DadErro = "Arquivo truncado ou corrompido"
+falha:
+    CLOSE #f
+    LajQtd = 0
+END FUNCTION
+
+' ------------------------------------------------------- .VIG .SEC .EDV ------
+
+' Zera a lista de vigas (antes de montar uma nova).
+SUB VigLimpa
+    VigQtd = 0: VigApoQtd = 0: VigTraQtd = 0: VigConQtd = 0: VigPosQtd = 0
+END SUB
+
+' Acrescenta uma viga com nTramos tramos (apoios e tramos zerados).
+' Retorna o indice da viga, ou 0 se estourou algum limite.
+FUNCTION VigAdiciona% (nome AS STRING, nTramos AS INTEGER, bw AS DOUBLE, h AS DOUBLE)
+    DIM v AS INTEGER, k AS INTEGER
+    IF VigQtd >= DAD_MAXVIG OR VigApoQtd + nTramos + 1 > DAD_MAXAPO OR VigTraQtd + nTramos > DAD_MAXTRA THEN EXIT FUNCTION
+    VigQtd = VigQtd + 1: v = VigQtd
+    Vig(v).nome = nome: Vig(v).nTramos = nTramos: Vig(v).bw = bw: Vig(v).h = h: Vig(v).d = 0
+    Vig(v).iApo = VigApoQtd + 1: Vig(v).iTra = VigTraQtd + 1
+    FOR k = 0 TO nTramos
+        VigApoQtd = VigApoQtd + 1
+        VigApo(VigApoQtd).nome = "": VigApo(VigApoQtd).x = 0: VigApo(VigApoQtd).y = 0
+    NEXT
+    DIM vazio AS TTramo
+    FOR k = 1 TO nTramos
+        VigTraQtd = VigTraQtd + 1
+        VigTra(VigTraQtd) = vazio
+        VigTra(VigTraQtd).iCon = VigConQtd + 1
+    NEXT
+    VigAdiciona% = v
+END FUNCTION
+
+' Indice global do tramo t (1..nTramos) da viga v.
+FUNCTION VigTramo% (v AS INTEGER, t AS INTEGER)
+    VigTramo% = Vig(v).iTra + t - 1
+END FUNCTION
+
+' Indice global do apoio k (1..nTramos+1) da viga v.
+FUNCTION VigApoio% (v AS INTEGER, k AS INTEGER)
+    VigApoio% = Vig(v).iApo + k - 1
+END FUNCTION
+
+' Acrescenta carga concentrada ao tramo global ti. So vale enquanto ti for
+' o ultimo tramo que recebeu cargas (monte as cargas tramo a tramo, em ordem).
+SUB VigAddConc (ti AS INTEGER, a AS DOUBLE, P AS DOUBLE)
+    IF VigConQtd >= DAD_MAXCON THEN EXIT SUB
+    IF VigTra(ti).nConc = 0 THEN VigTra(ti).iCon = VigConQtd + 1
+    VigConQtd = VigConQtd + 1
+    VigCon(VigConQtd).a = a: VigCon(VigConQtd).P = P
+    VigTra(ti).nConc = VigTra(ti).nConc + 1
+END SUB
+
+' Acrescenta posicao de ferro ao tramo global ti (.EDV), mesma regra de ordem.
+SUB VigAddPos (ti AS INTEGER, numPos AS INTEGER, phi AS DOUBLE, n AS INTEGER, compr AS DOUBLE, forma AS STRING)
+    IF VigPosQtd >= DAD_MAXPOS THEN EXIT SUB
+    IF VigTra(ti).nPosFerro = 0 THEN VigTra(ti).iPosFerro = VigPosQtd + 1
+    VigPosQtd = VigPosQtd + 1
+    VigPos(VigPosQtd).numPos = numPos: VigPos(VigPosQtd).phi = phi: VigPos(VigPosQtd).n = n
+    VigPos(VigPosQtd).compr = compr: VigPos(VigPosQtd).forma = forma
+    VigTra(ti).nPosFerro = VigTra(ti).nPosFerro + 1
+END SUB
+
+' Grava as vigas. tipo = "VIG" (carregamento), "SEC" (armacao) ou "EDV" (SEC + posicoes).
+SUB VigGrava (arq AS STRING, tipo AS STRING)
+    DIM f AS INTEGER, v AS INTEGER, k AS INTEGER, t AS INTEGER, c AS INTEGER, j AS INTEGER
+    f = DadAbreGravacao%(arq, tipo, VigObra)
+    IF tipo = "VIG" THEN WRITE #f, VigNivel, VigQtd ELSE WRITE #f, VigQtd
+    FOR v = 1 TO VigQtd
+        IF tipo = "VIG" THEN
+            WRITE #f, RTRIM$(Vig(v).nome), Vig(v).nTramos, Vig(v).bw, Vig(v).h
+            FOR k = 0 TO Vig(v).nTramos
+                j = Vig(v).iApo + k
+                WRITE #f, RTRIM$(VigApo(j).nome), VigApo(j).x, VigApo(j).y
+            NEXT
+        ELSE
+            WRITE #f, RTRIM$(Vig(v).nome), Vig(v).nTramos, Vig(v).bw, Vig(v).h, Vig(v).d
+            FOR k = 0 TO Vig(v).nTramos
+                j = Vig(v).iApo + k
+                WRITE #f, RTRIM$(VigApo(j).nome), VigApo(j).x, VigApo(j).y
+            NEXT
+        END IF
+        FOR k = 0 TO Vig(v).nTramos - 1
+            t = Vig(v).iTra + k
+            IF tipo = "VIG" THEN
+                WRITE #f, VigTra(t).vao, VigTra(t).qPerm, VigTra(t).qAcid, VigTra(t).nConc
+                FOR c = 0 TO VigTra(t).nConc - 1
+                    WRITE #f, VigCon(VigTra(t).iCon + c).a, VigCon(VigTra(t).iCon + c).P
+                NEXT
+            ELSE
+                WRITE #f, VigTra(t).vao, VigTra(t).mPos, VigTra(t).mNegEsq, VigTra(t).mNegDir, VigTra(t).vEsq, VigTra(t).vDir, VigTra(t).asPos, VigTra(t).asNegEsq, VigTra(t).asNegDir, VigTra(t).phiPos, VigTra(t).nPos, VigTra(t).phiNegEsq, VigTra(t).nNegEsq, VigTra(t).phiNegDir, VigTra(t).nNegDir, VigTra(t).aswEsq, VigTra(t).aswDir, VigTra(t).phiEst, VigTra(t).sEst
+                IF tipo = "EDV" THEN
+                    WRITE #f, VigTra(t).nPosFerro
+                    FOR c = 0 TO VigTra(t).nPosFerro - 1
+                        j = VigTra(t).iPosFerro + c
+                        WRITE #f, VigPos(j).numPos, VigPos(j).phi, VigPos(j).n, VigPos(j).compr, VigPos(j).forma
+                    NEXT
+                END IF
+            END IF
+        NEXT
+    NEXT
+    CLOSE #f
+END SUB
+
+' Le vigas de um .VIG, .SEC ou .EDV (tipo = extensao sem ponto).
+FUNCTION VigLe% (arq AS STRING, tipo AS STRING)
+    DIM f AS INTEGER, v AS INTEGER, k AS INTEGER, t AS INTEGER, c AS INTEGER, n AS INTEGER, nv AS INTEGER
+    DIM nome AS STRING, nTr AS INTEGER, bw AS DOUBLE, h AS DOUBLE, d AS DOUBLE, a AS DOUBLE, P AS DOUBLE
+    DIM np AS INTEGER, phi AS DOUBLE, nb AS INTEGER, compr AS DOUBLE, forma AS STRING
+    VigLimpa
+    f = DadAbreLeitura%(arq, tipo, VigObra)
+    IF f = 0 THEN EXIT FUNCTION
+    IF EOF(f) THEN GOTO truncado
+    IF tipo = "VIG" THEN INPUT #f, VigNivel, nv ELSE INPUT #f, nv
+    IF nv < 0 OR nv > DAD_MAXVIG THEN DadErro = "Numero maximo de vigas/tramos excedido": GOTO falha
+    FOR v = 1 TO nv
+        IF EOF(f) THEN GOTO truncado
+        IF tipo = "VIG" THEN INPUT #f, nome, nTr, bw, h ELSE INPUT #f, nome, nTr, bw, h, d
+        IF nTr < 1 THEN DadErro = "Viga sem tramos: " + nome: GOTO falha
+        IF VigAdiciona%(nome, nTr, bw, h) = 0 THEN DadErro = "Numero maximo de vigas/tramos excedido": GOTO falha
+        Vig(v).d = d
+        ' apoios em todos os tipos (.VIG, .SEC v2, .EDV v2)
+        FOR k = 0 TO nTr
+            IF EOF(f) THEN GOTO truncado
+            INPUT #f, nome, VigApo(Vig(v).iApo + k).x, VigApo(Vig(v).iApo + k).y
+            VigApo(Vig(v).iApo + k).nome = nome
+        NEXT
+        FOR k = 0 TO nTr - 1
+            t = Vig(v).iTra + k
+            IF EOF(f) THEN GOTO truncado
+            IF tipo = "VIG" THEN
+                INPUT #f, VigTra(t).vao, VigTra(t).qPerm, VigTra(t).qAcid, n
+                VigTra(t).nConc = 0
+                FOR c = 1 TO n
+                    IF EOF(f) THEN GOTO truncado
+                    INPUT #f, a, P
+                    VigAddConc t, a, P
+                NEXT
+            ELSE
+                INPUT #f, VigTra(t).vao, VigTra(t).mPos, VigTra(t).mNegEsq, VigTra(t).mNegDir, VigTra(t).vEsq, VigTra(t).vDir, VigTra(t).asPos, VigTra(t).asNegEsq, VigTra(t).asNegDir, VigTra(t).phiPos, VigTra(t).nPos, VigTra(t).phiNegEsq, VigTra(t).nNegEsq, VigTra(t).phiNegDir, VigTra(t).nNegDir, VigTra(t).aswEsq, VigTra(t).aswDir, VigTra(t).phiEst, VigTra(t).sEst
+                IF tipo = "EDV" THEN
+                    IF EOF(f) THEN GOTO truncado
+                    INPUT #f, np
+                    VigTra(t).nPosFerro = 0
+                    FOR c = 1 TO np
+                        IF EOF(f) THEN GOTO truncado
+                        INPUT #f, n, phi, nb, compr, forma
+                        VigAddPos t, n, phi, nb, compr, forma
+                    NEXT
+                END IF
+            END IF
+        NEXT
+    NEXT
+    CLOSE #f
+    VigLe% = -1
+    EXIT FUNCTION
+truncado:
+    DadErro = "Arquivo truncado ou corrompido"
+falha:
+    CLOSE #f
+    VigLimpa
+END FUNCTION
+
+
+' ------------------------------------------------------------ .RLP .REP ------
+
+' Grava CPil(1..CPilQtd); tipo = "RLP" ou "REP".
+SUB CPilGrava (arq AS STRING, tipo AS STRING)
+    DIM f AS INTEGER, i AS INTEGER
+    f = DadAbreGravacao%(arq, tipo, CPilObra)
+    WRITE #f, CPilNivel, CPilQtd
+    FOR i = 1 TO CPilQtd
+        WRITE #f, RTRIM$(CPil(i).nome), CPil(i).x, CPil(i).y, CPil(i).N, CPil(i).Mx, CPil(i).My
+    NEXT
+    CLOSE #f
+END SUB
+
+' Le .RLP ou .REP para CPil().
+FUNCTION CPilLe% (arq AS STRING, tipo AS STRING)
+    DIM f AS INTEGER, i AS INTEGER, n AS INTEGER, nome AS STRING
+    CPilQtd = 0
+    f = DadAbreLeitura%(arq, tipo, CPilObra)
+    IF f = 0 THEN EXIT FUNCTION
+    INPUT #f, CPilNivel, n
+    IF n < 0 OR n > DAD_MAXPIL THEN CLOSE #f: DadErro = "Numero maximo de pilares excedido": EXIT FUNCTION
+    FOR i = 1 TO n
+        IF EOF(f) THEN CLOSE #f: DadErro = "Arquivo truncado ou corrompido": EXIT FUNCTION
+        INPUT #f, nome, CPil(i).x, CPil(i).y, CPil(i).N, CPil(i).Mx, CPil(i).My
+        CPil(i).nome = nome
+    NEXT
+    CLOSE #f
+    CPilQtd = n
+    CPilLe% = -1
+END FUNCTION
+
+' Soma a carga N/Mx/My no pilar de nome dado (cria se nao existir). Retorna o indice.
+FUNCTION CPilSoma% (nome AS STRING, x AS DOUBLE, y AS DOUBLE, N AS DOUBLE, Mx AS DOUBLE, My AS DOUBLE)
+    DIM i AS INTEGER
+    FOR i = 1 TO CPilQtd
+        IF RTRIM$(CPil(i).nome) = nome THEN EXIT FOR
+    NEXT
+    IF i > CPilQtd THEN
+        IF CPilQtd >= DAD_MAXPIL THEN EXIT FUNCTION
+        CPilQtd = CPilQtd + 1: i = CPilQtd
+        CPil(i).nome = nome: CPil(i).x = x: CPil(i).y = y
+        CPil(i).N = 0: CPil(i).Mx = 0: CPil(i).My = 0
+    END IF
+    CPil(i).N = CPil(i).N + N: CPil(i).Mx = CPil(i).Mx + Mx: CPil(i).My = CPil(i).My + My
+    CPilSoma% = i
+END FUNCTION
+
+' ----------------------------------------------------------------- .COL ------
+
+' Indice em ColEsf() da coluna c no nivel k.
+FUNCTION ColIdx% (c AS INTEGER, k AS INTEGER)
+    ColIdx% = (c - 1) * ColNivQtd + k
+END FUNCTION
+
+' Grava ColNiv(), Col() e ColEsf() em .COL.
+SUB ColGrava (arq AS STRING)
+    DIM f AS INTEGER, c AS INTEGER, k AS INTEGER, j AS INTEGER
+    f = DadAbreGravacao%(arq, "COL", ColObra)
+    WRITE #f, ColNivQtd, ColQtd
+    FOR k = 1 TO ColNivQtd
+        WRITE #f, RTRIM$(ColNiv(k).nome), ColNiv(k).cota, ColNiv(k).peDireito
+    NEXT
+    FOR c = 1 TO ColQtd
+        WRITE #f, RTRIM$(Col(c).nome), Col(c).secao, Col(c).bx, Col(c).by, Col(c).x, Col(c).y
+        FOR k = 1 TO ColNivQtd
+            j = ColIdx%(c, k)
+            WRITE #f, ColEsf(j).N, ColEsf(j).Mx, ColEsf(j).My, ColEsf(j).lex, ColEsf(j).ley, ColEsf(j).asTot, ColEsf(j).phi, ColEsf(j).nBarras, ColEsf(j).phiEstribo, ColEsf(j).sEstribo
+        NEXT
+    NEXT
+    CLOSE #f
+END SUB
+
+' Le .COL.
+FUNCTION ColLe% (arq AS STRING)
+    DIM f AS INTEGER, c AS INTEGER, k AS INTEGER, j AS INTEGER, nome AS STRING, sec AS STRING, nn AS INTEGER, nc AS INTEGER
+    ColQtd = 0: ColNivQtd = 0
+    f = DadAbreLeitura%(arq, "COL", ColObra)
+    IF f = 0 THEN EXIT FUNCTION
+    IF EOF(f) THEN GOTO truncado
+    INPUT #f, nn, nc
+    IF nn < 0 OR nc < 0 OR nn > DAD_MAXNIV OR nc > DAD_MAXPIL OR nn * nc > DAD_MAXESF THEN
+        DadErro = "Numero maximo de colunas/niveis excedido": GOTO falha
+    END IF
+    ColNivQtd = nn   ' ColIdx% depende de ColNivQtd durante a leitura
+    FOR k = 1 TO nn
+        IF EOF(f) THEN GOTO truncado
+        INPUT #f, nome, ColNiv(k).cota, ColNiv(k).peDireito
+        ColNiv(k).nome = nome
+    NEXT
+    FOR c = 1 TO nc
+        IF EOF(f) THEN GOTO truncado
+        INPUT #f, nome, sec, Col(c).bx, Col(c).by, Col(c).x, Col(c).y
+        Col(c).nome = nome: Col(c).secao = sec
+        FOR k = 1 TO nn
+            j = ColIdx%(c, k)
+            IF EOF(f) THEN GOTO truncado
+            INPUT #f, ColEsf(j).N, ColEsf(j).Mx, ColEsf(j).My, ColEsf(j).lex, ColEsf(j).ley, ColEsf(j).asTot, ColEsf(j).phi, ColEsf(j).nBarras, ColEsf(j).phiEstribo, ColEsf(j).sEstribo
+        NEXT
+    NEXT
+    CLOSE #f
+    ColQtd = nc
+    ColLe% = -1
+    EXIT FUNCTION
+truncado:
+    DadErro = "Arquivo truncado ou corrompido"
+falha:
+    CLOSE #f
+    ColQtd = 0: ColNivQtd = 0
+END FUNCTION
+
+' ----------------------------------------------------- .FRM .FOR .CFO ------
+
+' Grava a forma montada (FrmLaj, FrmVig, FrmPil) em .FRM.
+SUB FrmGrava (arq AS STRING)
+    DIM f AS INTEGER, i AS INTEGER
+    f = DadAbreGravacao%(arq, "FRM", FrmObra)
+    WRITE #f, "LAJES", FrmLajQtd
+    FOR i = 1 TO FrmLajQtd
+        WRITE #f, RTRIM$(FrmLaj(i).nome), FrmLaj(i).x0, FrmLaj(i).y0, FrmLaj(i).lx, FrmLaj(i).ly, FrmLaj(i).h
+    NEXT
+    WRITE #f, "VIGAS", FrmVigQtd
+    FOR i = 1 TO FrmVigQtd
+        WRITE #f, RTRIM$(FrmVig(i).nome), FrmVig(i).x1, FrmVig(i).y1, FrmVig(i).x2, FrmVig(i).y2, FrmVig(i).bw, FrmVig(i).h
+    NEXT
+    WRITE #f, "PILARES", FrmPilQtd
+    FOR i = 1 TO FrmPilQtd
+        WRITE #f, RTRIM$(FrmPil(i).nome), FrmPil(i).x, FrmPil(i).y, FrmPil(i).bx, FrmPil(i).by, FrmPil(i).secao
+    NEXT
+    CLOSE #f
+END SUB
+
+' Le .FRM.
+FUNCTION FrmLe% (arq AS STRING)
+    DIM f AS INTEGER, i AS INTEGER, s AS STRING, nome AS STRING, sec AS STRING, nl AS INTEGER, nv AS INTEGER, np AS INTEGER
+    FrmLajQtd = 0: FrmVigQtd = 0: FrmPilQtd = 0
+    f = DadAbreLeitura%(arq, "FRM", FrmObra)
+    IF f = 0 THEN EXIT FUNCTION
+    IF EOF(f) THEN GOTO truncado
+    INPUT #f, s, nl
+    IF nl < 0 OR nl > DAD_MAXLAJ THEN DadErro = "Numero maximo de lajes excedido": GOTO falha
+    FOR i = 1 TO nl
+        IF EOF(f) THEN GOTO truncado
+        INPUT #f, nome, FrmLaj(i).x0, FrmLaj(i).y0, FrmLaj(i).lx, FrmLaj(i).ly, FrmLaj(i).h
+        FrmLaj(i).nome = nome
+    NEXT
+    IF EOF(f) THEN GOTO truncado
+    INPUT #f, s, nv
+    IF nv < 0 OR nv > DAD_MAXVIG THEN DadErro = "Numero maximo de vigas excedido": GOTO falha
+    FOR i = 1 TO nv
+        IF EOF(f) THEN GOTO truncado
+        INPUT #f, nome, FrmVig(i).x1, FrmVig(i).y1, FrmVig(i).x2, FrmVig(i).y2, FrmVig(i).bw, FrmVig(i).h
+        FrmVig(i).nome = nome
+    NEXT
+    IF EOF(f) THEN GOTO truncado
+    INPUT #f, s, np
+    IF np < 0 OR np > DAD_MAXPIL THEN DadErro = "Numero maximo de pilares excedido": GOTO falha
+    FOR i = 1 TO np
+        IF EOF(f) THEN GOTO truncado
+        INPUT #f, nome, FrmPil(i).x, FrmPil(i).y, FrmPil(i).bx, FrmPil(i).by, sec
+        FrmPil(i).nome = nome: FrmPil(i).secao = sec
+    NEXT
+    CLOSE #f
+    FrmLajQtd = nl: FrmVigQtd = nv: FrmPilQtd = np
+    FrmLe% = -1
+    EXIT FUNCTION
+truncado:
+    DadErro = "Arquivo truncado ou corrompido"
+falha:
+    CLOSE #f
+    FrmLajQtd = 0: FrmVigQtd = 0: FrmPilQtd = 0
+END FUNCTION
+
+' Grava .FOR (dados de forma por viga) a partir de FrmVig().
+SUB ForGrava (arq AS STRING, nivel AS INTEGER)
+    DIM f AS INTEGER, i AS INTEGER, L AS DOUBLE
+    f = DadAbreGravacao%(arq, "FOR", FrmObra)
+    WRITE #f, FrmVigQtd
+    FOR i = 1 TO FrmVigQtd
+        L = SQR((FrmVig(i).x2 - FrmVig(i).x1) ^ 2 + (FrmVig(i).y2 - FrmVig(i).y1) ^ 2)
+        WRITE #f, RTRIM$(FrmVig(i).nome), FrmVig(i).bw, FrmVig(i).h, nivel, L
+    NEXT
+    CLOSE #f
+END SUB
+
+' Le .FOR para FrmVig(): o comprimento total vai em x2 (x1 = y1 = y2 = 0).
+FUNCTION ForLe% (arq AS STRING, nivel AS INTEGER)
+    DIM f AS INTEGER, i AS INTEGER, nome AS STRING, n AS INTEGER
+    FrmVigQtd = 0
+    f = DadAbreLeitura%(arq, "FOR", FrmObra)
+    IF f = 0 THEN EXIT FUNCTION
+    IF EOF(f) THEN GOTO truncado
+    INPUT #f, n
+    IF n < 0 OR n > DAD_MAXVIG THEN DadErro = "Numero maximo de vigas excedido": GOTO falha
+    FOR i = 1 TO n
+        IF EOF(f) THEN GOTO truncado
+        INPUT #f, nome, FrmVig(i).bw, FrmVig(i).h, nivel, FrmVig(i).x2
+        FrmVig(i).nome = nome: FrmVig(i).x1 = 0: FrmVig(i).y1 = 0: FrmVig(i).y2 = 0
+    NEXT
+    CLOSE #f
+    FrmVigQtd = n
+    ForLe% = -1
+    EXIT FUNCTION
+truncado:
+    DadErro = "Arquivo truncado ou corrompido"
+falha:
+    CLOSE #f
+    FrmVigQtd = 0
+END FUNCTION
+
+' Grava .CFO (dados de forma por pilar) a partir de FrmPil().
+SUB CfoGrava (arq AS STRING, nivel AS INTEGER, altura AS DOUBLE)
+    DIM f AS INTEGER, i AS INTEGER
+    f = DadAbreGravacao%(arq, "CFO", FrmObra)
+    WRITE #f, FrmPilQtd
+    FOR i = 1 TO FrmPilQtd
+        WRITE #f, RTRIM$(FrmPil(i).nome), FrmPil(i).bx, FrmPil(i).by, FrmPil(i).secao, nivel, altura
+    NEXT
+    CLOSE #f
+END SUB
+
+' Le .CFO para FrmPil() (x = y = 0); devolve nivel e altura do ultimo registro.
+FUNCTION CfoLe% (arq AS STRING, nivel AS INTEGER, altura AS DOUBLE)
+    DIM f AS INTEGER, i AS INTEGER, nome AS STRING, sec AS STRING, n AS INTEGER
+    FrmPilQtd = 0
+    f = DadAbreLeitura%(arq, "CFO", FrmObra)
+    IF f = 0 THEN EXIT FUNCTION
+    IF EOF(f) THEN GOTO truncado
+    INPUT #f, n
+    IF n < 0 OR n > DAD_MAXPIL THEN DadErro = "Numero maximo de pilares excedido": GOTO falha
+    FOR i = 1 TO n
+        IF EOF(f) THEN GOTO truncado
+        INPUT #f, nome, FrmPil(i).bx, FrmPil(i).by, sec, nivel, altura
+        FrmPil(i).nome = nome: FrmPil(i).secao = sec: FrmPil(i).x = 0: FrmPil(i).y = 0
+    NEXT
+    CLOSE #f
+    FrmPilQtd = n
+    CfoLe% = -1
+    EXIT FUNCTION
+truncado:
+    DadErro = "Arquivo truncado ou corrompido"
+falha:
+    CLOSE #f
+    FrmPilQtd = 0
+END FUNCTION
+
+' ------------------------------------------------------- obra corrente ------
+
+' Le o nome da obra corrente de <dirDados>SISTRUT.OBR (gravado pelo
+' gerenciador de cada familia). Retorna "" se nao houver.
+FUNCTION ObraAtual$ (dirDados AS STRING)
+    DIM f AS INTEGER, obra AS STRING
+    IF NOT _FILEEXISTS(dirDados + "SISTRUT.OBR") THEN EXIT FUNCTION
+    f = FREEFILE
+    OPEN dirDados + "SISTRUT.OBR" FOR INPUT AS #f
+    IF NOT EOF(f) THEN INPUT #f, obra
+    CLOSE #f
+    ObraAtual$ = obra
+END FUNCTION
+
+' Grava o nome da obra corrente em <dirDados>SISTRUT.OBR.
+SUB ObraDefine (dirDados AS STRING, obra AS STRING)
+    DIM f AS INTEGER
+    f = FREEFILE
+    OPEN dirDados + "SISTRUT.OBR" FOR OUTPUT AS #f
+    WRITE #f, obra
+    CLOSE #f
+END SUB

@@ -1,0 +1,18 @@
+# exe: PIGRAEDI
+# pilged_05_drive: PIGRAEDI item 7 (Alterar Drive e Diretorio) sobre a obra FLUXO.
+# Fixture: roteiros/pilged_05_drive.dados (copia de roteiros/semente).
+# Limite de 50 caracteres no subdiretorio (a partir da raiz do drive): nenhum
+# diretorio do projeto cabe nele, e os casos de diretorio existente ou S em
+# diretorio inexistente em C: foram omitidos para nao escrever fora do projeto.
+# Cada aviso (Espera) leva um {ENTER}.
+
+{TELA p0_menu}
+
+# C: com subdiretorio inexistente; N nao cria nada
+7{BS}{BS}C:{ENTER}NAOEXISTE{ENTER}{TELA p1_C_inexistente_aviso}{ENTER}{TELA p2_C_inexistente_pergunta}N{TELA p3_C_nao_cria}{ENTER}
+
+# Z: (drive inexistente) com S: nada e criado; avisos de drive e de "Acione D"
+7{BS}{BS}Z:{ENTER}{ENTER}{TELA p4_Z_aviso}{ENTER}{TELA p5_Z_pergunta}S{TELA p6_Z_drive_nao_encontrado}{ENTER}{TELA p7_Z_acione_D}{ENTER}
+
+# Retorno ao menu principal
+{TELA p8_antes_de_sair}R

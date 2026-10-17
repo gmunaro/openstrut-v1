@@ -1,0 +1,21 @@
+# T10 v2par_des_3tramos (sufixo a partir do menu do DESENHO). Obra ASS gravada pelo original no caso v2par_laje_assim.
+# Item 1 (Detalhamento e Desenho) do registro 1 = viga V1 (y = 9 m, 3 tramos: eixos x 0, 3, 8, 12), secao 20 x 50
+# (Bf 0, Hf 0), apoios de 20 cm (titulos P1..P4), vaos livres 280, 480, 380 cm; impressao dos esforcos e da armacao,
+# diagramas (escala VIDEO), desenho definitivo 1/50 na impressora, sem CAD; depois item 4 (resumo geral de consumo, impresso).
+1{ESPERA Nome da Obra}{PAUSA 2}{TELA d01}ASS{ENTER}{ESPERA Listo as Vigas}{PAUSA 1}{ENTER}{ESPERA Continuo}{PAUSA 1}{ENTER}{ESPERA Todas as Vigas}{PAUSA 1}{ENTER}{ESPERA Processar Registros}{PAUSA 1}{TELA d05}
+1{ENTER}{ESPERA Bw , Hw}{PAUSA 2}{TELA d06}20,50,0,0{ENTER}{ESPERA Secoes Diferentes}{PAUSA 1}{ENTER}{ESPERA Retangular}{PAUSA 1}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA d09}{ENTER}
+{ESPERA Largura do Apoio 0}{PAUSA 1}{TELA d10_apoio}20{ENTER}{ESPERA Tipo do Apoio}{PAUSA 1}{ENTER}{ESPERA Titulo}{PAUSA 1}P1{ENTER}{ESPERA orre}{PAUSA 1}{ENTER}
+{ESPERA Largura do Apoio 1}{PAUSA 1}{TELA d11_apoio}20{ENTER}{ESPERA Tipo do Apoio}{PAUSA 1}{ENTER}{ESPERA Titulo}{PAUSA 1}P2{ENTER}{ESPERA orre}{PAUSA 1}{ENTER}
+{ESPERA Largura do Apoio 2}{PAUSA 1}{TELA d12_apoio}20{ENTER}{ESPERA Tipo do Apoio}{PAUSA 1}{ENTER}{ESPERA Titulo}{PAUSA 1}P3{ENTER}{ESPERA orre}{PAUSA 1}{ENTER}
+{ESPERA Largura do Apoio 3}{PAUSA 1}{TELA d13_apoio}20{ENTER}{ESPERA Tipo do Apoio}{PAUSA 1}{ENTER}{ESPERA Titulo}{PAUSA 1}P4{ENTER}{ESPERA orre}{PAUSA 1}{ENTER}
+{ESPERA Dados Corretos}{PAUSA 1}{TELA d20}{ENTER}{ESPERA Vao Livre do Tramo 1}{PAUSA 1}{TELA d21_vao}280{ENTER}{ESPERA Vao Livre do Tramo 2}{PAUSA 1}{TELA d22_vao}480{ENTER}{ESPERA Vao Livre do Tramo 3}{PAUSA 1}{TELA d23_vao}380{ENTER}
+{ESPERA Superior dos Tramos}{PAUSA 1}{TELA d25}{ENTER}{ESPERA Centraliza}{PAUSA 1}{ENTER}{ESPERA Lajes no Corte}{PAUSA 1}N{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA d28}{ENTER}
+{ESPERA Deseja Alterar}{PAUSA 1}{TELA d29}{ENTER}{ESPERA esforcos S}{PAUSA 1}S{ENTER}{ESPERA resultados de Armacao}{PAUSA 1}S{ENTER}{ESPERA somente os diagramas}{PAUSA 1}S{ENTER}
+{ESPERA diagramas e a Armacao}{PAUSA 1}S{ENTER}{ESPERA VIDEO}{PAUSA 1}{TELA d34}{ENTER}{ESPERA Altero a armadura}{PAUSA 1}{TELA d35}{ENTER}
+{ESPERA desenho definitivo}{PAUSA 1}{TELA d36}S{ENTER}{ESPERA Escala 1/.. 200 100 *50*}{PAUSA 1}{ENTER}{ESPERA Edito}{PAUSA 1}{ENTER}{ESPERA padrao CAD}{PAUSA 1}{TELA d39}N{ENTER}
+{ESPERA medidas de forma}{PAUSA 1}{TELA d41}{ENTER}{ESPERA dobramento}{PAUSA 1}{ENTER}
+{ESPERA CAB 1)}{PAUSA 1}OBRA ASS{ENTER}{ESPERA CAB 2)}{PAUSA 1}VIGA V1{ENTER}{ESPERA CAB 3)}{PAUSA 1}SISTRUT{ENTER}{ESPERA NOT 1)}{PAUSA 1}NOTA UM{ENTER}{ESPERA NOT 2)}{PAUSA 1}NOTA DOIS{ENTER}
+{ESPERA repeticoes *FIM*}{PAUSA 1}{TELA i01}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA i02}{ENTER}{PAUSA 8}{TELA i03}
+{ENTER}{ESPERA escolha opcao|300}{PAUSA 3}{TELA i04_menu}
+4{ESPERA Nome da Obra}{PAUSA 2}ASS{ENTER}{ESPERA a anular}{PAUSA 2}{TELA r02}{ENTER}{ESPERA Resumo Geral}{PAUSA 2}S{ENTER}{ESPERA para seguir}{PAUSA 2}{ENTER}{ESPERA Qualquer Tecla}{PAUSA 3}{TELA r04_resumo}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA r05}
+{F2}{ENTER}{ESPERA Configuracao|60}{PAUSA 2}{F2}

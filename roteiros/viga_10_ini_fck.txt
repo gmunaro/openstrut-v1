@@ -1,0 +1,4 @@
+# exe: ARMADURA
+# ARMADURA item 6 (INI com Fck 0.30 em vez de 0.15). Mesmo P da viga_10_ini_base; compara As com ela.
+P{ENTER}{ENTER}{TELA processa}{ENTER}
+{TELA fim}{F2}

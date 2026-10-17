@@ -1,0 +1,13 @@
+# Sufixo (a partir do menu do PILAR): PILAR 1 (materiais), 2 (secao retangular 20x20 e circular D30 com
+# 6 barras), 4 (lista), 5 (correcao: Hw = 25), 3 (processar as duas posicoes na tela: diagramas de
+# interacao em CGA), 3 (processar a posicao 1 impressa), 7 (parametros: item 1 = 1.5). Sem obra.
+1{ESPERA Fck}{PAUSA 1}{TELA a01}{ENTER}{ESPERA Fyk}{ENTER}{ESPERA Tipo de Aco}{PAUSA 1}{TELA a02}{ENTER}{ESPERA Edificios de Multiplos}{ESPERA escolha opcao}{PAUSA 2}
+2{ESPERA Posicao}{PAUSA 1}{TELA a03}{ENTER}{ESPERA tipo de secao}{PAUSA 2}{TELA a04}1{ESPERA B(cm)}20,20,3{ENTER}{ESPERA borda superior}2{ENTER}{ESPERA borda inferior}2{ENTER}{ESPERA bordas laterais}0{ENTER}{ESPERA b1,b2,b3}{PAUSA 1}{TELA a05}10,12.5,16{ENTER}{ESPERA <5> Definir}{PAUSA 1}{TELA a06}2{ESPERA Dados Corretos}{PAUSA 1}{TELA a07}{ENTER}
+{ESPERA POSICAO 2}{ESPERA tipo de secao}{PAUSA 2}2{ESPERA Dinterno}{PAUSA 1}30,3{ENTER}{ESPERA igualmente distribuidas}{PAUSA 1}{ENTER}{ESPERA perimetro EXTERNO}6{ENTER}{ESPERA acrescentar novas barras}{PAUSA 1}{TELA a08}{ENTER}{ESPERA b1,b2,b3}10,12.5,16{ENTER}{ESPERA <5> Definir}{PAUSA 1}1{ESPERA Dados Corretos}{PAUSA 1}{TELA a09}{ENTER}
+{ESPERA POSICAO 3}{ESPERA tipo de secao}{PAUSA 2}{ENTER}{ESPERA Edificios de Multiplos}{ESPERA escolha opcao}{PAUSA 2}
+4{ESPERA Lista das Secoes}{PAUSA 2}{TELA b01}{ENTER}{ESPERA Edificios de Multiplos}{ESPERA escolha opcao}{PAUSA 2}
+5{ESPERA Correcao de Secoes}{ESPERA *FIM*}{PAUSA 1}1{ENTER}{ESPERA *NAO*}{PAUSA 1}{TELA c01}2,25{ENTER}{ESPERA Hw = 25}{PAUSA 1}{TELA c02}{ENTER}{ESPERA alterada *FIM*}{PAUSA 1}{ENTER}{ESPERA Edificios de Multiplos}{ESPERA escolha opcao}{PAUSA 2}
+3{ESPERA Processamento de Secoes}{ESPERA *RETORNO*}{PAUSA 1}1A2{ENTER}{ESPERA Imprimo os resultados}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA d01}{ENTER}
+{ESPERA Continua|600}{PAUSA 3}{TELA d02}{ENTER}{PAUSA 5}{ESPERA Continua|600}{PAUSA 3}{TELA d03}{ENTER}{PAUSA 5}{ESPERA Continua|600}{PAUSA 3}{TELA d04}{ENTER}{ESPERA Edificios de Multiplos|600}{ESPERA escolha opcao}{PAUSA 2}
+3{ESPERA Processamento de Secoes}{ESPERA *RETORNO*}{PAUSA 1}1{ENTER}{ESPERA Imprimo os resultados}S{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{ENTER}{ESPERA Edificios de Multiplos|900}{ESPERA escolha opcao}{PAUSA 2}{TELA d05}
+7{ESPERA Correcao de Parametros}{ESPERA *NAO*}{PAUSA 1}{TELA e01}1,1.5{ENTER}{PAUSA 2}{TELA e02}{ENTER}{ESPERA Edificios de Multiplos}{ESPERA escolha opcao}{PAUSA 2}{TELA e03}

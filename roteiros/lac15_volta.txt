@@ -1,0 +1,4 @@
+# exe: PIGRAEDI
+# lac15: caminho de saida pelo menu (R). O protocolo VOLTA nao esta reconstruido (RECONSTRUCAO em PIGRAEDI.BAS): este roteiro so prova que R termina com 0 e grava a tela do menu.
+# O destino do VOLTA (PIGRAEDI ou PILGEEDI) nao e verificado aqui.
+{TELA lac15_menu}R

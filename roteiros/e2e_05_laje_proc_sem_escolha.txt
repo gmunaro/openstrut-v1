@@ -1,0 +1,4 @@
+# exe: SISTRUT
+# Obra E2E (dados do e2e_04). LAJEPROC sem escolha previa: opcao I logo na entrada.
+# Sem escolha previa (E), I usa a escolha automatica e avisa; a escolha do E/M fica gravada em <obra>.ARL.
+{TELA s01_menu}L{TELA l01_menu_laje}4{TELA q01_proc_menu}I{TELA q02_imp_sem_escolha}{ENTER}{TELA q03_imp_fim}R{TELA l02_menu_pos_proc}{ENTER}{TELA l03_menu_fim}{F2}{TELA s02_menu}{F2}

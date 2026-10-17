@@ -1,0 +1,25 @@
+  LAJES EM REGIME DE RUPTURA                Obra - sem nome
+  OpenStrut                              *  Dados em ...je_geo-20261012-071302\
+  Abril 1991   (omitido)                 
+  Versao 4.0
+
+
+         1  -  Definicao dos Materiais, Concreto Aco
+         2  -  Arquivar dados de Painel
+         3  -  Continuidade / Espessura / Dimensionamento
+         4  -  Processar / Detalhar Lajes
+         5  -  Lista das Lajes Arquivadas
+         6  -  Gravacao e Leitura
+         7  -  Visualizar e Alterar Parametrizacoes
+         8  -  Geometria das Lajes
+         9  -  Montagem .VIG .RLP
+
+
+
+         <F2> = Fim
+
+
+
+
+
+escolha opcao

@@ -1,0 +1,54 @@
+' ============================================================================
+'  ASSERT.BM - helpers de teste para programas de teste QB64 (tests/T_*.BAS)
+'  Uso no teste:
+'      $CONSOLE:ONLY
+'      ... chamadas AssertNear / AssertEq / AssertTrue ...
+'      TestEnd            ' imprime resumo e sai com codigo 1 se houve falha
+'      '$INCLUDE: 'ASSERT.BM'   (no fim do arquivo, depois do codigo principal)
+'  Cada verificacao imprime "PASS <nome>" ou "FAIL <nome> ...".
+' ============================================================================
+
+' Compara numeros com tolerancia relativa (ou absoluta se esperado = 0).
+SUB AssertNear (nome AS STRING, obtido AS DOUBLE, esperado AS DOUBLE, tol AS DOUBLE)
+    SHARED TestFails AS INTEGER, TestCount AS INTEGER
+    DIM erro AS DOUBLE
+    TestCount = TestCount + 1
+    IF esperado = 0 THEN erro = ABS(obtido) ELSE erro = ABS((obtido - esperado) / esperado)
+    IF erro <= tol THEN
+        PRINT "PASS "; nome
+    ELSE
+        PRINT "FAIL "; nome; " obtido="; obtido; " esperado="; esperado; " tol="; tol
+        TestFails = TestFails + 1
+    END IF
+END SUB
+
+' Compara strings exatamente.
+SUB AssertEq (nome AS STRING, obtido AS STRING, esperado AS STRING)
+    SHARED TestFails AS INTEGER, TestCount AS INTEGER
+    TestCount = TestCount + 1
+    IF obtido = esperado THEN
+        PRINT "PASS "; nome
+    ELSE
+        PRINT "FAIL "; nome; " obtido=["; obtido; "] esperado=["; esperado; "]"
+        TestFails = TestFails + 1
+    END IF
+END SUB
+
+' Verifica condicao booleana (QB: -1 verdadeiro, 0 falso).
+SUB AssertTrue (nome AS STRING, cond AS INTEGER)
+    SHARED TestFails AS INTEGER, TestCount AS INTEGER
+    TestCount = TestCount + 1
+    IF cond THEN
+        PRINT "PASS "; nome
+    ELSE
+        PRINT "FAIL "; nome
+        TestFails = TestFails + 1
+    END IF
+END SUB
+
+' Imprime resumo e encerra; codigo de saida 1 se alguma verificacao falhou.
+SUB TestEnd
+    SHARED TestFails AS INTEGER, TestCount AS INTEGER
+    PRINT "RESULT"; TestCount; "checks,"; TestFails; "failures"
+    IF TestFails > 0 THEN SYSTEM 1 ELSE SYSTEM 0
+END SUB

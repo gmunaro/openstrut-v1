@@ -1,0 +1,11 @@
+# exe: PILAR
+# LACUNA 2: PILAREDI "Resumo de cargas Acumuladas" e "Momentos e Carga Normal / Diagramas" (menu de calculo 3.4).
+# Obra FLUXO com .COL proprio: 6 niveis, P4 com N = 20k tf (k = 1..6), P1 com N = 10k tf, secao 20x30, pe-direito 3 m.
+# Conta a mao (peso do PILGEEDI 6 x 0,06 x 3 x 2,5 = 2,7 tf; reducao NBR 6120 6 pav = 60% de 10% acidental):
+#   P4: carga 120 - 2,7 = 117,30; pp 2,70; fundacao 117,3 x 0,94 + 2,7 = 112,96
+#   P1: carga  60 - 2,7 =  57,30; pp 2,70; fundacao  57,3 x 0,94 + 2,7 =  56,56
+# Altera "Reduzo cargas acidentais" para S, imprime (FLUXO_FUND.LST), depois tabela e diagrama (SCREEN 12) da posicao 1.
+{TELA b01_abertura}{ENTER}{TELA b02_pilar}8{TELA b03_obra}{ENTER}{TELA b04_menu}P{TELA b05_calc}3{TELA b06_param}
+S{TELA b07_alterar}S{BS}{BS}10{ENTER}{ENTER}{ENTER}{TELA b08_param2}N{TELA b09_imprime}S{TELA b10_form}{ENTER}{TELA b11_relatorio}{ENTER}
+{TELA b12_calc}4{TELA b13_lista}1{ENTER}{TELA b14_tabela}D{TELA b15_diagrama}{ENTER}{TELA b16_tabela2}{ENTER}
+{TELA b17_calc}6{TELA b18_principal}{ESC}{TELA b19_fim}{F2}{F2}

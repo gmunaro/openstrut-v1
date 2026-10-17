@@ -1,0 +1,1441 @@
+' Grava/le o COMMON da familia PILAREDI no arquivo de troca do CHAIN (ver comum/RT45.BM).
+' Formato de cada item: deslocamento no bloco COMMON (LONG; DS:0DC0 = 0), tipo (1 byte:
+' ! # % & $), n. de dimensoes (INTEGER),
+' limites (LONG inferior, LONG superior por dimensao), tamanho dos dados (LONG), dados.
+' Strings: LONG com o comprimento e os bytes. Matrizes nao dimensionadas nao sao gravadas.
+
+SUB RT_COMMON_GRAVA (f AS INTEGER)
+    RT_CG_ITEM f, &H0000, "!", 4: PUT #f, , V_0dc0!
+    RT_CG_ITEM f, &H0004, "!", 4: PUT #f, , V_0dc4!
+    RT_CG_ITEM f, &H0008, "!", 4: PUT #f, , V_0dc8!
+    RT_CG_ITEM f, &H000C, "$", 4 + LEN(V_0dcc$): RT_CG_STR f, V_0dcc$
+    RT_CG_ITEM f, &H0018, "$", 4 + LEN(V_0dd8$): RT_CG_STR f, V_0dd8$
+    RT_CG_ITEM f, &H001C, "$", 4 + LEN(V_0ddc$): RT_CG_STR f, V_0ddc$
+    RT_CG_ITEM f, &H0020, "$", 4 + LEN(V_0de0$): RT_CG_STR f, V_0de0$
+    RT_CG_ITEM f, &H0024, "!", 4: PUT #f, , V_0de4!
+    RT_CG_ITEM f, &H0028, "!", 4: PUT #f, , V_0de8!
+    RT_CG_ITEM f, &H002C, "!", 4: PUT #f, , V_0dec!
+    RT_CG_ITEM f, &H0030, "$", 4 + LEN(V_0df0$): RT_CG_STR f, V_0df0$
+    RT_CG_ITEM f, &H0034, "$", 4 + LEN(V_0df4$): RT_CG_STR f, V_0df4$
+    RT_CG_ITEM f, &H0038, "$", 4 + LEN(V_0df8$): RT_CG_STR f, V_0df8$
+    RT_CG_ITEM f, &H003C, "$", 4 + LEN(V_0dfc$): RT_CG_STR f, V_0dfc$
+    RT_CG_ITEM f, &H0040, "$", 4 + LEN(V_0e00$): RT_CG_STR f, V_0e00$
+    RT_CG_ITEM f, &H0044, "$", 4 + LEN(V_0e04$): RT_CG_STR f, V_0e04$
+    RT_CG_ITEM f, &H0048, "$", 4 + LEN(V_0e08$): RT_CG_STR f, V_0e08$
+    RT_CG_ITEM f, &H004C, "$", 4 + LEN(V_0e0c$): RT_CG_STR f, V_0e0c$
+    RT_CG_ITEM f, &H0050, "$", 4 + LEN(V_0e10$): RT_CG_STR f, V_0e10$
+    RT_CG_ITEM f, &H0054, "$", 4 + LEN(V_0e14$): RT_CG_STR f, V_0e14$
+    RT_CG_ITEM f, &H0058, "$", 4 + LEN(V_0e18$): RT_CG_STR f, V_0e18$
+    RT_CG_ITEM f, &H005C, "!", 4: PUT #f, , V_0e1c!
+    RT_CG_ITEM f, &H0060, "!", 4: PUT #f, , V_0e20!
+    RT_CG_ITEM f, &H0064, "!", 4: PUT #f, , V_0e24!
+    RT_CG_ITEM f, &H0068, "!", 4: PUT #f, , V_0e28!
+    RT_CG_ITEM f, &H006C, "!", 4: PUT #f, , V_0e2c!
+    RT_CG_ITEM f, &H0070, "!", 4: PUT #f, , V_0e30!
+    RT_CG_ITEM f, &H0074, "!", 4: PUT #f, , V_0e34!
+    RT_CG_ITEM f, &H0078, "!", 4: PUT #f, , V_0e38!
+    RT_CG_ITEM f, &H007C, "%", 2: PUT #f, , V_0e3c%
+    RT_CG_ITEM f, &H007E, "%", 2: PUT #f, , V_0e3e%
+    RT_CG_ITEM f, &H0080, "%", 2: PUT #f, , V_0e40%
+    RT_CG_ITEM f, &H0082, "!", 4: PUT #f, , V_0e42!
+    RT_CG_ITEM f, &H0086, "!", 4: PUT #f, , V_0e46!
+    RT_CG_ITEM f, &H008A, "!", 4: PUT #f, , V_0e4a!
+    RT_CG_ITEM f, &H008E, "!", 4: PUT #f, , V_0e4e!
+    RT_CG_ITEM f, &H0092, "!", 4: PUT #f, , V_0e52!
+    RT_CG_ITEM f, &H0096, "$", 4 + LEN(V_0e56$): RT_CG_STR f, V_0e56$
+    RT_CG_ITEM f, &H009A, "!", 4: PUT #f, , V_0e5a!
+    RT_CG_ITEM f, &H009E, "!", 4: PUT #f, , V_0e5e!
+    RT_CG_ITEM f, &H00A2, "!", 4: PUT #f, , V_0e62!
+    RT_CG_ITEM f, &H00A6, "!", 4: PUT #f, , V_0e66!
+    RT_CG_ITEM f, &H00AA, "!", 4: PUT #f, , V_0e6a!
+    RT_CG_ITEM f, &H00AE, "!", 4: PUT #f, , V_0e6e!
+    RT_CG_ITEM f, &H00B2, "!", 4: PUT #f, , V_0e72!
+    RT_CG_ITEM f, &H00B6, "!", 4: PUT #f, , V_0e76!
+    RT_CG_ITEM f, &H00BA, "!", 4: PUT #f, , V_0e7a!
+    RT_CG_ITEM f, &H00BE, "$", 4 + LEN(V_0e7e$): RT_CG_STR f, V_0e7e$
+    RT_CG_ITEM f, &H00C2, "$", 4 + LEN(V_0e82$): RT_CG_STR f, V_0e82$
+    RT_CG_ITEM f, &H00C6, "$", 4 + LEN(V_0e86$): RT_CG_STR f, V_0e86$
+    RT_CG_ITEM f, &H00CA, "$", 4 + LEN(V_0e8a$): RT_CG_STR f, V_0e8a$
+    RT_CG_ITEM f, &H00CE, "!", 4: PUT #f, , V_0e8e!
+    RT_CG_ITEM f, &H00D2, "!", 4: PUT #f, , V_0e92!
+    RT_CG_ITEM f, &H00D6, "!", 4: PUT #f, , V_0e96!
+    RT_CG_ITEM f, &H00DA, "!", 4: PUT #f, , V_0e9a!
+    RT_CG_ITEM f, &H00DE, "$", 4 + LEN(V_0e9e$): RT_CG_STR f, V_0e9e$
+    RT_CG_ITEM f, &H00E2, "$", 4 + LEN(V_0ea2$): RT_CG_STR f, V_0ea2$
+    RT_CG_ITEM f, &H00E6, "%", 2: PUT #f, , V_0ea6%
+    RT_CG_ITEM f, &H00E8, "$", 4 + LEN(V_0ea8$): RT_CG_STR f, V_0ea8$
+    RT_CG_ITEM f, &H00EC, "!", 4: PUT #f, , V_0eac!
+    RT_CG_ITEM f, &H00F0, "%", 2: PUT #f, , V_0eb0%
+    RT_CG_ITEM f, &H00F2, "%", 2: PUT #f, , V_0eb2%
+    RT_CG_ITEM f, &H00F4, "!", 4: PUT #f, , V_0eb4!
+    RT_CG_ITEM f, &H00F8, "!", 4: PUT #f, , V_0eb8!
+    RT_CG_ITEM f, &H00FC, "!", 4: PUT #f, , V_0ebc!
+    RT_CG_ITEM f, &H0100, "$", 4 + LEN(V_0ec0$): RT_CG_STR f, V_0ec0$
+    RT_CG_ITEM f, &H0104, "$", 4 + LEN(V_0ec4$): RT_CG_STR f, V_0ec4$
+    RT_CG_ITEM f, &H0108, "!", 4: PUT #f, , V_0ec8!
+    IF LBOUND(A_0ecc!, 1) <> -32768 THEN
+        RT_CG_MATRIZ f, &H010C, "!", 1, LBOUND(A_0ecc!, 1), UBOUND(A_0ecc!, 1), 0, 0, 0, 0
+        FOR i1 = LBOUND(A_0ecc!, 1) TO UBOUND(A_0ecc!, 1)
+            PUT #f, , A_0ecc!(i1)
+        NEXT
+        RT_CG_FECHA f
+    END IF
+    IF LBOUND(A_0efa!, 1) <> -32768 THEN
+        RT_CG_MATRIZ f, &H013A, "!", 1, LBOUND(A_0efa!, 1), UBOUND(A_0efa!, 1), 0, 0, 0, 0
+        FOR i1 = LBOUND(A_0efa!, 1) TO UBOUND(A_0efa!, 1)
+            PUT #f, , A_0efa!(i1)
+        NEXT
+        RT_CG_FECHA f
+    END IF
+    IF LBOUND(A_0f28!, 1) <> -32768 THEN
+        RT_CG_MATRIZ f, &H0168, "!", 2, LBOUND(A_0f28!, 1), UBOUND(A_0f28!, 1), LBOUND(A_0f28!, 2), UBOUND(A_0f28!, 2), 0, 0
+        FOR i2 = LBOUND(A_0f28!, 2) TO UBOUND(A_0f28!, 2)
+            FOR i1 = LBOUND(A_0f28!, 1) TO UBOUND(A_0f28!, 1)
+                PUT #f, , A_0f28!(i1, i2)
+            NEXT
+        NEXT
+        RT_CG_FECHA f
+    END IF
+    IF LBOUND(A_0f56%, 1) <> -32768 THEN
+        RT_CG_MATRIZ f, &H0196, "%", 2, LBOUND(A_0f56%, 1), UBOUND(A_0f56%, 1), LBOUND(A_0f56%, 2), UBOUND(A_0f56%, 2), 0, 0
+        FOR i2 = LBOUND(A_0f56%, 2) TO UBOUND(A_0f56%, 2)
+            FOR i1 = LBOUND(A_0f56%, 1) TO UBOUND(A_0f56%, 1)
+                PUT #f, , A_0f56%(i1, i2)
+            NEXT
+        NEXT
+        RT_CG_FECHA f
+    END IF
+    RT_CG_ITEM f, &H01C4, "!", 4: PUT #f, , V_0f84!
+    RT_CG_ITEM f, &H01C8, "!", 4: PUT #f, , V_0f88!
+    RT_CG_ITEM f, &H01D0, "!", 4: PUT #f, , V_0f90!
+    RT_CG_ITEM f, &H01D4, "!", 4: PUT #f, , V_0f94!
+    RT_CG_ITEM f, &H01D8, "!", 4: PUT #f, , V_0f98!
+    RT_CG_ITEM f, &H01DC, "!", 4: PUT #f, , V_0f9c!
+    RT_CG_ITEM f, &H01E0, "!", 4: PUT #f, , V_0fa0!
+    RT_CG_ITEM f, &H01E4, "!", 4: PUT #f, , V_0fa4!
+    RT_CG_ITEM f, &H01E8, "!", 4: PUT #f, , V_0fa8!
+    RT_CG_ITEM f, &H01EC, "!", 4: PUT #f, , V_0fac!
+    RT_CG_ITEM f, &H01F0, "!", 4: PUT #f, , V_0fb0!
+    RT_CG_ITEM f, &H01F4, "!", 4: PUT #f, , V_0fb4!
+    RT_CG_ITEM f, &H01F8, "!", 4: PUT #f, , V_0fb8!
+    RT_CG_ITEM f, &H01FC, "!", 4: PUT #f, , V_0fbc!
+    RT_CG_ITEM f, &H0200, "!", 4: PUT #f, , V_0fc0!
+    RT_CG_ITEM f, &H0204, "!", 4: PUT #f, , V_0fc4!
+    RT_CG_ITEM f, &H0208, "!", 4: PUT #f, , V_0fc8!
+    RT_CG_ITEM f, &H020C, "!", 4: PUT #f, , V_0fcc!
+    RT_CG_ITEM f, &H0210, "!", 4: PUT #f, , V_0fd0!
+    RT_CG_ITEM f, &H0214, "!", 4: PUT #f, , V_0fd4!
+    RT_CG_ITEM f, &H0218, "!", 4: PUT #f, , V_0fd8!
+    RT_CG_ITEM f, &H021C, "!", 4: PUT #f, , V_0fdc!
+    RT_CG_ITEM f, &H0220, "!", 4: PUT #f, , V_0fe0!
+    RT_CG_ITEM f, &H0224, "!", 4: PUT #f, , V_0fe4!
+    RT_CG_ITEM f, &H0228, "!", 4: PUT #f, , V_0fe8!
+    RT_CG_ITEM f, &H022C, "!", 4: PUT #f, , V_0fec!
+    RT_CG_ITEM f, &H0230, "!", 4: PUT #f, , V_0ff0!
+    RT_CG_ITEM f, &H0234, "!", 4: PUT #f, , V_0ff4!
+    RT_CG_ITEM f, &H0238, "%", 2: PUT #f, , V_0ff8%
+    RT_CG_ITEM f, &H023A, "!", 4: PUT #f, , V_0ffa!
+    RT_CG_ITEM f, &H023E, "!", 4: PUT #f, , V_0ffe!
+    RT_CG_ITEM f, &H0242, "!", 4: PUT #f, , V_1002!
+    RT_CG_ITEM f, &H0246, "!", 4: PUT #f, , V_1006!
+    RT_CG_ITEM f, &H024A, "!", 4: PUT #f, , V_100a!
+    RT_CG_ITEM f, &H024E, "!", 4: PUT #f, , V_100e!
+    RT_CG_ITEM f, &H0252, "!", 4: PUT #f, , V_1012!
+    RT_CG_ITEM f, &H0256, "!", 4: PUT #f, , V_1016!
+    RT_CG_ITEM f, &H025A, "!", 4: PUT #f, , V_101a!
+    RT_CG_ITEM f, &H025E, "!", 4: PUT #f, , V_101e!
+    RT_CG_ITEM f, &H0262, "!", 4: PUT #f, , V_1022!
+    RT_CG_ITEM f, &H0266, "!", 4: PUT #f, , V_1026!
+    RT_CG_ITEM f, &H026E, "!", 4: PUT #f, , V_102e!
+    RT_CG_ITEM f, &H0272, "!", 4: PUT #f, , V_1032!
+    RT_CG_ITEM f, &H0276, "!", 4: PUT #f, , V_1036!
+    RT_CG_ITEM f, &H027A, "!", 4: PUT #f, , V_103a!
+    RT_CG_ITEM f, &H027E, "!", 4: PUT #f, , V_103e!
+    RT_CG_ITEM f, &H0282, "!", 4: PUT #f, , V_1042!
+    RT_CG_ITEM f, &H0286, "!", 4: PUT #f, , V_1046!
+    RT_CG_ITEM f, &H028A, "!", 4: PUT #f, , V_104a!
+    RT_CG_ITEM f, &H028E, "!", 4: PUT #f, , V_104e!
+    RT_CG_ITEM f, &H0292, "!", 4: PUT #f, , V_1052!
+    RT_CG_ITEM f, &H0296, "!", 4: PUT #f, , V_1056!
+    RT_CG_ITEM f, &H029A, "!", 4: PUT #f, , V_105a!
+    RT_CG_ITEM f, &H029E, "!", 4: PUT #f, , V_105e!
+    RT_CG_ITEM f, &H02A2, "!", 4: PUT #f, , V_1062!
+    RT_CG_ITEM f, &H02A6, "!", 4: PUT #f, , V_1066!
+    RT_CG_ITEM f, &H02AA, "!", 4: PUT #f, , V_106a!
+    RT_CG_ITEM f, &H02AE, "$", 4 + LEN(V_106e$): RT_CG_STR f, V_106e$
+    RT_CG_ITEM f, &H02B2, "$", 4 + LEN(V_1072$): RT_CG_STR f, V_1072$
+    RT_CG_ITEM f, &H02B6, "$", 4 + LEN(V_1076$): RT_CG_STR f, V_1076$
+    RT_CG_ITEM f, &H02BA, "$", 4 + LEN(V_107a$): RT_CG_STR f, V_107a$
+    RT_CG_ITEM f, &H02BE, "$", 4 + LEN(V_107e$): RT_CG_STR f, V_107e$
+    RT_CG_ITEM f, &H02C2, "$", 4 + LEN(V_1082$): RT_CG_STR f, V_1082$
+    RT_CG_ITEM f, &H02C6, "!", 4: PUT #f, , V_1086!
+    RT_CG_ITEM f, &H02CA, "!", 4: PUT #f, , V_108a!
+    RT_CG_ITEM f, &H02CE, "!", 4: PUT #f, , V_108e!
+    RT_CG_ITEM f, &H02D2, "!", 4: PUT #f, , V_1092!
+    RT_CG_ITEM f, &H02D6, "!", 4: PUT #f, , V_1096!
+    RT_CG_ITEM f, &H02DA, "!", 4: PUT #f, , V_109a!
+    RT_CG_ITEM f, &H02DE, "!", 4: PUT #f, , V_109e!
+    RT_CG_ITEM f, &H02E2, "!", 4: PUT #f, , V_10a2!
+    RT_CG_ITEM f, &H02E6, "!", 4: PUT #f, , V_10a6!
+    RT_CG_ITEM f, &H02EA, "!", 4: PUT #f, , V_10aa!
+    RT_CG_ITEM f, &H02EE, "!", 4: PUT #f, , V_10ae!
+    RT_CG_ITEM f, &H02F2, "!", 4: PUT #f, , V_10b2!
+    RT_CG_ITEM f, &H02F6, "!", 4: PUT #f, , V_10b6!
+    RT_CG_ITEM f, &H02FA, "!", 4: PUT #f, , V_10ba!
+    IF LBOUND(A_10be!, 1) <> -32768 THEN
+        RT_CG_MATRIZ f, &H02FE, "!", 2, LBOUND(A_10be!, 1), UBOUND(A_10be!, 1), LBOUND(A_10be!, 2), UBOUND(A_10be!, 2), 0, 0
+        FOR i2 = LBOUND(A_10be!, 2) TO UBOUND(A_10be!, 2)
+            FOR i1 = LBOUND(A_10be!, 1) TO UBOUND(A_10be!, 1)
+                PUT #f, , A_10be!(i1, i2)
+            NEXT
+        NEXT
+        RT_CG_FECHA f
+    END IF
+    IF LBOUND(A_10ec!, 1) <> -32768 THEN
+        RT_CG_MATRIZ f, &H032C, "!", 2, LBOUND(A_10ec!, 1), UBOUND(A_10ec!, 1), LBOUND(A_10ec!, 2), UBOUND(A_10ec!, 2), 0, 0
+        FOR i2 = LBOUND(A_10ec!, 2) TO UBOUND(A_10ec!, 2)
+            FOR i1 = LBOUND(A_10ec!, 1) TO UBOUND(A_10ec!, 1)
+                PUT #f, , A_10ec!(i1, i2)
+            NEXT
+        NEXT
+        RT_CG_FECHA f
+    END IF
+    IF LBOUND(A_111a!, 1) <> -32768 THEN
+        RT_CG_MATRIZ f, &H035A, "!", 2, LBOUND(A_111a!, 1), UBOUND(A_111a!, 1), LBOUND(A_111a!, 2), UBOUND(A_111a!, 2), 0, 0
+        FOR i2 = LBOUND(A_111a!, 2) TO UBOUND(A_111a!, 2)
+            FOR i1 = LBOUND(A_111a!, 1) TO UBOUND(A_111a!, 1)
+                PUT #f, , A_111a!(i1, i2)
+            NEXT
+        NEXT
+        RT_CG_FECHA f
+    END IF
+    IF LBOUND(A_1148!, 1) <> -32768 THEN
+        RT_CG_MATRIZ f, &H0388, "!", 2, LBOUND(A_1148!, 1), UBOUND(A_1148!, 1), LBOUND(A_1148!, 2), UBOUND(A_1148!, 2), 0, 0
+        FOR i2 = LBOUND(A_1148!, 2) TO UBOUND(A_1148!, 2)
+            FOR i1 = LBOUND(A_1148!, 1) TO UBOUND(A_1148!, 1)
+                PUT #f, , A_1148!(i1, i2)
+            NEXT
+        NEXT
+        RT_CG_FECHA f
+    END IF
+    IF LBOUND(A_1176!, 1) <> -32768 THEN
+        RT_CG_MATRIZ f, &H03B6, "!", 2, LBOUND(A_1176!, 1), UBOUND(A_1176!, 1), LBOUND(A_1176!, 2), UBOUND(A_1176!, 2), 0, 0
+        FOR i2 = LBOUND(A_1176!, 2) TO UBOUND(A_1176!, 2)
+            FOR i1 = LBOUND(A_1176!, 1) TO UBOUND(A_1176!, 1)
+                PUT #f, , A_1176!(i1, i2)
+            NEXT
+        NEXT
+        RT_CG_FECHA f
+    END IF
+    RT_CG_ITEM f, &H03E4, "%", 2: PUT #f, , V_11a4%
+    RT_CG_ITEM f, &H03E6, "%", 2: PUT #f, , V_11a6%
+    RT_CG_ITEM f, &H03E8, "%", 2: PUT #f, , V_11a8%
+    RT_CG_ITEM f, &H03EA, "%", 2: PUT #f, , V_11aa%
+    RT_CG_ITEM f, &H03EC, "%", 2: PUT #f, , V_11ac%
+    RT_CG_ITEM f, &H03EE, "%", 2: PUT #f, , V_11ae%
+    RT_CG_ITEM f, &H03F0, "%", 2: PUT #f, , V_11b0%
+    RT_CG_ITEM f, &H03F2, "%", 2: PUT #f, , V_11b2%
+    RT_CG_ITEM f, &H03F4, "%", 2: PUT #f, , V_11b4%
+    RT_CG_ITEM f, &H03F6, "!", 4: PUT #f, , V_11b6!
+    RT_CG_ITEM f, &H03FA, "!", 4: PUT #f, , V_11ba!
+    RT_CG_ITEM f, &H03FE, "$", 4 + LEN(V_11be$): RT_CG_STR f, V_11be$
+    RT_CG_ITEM f, &H0402, "%", 2: PUT #f, , V_11c2%
+    RT_CG_ITEM f, &H0404, "%", 2: PUT #f, , V_11c4%
+    RT_CG_ITEM f, &H0406, "%", 2: PUT #f, , V_11c6%
+    IF LBOUND(A_11c8!, 1) <> -32768 THEN
+        RT_CG_MATRIZ f, &H0408, "!", 1, LBOUND(A_11c8!, 1), UBOUND(A_11c8!, 1), 0, 0, 0, 0
+        FOR i1 = LBOUND(A_11c8!, 1) TO UBOUND(A_11c8!, 1)
+            PUT #f, , A_11c8!(i1)
+        NEXT
+        RT_CG_FECHA f
+    END IF
+    IF LBOUND(A_11f6$, 1) <> -32768 THEN
+        RT_CG_MATRIZ f, &H0436, "$", 1, LBOUND(A_11f6$, 1), UBOUND(A_11f6$, 1), 0, 0, 0, 0
+        FOR i1 = LBOUND(A_11f6$, 1) TO UBOUND(A_11f6$, 1)
+            RT_CG_STR f, A_11f6$(i1)
+        NEXT
+        RT_CG_FECHA f
+    END IF
+    IF LBOUND(A_1224%, 1) <> -32768 THEN
+        RT_CG_MATRIZ f, &H0464, "%", 2, LBOUND(A_1224%, 1), UBOUND(A_1224%, 1), LBOUND(A_1224%, 2), UBOUND(A_1224%, 2), 0, 0
+        FOR i2 = LBOUND(A_1224%, 2) TO UBOUND(A_1224%, 2)
+            FOR i1 = LBOUND(A_1224%, 1) TO UBOUND(A_1224%, 1)
+                PUT #f, , A_1224%(i1, i2)
+            NEXT
+        NEXT
+        RT_CG_FECHA f
+    END IF
+    IF LBOUND(A_1252$, 1) <> -32768 THEN
+        RT_CG_MATRIZ f, &H0492, "$", 1, LBOUND(A_1252$, 1), UBOUND(A_1252$, 1), 0, 0, 0, 0
+        FOR i1 = LBOUND(A_1252$, 1) TO UBOUND(A_1252$, 1)
+            RT_CG_STR f, A_1252$(i1)
+        NEXT
+        RT_CG_FECHA f
+    END IF
+    IF LBOUND(A_1280!, 1) <> -32768 THEN
+        RT_CG_MATRIZ f, &H04C0, "!", 3, LBOUND(A_1280!, 1), UBOUND(A_1280!, 1), LBOUND(A_1280!, 2), UBOUND(A_1280!, 2), LBOUND(A_1280!, 3), UBOUND(A_1280!, 3)
+        FOR i3 = LBOUND(A_1280!, 3) TO UBOUND(A_1280!, 3)
+            FOR i2 = LBOUND(A_1280!, 2) TO UBOUND(A_1280!, 2)
+                FOR i1 = LBOUND(A_1280!, 1) TO UBOUND(A_1280!, 1)
+                    PUT #f, , A_1280!(i1, i2, i3)
+                NEXT
+            NEXT
+        NEXT
+        RT_CG_FECHA f
+    END IF
+    IF LBOUND(A_12ae$, 1) <> -32768 THEN
+        RT_CG_MATRIZ f, &H04EE, "$", 3, LBOUND(A_12ae$, 1), UBOUND(A_12ae$, 1), LBOUND(A_12ae$, 2), UBOUND(A_12ae$, 2), LBOUND(A_12ae$, 3), UBOUND(A_12ae$, 3)
+        FOR i3 = LBOUND(A_12ae$, 3) TO UBOUND(A_12ae$, 3)
+            FOR i2 = LBOUND(A_12ae$, 2) TO UBOUND(A_12ae$, 2)
+                FOR i1 = LBOUND(A_12ae$, 1) TO UBOUND(A_12ae$, 1)
+                    RT_CG_STR f, A_12ae$(i1, i2, i3)
+                NEXT
+            NEXT
+        NEXT
+        RT_CG_FECHA f
+    END IF
+    IF LBOUND(A_12dc!, 1) <> -32768 THEN
+        RT_CG_MATRIZ f, &H051C, "!", 3, LBOUND(A_12dc!, 1), UBOUND(A_12dc!, 1), LBOUND(A_12dc!, 2), UBOUND(A_12dc!, 2), LBOUND(A_12dc!, 3), UBOUND(A_12dc!, 3)
+        FOR i3 = LBOUND(A_12dc!, 3) TO UBOUND(A_12dc!, 3)
+            FOR i2 = LBOUND(A_12dc!, 2) TO UBOUND(A_12dc!, 2)
+                FOR i1 = LBOUND(A_12dc!, 1) TO UBOUND(A_12dc!, 1)
+                    PUT #f, , A_12dc!(i1, i2, i3)
+                NEXT
+            NEXT
+        NEXT
+        RT_CG_FECHA f
+    END IF
+    IF LBOUND(A_130a%, 1) <> -32768 THEN
+        RT_CG_MATRIZ f, &H054A, "%", 2, LBOUND(A_130a%, 1), UBOUND(A_130a%, 1), LBOUND(A_130a%, 2), UBOUND(A_130a%, 2), 0, 0
+        FOR i2 = LBOUND(A_130a%, 2) TO UBOUND(A_130a%, 2)
+            FOR i1 = LBOUND(A_130a%, 1) TO UBOUND(A_130a%, 1)
+                PUT #f, , A_130a%(i1, i2)
+            NEXT
+        NEXT
+        RT_CG_FECHA f
+    END IF
+    IF LBOUND(A_1338%, 1) <> -32768 THEN
+        RT_CG_MATRIZ f, &H0578, "%", 3, LBOUND(A_1338%, 1), UBOUND(A_1338%, 1), LBOUND(A_1338%, 2), UBOUND(A_1338%, 2), LBOUND(A_1338%, 3), UBOUND(A_1338%, 3)
+        FOR i3 = LBOUND(A_1338%, 3) TO UBOUND(A_1338%, 3)
+            FOR i2 = LBOUND(A_1338%, 2) TO UBOUND(A_1338%, 2)
+                FOR i1 = LBOUND(A_1338%, 1) TO UBOUND(A_1338%, 1)
+                    PUT #f, , A_1338%(i1, i2, i3)
+                NEXT
+            NEXT
+        NEXT
+        RT_CG_FECHA f
+    END IF
+    IF LBOUND(A_1366%, 1) <> -32768 THEN
+        RT_CG_MATRIZ f, &H05A6, "%", 3, LBOUND(A_1366%, 1), UBOUND(A_1366%, 1), LBOUND(A_1366%, 2), UBOUND(A_1366%, 2), LBOUND(A_1366%, 3), UBOUND(A_1366%, 3)
+        FOR i3 = LBOUND(A_1366%, 3) TO UBOUND(A_1366%, 3)
+            FOR i2 = LBOUND(A_1366%, 2) TO UBOUND(A_1366%, 2)
+                FOR i1 = LBOUND(A_1366%, 1) TO UBOUND(A_1366%, 1)
+                    PUT #f, , A_1366%(i1, i2, i3)
+                NEXT
+            NEXT
+        NEXT
+        RT_CG_FECHA f
+    END IF
+    IF LBOUND(A_1394%, 1) <> -32768 THEN
+        RT_CG_MATRIZ f, &H05D4, "%", 1, LBOUND(A_1394%, 1), UBOUND(A_1394%, 1), 0, 0, 0, 0
+        FOR i1 = LBOUND(A_1394%, 1) TO UBOUND(A_1394%, 1)
+            PUT #f, , A_1394%(i1)
+        NEXT
+        RT_CG_FECHA f
+    END IF
+    IF LBOUND(A_13c2%, 1) <> -32768 THEN
+        RT_CG_MATRIZ f, &H0602, "%", 1, LBOUND(A_13c2%, 1), UBOUND(A_13c2%, 1), 0, 0, 0, 0
+        FOR i1 = LBOUND(A_13c2%, 1) TO UBOUND(A_13c2%, 1)
+            PUT #f, , A_13c2%(i1)
+        NEXT
+        RT_CG_FECHA f
+    END IF
+    IF LBOUND(A_13f0%, 1) <> -32768 THEN
+        RT_CG_MATRIZ f, &H0630, "%", 2, LBOUND(A_13f0%, 1), UBOUND(A_13f0%, 1), LBOUND(A_13f0%, 2), UBOUND(A_13f0%, 2), 0, 0
+        FOR i2 = LBOUND(A_13f0%, 2) TO UBOUND(A_13f0%, 2)
+            FOR i1 = LBOUND(A_13f0%, 1) TO UBOUND(A_13f0%, 1)
+                PUT #f, , A_13f0%(i1, i2)
+            NEXT
+        NEXT
+        RT_CG_FECHA f
+    END IF
+    IF LBOUND(A_141e%, 1) <> -32768 THEN
+        RT_CG_MATRIZ f, &H065E, "%", 3, LBOUND(A_141e%, 1), UBOUND(A_141e%, 1), LBOUND(A_141e%, 2), UBOUND(A_141e%, 2), LBOUND(A_141e%, 3), UBOUND(A_141e%, 3)
+        FOR i3 = LBOUND(A_141e%, 3) TO UBOUND(A_141e%, 3)
+            FOR i2 = LBOUND(A_141e%, 2) TO UBOUND(A_141e%, 2)
+                FOR i1 = LBOUND(A_141e%, 1) TO UBOUND(A_141e%, 1)
+                    PUT #f, , A_141e%(i1, i2, i3)
+                NEXT
+            NEXT
+        NEXT
+        RT_CG_FECHA f
+    END IF
+    RT_CG_ITEM f, &H068C, "!", 4: PUT #f, , V_144c!
+    IF LBOUND(A_1450!, 1) <> -32768 THEN
+        RT_CG_MATRIZ f, &H0690, "!", 2, LBOUND(A_1450!, 1), UBOUND(A_1450!, 1), LBOUND(A_1450!, 2), UBOUND(A_1450!, 2), 0, 0
+        FOR i2 = LBOUND(A_1450!, 2) TO UBOUND(A_1450!, 2)
+            FOR i1 = LBOUND(A_1450!, 1) TO UBOUND(A_1450!, 1)
+                PUT #f, , A_1450!(i1, i2)
+            NEXT
+        NEXT
+        RT_CG_FECHA f
+    END IF
+END SUB
+
+' CLEAR do original: zera o COMMON (matrizes voltam a 'nao dimensionadas').
+SUB RT_COMMON_LIMPA
+    V_0dc0! = 0
+    V_0dc4! = 0
+    V_0dc8! = 0
+    V_0dcc$ = ""
+    V_0dd8$ = ""
+    V_0ddc$ = ""
+    V_0de0$ = ""
+    V_0de4! = 0
+    V_0de8! = 0
+    V_0dec! = 0
+    V_0df0$ = ""
+    V_0df4$ = ""
+    V_0df8$ = ""
+    V_0dfc$ = ""
+    V_0e00$ = ""
+    V_0e04$ = ""
+    V_0e08$ = ""
+    V_0e0c$ = ""
+    V_0e10$ = ""
+    V_0e14$ = ""
+    V_0e18$ = ""
+    V_0e1c! = 0
+    V_0e20! = 0
+    V_0e24! = 0
+    V_0e28! = 0
+    V_0e2c! = 0
+    V_0e30! = 0
+    V_0e34! = 0
+    V_0e38! = 0
+    V_0e3c% = 0
+    V_0e3e% = 0
+    V_0e40% = 0
+    V_0e42! = 0
+    V_0e46! = 0
+    V_0e4a! = 0
+    V_0e4e! = 0
+    V_0e52! = 0
+    V_0e56$ = ""
+    V_0e5a! = 0
+    V_0e5e! = 0
+    V_0e62! = 0
+    V_0e66! = 0
+    V_0e6a! = 0
+    V_0e6e! = 0
+    V_0e72! = 0
+    V_0e76! = 0
+    V_0e7a! = 0
+    V_0e7e$ = ""
+    V_0e82$ = ""
+    V_0e86$ = ""
+    V_0e8a$ = ""
+    V_0e8e! = 0
+    V_0e92! = 0
+    V_0e96! = 0
+    V_0e9a! = 0
+    V_0e9e$ = ""
+    V_0ea2$ = ""
+    V_0ea6% = 0
+    V_0ea8$ = ""
+    V_0eac! = 0
+    V_0eb0% = 0
+    V_0eb2% = 0
+    V_0eb4! = 0
+    V_0eb8! = 0
+    V_0ebc! = 0
+    V_0ec0$ = ""
+    V_0ec4$ = ""
+    V_0ec8! = 0
+    REDIM A_0ecc!(-32768 TO -32768)
+    REDIM A_0efa!(-32768 TO -32768)
+    REDIM A_0f28!(-32768 TO -32768, -32768 TO -32768)
+    REDIM A_0f56%(-32768 TO -32768, -32768 TO -32768)
+    V_0f84! = 0
+    V_0f88! = 0
+    V_0f90! = 0
+    V_0f94! = 0
+    V_0f98! = 0
+    V_0f9c! = 0
+    V_0fa0! = 0
+    V_0fa4! = 0
+    V_0fa8! = 0
+    V_0fac! = 0
+    V_0fb0! = 0
+    V_0fb4! = 0
+    V_0fb8! = 0
+    V_0fbc! = 0
+    V_0fc0! = 0
+    V_0fc4! = 0
+    V_0fc8! = 0
+    V_0fcc! = 0
+    V_0fd0! = 0
+    V_0fd4! = 0
+    V_0fd8! = 0
+    V_0fdc! = 0
+    V_0fe0! = 0
+    V_0fe4! = 0
+    V_0fe8! = 0
+    V_0fec! = 0
+    V_0ff0! = 0
+    V_0ff4! = 0
+    V_0ff8% = 0
+    V_0ffa! = 0
+    V_0ffe! = 0
+    V_1002! = 0
+    V_1006! = 0
+    V_100a! = 0
+    V_100e! = 0
+    V_1012! = 0
+    V_1016! = 0
+    V_101a! = 0
+    V_101e! = 0
+    V_1022! = 0
+    V_1026! = 0
+    V_102e! = 0
+    V_1032! = 0
+    V_1036! = 0
+    V_103a! = 0
+    V_103e! = 0
+    V_1042! = 0
+    V_1046! = 0
+    V_104a! = 0
+    V_104e! = 0
+    V_1052! = 0
+    V_1056! = 0
+    V_105a! = 0
+    V_105e! = 0
+    V_1062! = 0
+    V_1066! = 0
+    V_106a! = 0
+    V_106e$ = ""
+    V_1072$ = ""
+    V_1076$ = ""
+    V_107a$ = ""
+    V_107e$ = ""
+    V_1082$ = ""
+    V_1086! = 0
+    V_108a! = 0
+    V_108e! = 0
+    V_1092! = 0
+    V_1096! = 0
+    V_109a! = 0
+    V_109e! = 0
+    V_10a2! = 0
+    V_10a6! = 0
+    V_10aa! = 0
+    V_10ae! = 0
+    V_10b2! = 0
+    V_10b6! = 0
+    V_10ba! = 0
+    REDIM A_10be!(-32768 TO -32768, -32768 TO -32768)
+    REDIM A_10ec!(-32768 TO -32768, -32768 TO -32768)
+    REDIM A_111a!(-32768 TO -32768, -32768 TO -32768)
+    REDIM A_1148!(-32768 TO -32768, -32768 TO -32768)
+    REDIM A_1176!(-32768 TO -32768, -32768 TO -32768)
+    V_11a4% = 0
+    V_11a6% = 0
+    V_11a8% = 0
+    V_11aa% = 0
+    V_11ac% = 0
+    V_11ae% = 0
+    V_11b0% = 0
+    V_11b2% = 0
+    V_11b4% = 0
+    V_11b6! = 0
+    V_11ba! = 0
+    V_11be$ = ""
+    V_11c2% = 0
+    V_11c4% = 0
+    V_11c6% = 0
+    REDIM A_11c8!(-32768 TO -32768)
+    REDIM A_11f6$(-32768 TO -32768)
+    REDIM A_1224%(-32768 TO -32768, -32768 TO -32768)
+    REDIM A_1252$(-32768 TO -32768)
+    REDIM A_1280!(-32768 TO -32768, -32768 TO -32768, -32768 TO -32768)
+    REDIM A_12ae$(-32768 TO -32768, -32768 TO -32768, -32768 TO -32768)
+    REDIM A_12dc!(-32768 TO -32768, -32768 TO -32768, -32768 TO -32768)
+    REDIM A_130a%(-32768 TO -32768, -32768 TO -32768)
+    REDIM A_1338%(-32768 TO -32768, -32768 TO -32768, -32768 TO -32768)
+    REDIM A_1366%(-32768 TO -32768, -32768 TO -32768, -32768 TO -32768)
+    REDIM A_1394%(-32768 TO -32768)
+    REDIM A_13c2%(-32768 TO -32768)
+    REDIM A_13f0%(-32768 TO -32768, -32768 TO -32768)
+    REDIM A_141e%(-32768 TO -32768, -32768 TO -32768, -32768 TO -32768)
+    V_144c! = 0
+    REDIM A_1450!(-32768 TO -32768, -32768 TO -32768)
+END SUB
+
+SUB RT_COMMON_LE (f AS INTEGER)
+    DIM ender AS LONG, tipo AS STRING * 1, nd AS INTEGER, lb(1 TO 3) AS LONG, ub(1 TO 3) AS LONG
+    DIM tam AS LONG, prox AS LONG
+    DO WHILE RT_CL_ITEM(f, ender, tipo, nd, lb(), ub(), tam)
+        prox = SEEK(f) + tam
+        SELECT CASE ender
+        CASE &H0000   ' V_0dc0
+            IF tipo = "!" THEN
+                GET #f, , V_0dc0!
+            END IF
+        CASE &H0004   ' V_0dc4
+            IF tipo = "!" THEN
+                GET #f, , V_0dc4!
+            END IF
+        CASE &H0008   ' V_0dc8
+            IF tipo = "!" THEN
+                GET #f, , V_0dc8!
+            END IF
+        CASE &H000C   ' V_0dcc
+            IF tipo = "$" THEN
+                V_0dcc$ = RT_CL_STR$(f)
+            END IF
+        CASE &H0018   ' V_0dd8
+            IF tipo = "$" THEN
+                V_0dd8$ = RT_CL_STR$(f)
+            END IF
+        CASE &H001C   ' V_0ddc
+            IF tipo = "$" THEN
+                V_0ddc$ = RT_CL_STR$(f)
+            END IF
+        CASE &H0020   ' V_0de0
+            IF tipo = "$" THEN
+                V_0de0$ = RT_CL_STR$(f)
+            END IF
+        CASE &H0024   ' V_0de4
+            IF tipo = "!" THEN
+                GET #f, , V_0de4!
+            END IF
+        CASE &H0028   ' V_0de8
+            IF tipo = "!" THEN
+                GET #f, , V_0de8!
+            END IF
+        CASE &H002C   ' V_0dec
+            IF tipo = "!" THEN
+                GET #f, , V_0dec!
+            END IF
+        CASE &H0030   ' V_0df0
+            IF tipo = "$" THEN
+                V_0df0$ = RT_CL_STR$(f)
+            END IF
+        CASE &H0034   ' V_0df4
+            IF tipo = "$" THEN
+                V_0df4$ = RT_CL_STR$(f)
+            END IF
+        CASE &H0038   ' V_0df8
+            IF tipo = "$" THEN
+                V_0df8$ = RT_CL_STR$(f)
+            END IF
+        CASE &H003C   ' V_0dfc
+            IF tipo = "$" THEN
+                V_0dfc$ = RT_CL_STR$(f)
+            END IF
+        CASE &H0040   ' V_0e00
+            IF tipo = "$" THEN
+                V_0e00$ = RT_CL_STR$(f)
+            END IF
+        CASE &H0044   ' V_0e04
+            IF tipo = "$" THEN
+                V_0e04$ = RT_CL_STR$(f)
+            END IF
+        CASE &H0048   ' V_0e08
+            IF tipo = "$" THEN
+                V_0e08$ = RT_CL_STR$(f)
+            END IF
+        CASE &H004C   ' V_0e0c
+            IF tipo = "$" THEN
+                V_0e0c$ = RT_CL_STR$(f)
+            END IF
+        CASE &H0050   ' V_0e10
+            IF tipo = "$" THEN
+                V_0e10$ = RT_CL_STR$(f)
+            END IF
+        CASE &H0054   ' V_0e14
+            IF tipo = "$" THEN
+                V_0e14$ = RT_CL_STR$(f)
+            END IF
+        CASE &H0058   ' V_0e18
+            IF tipo = "$" THEN
+                V_0e18$ = RT_CL_STR$(f)
+            END IF
+        CASE &H005C   ' V_0e1c
+            IF tipo = "!" THEN
+                GET #f, , V_0e1c!
+            END IF
+        CASE &H0060   ' V_0e20
+            IF tipo = "!" THEN
+                GET #f, , V_0e20!
+            END IF
+        CASE &H0064   ' V_0e24
+            IF tipo = "!" THEN
+                GET #f, , V_0e24!
+            END IF
+        CASE &H0068   ' V_0e28
+            IF tipo = "!" THEN
+                GET #f, , V_0e28!
+            END IF
+        CASE &H006C   ' V_0e2c
+            IF tipo = "!" THEN
+                GET #f, , V_0e2c!
+            END IF
+        CASE &H0070   ' V_0e30
+            IF tipo = "!" THEN
+                GET #f, , V_0e30!
+            END IF
+        CASE &H0074   ' V_0e34
+            IF tipo = "!" THEN
+                GET #f, , V_0e34!
+            END IF
+        CASE &H0078   ' V_0e38
+            IF tipo = "!" THEN
+                GET #f, , V_0e38!
+            END IF
+        CASE &H007C   ' V_0e3c
+            IF tipo = "%" THEN
+                GET #f, , V_0e3c%
+            END IF
+        CASE &H007E   ' V_0e3e
+            IF tipo = "%" THEN
+                GET #f, , V_0e3e%
+            END IF
+        CASE &H0080   ' V_0e40
+            IF tipo = "%" THEN
+                GET #f, , V_0e40%
+            END IF
+        CASE &H0082   ' V_0e42
+            IF tipo = "!" THEN
+                GET #f, , V_0e42!
+            END IF
+        CASE &H0086   ' V_0e46
+            IF tipo = "!" THEN
+                GET #f, , V_0e46!
+            END IF
+        CASE &H008A   ' V_0e4a
+            IF tipo = "!" THEN
+                GET #f, , V_0e4a!
+            END IF
+        CASE &H008E   ' V_0e4e
+            IF tipo = "!" THEN
+                GET #f, , V_0e4e!
+            END IF
+        CASE &H0092   ' V_0e52
+            IF tipo = "!" THEN
+                GET #f, , V_0e52!
+            END IF
+        CASE &H0096   ' V_0e56
+            IF tipo = "$" THEN
+                V_0e56$ = RT_CL_STR$(f)
+            END IF
+        CASE &H009A   ' V_0e5a
+            IF tipo = "!" THEN
+                GET #f, , V_0e5a!
+            END IF
+        CASE &H009E   ' V_0e5e
+            IF tipo = "!" THEN
+                GET #f, , V_0e5e!
+            END IF
+        CASE &H00A2   ' V_0e62
+            IF tipo = "!" THEN
+                GET #f, , V_0e62!
+            END IF
+        CASE &H00A6   ' V_0e66
+            IF tipo = "!" THEN
+                GET #f, , V_0e66!
+            END IF
+        CASE &H00AA   ' V_0e6a
+            IF tipo = "!" THEN
+                GET #f, , V_0e6a!
+            END IF
+        CASE &H00AE   ' V_0e6e
+            IF tipo = "!" THEN
+                GET #f, , V_0e6e!
+            END IF
+        CASE &H00B2   ' V_0e72
+            IF tipo = "!" THEN
+                GET #f, , V_0e72!
+            END IF
+        CASE &H00B6   ' V_0e76
+            IF tipo = "!" THEN
+                GET #f, , V_0e76!
+            END IF
+        CASE &H00BA   ' V_0e7a
+            IF tipo = "!" THEN
+                GET #f, , V_0e7a!
+            END IF
+        CASE &H00BE   ' V_0e7e
+            IF tipo = "$" THEN
+                V_0e7e$ = RT_CL_STR$(f)
+            END IF
+        CASE &H00C2   ' V_0e82
+            IF tipo = "$" THEN
+                V_0e82$ = RT_CL_STR$(f)
+            END IF
+        CASE &H00C6   ' V_0e86
+            IF tipo = "$" THEN
+                V_0e86$ = RT_CL_STR$(f)
+            END IF
+        CASE &H00CA   ' V_0e8a
+            IF tipo = "$" THEN
+                V_0e8a$ = RT_CL_STR$(f)
+            END IF
+        CASE &H00CE   ' V_0e8e
+            IF tipo = "!" THEN
+                GET #f, , V_0e8e!
+            END IF
+        CASE &H00D2   ' V_0e92
+            IF tipo = "!" THEN
+                GET #f, , V_0e92!
+            END IF
+        CASE &H00D6   ' V_0e96
+            IF tipo = "!" THEN
+                GET #f, , V_0e96!
+            END IF
+        CASE &H00DA   ' V_0e9a
+            IF tipo = "!" THEN
+                GET #f, , V_0e9a!
+            END IF
+        CASE &H00DE   ' V_0e9e
+            IF tipo = "$" THEN
+                V_0e9e$ = RT_CL_STR$(f)
+            END IF
+        CASE &H00E2   ' V_0ea2
+            IF tipo = "$" THEN
+                V_0ea2$ = RT_CL_STR$(f)
+            END IF
+        CASE &H00E6   ' V_0ea6
+            IF tipo = "%" THEN
+                GET #f, , V_0ea6%
+            END IF
+        CASE &H00E8   ' V_0ea8
+            IF tipo = "$" THEN
+                V_0ea8$ = RT_CL_STR$(f)
+            END IF
+        CASE &H00EC   ' V_0eac
+            IF tipo = "!" THEN
+                GET #f, , V_0eac!
+            END IF
+        CASE &H00F0   ' V_0eb0
+            IF tipo = "%" THEN
+                GET #f, , V_0eb0%
+            END IF
+        CASE &H00F2   ' V_0eb2
+            IF tipo = "%" THEN
+                GET #f, , V_0eb2%
+            END IF
+        CASE &H00F4   ' V_0eb4
+            IF tipo = "!" THEN
+                GET #f, , V_0eb4!
+            END IF
+        CASE &H00F8   ' V_0eb8
+            IF tipo = "!" THEN
+                GET #f, , V_0eb8!
+            END IF
+        CASE &H00FC   ' V_0ebc
+            IF tipo = "!" THEN
+                GET #f, , V_0ebc!
+            END IF
+        CASE &H0100   ' V_0ec0
+            IF tipo = "$" THEN
+                V_0ec0$ = RT_CL_STR$(f)
+            END IF
+        CASE &H0104   ' V_0ec4
+            IF tipo = "$" THEN
+                V_0ec4$ = RT_CL_STR$(f)
+            END IF
+        CASE &H0108   ' V_0ec8
+            IF tipo = "!" THEN
+                GET #f, , V_0ec8!
+            END IF
+        CASE &H010C   ' A_0ecc
+            IF tipo = "!" THEN
+                REDIM A_0ecc!(lb(1) TO ub(1))
+                FOR i1 = lb(1) TO ub(1)
+                    GET #f, , A_0ecc!(i1)
+                NEXT
+            END IF
+        CASE &H013A   ' A_0efa
+            IF tipo = "!" THEN
+                REDIM A_0efa!(lb(1) TO ub(1))
+                FOR i1 = lb(1) TO ub(1)
+                    GET #f, , A_0efa!(i1)
+                NEXT
+            END IF
+        CASE &H0168   ' A_0f28
+            IF tipo = "!" THEN
+                REDIM A_0f28!(lb(1) TO ub(1), lb(2) TO ub(2))
+                FOR i2 = lb(2) TO ub(2)
+                    FOR i1 = lb(1) TO ub(1)
+                        GET #f, , A_0f28!(i1, i2)
+                    NEXT
+                NEXT
+            END IF
+        CASE &H0196   ' A_0f56
+            IF tipo = "%" THEN
+                REDIM A_0f56%(lb(1) TO ub(1), lb(2) TO ub(2))
+                FOR i2 = lb(2) TO ub(2)
+                    FOR i1 = lb(1) TO ub(1)
+                        GET #f, , A_0f56%(i1, i2)
+                    NEXT
+                NEXT
+            END IF
+        CASE &H01C4   ' V_0f84
+            IF tipo = "!" THEN
+                GET #f, , V_0f84!
+            END IF
+        CASE &H01C8   ' V_0f88
+            IF tipo = "!" THEN
+                GET #f, , V_0f88!
+            END IF
+        CASE &H01D0   ' V_0f90
+            IF tipo = "!" THEN
+                GET #f, , V_0f90!
+            END IF
+        CASE &H01D4   ' V_0f94
+            IF tipo = "!" THEN
+                GET #f, , V_0f94!
+            END IF
+        CASE &H01D8   ' V_0f98
+            IF tipo = "!" THEN
+                GET #f, , V_0f98!
+            END IF
+        CASE &H01DC   ' V_0f9c
+            IF tipo = "!" THEN
+                GET #f, , V_0f9c!
+            END IF
+        CASE &H01E0   ' V_0fa0
+            IF tipo = "!" THEN
+                GET #f, , V_0fa0!
+            END IF
+        CASE &H01E4   ' V_0fa4
+            IF tipo = "!" THEN
+                GET #f, , V_0fa4!
+            END IF
+        CASE &H01E8   ' V_0fa8
+            IF tipo = "!" THEN
+                GET #f, , V_0fa8!
+            END IF
+        CASE &H01EC   ' V_0fac
+            IF tipo = "!" THEN
+                GET #f, , V_0fac!
+            END IF
+        CASE &H01F0   ' V_0fb0
+            IF tipo = "!" THEN
+                GET #f, , V_0fb0!
+            END IF
+        CASE &H01F4   ' V_0fb4
+            IF tipo = "!" THEN
+                GET #f, , V_0fb4!
+            END IF
+        CASE &H01F8   ' V_0fb8
+            IF tipo = "!" THEN
+                GET #f, , V_0fb8!
+            END IF
+        CASE &H01FC   ' V_0fbc
+            IF tipo = "!" THEN
+                GET #f, , V_0fbc!
+            END IF
+        CASE &H0200   ' V_0fc0
+            IF tipo = "!" THEN
+                GET #f, , V_0fc0!
+            END IF
+        CASE &H0204   ' V_0fc4
+            IF tipo = "!" THEN
+                GET #f, , V_0fc4!
+            END IF
+        CASE &H0208   ' V_0fc8
+            IF tipo = "!" THEN
+                GET #f, , V_0fc8!
+            END IF
+        CASE &H020C   ' V_0fcc
+            IF tipo = "!" THEN
+                GET #f, , V_0fcc!
+            END IF
+        CASE &H0210   ' V_0fd0
+            IF tipo = "!" THEN
+                GET #f, , V_0fd0!
+            END IF
+        CASE &H0214   ' V_0fd4
+            IF tipo = "!" THEN
+                GET #f, , V_0fd4!
+            END IF
+        CASE &H0218   ' V_0fd8
+            IF tipo = "!" THEN
+                GET #f, , V_0fd8!
+            END IF
+        CASE &H021C   ' V_0fdc
+            IF tipo = "!" THEN
+                GET #f, , V_0fdc!
+            END IF
+        CASE &H0220   ' V_0fe0
+            IF tipo = "!" THEN
+                GET #f, , V_0fe0!
+            END IF
+        CASE &H0224   ' V_0fe4
+            IF tipo = "!" THEN
+                GET #f, , V_0fe4!
+            END IF
+        CASE &H0228   ' V_0fe8
+            IF tipo = "!" THEN
+                GET #f, , V_0fe8!
+            END IF
+        CASE &H022C   ' V_0fec
+            IF tipo = "!" THEN
+                GET #f, , V_0fec!
+            END IF
+        CASE &H0230   ' V_0ff0
+            IF tipo = "!" THEN
+                GET #f, , V_0ff0!
+            END IF
+        CASE &H0234   ' V_0ff4
+            IF tipo = "!" THEN
+                GET #f, , V_0ff4!
+            END IF
+        CASE &H0238   ' V_0ff8
+            IF tipo = "%" THEN
+                GET #f, , V_0ff8%
+            END IF
+        CASE &H023A   ' V_0ffa
+            IF tipo = "!" THEN
+                GET #f, , V_0ffa!
+            END IF
+        CASE &H023E   ' V_0ffe
+            IF tipo = "!" THEN
+                GET #f, , V_0ffe!
+            END IF
+        CASE &H0242   ' V_1002
+            IF tipo = "!" THEN
+                GET #f, , V_1002!
+            END IF
+        CASE &H0246   ' V_1006
+            IF tipo = "!" THEN
+                GET #f, , V_1006!
+            END IF
+        CASE &H024A   ' V_100a
+            IF tipo = "!" THEN
+                GET #f, , V_100a!
+            END IF
+        CASE &H024E   ' V_100e
+            IF tipo = "!" THEN
+                GET #f, , V_100e!
+            END IF
+        CASE &H0252   ' V_1012
+            IF tipo = "!" THEN
+                GET #f, , V_1012!
+            END IF
+        CASE &H0256   ' V_1016
+            IF tipo = "!" THEN
+                GET #f, , V_1016!
+            END IF
+        CASE &H025A   ' V_101a
+            IF tipo = "!" THEN
+                GET #f, , V_101a!
+            END IF
+        CASE &H025E   ' V_101e
+            IF tipo = "!" THEN
+                GET #f, , V_101e!
+            END IF
+        CASE &H0262   ' V_1022
+            IF tipo = "!" THEN
+                GET #f, , V_1022!
+            END IF
+        CASE &H0266   ' V_1026
+            IF tipo = "!" THEN
+                GET #f, , V_1026!
+            END IF
+        CASE &H026E   ' V_102e
+            IF tipo = "!" THEN
+                GET #f, , V_102e!
+            END IF
+        CASE &H0272   ' V_1032
+            IF tipo = "!" THEN
+                GET #f, , V_1032!
+            END IF
+        CASE &H0276   ' V_1036
+            IF tipo = "!" THEN
+                GET #f, , V_1036!
+            END IF
+        CASE &H027A   ' V_103a
+            IF tipo = "!" THEN
+                GET #f, , V_103a!
+            END IF
+        CASE &H027E   ' V_103e
+            IF tipo = "!" THEN
+                GET #f, , V_103e!
+            END IF
+        CASE &H0282   ' V_1042
+            IF tipo = "!" THEN
+                GET #f, , V_1042!
+            END IF
+        CASE &H0286   ' V_1046
+            IF tipo = "!" THEN
+                GET #f, , V_1046!
+            END IF
+        CASE &H028A   ' V_104a
+            IF tipo = "!" THEN
+                GET #f, , V_104a!
+            END IF
+        CASE &H028E   ' V_104e
+            IF tipo = "!" THEN
+                GET #f, , V_104e!
+            END IF
+        CASE &H0292   ' V_1052
+            IF tipo = "!" THEN
+                GET #f, , V_1052!
+            END IF
+        CASE &H0296   ' V_1056
+            IF tipo = "!" THEN
+                GET #f, , V_1056!
+            END IF
+        CASE &H029A   ' V_105a
+            IF tipo = "!" THEN
+                GET #f, , V_105a!
+            END IF
+        CASE &H029E   ' V_105e
+            IF tipo = "!" THEN
+                GET #f, , V_105e!
+            END IF
+        CASE &H02A2   ' V_1062
+            IF tipo = "!" THEN
+                GET #f, , V_1062!
+            END IF
+        CASE &H02A6   ' V_1066
+            IF tipo = "!" THEN
+                GET #f, , V_1066!
+            END IF
+        CASE &H02AA   ' V_106a
+            IF tipo = "!" THEN
+                GET #f, , V_106a!
+            END IF
+        CASE &H02AE   ' V_106e
+            IF tipo = "$" THEN
+                V_106e$ = RT_CL_STR$(f)
+            END IF
+        CASE &H02B2   ' V_1072
+            IF tipo = "$" THEN
+                V_1072$ = RT_CL_STR$(f)
+            END IF
+        CASE &H02B6   ' V_1076
+            IF tipo = "$" THEN
+                V_1076$ = RT_CL_STR$(f)
+            END IF
+        CASE &H02BA   ' V_107a
+            IF tipo = "$" THEN
+                V_107a$ = RT_CL_STR$(f)
+            END IF
+        CASE &H02BE   ' V_107e
+            IF tipo = "$" THEN
+                V_107e$ = RT_CL_STR$(f)
+            END IF
+        CASE &H02C2   ' V_1082
+            IF tipo = "$" THEN
+                V_1082$ = RT_CL_STR$(f)
+            END IF
+        CASE &H02C6   ' V_1086
+            IF tipo = "!" THEN
+                GET #f, , V_1086!
+            END IF
+        CASE &H02CA   ' V_108a
+            IF tipo = "!" THEN
+                GET #f, , V_108a!
+            END IF
+        CASE &H02CE   ' V_108e
+            IF tipo = "!" THEN
+                GET #f, , V_108e!
+            END IF
+        CASE &H02D2   ' V_1092
+            IF tipo = "!" THEN
+                GET #f, , V_1092!
+            END IF
+        CASE &H02D6   ' V_1096
+            IF tipo = "!" THEN
+                GET #f, , V_1096!
+            END IF
+        CASE &H02DA   ' V_109a
+            IF tipo = "!" THEN
+                GET #f, , V_109a!
+            END IF
+        CASE &H02DE   ' V_109e
+            IF tipo = "!" THEN
+                GET #f, , V_109e!
+            END IF
+        CASE &H02E2   ' V_10a2
+            IF tipo = "!" THEN
+                GET #f, , V_10a2!
+            END IF
+        CASE &H02E6   ' V_10a6
+            IF tipo = "!" THEN
+                GET #f, , V_10a6!
+            END IF
+        CASE &H02EA   ' V_10aa
+            IF tipo = "!" THEN
+                GET #f, , V_10aa!
+            END IF
+        CASE &H02EE   ' V_10ae
+            IF tipo = "!" THEN
+                GET #f, , V_10ae!
+            END IF
+        CASE &H02F2   ' V_10b2
+            IF tipo = "!" THEN
+                GET #f, , V_10b2!
+            END IF
+        CASE &H02F6   ' V_10b6
+            IF tipo = "!" THEN
+                GET #f, , V_10b6!
+            END IF
+        CASE &H02FA   ' V_10ba
+            IF tipo = "!" THEN
+                GET #f, , V_10ba!
+            END IF
+        CASE &H02FE   ' A_10be
+            IF tipo = "!" THEN
+                REDIM A_10be!(lb(1) TO ub(1), lb(2) TO ub(2))
+                FOR i2 = lb(2) TO ub(2)
+                    FOR i1 = lb(1) TO ub(1)
+                        GET #f, , A_10be!(i1, i2)
+                    NEXT
+                NEXT
+            END IF
+        CASE &H032C   ' A_10ec
+            IF tipo = "!" THEN
+                REDIM A_10ec!(lb(1) TO ub(1), lb(2) TO ub(2))
+                FOR i2 = lb(2) TO ub(2)
+                    FOR i1 = lb(1) TO ub(1)
+                        GET #f, , A_10ec!(i1, i2)
+                    NEXT
+                NEXT
+            END IF
+        CASE &H035A   ' A_111a
+            IF tipo = "!" THEN
+                REDIM A_111a!(lb(1) TO ub(1), lb(2) TO ub(2))
+                FOR i2 = lb(2) TO ub(2)
+                    FOR i1 = lb(1) TO ub(1)
+                        GET #f, , A_111a!(i1, i2)
+                    NEXT
+                NEXT
+            END IF
+        CASE &H0388   ' A_1148
+            IF tipo = "!" THEN
+                REDIM A_1148!(lb(1) TO ub(1), lb(2) TO ub(2))
+                FOR i2 = lb(2) TO ub(2)
+                    FOR i1 = lb(1) TO ub(1)
+                        GET #f, , A_1148!(i1, i2)
+                    NEXT
+                NEXT
+            END IF
+        CASE &H03B6   ' A_1176
+            IF tipo = "!" THEN
+                REDIM A_1176!(lb(1) TO ub(1), lb(2) TO ub(2))
+                FOR i2 = lb(2) TO ub(2)
+                    FOR i1 = lb(1) TO ub(1)
+                        GET #f, , A_1176!(i1, i2)
+                    NEXT
+                NEXT
+            END IF
+        CASE &H03E4   ' V_11a4
+            IF tipo = "%" THEN
+                GET #f, , V_11a4%
+            END IF
+        CASE &H03E6   ' V_11a6
+            IF tipo = "%" THEN
+                GET #f, , V_11a6%
+            END IF
+        CASE &H03E8   ' V_11a8
+            IF tipo = "%" THEN
+                GET #f, , V_11a8%
+            END IF
+        CASE &H03EA   ' V_11aa
+            IF tipo = "%" THEN
+                GET #f, , V_11aa%
+            END IF
+        CASE &H03EC   ' V_11ac
+            IF tipo = "%" THEN
+                GET #f, , V_11ac%
+            END IF
+        CASE &H03EE   ' V_11ae
+            IF tipo = "%" THEN
+                GET #f, , V_11ae%
+            END IF
+        CASE &H03F0   ' V_11b0
+            IF tipo = "%" THEN
+                GET #f, , V_11b0%
+            END IF
+        CASE &H03F2   ' V_11b2
+            IF tipo = "%" THEN
+                GET #f, , V_11b2%
+            END IF
+        CASE &H03F4   ' V_11b4
+            IF tipo = "%" THEN
+                GET #f, , V_11b4%
+            END IF
+        CASE &H03F6   ' V_11b6
+            IF tipo = "!" THEN
+                GET #f, , V_11b6!
+            END IF
+        CASE &H03FA   ' V_11ba
+            IF tipo = "!" THEN
+                GET #f, , V_11ba!
+            END IF
+        CASE &H03FE   ' V_11be
+            IF tipo = "$" THEN
+                V_11be$ = RT_CL_STR$(f)
+            END IF
+        CASE &H0402   ' V_11c2
+            IF tipo = "%" THEN
+                GET #f, , V_11c2%
+            END IF
+        CASE &H0404   ' V_11c4
+            IF tipo = "%" THEN
+                GET #f, , V_11c4%
+            END IF
+        CASE &H0406   ' V_11c6
+            IF tipo = "%" THEN
+                GET #f, , V_11c6%
+            END IF
+        CASE &H0408   ' A_11c8
+            IF tipo = "!" THEN
+                REDIM A_11c8!(lb(1) TO ub(1))
+                FOR i1 = lb(1) TO ub(1)
+                    GET #f, , A_11c8!(i1)
+                NEXT
+            END IF
+        CASE &H0436   ' A_11f6
+            IF tipo = "$" THEN
+                REDIM A_11f6$(lb(1) TO ub(1))
+                FOR i1 = lb(1) TO ub(1)
+                    A_11f6$(i1) = RT_CL_STR$(f)
+                NEXT
+            END IF
+        CASE &H0464   ' A_1224
+            IF tipo = "%" THEN
+                REDIM A_1224%(lb(1) TO ub(1), lb(2) TO ub(2))
+                FOR i2 = lb(2) TO ub(2)
+                    FOR i1 = lb(1) TO ub(1)
+                        GET #f, , A_1224%(i1, i2)
+                    NEXT
+                NEXT
+            END IF
+        CASE &H0492   ' A_1252
+            IF tipo = "$" THEN
+                REDIM A_1252$(lb(1) TO ub(1))
+                FOR i1 = lb(1) TO ub(1)
+                    A_1252$(i1) = RT_CL_STR$(f)
+                NEXT
+            END IF
+        CASE &H04C0   ' A_1280
+            IF tipo = "!" THEN
+                REDIM A_1280!(lb(1) TO ub(1), lb(2) TO ub(2), lb(3) TO ub(3))
+                FOR i3 = lb(3) TO ub(3)
+                    FOR i2 = lb(2) TO ub(2)
+                        FOR i1 = lb(1) TO ub(1)
+                            GET #f, , A_1280!(i1, i2, i3)
+                        NEXT
+                    NEXT
+                NEXT
+            END IF
+        CASE &H04EE   ' A_12ae
+            IF tipo = "$" THEN
+                REDIM A_12ae$(lb(1) TO ub(1), lb(2) TO ub(2), lb(3) TO ub(3))
+                FOR i3 = lb(3) TO ub(3)
+                    FOR i2 = lb(2) TO ub(2)
+                        FOR i1 = lb(1) TO ub(1)
+                            A_12ae$(i1, i2, i3) = RT_CL_STR$(f)
+                        NEXT
+                    NEXT
+                NEXT
+            END IF
+        CASE &H051C   ' A_12dc
+            IF tipo = "!" THEN
+                REDIM A_12dc!(lb(1) TO ub(1), lb(2) TO ub(2), lb(3) TO ub(3))
+                FOR i3 = lb(3) TO ub(3)
+                    FOR i2 = lb(2) TO ub(2)
+                        FOR i1 = lb(1) TO ub(1)
+                            GET #f, , A_12dc!(i1, i2, i3)
+                        NEXT
+                    NEXT
+                NEXT
+            END IF
+        CASE &H054A   ' A_130a
+            IF tipo = "%" THEN
+                REDIM A_130a%(lb(1) TO ub(1), lb(2) TO ub(2))
+                FOR i2 = lb(2) TO ub(2)
+                    FOR i1 = lb(1) TO ub(1)
+                        GET #f, , A_130a%(i1, i2)
+                    NEXT
+                NEXT
+            END IF
+        CASE &H0578   ' A_1338
+            IF tipo = "%" THEN
+                REDIM A_1338%(lb(1) TO ub(1), lb(2) TO ub(2), lb(3) TO ub(3))
+                FOR i3 = lb(3) TO ub(3)
+                    FOR i2 = lb(2) TO ub(2)
+                        FOR i1 = lb(1) TO ub(1)
+                            GET #f, , A_1338%(i1, i2, i3)
+                        NEXT
+                    NEXT
+                NEXT
+            END IF
+        CASE &H05A6   ' A_1366
+            IF tipo = "%" THEN
+                REDIM A_1366%(lb(1) TO ub(1), lb(2) TO ub(2), lb(3) TO ub(3))
+                FOR i3 = lb(3) TO ub(3)
+                    FOR i2 = lb(2) TO ub(2)
+                        FOR i1 = lb(1) TO ub(1)
+                            GET #f, , A_1366%(i1, i2, i3)
+                        NEXT
+                    NEXT
+                NEXT
+            END IF
+        CASE &H05D4   ' A_1394
+            IF tipo = "%" THEN
+                REDIM A_1394%(lb(1) TO ub(1))
+                FOR i1 = lb(1) TO ub(1)
+                    GET #f, , A_1394%(i1)
+                NEXT
+            END IF
+        CASE &H0602   ' A_13c2
+            IF tipo = "%" THEN
+                REDIM A_13c2%(lb(1) TO ub(1))
+                FOR i1 = lb(1) TO ub(1)
+                    GET #f, , A_13c2%(i1)
+                NEXT
+            END IF
+        CASE &H0630   ' A_13f0
+            IF tipo = "%" THEN
+                REDIM A_13f0%(lb(1) TO ub(1), lb(2) TO ub(2))
+                FOR i2 = lb(2) TO ub(2)
+                    FOR i1 = lb(1) TO ub(1)
+                        GET #f, , A_13f0%(i1, i2)
+                    NEXT
+                NEXT
+            END IF
+        CASE &H065E   ' A_141e
+            IF tipo = "%" THEN
+                REDIM A_141e%(lb(1) TO ub(1), lb(2) TO ub(2), lb(3) TO ub(3))
+                FOR i3 = lb(3) TO ub(3)
+                    FOR i2 = lb(2) TO ub(2)
+                        FOR i1 = lb(1) TO ub(1)
+                            GET #f, , A_141e%(i1, i2, i3)
+                        NEXT
+                    NEXT
+                NEXT
+            END IF
+        CASE &H068C   ' V_144c
+            IF tipo = "!" THEN
+                GET #f, , V_144c!
+            END IF
+        CASE &H0690   ' A_1450
+            IF tipo = "!" THEN
+                REDIM A_1450!(lb(1) TO ub(1), lb(2) TO ub(2))
+                FOR i2 = lb(2) TO ub(2)
+                    FOR i1 = lb(1) TO ub(1)
+                        GET #f, , A_1450!(i1, i2)
+                    NEXT
+                NEXT
+            END IF
+        END SELECT
+        SEEK #f, prox
+    LOOP
+END SUB

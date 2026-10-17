@@ -1,0 +1,11 @@
+{
+ "familia": "sistema",
+ "ini": "0x0dc0",
+ "fim": "0x0dc0",
+ "exes": [
+  "SISTRUT",
+  "SISEDIT"
+ ],
+ "conflitos": [],
+ "vars": []
+}

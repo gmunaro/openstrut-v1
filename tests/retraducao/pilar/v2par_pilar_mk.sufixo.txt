@@ -1,0 +1,13 @@
+# T10 v2par_pilar_mk (sufixo a partir do menu do PILAR). Sem obra de partida.
+# PILAR opcao 6 (verificacao NB-1/78), padroes Fck .15, Fyk 5 tipo B; secao retangular B 20 x H 30 cm,
+# c' 3 cm, 2 barras em cima e 2 embaixo, 0 laterais, bitola 16 mm; verificacoes impressas (LPT1).
+# Conjunto 1: Nk 30 t, Mxk 1.5 tm, Myk 0, Lxe = Lye = 3 m (flexo-compressao com Mk inicial; instabilidade).
+# Conjunto 2: Nk 30 t, Mxk 0.5 tm, Myk 0.3 tm, Lxe = Lye = 3 m (flexao obliqua com Mk inicial; ok).
+# Conjunto 3: Nk 20 t, Mxk 0.6 tm, Myk 0.4 tm, Lxe = Lye = 3 m (flexao obliqua com Mk inicial; ok).
+# (Combinacoes que fazem o original entrar em laco estao no v2par_pilar_trava.)
+{TELA p00_menu}6{ESPERA Fck}{ENTER}{ESPERA Fyk}{ENTER}{ESPERA Tipo de Aco}{ENTER}{ESPERA tipo de secao}{PAUSA 2}1{ESPERA B(cm)}20,30,3{ENTER}{ESPERA borda superior}2{ENTER}{ESPERA borda inferior}2{ENTER}{ESPERA bordas laterais}0{ENTER}{ESPERA Bitola (mm)}16{ENTER}{ESPERA Outra Bitola}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA p01_secao}{ENTER}{ESPERA Imprimo as verificacoes}S{ENTER}{ESPERA Secao comprimida}N{ENTER}
+{ESPERA Nk(t)}30{ENTER}{ESPERA Mxk(tm)}1.5{ENTER}{ESPERA Myk(tm)}0{ENTER}{ESPERA Lxe(m)}3{ENTER}{ESPERA Lye(m)}3{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA p02_esf1}{ENTER}{PAUSA 4}{ESPERA Nk(t) *FIM*|300}{PAUSA 1}{TELA p03_res1}
+30{ENTER}{ESPERA Mxk(tm)}0.5{ENTER}{ESPERA Myk(tm)}0.3{ENTER}{ESPERA Lxe(m)}3{ENTER}{ESPERA Lye(m)}3{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA p04_esf2}{ENTER}{PAUSA 4}{ESPERA Nk(t) *FIM*|300}{PAUSA 1}{TELA p05_res2}
+20{ENTER}{ESPERA Mxk(tm)}0.6{ENTER}{ESPERA Myk(tm)}0.4{ENTER}{ESPERA Lxe(m)}3{ENTER}{ESPERA Lye(m)}3{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA p06_esf3}{ENTER}{PAUSA 4}{ESPERA Nk(t) *FIM*|300}{PAUSA 1}{TELA p07_res3}
+{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA p08_menu}
+{F2}{ENTER}{ESPERA Configuracao|60}{PAUSA 2}{F2}

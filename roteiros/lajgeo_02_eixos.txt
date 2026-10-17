@@ -1,0 +1,22 @@
+# exe: LAJEGEOM
+# lajgeo_02_eixos: menu 1 (EixosTela): H, V, D (deleta), F. Base: roteiros/lajgeo_base.dados (obra TESTE, 4 lajes).
+# Campo de cota vem com padrao 0: {BS} apaga antes de digitar.
+# Cadastro: H 0, H 5, V 0, V 4, V 8. Depois deleta H2 (cota 5) e confere a lista.
+{TELA e00_menu_inicial}
+1
+{TELA e01_eixos_vazio}
+H{BS}0{ENTER}
+H{BS}5{ENTER}
+V{BS}0{ENTER}
+V{BS}4{ENTER}
+V{BS}8{ENTER}
+{TELA e02_eixos_cadastrados}
+D
+H{ENTER}
+{BS}2{ENTER}
+{TELA e03_eixos_apos_deleta}
+F
+9
+S
+{TELA e04_retorno}
+{ENTER}

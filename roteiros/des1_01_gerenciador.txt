@@ -1,0 +1,12 @@
+# exe: DESENHO
+# DESENHO (gerenciador): R resumo, P parametros (grava item 2), A drive e
+# diretorio (aviso de diretorio inexistente no campo 2), tecla invalida, F2 fim.
+{TELA menu}
+R{TELA resumo}{ENTER}
+P{TELA par0}
+2,0.20{ENTER}
+{TELA par1}
+{ENTER}
+A{TELA dirs}{ENTER}{ENTER}{TELA aviso}{ENTER}{ENTER}{ENTER}{TELA dirs2}{ENTER}
+X{TELA invalida}
+{F2}

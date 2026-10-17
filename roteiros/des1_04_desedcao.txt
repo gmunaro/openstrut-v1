@@ -1,0 +1,79 @@
+# exe: DESENHO
+# DESENHO > S (DESEDCAO): obra FLUXO (roteiros/des1_04_desedcao.dados).
+# Lista de vigas (nome inexistente, minusculo, ENTER vazio). V1: C com P (erro de tramo
+# e ok), C com G, C com R; A (numero valido, inexistente, ENTER vazio); D (ENTER vazio,
+# numero invalido, N e SIM); E; F com C (erro de tramo e ok) e R; R volta a lista.
+# V2: ESC volta a lista. V3: Z (previa), D TODOS com N e SIM, C com P; ESC.
+# Termino: ENTER na lista abre a confirmacao (N) e o abandono (N) volta a lista;
+# ENTER na lista de novo abre a confirmacao e SIM grava o .EDV e sai. Depois F2 no menu do DESENHO.
+# Padroes numericos e de forma sao anexados (EntradaTexto$): por isso {BS} antes de cada valor.
+{TELA menu}
+S{TELA lista}
+XX{ENTER}{TELA lista_xx_erro}{ENTER}
+v1{ENTER}
+{TELA v1_tela}
+C
+P{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}9{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}2{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}10{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}200{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}U{ENTER}
+{TELA v1_cria_tr9_erro}{ENTER}
+C
+P{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}1{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}2{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}10{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}300{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}U{ENTER}
+{TELA v1_cria_p_ok}
+C
+G{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}2{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}1{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}8{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}40{ENTER}
+{TELA v1_cria_g_ok}
+C
+R
+{TELA v1_cria_r}
+A{ENTER}
+{TELA v1_a_retorno}
+A{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}99{ENTER}{TELA v1_a_inexist_erro}{ENTER}
+A{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}6{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}3{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}12.5{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}310{ENTER}
+{TELA v1_altera_ok}
+D{ENTER}
+{TELA v1_d_retorno}
+DABC{ENTER}{TELA v1_d_invalido}{ENTER}
+D99{ENTER}{TELA v1_d_inexist_erro}{ENTER}
+D1{ENTER}{ENTER}
+{TELA v1_d1_n}
+D1{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}SIM{ENTER}
+{TELA v1_d1_sim}
+E{TELA v1_esforcos}{ENTER}
+F{TELA v1_estribos}
+C{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}9{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}5{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}18{ENTER}{TELA v1_est_tr9_erro}{ENTER}
+C{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}1{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}5{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}18{ENTER}
+{TELA v1_est_ok}
+R
+{TELA v1_pos_final}
+R{TELA lista_v1_saiu}
+v2{ENTER}
+{TELA v2_tela}
+{ESC}
+{TELA lista_v2_esc}
+v3{ENTER}
+{TELA v3_tela}
+Z
+{TELA v3_zoom}
+{ENTER}
+{ENTER}
+DTODOS{ENTER}{ENTER}
+{TELA v3_todos_n}
+DTODOS{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}SIM{ENTER}
+{TELA v3_todos_sim}
+C
+P{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}1{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}1{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}12.5{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}200{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}R{ENTER}
+{TELA v3_nova_ok}
+{ESC}
+{TELA lista_v3_saiu}
+{ENTER}
+{TELA fim_confirma_n}
+{ENTER}
+{TELA fim_abandono_n}
+{ENTER}
+{TELA lista_volta}
+{ENTER}
+{TELA fim_confirma_sim}
+{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}SIM{ENTER}
+{TELA gravou}
+{ENTER}
+{TELA menu_volta}
+{F2}

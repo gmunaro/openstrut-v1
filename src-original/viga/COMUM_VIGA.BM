@@ -1,0 +1,23 @@
+' Grava/le o COMMON da familia VIGA no arquivo de troca do CHAIN (ver comum/RT45.BM).
+' Formato de cada item: deslocamento no bloco COMMON (LONG; DS:0DC0 = 0), tipo (1 byte:
+' ! # % & $), n. de dimensoes (INTEGER),
+' limites (LONG inferior, LONG superior por dimensao), tamanho dos dados (LONG), dados.
+' Strings: LONG com o comprimento e os bytes. Matrizes nao dimensionadas nao sao gravadas.
+
+SUB RT_COMMON_GRAVA (f AS INTEGER)
+END SUB
+
+' CLEAR do original: zera o COMMON (matrizes voltam a 'nao dimensionadas').
+SUB RT_COMMON_LIMPA
+END SUB
+
+SUB RT_COMMON_LE (f AS INTEGER)
+    DIM ender AS LONG, tipo AS STRING * 1, nd AS INTEGER, lb(1 TO 3) AS LONG, ub(1 TO 3) AS LONG
+    DIM tam AS LONG, prox AS LONG
+    DO WHILE RT_CL_ITEM(f, ender, tipo, nd, lb(), ub(), tam)
+        prox = SEEK(f) + tam
+        SELECT CASE ender
+        END SELECT
+        SEEK #f, prox
+    LOOP
+END SUB

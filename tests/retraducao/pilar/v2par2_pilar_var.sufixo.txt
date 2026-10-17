@@ -1,0 +1,27 @@
+# T10b v2par2_pilar_var (sufixo a partir do menu do PILAR). Partida: C: sem obra.
+# PILAREDI: niveis FUND 0, PAV1 3, PAV2 6, PAV3 9, COB 12 m; coluna PA (obra VAR) do nivel 1 ao 5; esforcos externos
+# (PILGEEDI 3, por coluna) nos niveis 2, 3, 4 e 5: Nk 12 t, Ma 3.0 tm com inclinacao 0 (48 t acumuladas na fundacao);
+# travamentos e materiais padrao; secao 25 x 40.
+# Dimensionamento 1: uma armadura para toda a coluna (Vario N), relatorio impresso; proposta 8 # 10; <R>edefine com
+#   4 # 10 (cantos 10, faces a mesma, 0 internas) -> recusada (volta a janela de redefinicao, nada impresso);
+#   redefine com cantos 16 e 1 barra interna por face em Hw (6 # 16) -> aceita (relatorio impresso); A.
+# Dimensionamento 2: varia a armadura de 2 em 2 niveis ("Dimensiono a Coluna novamente" S), relatorio impresso; A.
+# Grava VAR.COL (PIGRAEDI 1 e 2). F2 ate o gerenciador, F2.
+8{ESPERA MULTIPLOS ANDARES}{ESPERA escolha opcao}{PAUSA 2}
+2{ESPERA dados de Colunas}{ESPERA escolha opcao}{PAUSA 2}
+1{ESPERA Nivel (1)}0,FUND{ENTER}{ESPERA Nivel (2)}3,PAV1{ENTER}{ESPERA Nivel (3)}6,PAV2{ENTER}{ESPERA Nivel (4)}9,PAV3{ENTER}{ESPERA Nivel (5)}12,COB{ENTER}{ESPERA Nivel (6)}{ENTER}{ESPERA dados de Colunas}{ESPERA escolha opcao}{PAUSA 2}
+2{ESPERA Posicao}{ENTER}{ESPERA Nome da Obra}VAR{ENTER}{ESPERA Nome da Coluna}PA{ENTER}{ESPERA Nivel inferior}1{ENTER}{ESPERA Nivel superior}5{ENTER}{ESPERA Dados Corretos}{ENTER}{ESPERA POSICAO 2}{PAUSA 1}{ENTER}{ESPERA dados de Colunas}{ESPERA escolha opcao}{PAUSA 2}
+3{ESPERA oluna ou para um}{PAUSA 1}C{ENTER}{ESPERA Nome da Coluna *RETORNO*}{PAUSA 1}PA{ENTER}{ESPERA *NAO*}{PAUSA 1}{ENTER}{ESPERA Nivel *FIM*}{PAUSA 1}2{ENTER}{ESPERA Nk }{PAUSA 1}12{ENTER}{PAUSA 1}3.0{ENTER}{PAUSA 1}0{ENTER}{PAUSA 1}{ENTER}{ESPERA Nivel *FIM*}{PAUSA 1}3{ENTER}{ESPERA Nk }{PAUSA 1}12{ENTER}{PAUSA 1}3.0{ENTER}{PAUSA 1}0{ENTER}{PAUSA 1}{ENTER}{ESPERA Nivel *FIM*}{PAUSA 1}4{ENTER}{ESPERA Nk }{PAUSA 1}12{ENTER}{PAUSA 1}3.0{ENTER}{PAUSA 1}0{ENTER}{PAUSA 1}{ENTER}{ESPERA Nivel *FIM*}{PAUSA 1}5{ENTER}{ESPERA Nk }{PAUSA 1}12{ENTER}{PAUSA 1}3.0{ENTER}{PAUSA 1}0{ENTER}{PAUSA 1}{ENTER}{ESPERA Nivel *FIM*}{PAUSA 1}{TELA s01_esforcos}{ENTER}{ESPERA oluna ou para um}{PAUSA 1}{ENTER}{ESPERA dados de Colunas}{ESPERA escolha opcao}{PAUSA 2}
+6{ESPERA Vinculos de extremidade}{ESPERA Nome da Coluna}{PAUSA 1}{ENTER}{ESPERA Posicionadas 1 Colunas}{ESPERA escolha opcao}{PAUSA 2}
+8{ESPERA MULTIPLOS ANDARES}{ESPERA escolha opcao}{PAUSA 2}
+1{ESPERA Fck}{ENTER}{ESPERA Fyk}{ENTER}{ESPERA Tipo de Aco}{ENTER}{ESPERA MULTIPLOS ANDARES}{ESPERA escolha opcao}{PAUSA 2}
+3{ESPERA Predimensionamento de Secao e}{ESPERA escolha opcao}{PAUSA 2}
+1{ESPERA serao Predimensionadas}{PAUSA 1}1{ENTER}{ESPERA tipo de secao}{PAUSA 2}1{ESPERA B(cm) , H(cm)}{PAUSA 1}25,40{ENTER}{ESPERA SECAO PROPOSTA}{PAUSA 2}{TELA e01_predim}A{ESPERA 2  -  Dimensionamento da Armadura}{ESPERA escolha opcao}{PAUSA 2}
+2{ESPERA serao Dimensionadas}{PAUSA 1}1{ENTER}{ESPERA Vario a Armadura}{ENTER}{ESPERA Paro para Visualizacao}{ENTER}{ESPERA continuamente}{ENTER}{ESPERA Imprimo Relatorio}S{ENTER}{ESPERA Dados Corretos}{ENTER}
+{ESPERA ceita a Armadura proposta|120}{PAUSA 2}{TELA e02_arm}R{ESPERA Escolha o arranjo}{PAUSA 1}{ENTER}{ESPERA Bitola utilizada nos cantos}{PAUSA 1}10{ENTER}{ESPERA Outra Bitola}{PAUSA 1}{ENTER}{ESPERA internas as de canto em Bw}{PAUSA 1}0{ENTER}{ESPERA internas as de canto em Hw}{PAUSA 1}0{ENTER}{ESPERA Dados corretos}{PAUSA 1}{TELA e03_redef_nao}{ENTER}
+{ESPERA Bitola utilizada nos cantos}{PAUSA 2}{TELA e04_recusado}16{ENTER}{ESPERA Outra Bitola}{PAUSA 1}{ENTER}{ESPERA internas as de canto em Bw}{PAUSA 1}0{ENTER}{ESPERA internas as de canto em Hw}{PAUSA 1}1{ENTER}{ESPERA Dados corretos}{PAUSA 1}{TELA e05_redef_ok}{ENTER}{ESPERA ceita a Armadura proposta}{PAUSA 2}{TELA e06_aceita}A{ESPERA 2  -  Dimensionamento da Armadura}{ESPERA escolha opcao}{PAUSA 2}
+2{ESPERA serao Dimensionadas}{PAUSA 1}1{ENTER}{ESPERA Vario a Armadura}S{ENTER}{ESPERA quantos em quantos}2{ENTER}{ESPERA Paro para Visualizacao}{ENTER}{ESPERA continuamente}{ENTER}{ESPERA Imprimo Relatorio}S{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA e07_opcoes2}{ENTER}{ESPERA Dimensiono a Coluna novamente}{PAUSA 1}S{ENTER}
+{ESPERA ceita a Armadura proposta|120}{PAUSA 2}{TELA e08_2em2}A{ESPERA 2  -  Dimensionamento da Armadura}{ESPERA escolha opcao}{PAUSA 2}
+6{ESPERA MULTIPLOS ANDARES}{ESPERA escolha opcao}{PAUSA 2}
+6{ESPERA Gravacao e Leitura de Dados de Colunas}{ESPERA escolha opcao}{PAUSA 2}1{ESPERA NAO CRIAR}{PAUSA 1}VAR{ENTER}{ESPERA escolha opcao}{PAUSA 2}2{ESPERA Nome da Obra}{PAUSA 1}{ENTER}{ESPERA Continuo}{PAUSA 1}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA e09_gravado}8{ESPERA MULTIPLOS ANDARES}{ESPERA escolha opcao}{PAUSA 2}
+{F2}{ENTER}{ESPERA PILARES DE CONCRETO}{ESPERA escolha opcao}{PAUSA 2}{F2}{ENTER}{ESPERA Configuracao|60}{PAUSA 2}{F2}

@@ -1,0 +1,12 @@
+# exe: FORMA
+# FORMA: menu principal, opcoes 5, 6, 2, 1 (Montagem sem submodulo), tecla invalida, F2.
+# Obra FLUXO vem de forma_01_menu.dados (copia de semente).
+{ENTER}{TELA menu}
+5{TELA param_tela}{ENTER}
+6{TELA alt_drive}{ESC}
+6C:\NAOEXISTE_SISTRUT\{ENTER}{TELA alt_erro}{ENTER}
+2NAOEX{ENTER}{TELA reed_nf}x{TELA reed_volta}{ESC}
+1{TELA mont_pede}{ESC}
+1FLUXO{ENTER}FLUXO{ENTER}FLUXO{ENTER}{TELA mont_lidos}N
+Z{TELA tecla_invalida}
+{F2}

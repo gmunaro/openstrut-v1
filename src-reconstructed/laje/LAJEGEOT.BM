@@ -1,0 +1,242 @@
+' Continuidade e vigas da planta (LAJEGEOT.BM). SUB pura: sem tela, opera em
+' Laj(1..LajQtd), todas do mesmo nivel. Incluir depois de common/SISDADOS.BI.
+'
+' Regras de LgDetectaContinuidade:
+'   - Lados opostos de duas lajes, na mesma linha, sem lado L, com sobreposicao
+'     maior que 50% do menor dos dois lados, sao continuidade: os dois viram E
+'     e ficam com a mesma viga.
+' RECONSTRUCAO: a regra de 50% (base: menor dos dois lados) e suposicao. Nao esta
+' em docs/RECONSTRUCAO.md nem em docs/modules/LAJEGEOM.md.
+' RECONSTRUCAO: orientacao de y: y cresce para cima; "cima" = maior y.
+'   - Lado E sem vizinho volta a A.
+'   - Lado L nao tem viga ("-") e nunca entra em continuidade.
+'   - Demais lados recebem viga, numerada V1..Vn no nivel: horizontais de cima
+'     para baixo (empate: da esquerda para a direita); depois verticais da
+'     esquerda para a direita (empate: de cima para baixo).
+CONST LG_TOL = 0.001
+CONST LG_MAXLADO = DAD_MAXLAJ * 4
+
+' Lado k = (laje - 1) * 4 + lado. Lado 1 esquerdo, 2 inferior, 3 direito, 4 superior.
+FUNCTION LgLaje% (k AS INTEGER)
+    LgLaje% = (k - 1) \ 4 + 1
+END FUNCTION
+
+FUNCTION LgLado% (k AS INTEGER)
+    LgLado% = k - ((k - 1) \ 4) * 4
+END FUNCTION
+
+' Lado oposto ao lado s (esquerdo-direito, inferior-superior).
+FUNCTION LgOposto% (s AS INTEGER)
+    IF s <= 2 THEN
+        LgOposto% = s + 2
+    ELSE
+        LgOposto% = s - 2
+    END IF
+END FUNCTION
+
+' Verdadeiro se o lado k e horizontal (inferior ou superior).
+FUNCTION LgHorizontal% (k AS INTEGER)
+    LgHorizontal% = (LgLado%(k) MOD 2 = 0)
+END FUNCTION
+
+' Verdadeiro se o lado k nao e livre.
+FUNCTION LgNaoL% (k AS INTEGER)
+    LgNaoL% = (MID$(Laj(LgLaje%(k)).bordos, LgLado%(k), 1) <> "L")
+END FUNCTION
+
+' Linha do lado k: eixo = coordenada da linha (m); ini e fim = extremos ao longo dela.
+SUB LgGeom (k AS INTEGER, eixo AS DOUBLE, ini AS DOUBLE, fim AS DOUBLE)
+    DIM i AS INTEGER, s AS INTEGER
+    i = LgLaje%(k)
+    s = LgLado%(k)
+    SELECT CASE s
+        CASE 1: eixo = Laj(i).x0: ini = Laj(i).y0: fim = Laj(i).y0 + Laj(i).ly
+        CASE 2: eixo = Laj(i).y0: ini = Laj(i).x0: fim = Laj(i).x0 + Laj(i).lx
+        CASE 3: eixo = Laj(i).x0 + Laj(i).lx: ini = Laj(i).y0: fim = Laj(i).y0 + Laj(i).ly
+        CASE 4: eixo = Laj(i).y0 + Laj(i).ly: ini = Laj(i).x0: fim = Laj(i).x0 + Laj(i).lx
+    END SELECT
+END SUB
+
+' Verdadeiro se os lados ka e kb (opostos, de lajes diferentes) sao continuidade:
+' mesma linha e sobreposicao maior que 50% do menor lado.
+FUNCTION LgContinuo% (ka AS INTEGER, kb AS INTEGER)
+    DIM ea AS DOUBLE, ia AS DOUBLE, fa AS DOUBLE
+    DIM eb AS DOUBLE, ib AS DOUBLE, fb AS DOUBLE
+    DIM sobra AS DOUBLE, menor AS DOUBLE, inicio AS DOUBLE, termino AS DOUBLE
+    LgGeom ka, ea, ia, fa
+    LgGeom kb, eb, ib, fb
+    inicio = ia
+    IF ib > inicio THEN inicio = ib
+    termino = fa
+    IF fb < termino THEN termino = fb
+    sobra = termino - inicio
+    menor = fa - ia
+    IF fb - ib < menor THEN menor = fb - ib
+    LgContinuo% = (ABS(ea - eb) <= LG_TOL) AND (menor > LG_TOL) AND (sobra > 0.5 * menor)
+END FUNCTION
+
+' Ordem de numeracao das vigas: verdadeiro se o lado ka vem antes do kb.
+' Horizontais primeiro (cima para baixo, esquerda para direita); depois verticais
+' (esquerda para direita, cima para baixo).
+FUNCTION LgAntes% (ka AS INTEGER, kb AS INTEGER)
+    DIM ea AS DOUBLE, ia AS DOUBLE, fa AS DOUBLE
+    DIM eb AS DOUBLE, ib AS DOUBLE, fb AS DOUBLE
+    DIM ha AS INTEGER, hb AS INTEGER
+    LgGeom ka, ea, ia, fa
+    LgGeom kb, eb, ib, fb
+    ha = LgHorizontal%(ka)
+    hb = LgHorizontal%(kb)
+    IF ha <> hb THEN
+        LgAntes% = ha
+    ELSEIF ha THEN
+        IF ABS(ea - eb) > LG_TOL THEN
+            LgAntes% = (ea > eb)
+        ELSE
+            LgAntes% = (ia < ib)
+        END IF
+    ELSE
+        IF ABS(ea - eb) > LG_TOL THEN
+            LgAntes% = (ea < eb)
+        ELSE
+            LgAntes% = (fa > fb)
+        END IF
+    END IF
+END FUNCTION
+
+' Recalcula bordos E/A e vigas V<n> de Laj(1..LajQtd). Chamar depois de
+' alterar geometria ou bordos das lajes do nivel.
+SUB LgDetectaContinuidade
+    DIM n AS INTEGER, a AS INTEGER, b AS INTEGER, i AS INTEGER
+    DIM p AS INTEGER, q AS INTEGER, s AS INTEGER, ng AS INTEGER, g AS INTEGER
+    DIM qi AS INTEGER, qf AS INTEGER, t AS STRING, v AS STRING
+    DIM grp(1 TO LG_MAXLADO) AS INTEGER, fila(1 TO LG_MAXLADO) AS INTEGER
+    DIM rep(1 TO LG_MAXLADO) AS INTEGER, ordem(1 TO LG_MAXLADO) AS INTEGER
+    DIM numVig(1 TO LG_MAXLADO) AS INTEGER
+    n = LajQtd * 4
+    FOR a = 1 TO LG_MAXLADO
+        grp(a) = 0
+        numVig(a) = 0
+    NEXT
+
+    ' 1. Lado E sem vizinho volta a A; a continuidade e refeita abaixo.
+    FOR a = 1 TO n
+        IF MID$(Laj(LgLaje%(a)).bordos, LgLado%(a), 1) = "E" THEN
+            MID$(Laj(LgLaje%(a)).bordos, LgLado%(a), 1) = "A"
+        END IF
+    NEXT
+
+    ' 2. Pares de continuidade viram E nos dois lados.
+    FOR a = 1 TO n
+        FOR b = a + 1 TO n
+            IF LgLaje%(a) <> LgLaje%(b) AND LgLado%(b) = LgOposto%(LgLado%(a)) AND LgNaoL%(a) AND LgNaoL%(b) THEN
+                IF LgContinuo%(a, b) THEN
+                    MID$(Laj(LgLaje%(a)).bordos, LgLado%(a), 1) = "E"
+                    MID$(Laj(LgLaje%(b)).bordos, LgLado%(b), 1) = "E"
+                END IF
+            END IF
+        NEXT
+    NEXT
+
+    ' 3. Lados ligados por continuidade formam uma mesma viga (busca em largura).
+    ng = 0
+    FOR a = 1 TO n
+        IF LgNaoL%(a) AND grp(a) = 0 THEN
+            ng = ng + 1
+            grp(a) = ng
+            rep(ng) = a
+            qi = 1
+            qf = 1
+            fila(1) = a
+            DO WHILE qi <= qf
+                p = fila(qi)
+                qi = qi + 1
+                FOR b = 1 TO n
+                    IF grp(b) = 0 AND LgNaoL%(b) AND LgLaje%(b) <> LgLaje%(p) AND LgLado%(b) = LgOposto%(LgLado%(p)) THEN
+                        IF LgContinuo%(p, b) THEN
+                            grp(b) = ng
+                            qf = qf + 1
+                            fila(qf) = b
+                        END IF
+                    END IF
+                NEXT
+            LOOP
+        END IF
+    NEXT
+
+    ' 3b. Lados colineares que se tocam ou se sobrepoem (mesma linha) formam a
+    '     mesma viga continua, mesmo sem laje do outro lado (ex.: borda externa
+    '     de duas lajes vizinhas). Sem isso cada trecho viraria uma viga
+    '     biapoiada e o pilar interno perderia a reacao da continuidade.
+    DIM mudou AS INTEGER, c AS INTEGER, gOld AS INTEGER, gNew AS INTEGER
+    DIM ea AS DOUBLE, ia AS DOUBLE, fa AS DOUBLE, eb AS DOUBLE, ib AS DOUBLE, fb AS DOUBLE
+    DO
+        mudou = 0
+        FOR a = 1 TO n
+            IF grp(a) > 0 THEN
+                FOR b = a + 1 TO n
+                    IF grp(b) > 0 AND grp(b) <> grp(a) AND LgHorizontal%(a) = LgHorizontal%(b) THEN
+                        LgGeom a, ea, ia, fa
+                        LgGeom b, eb, ib, fb
+                        IF ABS(ea - eb) <= LG_TOL AND fa >= ib - LG_TOL AND fb >= ia - LG_TOL THEN
+                            gOld = grp(b): gNew = grp(a)
+                            FOR c = 1 TO n
+                                IF grp(c) = gOld THEN grp(c) = gNew
+                            NEXT
+                            mudou = -1
+                        END IF
+                    END IF
+                NEXT
+            END IF
+        NEXT
+    LOOP WHILE mudou
+    ' renumera os grupos de 1..ng e refaz o representante (primeiro lado)
+    DIM novo(1 TO LG_MAXLADO) AS INTEGER
+    FOR g = 1 TO LG_MAXLADO: novo(g) = 0: NEXT
+    ng = 0
+    FOR a = 1 TO n
+        IF grp(a) > 0 THEN
+            IF novo(grp(a)) = 0 THEN ng = ng + 1: novo(grp(a)) = ng: rep(ng) = a
+        END IF
+    NEXT
+    FOR a = 1 TO n
+        IF grp(a) > 0 THEN grp(a) = novo(grp(a))
+    NEXT
+
+    ' 4. Numera as vigas (selecao simples sobre o lado representante de cada viga).
+    FOR g = 1 TO ng
+        ordem(g) = g
+    NEXT
+    FOR p = 1 TO ng - 1
+        q = p
+        FOR b = p + 1 TO ng
+            IF LgAntes%(rep(ordem(b)), rep(ordem(q))) THEN q = b
+        NEXT
+        SWAP ordem(p), ordem(q)
+    NEXT
+    FOR p = 1 TO ng
+        numVig(ordem(p)) = p
+    NEXT
+
+    ' 5. Vigas de cada laje: "-" no lado livre, senao V<n> da viga do grupo.
+    FOR i = 1 TO LajQtd
+        v = ""
+        FOR s = 1 TO 4
+            a = (i - 1) * 4 + s
+            IF grp(a) = 0 THEN
+                t = "-"
+            ELSE
+                t = "V" + LTRIM$(STR$(numVig(grp(a))))
+            END IF
+            IF s > 1 THEN v = v + "/"
+            v = v + t
+        NEXT
+        Laj(i).vigas = v
+    NEXT
+END SUB
+
+' Carga distribuida equivalente (tf/m2) de uma laje: soma das cargas lineares
+' (totLin = soma de carga*comprimento, tf) e das cargas por area (totArea = soma de carga*area,
+' tf) divididas pela area lx*ly. Pura: nao le nem grava Laj. Devolve 0 se lx*ly <= 0.
+FUNCTION LgCargaEquivalente# (lx AS DOUBLE, ly AS DOUBLE, totLin AS DOUBLE, totArea AS DOUBLE)
+    IF lx * ly > 0 THEN LgCargaEquivalente# = (totLin + totArea) / (lx * ly)
+END FUNCTION

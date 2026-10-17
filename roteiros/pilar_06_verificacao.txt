@@ -1,0 +1,6 @@
+# exe: PILAR
+# PILAR opcao 6 (verificacao NB1/78): pilar 20x40 c' 4, 2+2+0 barras de 16 mm (bitola 8), L 3 m, Nk 60 tf, Mxk 1, Myk 0.5 tf.m
+# obra de partida pilar_06_verificacao.dados (SISTRUT.OBR = PILTESTE) para gerar _PILAR.LST e _VERIF.VET
+# Imprimo = S; Desenho = Enter (padrao S); Dados corretos = S; Enter nas esperas de tela; F2 fecha
+{TELA p06_abertura}{ENTER}{TELA p06_menu}6{TELA p06_geo}20{ENTER}40{ENTER}4{ENTER}2{ENTER}2{ENTER}0{ENTER}8{ENTER}S{ENTER}
+{TELA p06_esf}60{ENTER}1{ENTER}0.5{ENTER}3{ENTER}3{ENTER}S{TELA p06_tela1}{ENTER}{TELA p06_tela2}{ENTER}{TELA p06_tela3}{ENTER}{TELA p06_fim}{ENTER}{F2}

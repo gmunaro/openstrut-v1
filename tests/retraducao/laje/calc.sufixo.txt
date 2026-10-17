@@ -1,0 +1,17 @@
+# Sufixo (a partir do menu do LAJE) do caso LAJECALC com a obra E2E gravada pelo original.
+# Le a obra (LAJEGRAV item 4), entra no LAJECALC (LAJE item 3) e percorre os itens 1 a 6 como o
+# caso_a_laje (continuidade, direcao, espessuras minimas, imposicao h=10, momentos e armaduras,
+# otimizacao, de novo momentos), com impressao, e volta ao LAJE (item 8).
+{TELA l01}6{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}
+4{ESPERA *RETORNO*}{PAUSA 2}E2E{ENTER}{ESPERA Continuo}{PAUSA 1}
+{ENTER}{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}
+7{ESPERA LAJES EM REGIME}{ESPERA escolha opcao}{PAUSA 2}{TELA l02}
+3{ESPERA Calculo e Detalhamento}{ESPERA escolha opcao}{PAUSA 2}{TELA c00_menu}
+1{ESPERA C O N T I N U I D A D E}{PAUSA 2}{TELA c01_continuidade}F{ESPERA escolha opcao}{PAUSA 2}{TELA c02_menu}
+2{ESPERA <F>im}{PAUSA 2}{TELA c03_direcao}F{ESPERA escolha opcao}{PAUSA 2}{TELA c05_menu}
+3{ESPERA TODAS}{PAUSA 1}{TELA c06_esp}{ENTER}{ESPERA Imprimo Relatorio}{PAUSA 1}{TELA c07_esp}S{ENTER}{ESPERA Visualizo}{PAUSA 1}{TELA c08_esp}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA c09_esp}{ENTER}{ESPERA para seguir}{PAUSA 1}{TELA c10_esp}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA c11_menu}
+4{ESPERA H em cm}{PAUSA 1}{TELA c12_imp}10{ENTER}{ESPERA RETORNA}{PAUSA 1}{TELA c13_imp}1 a 4{ENTER}{ESPERA H em cm}{PAUSA 1}{TELA c14_imp}{ENTER}{ESPERA Imprimo Relatorio}{PAUSA 1}{TELA c15_imp}S{ENTER}{ESPERA Visualizo}{PAUSA 1}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA c16_imp}{ENTER}{ESPERA para seguir}{PAUSA 1}{TELA c17_imp}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA c18_menu}
+5{ESPERA Momentos/Armaduras}{ESPERA TODAS}{PAUSA 1}{TELA c19_mom}{ENTER}{ESPERA Imprimo Relatorio}{PAUSA 1}{TELA c20_mom}S{ENTER}{ESPERA Visualizo}{PAUSA 1}{TELA c21_mom}{ENTER}{ESPERA Deseja Visualizar}{PAUSA 1}{TELA c22_mom}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA c23_mom}{ENTER}{ESPERA para seguir}{PAUSA 1}{TELA c24_mom}{ENTER}{ESPERA escolha opcao|180}{PAUSA 2}{TELA c25_menu}
+6{ESPERA odas serao equilibradas}{PAUSA 1}{TELA c26_otim}{ENTER}{ESPERA escolha opcao|180}{PAUSA 2}{TELA c27_menu}
+5{ESPERA Momentos/Armaduras}{ESPERA TODAS}{PAUSA 1}{ENTER}{ESPERA Imprimo Relatorio}{PAUSA 1}S{ENTER}{ESPERA Visualizo}{PAUSA 1}{ENTER}{ESPERA Deseja Visualizar}{PAUSA 1}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA c28_mom}{ENTER}{ESPERA para seguir}{PAUSA 1}{TELA c29_mom}{ENTER}{ESPERA escolha opcao|180}{PAUSA 2}{TELA c30_menu}
+8{ESPERA LAJES EM REGIME}{ESPERA escolha opcao}{PAUSA 2}{TELA l03}

@@ -1,0 +1,9 @@
+# T10 v2par_pilar_trava (sufixo a partir do menu do PILAR). Sem obra de partida.
+# Achado da T10: o PILAR opcao 6 nao termina a verificacao de alguns casos de flexao obliqua. Secao 20 x 30, c' 3,
+# 2 + 2 barras de 16 mm (a do v2par_pilar_mk), Nk 20 t, Mxk 0.8 tm, Myk 0, Lxe = Lye = 3 m: o caso 1/2 (Mx 0.8 + 0.4)
+# termina "ok"; o caso 2/2 (Mx 0.8(i), My acidental, flexao obliqua) fica em "Esforcos resistentes ... Aguarde".
+# A V1 nova (codigo nativo) tambem nao termina. O roteiro espera 2 x 30 s (telas t01 e t02); F2 interrompe o laco e o original mostra "Erro de Operacao" (t03),
+# onde o roteiro termina (o programa fica nessa tela).
+{TELA p00_menu}6{ESPERA Fck}{ENTER}{ESPERA Fyk}{ENTER}{ESPERA Tipo de Aco}{ENTER}{ESPERA tipo de secao}{PAUSA 2}1{ESPERA B(cm)}20,30,3{ENTER}{ESPERA borda superior}2{ENTER}{ESPERA borda inferior}2{ENTER}{ESPERA bordas laterais}0{ENTER}{ESPERA Bitola (mm)}16{ENTER}{ESPERA Outra Bitola}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA p01_secao}{ENTER}{ESPERA Imprimo as verificacoes}S{ENTER}{ESPERA Secao comprimida}N{ENTER}
+{ESPERA Nk(t)}20{ENTER}{ESPERA Mxk(tm)}0.8{ENTER}{ESPERA Myk(tm)}0{ENTER}{ESPERA Lxe(m)}3{ENTER}{ESPERA Lye(m)}3{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA p02_esf1}{ENTER}{PAUSA 30}{TELA t01_trava}{PAUSA 30}{TELA t02_trava}
+{F2}{ENTER}{ESPERA Erro de Operacao|120}{PAUSA 2}{TELA t03_f2_erro}

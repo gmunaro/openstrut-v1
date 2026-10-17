@@ -1,0 +1,5 @@
+# exe: PILAR
+# PILAREDI opcao V (Visualizar e Alterar Parametrizacoes), obra FLUXO, INI em MPa (grandeza 0,01).
+# item 1 (coef. seguranca Forcas, linha 35): 1.4 -> 1.5. item 6 (multiplicador fluencia, faixa 1.1 a 1.25): 2.5 -> aviso de faixa (Espera); depois 1.2.
+# ENTER com item 0 sai da tela. {BS} antes de cada campo, pois o padrao aparece preenchido.
+{TELA v_abertura}{ENTER}{TELA v_obra}8{TELA v_obra2}{ENTER}V{TELA v_tela}{BS}1{ENTER}{BS}{BS}{BS}{BS}1.5{ENTER}{TELA v_depois1}{BS}6{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}2.5{ENTER}{TELA v_fora}{ENTER}{TELA v_prox}{BS}6{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}1.2{ENTER}{TELA v_depois6}{ENTER}{TELA v_menu}{ESC}{TELA v_volta}{F2}

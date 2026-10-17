@@ -1,0 +1,30 @@
+# exe: LAJEGRAV
+# lajcal_02_grav (v2): LAJEGRAV sobre a obra FLUXO (copia de roteiros/semente).
+# Opcoes 1 a 7. EntradaTexto$: BS apaga, digitar acrescenta ao padrao, ENTER confirma.
+# *GRAVA, *LEIA, *CRIAR: ENTER confirma (*CRIAR aceita S). Espera pede ENTER.
+# Opcao 7 devolve o controle; a tela final pede ENTER.
+{TELA g00_menu}
+# 5 - acesso ao disco (Kbytes livres nao calculado)
+5{TELA g01_disco}{ENTER}
+# 3 - pesquisa: FLUXO (2 lajes); NAOEXISTE da erro; ENTER em branco sai
+3FLUXO{ENTER}{TELA g02_pesq_fluxo}{ENTER}NAOEXISTE{ENTER}{TELA g03_pesq_erro}{ENTER}{ENTER}
+# 4 - leitura de FLUXO (memoria vazia, sem pergunta de perda)
+4FLUXO{ENTER}{TELA g04_le_confirma}{ENTER}{TELA g05_le_ok}{ENTER}
+# 4 com lajes em memoria: N cancela; depois S le de novo
+4FLUXO{ENTER}{TELA g06_le_perda}N
+4FLUXO{ENTER}S{ENTER}{ENTER}
+# 2 - gravacao: N cancela; S grava FLUXO (nome padrao) e cria FLUXO.BAK
+2{ENTER}N
+2{ENTER}S{TELA g08_grava_confirma}{ENTER}{TELA g09_grava_ok}{ENTER}
+# 1 - criacao: FLUXO ja existe (recusa); TESTE2 e criado com as lajes em memoria
+1{ENTER}S{TELA g10_cria_existe}{ENTER}
+1{BS}{BS}{BS}{BS}{BS}TESTE2{ENTER}{TELA g11_cria_confirma}S{TELA g12_cria_ok}{ENTER}
+# 4 - le TESTE2 de volta (ida e volta da gravacao)
+4TESTE2{ENTER}S{ENTER}{TELA g13_le_teste2}{ENTER}
+# 6 - drive e diretorio: caminho atual longo, campo comeca vazio; ENTER vazio mantem o atual
+6{ENTER}{ENTER}{TELA g14_dir_mesmo}{ENTER}
+# Z:\NAO\SUB nao existe: N cancela; S tenta criar e falha (pai inexistente)
+6{BS}Z{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}NAO\SUB{ENTER}N{TELA g15_dir_nao}{ENTER}
+6{BS}Z{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}NAO\SUB{ENTER}S{TELA g16_dir_falha}{ENTER}
+# 7 - retorno ao menu; a tela final pede ENTER
+7{TELA g17_fim}{ENTER}

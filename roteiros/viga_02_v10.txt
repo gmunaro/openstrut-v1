@@ -1,0 +1,28 @@
+# exe: VIGA
+# VIGA cenario (b): viga V10 cadastrada pela tela (opcao 1), obra V10OBRA, sem .dados (memoria vazia).
+# 2 tramos de 5 m, bw 20 x h 50 cm, carga permanente 2 tf/m (peso proprio 0,25 tf/m entra no calculo),
+# 3 apoios pinados (P1, P2, P3). Sem engaste: o programa ignora o rotulo ENG (ver relatorio).
+# Ordem de prompts de VigNova: semBal (padrao 1), balanco esq/dir/ambos (N), engaste esq/dir (N),
+# bw, h, por tramo: L, P (carga total), concentradas (N); apoios; Dados Corretos (S).
+
+# 1 (arquivar): obra V10OBRA (apaga o padrao com 8 BS); viga V10; FIM da lista de vigas
+1{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}V10OBRA{ENTER}{TELA cad_obra}V10{ENTER}
+{BS}2{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{BS}20{ENTER}{BS}50{ENTER}
+{BS}5{ENTER}{BS}2{ENTER}N
+{BS}5{ENTER}{BS}2{ENTER}N
+P1{ENTER}P2{ENTER}P3{ENTER}{TELA cad_viga}S
+{ENTER}{TELA cad_fim}
+
+# 2 (processa): a lista pede o nome da viga (V10), nao a posicao; desenho da V10 ao final
+2V10{ENTER}{TELA processa_v10}V10{ENTER}{ENTER}{ENTER}{TELA processa_v10_fim}
+
+# 4 (lista): listar (S) e nao relistar (N)
+4S{TELA lista_v10}N
+
+# 7 (resumo de cargas): grava o .REP
+7{TELA resumo_v10}S{ENTER}{TELA resumo_v10_fim}
+
+# 6 -> 2 (gravar as vigas da memoria em V10OBRA.VIG, sobrescrevendo) e retorno
+6{TELA disco_v10}2{ENTER}S{TELA gravar_v10}{ENTER}8
+
+{TELA fim_v10}{F2}

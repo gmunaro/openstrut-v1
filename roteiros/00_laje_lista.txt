@@ -1,0 +1,3 @@
+# exe: LAJE
+# lista de lajes (opcao 5) da obra FLUXO
+5{TELA lista}{ENTER}{F2}

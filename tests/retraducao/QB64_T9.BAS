@@ -1,0 +1,15 @@
+OPEN "QB64_T9.TXT" FOR OUTPUT AS #1
+i% = 7: d# = 2.5#: s! = 1.25
+P (i%), 3
+P RT_SNG!(d# * 2), 4
+P s!, CINT(d#)
+P 10, (i%)
+P 2.5, 5
+CLOSE
+SYSTEM
+SUB P (x AS SINGLE, n AS INTEGER)
+    PRINT #1, x; n
+END SUB
+FUNCTION RT_SNG! (x AS _FLOAT)
+    RT_SNG! = x
+END FUNCTION

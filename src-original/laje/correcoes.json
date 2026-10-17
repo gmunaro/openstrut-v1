@@ -1,0 +1,31 @@
+{
+ "_leia": "Correcoes da familia LAJE lidas por tools/retraduz.py (somam-se as de CORRECOES). Chave = endereco da linha do lift; valor = linhas QB64 que substituem o comando, ou \"PROTECAO\" (comenta o comando). Aqui ficam so as marcas que desativam os trechos de verificacao de licenca do original. As marcas do LAJE, LAJEGRAV e LAJEPROC estao em tools/retraduz.py CORRECOES. Os contornos provisorios (SWAP, CSNG, LPRINT 80 colunas, comparacao SINGLE x DOUBLE) sairam em 15/10/2026: o tradutor resolveu os pedidos P1, P8, P9 e P11.",
+ "LAJECALC": {
+  "0x101b6": [
+   "GOTO L_10206   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x101cd": "PROTECAO",
+  "0x101db": "PROTECAO",
+  "0x101e9": "PROTECAO",
+  "0x101f7": "PROTECAO"
+ },
+ "LAJEGEOM": {
+  "0x1015c": [
+   "GOTO L_101ac   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x10173": "PROTECAO",
+  "0x10181": "PROTECAO",
+  "0x1018f": "PROTECAO",
+  "0x1019d": "PROTECAO"
+ },
+ "LAJEMONT": {
+  "0x101d4": [
+   "GOTO L_10224   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x101eb": "PROTECAO",
+  "0x101f9": "PROTECAO",
+  "0x10207": "PROTECAO",
+  "0x10215": "PROTECAO"
+ },
+ "LAJEPROC": {}
+}

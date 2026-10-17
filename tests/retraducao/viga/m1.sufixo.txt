@@ -1,0 +1,32 @@
+# Menus do VIGA sem calculo: 4 sem vigas na memoria, 8 (parametros, sem mudar), 6 (Gravacao e
+# Leitura: 3 numero de vigas, 4 catalogo, 1 criacao sem criar, 7 drive/diretorio sem mudar, 5 leitura
+# da obra E2E registros 1 A 6), 4 (lista das vigas), 5 (correcoes: viga 1, cada item sem mudar).
+{TELA m00}4{PAUSA 3}{ESPERA escolha opcao}{PAUSA 2}{TELA m01}
+8{ESPERA Correcao dos Parametros}{ESPERA Escolha opcao}{PAUSA 2}{TELA p00}
+1{ESPERA Reduzir Momentos Negativos a *}{PAUSA 1}{TELA p01}{ENTER}{ESPERA Escolha opcao}{PAUSA 2}{TELA p02}
+2{ESPERA Considero Cargas}{PAUSA 1}{TELA p03}{ENTER}{ESPERA Escolha opcao}{PAUSA 2}{TELA p04}
+3{ESPERA Fornecimento de Momentos}{PAUSA 1}{TELA p05}{ENTER}{ESPERA Escolha opcao}{PAUSA 2}{TELA p06}
+4{ESPERA Indexadas}{PAUSA 1}{TELA p07}{ENTER}{ESPERA Escolha opcao}{PAUSA 2}{TELA p08}
+5{ESPERA Unidade de Forca}{PAUSA 1}{TELA p09}{ENTER}{ESPERA Unidade de Medida}{PAUSA 1}{TELA p10}
+{ENTER}{ESPERA Escolha opcao}{PAUSA 2}{TELA p11}
+6{ESPERA VIGAS CONTINUAS}{ESPERA escolha opcao}{PAUSA 2}{TELA m02}
+6{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}{TELA g00}
+3{ESPERA Pesquisar}{PAUSA 2}{TELA g01}E2E{ENTER}{PAUSA 3}{TELA g02}{ENTER}{PAUSA 3}{TELA g03}
+{ENTER}{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}{TELA g04}
+4{ESPERA Catalogar}{PAUSA 2}{TELA g05}E2E{ENTER}{ESPERA Qualquer Tecla}{PAUSA 2}{TELA g06}{ENTER}{ESPERA Catalogar}{PAUSA 2}{TELA g07}
+{ENTER}{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}{TELA g08}
+1{ESPERA NAO CRIAR}{PAUSA 2}{TELA g09}{ENTER}{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}{TELA g10}
+7{ESPERA Drive que contem}{PAUSA 2}{TELA g11}{ENTER}{PAUSA 2}{TELA g12}{ENTER}{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}{TELA g13}
+5{ESPERA RETORNO}{PAUSA 2}{TELA g14}E2E{ENTER}{ESPERA intervalo}{PAUSA 2}{TELA g15}1 A 6{ENTER}{ESPERA Coloca-las}{PAUSA 2}{TELA g16}
+{ENTER}{ESPERA Dados Corretos}{PAUSA 2}{TELA g17}{ENTER}{ESPERA Catalogo}{PAUSA 3}{TELA g18}
+8{ESPERA VIGAS CONTINUAS}{ESPERA escolha opcao}{PAUSA 2}{TELA m03}
+4{ESPERA POSICAO}{ESPERA Qualquer Tecla}{PAUSA 2}{TELA l01}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA l02}
+5{ESPERA Numero da Posicao}{PAUSA 2}{TELA c00}1{ENTER}{ESPERA Fim da Correcao}{PAUSA 2}{TELA c01}
+1{ESPERA Alteracao do nome}{PAUSA 2}{TELA c02}{ENTER}{ESPERA Fim da Correcao}{PAUSA 2}{TELA c03}
+2{ESPERA Incluir um novo Tramo}{PAUSA 2}{TELA c04}{ENTER}{ESPERA Eliminar o Tramo}{PAUSA 2}{TELA c05}{ENTER}{ESPERA Fim da Correcao}{PAUSA 2}{TELA c06}
+3{ESPERA Balanco  esquerda}{PAUSA 2}{TELA c07}{ENTER}{ESPERA Engaste  esquerda}{PAUSA 2}{TELA c08}{ENTER}{ESPERA Fim da Correcao}{PAUSA 2}{TELA c09}
+4{ESPERA TRAMO , L , J}{PAUSA 2}{TELA c10}{ENTER}{ESPERA Fim da Correcao}{PAUSA 2}{TELA c11}
+5{ESPERA CARGA , P , D , F}{PAUSA 2}{TELA c12}{ENTER}{ESPERA Fim da Correcao}{PAUSA 2}{TELA c13}
+6{ESPERA CARGA , Pac , Fac}{PAUSA 2}{TELA c14}{ENTER}{ESPERA Fim da Correcao}{PAUSA 2}{TELA c15}
+7{ESPERA Mext(apoio 0)}{PAUSA 2}{TELA c16}{ENTER}{ESPERA Fim da Correcao}{PAUSA 2}{TELA c17}
+8{ESPERA Numero da Posicao}{PAUSA 2}{TELA c18}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA m04}

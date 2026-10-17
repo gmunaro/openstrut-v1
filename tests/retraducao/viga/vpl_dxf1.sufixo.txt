@@ -1,0 +1,8 @@
+# modulo: VPLOTA
+# VPLOTA opcao 1 (montagem de folha .DXF a partir dos .DXF isolados), parametros do VPLOTA.INI da
+# instalacao (folha 841x594, escala 50, tabela a direita, numeracao sequencial). Obra E2E com
+# R1__E2E.DXF gravado pelo DESENHO original (casos/retrad_vpl_obra). Registro 1; Seguir; grava
+# FV1_E2E.DXF (comparado byte a byte).
+{TELA d00}1{ESPERA Deseja alterar}{PAUSA 2}{TELA d01}{ENTER}{ESPERA Nome da Obra}{PAUSA 2}{TELA d02}E2E{ENTER}{ESPERA Numero dos Registros}{PAUSA 2}{TELA d03}
+1{ENTER}{ESPERA isualizar a disposicao|300}{PAUSA 2}{TELA d04}S{ESPERA Confirme seguir}{PAUSA 2}{TELA d05}S{ENTER}{ESPERA Montagem terminada|600}{PAUSA 2}{TELA d06}
+{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA d07}

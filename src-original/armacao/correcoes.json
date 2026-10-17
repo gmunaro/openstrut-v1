@@ -1,0 +1,28 @@
+{
+ "_leia": "Correcoes da familia ARMACAO lidas por tools/retraduz.py (somam-se as de CORRECOES). Chave = endereco da linha do lift; valor = linhas QB64 que substituem o comando, ou \"PROTECAO\" (comenta o comando). Aqui ficam so as marcas que desativam os trechos de verificacao de licenca do original.",
+ "ARMADURA": {
+  "0x103f8": [
+   "' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x10530": "PROTECAO",
+  "0x1053e": "PROTECAO",
+  "0x1054c": "PROTECAO",
+  "0x1055a": "PROTECAO",
+  "0x30073": "PROTECAO",
+  "0x300e5": "PROTECAO",
+  "0x30157": "PROTECAO",
+  "0x301c9": "PROTECAO",
+  "0x3023b": [
+   "GOTO L_3025c   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x30252": "PROTECAO",
+  "0x3025c": "PROTECAO",
+  "0x30277": "PROTECAO",
+  "0x302a4": "PROTECAO",
+  "0x302b2": [
+   "GOTO L_302e0   ' PROTECAO: verificacao de licenca do original desativada"
+  ],
+  "0x302c9": "PROTECAO",
+  "0x302d1": "PROTECAO"
+ }
+}

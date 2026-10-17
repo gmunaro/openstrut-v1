@@ -1,0 +1,12 @@
+# VIGA opcao 2 (Processar Vigas arquivadas): le a obra E2E (6 -> 5, registros 1 A 6) e processa
+# as posicoes 1 A 2 com impressao, diagramas de esforcos no video (escala automatica) e esquema
+# estrutural desenhado (D). Telas graficas CGA comparadas pixel a pixel (o texto delas nao sai
+# no decodificador do oraculo, por isso {PAUSA} e nao {ESPERA}).
+6{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}5{ESPERA RETORNO}{PAUSA 2}E2E{ENTER}{ESPERA intervalo}{PAUSA 2}
+1 A 6{ENTER}{ESPERA Coloca-las}{PAUSA 2}{ENTER}{ESPERA Dados Corretos}{PAUSA 2}{ENTER}{ESPERA Catalogo}{PAUSA 3}
+8{ESPERA VIGAS CONTINUAS}{ESPERA escolha opcao}{PAUSA 2}{TELA m00}
+2{ESPERA Calcular posicoes}{PAUSA 2}{TELA q00}1 A 2{ENTER}{ESPERA Imprimo os resultados}{PAUSA 1}{TELA q01}
+S{ENTER}{ESPERA Desenho diagramas}{PAUSA 1}{TELA q02}S{ENTER}{ESPERA VIDEO}{PAUSA 1}{TELA q03}{ENTER}{ESPERA esquema estrutural}{PAUSA 1}{TELA q04}
+D{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA q05}{ENTER}{PAUSA 20}{TELA q06_esquema_v1}
+{ENTER}{PAUSA 20}{TELA q07_diagrama_v1}{ENTER}{PAUSA 20}{TELA q08_esquema_v2}
+{ENTER}{PAUSA 20}{TELA q09_diagrama_v2}{ENTER}{ESPERA escolha opcao|120}{PAUSA 3}{TELA q10_menu}

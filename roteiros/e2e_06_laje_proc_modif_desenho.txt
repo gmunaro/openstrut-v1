@@ -1,0 +1,5 @@
+# exe: SISTRUT
+# Obra E2E (dados do e2e_04). LAJEPROC, opcao M na laje 1: impoe 5 mm c/10 nas tres armaduras
+# (positiva principal, secundaria e negativa). Os campos abrem com a proposta automatica,
+# por isso cada campo recebe {BS} antes de digitar (o campo abre com o valor atual e digitar acrescenta).
+{TELA s01_menu}L{TELA l01_menu_laje}4{TELA r01_proc_menu}M{TELA r02_modif_pergunta}1{ENTER}{TELA r03_armtela}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}5{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}10{ENTER}{TELA r04_armtela_sec}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}5{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}10{ENTER}{TELA r05_armtela_neg}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}5{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}10{ENTER}{TELA r06_pergunta_correta}{ENTER}{TELA r07_modif_volta}FIM{ENTER}{TELA r08_pos_modif}I{TELA r09_imp}{ENTER}{TELA r10_imp_fim}R{TELA l02_menu_pos_proc}{ENTER}{TELA l03_menu_fim}{F2}{TELA s02_menu}{F2}

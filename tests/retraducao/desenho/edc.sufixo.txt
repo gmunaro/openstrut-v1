@@ -1,0 +1,21 @@
+# Caso edc: detalhamento da viga 1 com edicao (DESEDCAO): editor longitudinal, esforcos, zoom, editor transversal,
+# esforcos, fim, grava R1__E2E.EDV; depois item 2 (DESEDITA) com a viga editada: desenho definitivo na impressora e CAD.
+1{ESPERA Nome da Obra}{PAUSA 2}E2E{ENTER}{ESPERA Listo as Vigas}{PAUSA 1}{ENTER}{ESPERA Continuo}{PAUSA 1}{ENTER}{ESPERA Todas as Vigas}{PAUSA 1}{ENTER}{ESPERA Processar Registros}{PAUSA 1}
+1{ENTER}{ESPERA Bw , Hw}{PAUSA 2}20,50,0,0{ENTER}{ESPERA Secoes Diferentes}{PAUSA 1}{ENTER}{ESPERA Retangular}{PAUSA 1}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{ENTER}
+{ESPERA Largura do Apoio 0}{PAUSA 1}20{ENTER}{ESPERA Tipo do Apoio}{PAUSA 1}{ENTER}{ESPERA Titulo}{PAUSA 1}P1{ENTER}{ESPERA orre}{PAUSA 1}{ENTER}
+{ESPERA Largura do Apoio 1}{PAUSA 1}20{ENTER}{ESPERA Tipo do Apoio}{PAUSA 1}{ENTER}{ESPERA Titulo}{PAUSA 1}P2{ENTER}{ESPERA orre}{PAUSA 1}{ENTER}
+{ESPERA Largura do Apoio 2}{PAUSA 1}20{ENTER}{ESPERA Tipo do Apoio}{PAUSA 1}{ENTER}{ESPERA Titulo}{PAUSA 1}P3{ENTER}{ESPERA orre}{PAUSA 1}{ENTER}
+{ESPERA Dados Corretos}{PAUSA 1}{ENTER}{ESPERA Vao Livre do Tramo 1}{PAUSA 1}380{ENTER}{ESPERA Vao Livre do Tramo 2}{PAUSA 1}380{ENTER}
+{ESPERA Superior dos Tramos}{PAUSA 1}{ENTER}{ESPERA Centraliza}{PAUSA 1}{ENTER}{ESPERA Lajes no Corte}{PAUSA 1}N{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{ENTER}
+{ESPERA Deseja Alterar}{PAUSA 1}{ENTER}{ESPERA esforcos S}{PAUSA 1}{ENTER}{ESPERA resultados de Armacao}{PAUSA 1}{ENTER}{ESPERA somente os diagramas}{PAUSA 1}S{ENTER}
+{ESPERA diagramas e a Armacao}{PAUSA 1}S{ENTER}{ESPERA VIDEO}{PAUSA 1}{ENTER}{ESPERA Altero a armadura}{PAUSA 1}{ENTER}{ESPERA Paro para}{PAUSA 1}S{ENTER}
+{ESPERA desenho definitivo}{PAUSA 1}{ENTER}{ESPERA Edito}{PAUSA 1}S{ENTER}{ESPERA padrao CAD}{PAUSA 1}{ENTER}{ESPERA repeticoes *FIM*}{PAUSA 1}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{ENTER}{PAUSA 8}
+{TELA k01}
+{ENTER}{PAUSA 8}{TELA k02}{ENTER}{PAUSA 8}{TELA k03}{ENTER}{PAUSA 8}{TELA k04}{ENTER}{ESPERA Edicao de Ferragem Longitudinal}{PAUSA 3}{TELA k05}
+E{PAUSA 5}{TELA k06}{ENTER}{ESPERA Edicao de Ferragem Longitudinal}{PAUSA 3}{TELA k07}Z{PAUSA 3}{TELA k08}2,2{ENTER}{ESPERA Edicao de Ferragem Longitudinal}{PAUSA 3}{TELA k09}
+F{ESPERA Edicao de Ferragem Transversal}{PAUSA 3}{TELA k10}E{PAUSA 5}{TELA k11}{ENTER}{ESPERA Edicao de Ferragem Transversal}{PAUSA 3}{TELA k12}
+F{ESPERA Gravo a Viga}{PAUSA 2}{TELA k13}S{ENTER}{ESPERA Confirme}{PAUSA 2}{TELA k14}SIM{ENTER}{ESPERA escolha opcao}{PAUSA 3}{TELA k15}
+2{ESPERA Nome da Obra}{PAUSA 2}{TELA t01}E2E{ENTER}{ESPERA Registros}{PAUSA 2}{TELA t02}1{ENTER}{ESPERA Corretas}{PAUSA 2}{TELA t03}{ENTER}
+{ESPERA Desenho Definitivo}{PAUSA 2}{TELA t04}S{ENTER}{ESPERA Escala}{PAUSA 1}{ENTER}{ESPERA Edito novamente}{PAUSA 1}{ENTER}{ESPERA padrao CAD}{PAUSA 1}S{ENTER}{ESPERA Tipo de Arquivo CAD}{PAUSA 1}{ENTER}
+{ESPERA medidas de forma}{PAUSA 1}{ENTER}{ESPERA dobramento}{PAUSA 1}{ENTER}{ESPERA CAB 1)}{PAUSA 1}OBRA E2E EDITADA{ENTER}{ESPERA CAB 2)}{PAUSA 1}V1{ENTER}{ESPERA CAB 3)}{PAUSA 1}{ENTER}{ESPERA NOT 1)}{PAUSA 1}{ENTER}
+{ESPERA Repeticoes *FIM*}{PAUSA 2}{TELA t05}{ENTER}{PAUSA 5}{TELA t06}{ENTER}{PAUSA 5}{TELA t07}{ENTER}{PAUSA 5}{TELA t08}{ENTER}{PAUSA 5}{TELA t09}{ENTER}{PAUSA 5}{TELA t10}{ENTER}{PAUSA 5}{TELA t11}{ENTER}{PAUSA 5}{TELA t12}{ENTER}{PAUSA 5}{TELA t13}

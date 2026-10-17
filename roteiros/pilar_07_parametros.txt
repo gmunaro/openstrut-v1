@@ -1,0 +1,4 @@
+# exe: PILAR
+# PILAR opcao 7 (correcao de parametros): altera item (1) Forcas csf para 1.5 e Enter nos demais
+# Reabre a tela para conferir que o valor ficou em memoria; grava so na sessao (PILAR.INI e apenas lido, ver docs/modules/PILAR.md secao 5)
+{TELA p07_abertura}{ENTER}{TELA p07_menu}7{TELA p07_par}1.5{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{TELA p07_fim}{ENTER}7{TELA p07_reab}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{TELA p07_fim2}{ENTER}{F2}

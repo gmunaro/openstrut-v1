@@ -1,0 +1,3 @@
+# exe: LAJEMONT
+# LAJEMONT, roteiro 02: relatorio N e indexacoes N (nada gravado; ESC no aviso).
+{TELA lm2_reacoes}{ENTER}{TELA lm2_totais}{ENTER}{TELA lm2_esq_vigas}{ENTER}{TELA lm2_esq_pilares}{ENTER}{TELA lm2_perg_rel}N{TELA lm2_perg_idx}N{TELA lm2_aviso}{ESC}

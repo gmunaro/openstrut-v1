@@ -1,0 +1,22 @@
+# VIGA com parametros alterados (opcao 8): reducao dos negativos 85%, cargas acidentais S geradas (G)
+# com 25%, momentos externos S, indexacao por reacoes maximas (M). Depois opcao 3: viga de 2 tramos
+# com balanco a direita e momentos externos; impressao, diagramas (envoltoria) no video. Opcao 7 na
+# obra E2E: registros 2/4 A 5, apoio 0 da V2 desconsiderado (*), multiplicador 50%, so na tela,
+# parando para visualizacao; grava E2E.REP (comparado byte a byte).
+8{ESPERA Correcao dos Parametros}{ESPERA Escolha opcao}{PAUSA 2}{TELA p00}
+1{ESPERA Reduzir Momentos Negativos a *}{PAUSA 1}85{ENTER}{ESPERA Escolha opcao}{PAUSA 2}{TELA p01}
+2{ESPERA Considero Cargas}{PAUSA 1}S{ENTER}{PAUSA 2}{TELA p02}G{ENTER}{PAUSA 2}{TELA p03}25{ENTER}{PAUSA 2}{TELA p04}
+3{PAUSA 2}{TELA p05}S{ENTER}{PAUSA 2}{TELA p06}4{PAUSA 2}{TELA p07}M{ENTER}{PAUSA 2}{TELA p08}
+6{ESPERA VIGAS CONTINUAS}{ESPERA escolha opcao}{PAUSA 2}{TELA m01}
+3{ESPERA OBRA}{PAUSA 2}ACID{ENTER}{ESPERA Viga *FIM*}{PAUSA 1}VA1{ENTER}{ESPERA Numero de tramos}{PAUSA 1}2{ENTER}{ESPERA Balanco  esquerda}{PAUSA 1}01{ENTER}
+{ESPERA Engaste  esquerda}{PAUSA 1}{ENTER}{ESPERA Inercia e constante}{PAUSA 1}{ENTER}{ESPERA L 1}{PAUSA 1}5{ENTER}{ESPERA divisoes de carga}{PAUSA 1}{ENTER}{ESPERA cargas totais}{PAUSA 1}2,,0{ENTER}
+{ESPERA L 2}{PAUSA 1}4{ENTER}{ESPERA divisoes de carga}{PAUSA 1}2{ENTER}{ESPERA cargas totais}{PAUSA 1}1.5,2,1{ENTER}{ESPERA P 2}{PAUSA 1}1.5,,0{ENTER}
+{ESPERA L 3}{PAUSA 1}{TELA e01}1.2{ENTER}{ESPERA divisoes de carga}{PAUSA 1}{ENTER}{ESPERA cargas totais}{PAUSA 1}{TELA e02}1,,0.5{ENTER}{ESPERA Mext( apoio 0 )}{PAUSA 1}{TELA e03}
+0,-1.5{ENTER}{ESPERA OBRA-ACID}{PAUSA 3}{TELA e04_dados}{ENTER}{ESPERA Imprimo os Resultados}{PAUSA 1}S{ENTER}{ESPERA Desenho Diagramas}{PAUSA 1}S{ENTER}{ESPERA VIDEO}{PAUSA 1}{ENTER}
+{ESPERA esquema estrutural}{PAUSA 1}{TELA e05}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{ENTER}{PAUSA 20}{TELA e06_diagrama}{ENTER}{ESPERA escolha opcao}{PAUSA 3}{TELA e07_menu}
+7{ESPERA Nome da Obra}{PAUSA 2}{TELA r00}E2E{ENTER}{ESPERA Listo as Vigas}{PAUSA 1}{ENTER}{ESPERA Continuo}{PAUSA 1}{ENTER}{ESPERA Todas as Vigas}{PAUSA 1}{TELA r01}
+N{ENTER}{ESPERA Processar Registros}{PAUSA 1}{TELA r02}2/4 A 5{ENTER}{ESPERA Registro 2}{PAUSA 2}{TELA r03}N{ENTER}{PAUSA 2}{TELA r04}*{ENTER}{PAUSA 2}{TELA r05}5{ENTER}{PAUSA 2}{TELA r06}4{ENTER}{PAUSA 2}{TELA r07}{ENTER}{ESPERA Registro 4}{PAUSA 2}{TELA r08}{ENTER}{ESPERA Registro 5}{PAUSA 2}{ENTER}{ESPERA Vigas Apoiadas}{PAUSA 2}{TELA r09}50{ENTER}{ESPERA Imprimo os Resultados}{PAUSA 1}{TELA r10}
+{ENTER}{ESPERA Diagrama de Esforcos}{PAUSA 1}{ENTER}{ESPERA Paro para}{PAUSA 1}S{ENTER}{ESPERA esquema estrutural}{PAUSA 1}{ENTER}{ESPERA somente a Somatoria}{PAUSA 1}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA r11}
+{ENTER}{ESPERA Continua}{PAUSA 3}{TELA r12_v2}{ENTER}{ESPERA Qualquer Tecla}{PAUSA 2}{TELA r13_v2}{ENTER}{ESPERA Continua}{PAUSA 3}{TELA r14_v4}{ENTER}{ESPERA Qualquer Tecla}{PAUSA 2}{TELA r15_v4}
+{ENTER}{ESPERA Continua}{PAUSA 3}{TELA r16_v5}{ENTER}{ESPERA Qualquer Tecla}{PAUSA 2}{TELA r17_v5}{ENTER}{ESPERA GRAVO A SOMATORIA|180}{PAUSA 2}{TELA r18_reacoes}
+S{ENTER}{ESPERA escolha opcao}{PAUSA 3}{TELA r19_menu}

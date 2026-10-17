@@ -1,0 +1,131 @@
+' ============================================================================
+'  FORMCALC.BM - montagem da forma e quantitativos do pavimento (FORMEDCA).
+'  Sem tela e sem I/O. Testado em tests/T_FORMCALC.BAS.
+'
+'  Entrada: Laj(), Vig()/VigApo(), Col() carregados (SISDADOS.BI).
+'  Saida: FrmLaj()/FrmVig()/FrmPil() (FcMontaForma) e as funcoes de
+'  quantitativo. Unidades do SISTRUT: m, cm; area em m2, volume em m3.
+'
+'  RECONSTRUCAO FUNCIONAL (o binario nao foi decodificado):
+'  - Espessura de referencia: a primeira laje com h > 0 (FcHLaje#). Lajes
+'    com h = 0 usam essa espessura (FcEspLaje#) e assim saem no .FRM.
+'  - Eixo de cada viga: do primeiro ao ultimo apoio em VigApo().
+'  - Pilares do volume: nao entram em FcVolumeConcreto# (sem pe-direito
+'    na assinatura). Pilares da area usam o pe-direito de FcAreaForma#.
+' ============================================================================
+
+' Espessura de referencia do pavimento (cm): primeira laje com h > 0, ou 0.
+FUNCTION FcHLaje# ()
+    DIM i AS INTEGER
+    FcHLaje# = 0
+    FOR i = 1 TO LajQtd
+        IF Laj(i).h > 0 THEN
+            FcHLaje# = Laj(i).h
+            EXIT FUNCTION
+        END IF
+    NEXT
+END FUNCTION
+
+' Espessura efetiva da laje i (cm): o h informado, ou a referencia.
+FUNCTION FcEspLaje# (i AS INTEGER)
+    IF Laj(i).h > 0 THEN
+        FcEspLaje# = Laj(i).h
+    ELSE
+        FcEspLaje# = FcHLaje#
+    END IF
+END FUNCTION
+
+' Comprimento (m) do eixo da viga v: distancia entre o primeiro e o ultimo apoio.
+FUNCTION FcCompVig# (v AS INTEGER)
+    DIM a AS INTEGER, b AS INTEGER
+    a = Vig(v).iApo
+    b = a + Vig(v).nTramos
+    FcCompVig# = SQR((VigApo(b).x - VigApo(a).x) ^ 2 + (VigApo(b).y - VigApo(a).y) ^ 2)
+END FUNCTION
+
+' Monta FrmLaj/FrmVig/FrmPil a partir de Laj/Vig/Col. msg recebe "" se ok,
+' ou o motivo da recusa (obra sem lajes nem vigas: nada a montar).
+' RECONSTRUCAO: a recusa e a unica validacao; o original nao foi decodificado.
+SUB FcMontaForma (msg AS STRING)
+    DIM i AS INTEGER, v AS INTEGER, a AS INTEGER, b AS INTEGER
+
+    msg = ""
+    IF LajQtd = 0 AND VigQtd = 0 THEN
+        msg = "Obra sem lajes nem vigas: nada a montar."
+        EXIT SUB
+    END IF
+
+    FrmLajQtd = LajQtd
+    FOR i = 1 TO LajQtd
+        FrmLaj(i).nome = Laj(i).nome
+        FrmLaj(i).x0 = Laj(i).x0
+        FrmLaj(i).y0 = Laj(i).y0
+        FrmLaj(i).lx = Laj(i).lx
+        FrmLaj(i).ly = Laj(i).ly
+        FrmLaj(i).h = FcEspLaje#(i)
+    NEXT
+
+    FrmVigQtd = VigQtd
+    FOR v = 1 TO VigQtd
+        a = Vig(v).iApo
+        b = a + Vig(v).nTramos
+        FrmVig(v).nome = Vig(v).nome
+        FrmVig(v).x1 = VigApo(a).x
+        FrmVig(v).y1 = VigApo(a).y
+        FrmVig(v).x2 = VigApo(b).x
+        FrmVig(v).y2 = VigApo(b).y
+        FrmVig(v).bw = Vig(v).bw
+        FrmVig(v).h = Vig(v).h
+    NEXT
+
+    FrmPilQtd = ColQtd
+    FOR i = 1 TO ColQtd
+        FrmPil(i).nome = Col(i).nome
+        FrmPil(i).x = Col(i).x
+        FrmPil(i).y = Col(i).y
+        FrmPil(i).bx = Col(i).bx
+        FrmPil(i).by = Col(i).by
+        FrmPil(i).secao = Col(i).secao
+    NEXT
+END SUB
+
+' Volume de concreto do pavimento (m3): lajes lx*ly*h, vigas comp*bw*(h - hlaje).
+' Pilares nao entram (ver cabecalho).
+FUNCTION FcVolumeConcreto# ()
+    DIM i AS INTEGER, v AS INTEGER, hl AS DOUBLE, alt AS DOUBLE, tot AS DOUBLE
+    hl = FcHLaje#
+    tot = 0
+    FOR i = 1 TO LajQtd
+        tot = tot + Laj(i).lx * Laj(i).ly * FcEspLaje#(i) / 100
+    NEXT
+    FOR v = 1 TO VigQtd
+        alt = Vig(v).h - hl
+        IF alt < 0 THEN alt = 0
+        tot = tot + FcCompVig#(v) * Vig(v).bw * alt / 10000
+    NEXT
+    FcVolumeConcreto# = tot
+END FUNCTION
+
+' Area de forma do pavimento (m2) com pe-direito peDireito (m):
+' lajes lx*ly; vigas comp*(bw + 2*(h - hlaje))/100; pilares 2*(bx + by)/100*peDireito.
+FUNCTION FcAreaForma# (peDireito AS DOUBLE)
+    DIM i AS INTEGER, v AS INTEGER, hl AS DOUBLE, alt AS DOUBLE, tot AS DOUBLE
+    hl = FcHLaje#
+    tot = 0
+    FOR i = 1 TO LajQtd
+        tot = tot + Laj(i).lx * Laj(i).ly
+    NEXT
+    FOR v = 1 TO VigQtd
+        alt = Vig(v).h - hl
+        IF alt < 0 THEN alt = 0
+        tot = tot + FcCompVig#(v) * (Vig(v).bw + 2 * alt) / 100
+    NEXT
+    FOR i = 1 TO ColQtd
+        IF UCASE$(Col(i).secao) = "C" THEN
+            tot = tot + 3.14159265358979# * Col(i).bx / 100 * peDireito
+        ELSE
+            tot = tot + 2 * (Col(i).bx + Col(i).by) / 100 * peDireito
+        END IF
+    NEXT
+    FcAreaForma# = tot
+END FUNCTION

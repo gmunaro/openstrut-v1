@@ -1,0 +1,43 @@
+# modulo: VIGA
+# T10 v2par_des_especial (sufixo a partir do menu do VIGA; continua no DESENHO pelo gerenciador).
+# Dados de partida: V2P.DSP (copia do SISTRUT.DSP com aco A, acidentais envoltorias S, flecha com inercia
+# fissurada S, flecha com deformacao lenta S, verificacao de fissuracao S com limite 1) em C:\.
+# VIGA: 8 -> 2 acidentais S, fornecidas; 1: obra DSX, viga D1 com 2 tramos e balanco nos dois lados:
+#   L0 = 1.5 m (balanco) P 3 t/m, Pac 0.5; L1 = 6 m em 2 divisoes: P 3 ate D 0.4 com F 3 t em D (carga
+#   concentrada a 0.4 m do apoio), depois P 3 ate 6; Pac 0.5 nas duas; L2 = 4 m P 3, Pac 0.5;
+#   L3 = 1.2 m (balanco) P 3 com F 3 t na ponta, Pac 0.5. 6: grava DSX.VIG (registro 1).
+# DESENHO: 6 -> pasta dos .DSP = C:\; 5 -> P = V2P; 1: DSX registro 1, secao T 20 x 40 com Bf 80 e Hf 10
+#   (apoios retangulares), apoios de 20 cm (P1..P3), vaos livres 140 (balanco), 580, 380, 110 (balanco);
+#   impressao de esforcos e armacao, diagramas VIDEO, "Altero a armadura" S; desenho definitivo 1/50 na
+#   impressora sem CAD; aviso "Momento acima de 40% do limite da armadura simples" -> Continuo S;
+#   Altero a Armacao N; janelas de fissuracao (apoios e tramos) -> N; Continuo S. Depois 4 (resumo). F2, F2.
+8{ESPERA Correcao dos Parametros}{ESPERA Escolha opcao}{PAUSA 2}{TELA a00}2{ESPERA Considero Cargas}{PAUSA 1}S{ENTER}{ESPERA ornecidas ou}{PAUSA 1}{TELA a01}{ENTER}{ESPERA Escolha opcao}{PAUSA 2}{TELA a02}
+6{ESPERA VIGAS CONTINUAS}{ESPERA escolha opcao}{PAUSA 2}
+1{ESPERA Posicao *}{PAUSA 2}{ENTER}{ESPERA Exemplo}{PAUSA 2}DSX{ENTER}{ESPERA Viga *FIM*}{PAUSA 2}
+D1{ENTER}{ESPERA Numero de tramos}{PAUSA 1}2{ENTER}{ESPERA Balanco  esquerda}{PAUSA 1}11{ENTER}{ESPERA Engaste  esquerda}{PAUSA 1}{ENTER}{ESPERA Inercia e constante}{PAUSA 1}{ENTER}
+{ESPERA L 0}{PAUSA 1}1.5{ENTER}{ESPERA divisoes de carga}{PAUSA 1}{ENTER}{ESPERA cargas totais}{PAUSA 1}3,,0{ENTER}{ESPERA cargas acidentais}{PAUSA 1}0.5,0{ENTER}
+{ESPERA L 1}{PAUSA 1}6{ENTER}{ESPERA divisoes de carga}{PAUSA 1}2{ENTER}{ESPERA cargas totais}{PAUSA 1}3,0.4,3{ENTER}{ESPERA cargas acidentais}{PAUSA 1}0.5,0{ENTER}{ESPERA P 2}{PAUSA 1}3,,0{ENTER}{ESPERA Pac 2}{PAUSA 1}0.5,0{ENTER}
+{ESPERA L 2}{PAUSA 1}4{ENTER}{ESPERA divisoes de carga}{PAUSA 1}{ENTER}{ESPERA cargas totais}{PAUSA 1}3,,0{ENTER}{ESPERA cargas acidentais}{PAUSA 1}0.5,0{ENTER}
+{ESPERA L 3}{PAUSA 1}1.2{ENTER}{ESPERA divisoes de carga}{PAUSA 1}{ENTER}{ESPERA cargas totais}{PAUSA 1}3,,3{ENTER}{ESPERA cargas acidentais}{PAUSA 1}0.5,0{ENTER}
+{ESPERA Continua}{PAUSA 3}{TELA b01_dados}{ENTER}{PAUSA 3}{TELA b01b_dados}{ENTER}{ESPERA posicao 2}{PAUSA 2}{TELA b02}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA b03_menu}
+6{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}1{ESPERA NAO CRIAR}{PAUSA 2}DSX{ENTER}{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}2{ESPERA posicoes da memoria}{PAUSA 2}1 A 1{ENTER}{ESPERA do Registro}{PAUSA 2}1{ENTER}{ESPERA Dados Corretos}{PAUSA 2}{ENTER}{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}{TELA b04_gravado}
+8{ESPERA VIGAS CONTINUAS}{ESPERA escolha opcao}{PAUSA 2}
+{F2}{ENTER}{ESPERA Configuracao|60}{PAUSA 2}V{PAUSA 2}{RIGHT}{PAUSA 2}{ENTER}{ESPERA escolha opcao|60}{PAUSA 2}{TELA c00_desenho}
+6{ESPERA arquivos de Vigas (.VIG}{PAUSA 2}{ENTER}{ESPERA Vigas Editadas}{PAUSA 2}{ENTER}{ESPERA Parametrizacao (.DSP)}{PAUSA 2}{TELA c01_dir_dsp}C:\{ENTER}{ESPERA publicos CAD}{PAUSA 2}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA c02_menu}
+5{ESPERA item , VALOR}{PAUSA 1}{TELA c03_param}P{ENTER}{ESPERA Nome do Arquivo PARAMETRIZACAO}{PAUSA 2}V2P{ENTER}{ESPERA item , VALOR}{PAUSA 2}{TELA c04_param_v2p}{ENTER}{ESPERA escolha opcao}{PAUSA 2}
+1{ESPERA Nome da Obra}{PAUSA 2}DSX{ENTER}{ESPERA Listo as Vigas}{PAUSA 1}{ENTER}{ESPERA Continuo}{PAUSA 1}{ENTER}{ESPERA Todas as Vigas}{PAUSA 1}{ENTER}{ESPERA Processar Registros}{PAUSA 1}{TELA d05}1{ENTER}{ESPERA Bw , Hw}{PAUSA 2}{TELA d06}20,40,80,10{ENTER}{ESPERA Secoes Diferentes}{PAUSA 1}{ENTER}{ESPERA Retangular}{PAUSA 1}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA d09_secoes}{ENTER}
+{ESPERA Largura do Apoio 0}{PAUSA 1}20{ENTER}{ESPERA Tipo do Apoio}{PAUSA 1}{ENTER}{ESPERA Titulo}{PAUSA 1}P1{ENTER}{ESPERA orre}{PAUSA 1}{ENTER}
+{ESPERA Largura do Apoio 1}{PAUSA 1}20{ENTER}{ESPERA Tipo do Apoio}{PAUSA 1}{ENTER}{ESPERA Titulo}{PAUSA 1}P2{ENTER}{ESPERA orre}{PAUSA 1}{ENTER}
+{ESPERA Largura do Apoio 2}{PAUSA 1}20{ENTER}{ESPERA Tipo do Apoio}{PAUSA 1}{ENTER}{ESPERA Titulo}{PAUSA 1}P3{ENTER}{ESPERA orre}{PAUSA 1}{ENTER}
+{ESPERA Dados Corretos}{PAUSA 1}{TELA d20_apoios}{ENTER}{ESPERA Vao Livre do Tramo 0}{PAUSA 1}140{ENTER}{ESPERA Vao Livre do Tramo 1}{PAUSA 1}580{ENTER}{ESPERA Vao Livre do Tramo 2}{PAUSA 1}380{ENTER}{ESPERA Vao Livre do Tramo 3}{PAUSA 1}110{ENTER}
+{ESPERA Superior dos Tramos}{PAUSA 1}{TELA d25}{ENTER}{ESPERA Centraliza}{PAUSA 1}{ENTER}{ESPERA Lajes no Corte}{PAUSA 1}N{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA d28}{ENTER}
+{ESPERA Deseja Alterar}{PAUSA 1}{TELA d29}{ENTER}{ESPERA esforcos S}{PAUSA 1}S{ENTER}{ESPERA resultados de Armacao}{PAUSA 1}S{ENTER}{ESPERA somente os diagramas}{PAUSA 1}S{ENTER}
+{ESPERA diagramas e a Armacao}{PAUSA 1}S{ENTER}{ESPERA VIDEO}{PAUSA 1}{TELA d34}{ENTER}{ESPERA Altero a armadura}{PAUSA 1}{TELA d35}S{ENTER}
+{ESPERA desenho definitivo}{PAUSA 1}S{ENTER}{ESPERA Escala 1/.. 200 100 *50*}{PAUSA 1}{ENTER}{ESPERA Edito}{PAUSA 1}{ENTER}{ESPERA padrao CAD}{PAUSA 1}N{ENTER}
+{ESPERA medidas de forma}{PAUSA 1}{ENTER}{ESPERA dobramento}{PAUSA 1}{ENTER}
+{ESPERA CAB 1)}{PAUSA 1}OBRA DSX{ENTER}{ESPERA CAB 2)}{PAUSA 1}VIGA D1{ENTER}{ESPERA CAB 3)}{PAUSA 1}SISTRUT{ENTER}{ESPERA NOT 1)}{PAUSA 1}NOTA UM{ENTER}{ESPERA NOT 2)}{PAUSA 1}NOTA DOIS{ENTER}
+{ESPERA repeticoes *FIM*}{PAUSA 1}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{ENTER}{ESPERA Continuo com o processamento|120}{PAUSA 2}{TELA h00_aviso}S{ENTER}{ESPERA Altero a Armacao}{PAUSA 2}{TELA h01}N{ENTER}
+{ESPERA Apoio     As-trac.}{ESPERA Modifico as Armaduras}{PAUSA 2}{TELA h02_fissura_apoios}N{ENTER}{ESPERA Tramo     As-trac.}{ESPERA Modifico as Armaduras}{PAUSA 2}{TELA h03_fissura_tramos}N{ENTER}
+{ESPERA Continuo com o processamento|120}{PAUSA 2}{TELA h04_aviso2}S{ENTER}{ESPERA escolha opcao|400}{PAUSA 3}{TELA i04_menu}
+4{ESPERA Nome da Obra}{PAUSA 2}DSX{ENTER}{ESPERA a anular}{PAUSA 2}{ENTER}{ESPERA Resumo Geral}{PAUSA 2}S{ENTER}{ESPERA para seguir}{PAUSA 2}{ENTER}{ESPERA Qualquer Tecla}{PAUSA 3}{TELA r04_resumo}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA r05}
+{F2}{ENTER}{ESPERA Configuracao|60}{PAUSA 2}{F2}

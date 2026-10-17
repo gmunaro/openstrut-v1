@@ -1,0 +1,28 @@
+# obra: obra2
+# Caso retrad_frm_edita: opcao 2 (Editadas) sobre E2E.FRM gravado pelo original (caso montagem); editor FORMEDCA:
+# P (pilar 5, X = 395), V com pilar alterado (aviso), G com elemento alterado (aviso), R, G (CHAIN FORMINIT e volta), V (viga 1, Y = 1010),
+# T (textos), Z (zoom por campo e todo), C (cotas), E (elevacao), Esc no zoom (ON KEY), S com elemento alterado,
+# R, G e S (volta ao FORMA).
+{ESPERA escolha opcao}{PAUSA 2}2{ESPERA Arquivo de Forma}{PAUSA 2}{TELA b00_frm}E2E{ENTER}{ESPERA Continuo com a edicao}{PAUSA 2}{TELA b01_arquivos}{ENTER}
+{ESPERA Inicio da reedicao}{PAUSA 2}{TELA b02_resumo}{ENTER}{ESPERA edesenha|120}{PAUSA 3}{TELA b03_editor}
+P{ESPERA Nome do Pilar}{PAUSA 2}{TELA b04_p}5{ENTER}{ESPERA Altero}{PAUSA 2}{TELA b05_p5}{ENTER}{ESPERA Sentido X}{PAUSA 2}{TELA b06_px}
+C{ESPERA Escolha do Vertice}{PAUSA 2}{TELA b07_pvert}S{ESPERA Coordenada absoluta}{PAUSA 2}{TELA b08_pcoord}395{ENTER}
+{ESPERA Sentido Y}{PAUSA 2}{TELA b09_py}M{ESPERA Corfirme}{PAUSA 2}{TELA b10_pconf}{ENTER}{ESPERA edesenha}{PAUSA 3}{TELA b11_p_feito}
+V{ESPERA Nome da Viga}{PAUSA 2}1{ENTER}{ESPERA Altero}{PAUSA 2}{TELA b12_v1}{ENTER}{ESPERA Acione REDESENHA}{PAUSA 2}{TELA b13_v_aviso}{ENTER}
+{ESPERA Nome da Viga}{PAUSA 2}{ENTER}{ESPERA edesenha}{PAUSA 3}
+G{ESPERA elementos alterados}{PAUSA 2}{TELA b14_g_alterado}{ENTER}{ESPERA edesenha}{PAUSA 3}
+R{PAUSA 10}{ESPERA edesenha|120}{PAUSA 3}{TELA b15_redesenhado}
+G{ESPERA Gravacao dos dados da Forma}{PAUSA 2}E2E{ENTER}{ESPERA Sigo com a gravacao}{PAUSA 2}{ENTER}{ESPERA edesenha}{PAUSA 3}{TELA b15a_gravado}
+V{ESPERA Nome da Viga}{PAUSA 2}1{ENTER}{ESPERA Altero}{PAUSA 2}{ENTER}{ESPERA odas faces}{PAUSA 2}{TELA b16_vfaces}T{ESPERA referencia}{PAUSA 2}{TELA b17_vref}
+S{ESPERA Sentido Y}{PAUSA 2}{TELA b18_vy}C{ESPERA Coordenada absoluta}{PAUSA 2}{TELA b19_vcoord}1010{ENTER}{ESPERA Corfirme}{PAUSA 2}{TELA b20_vconf}{ENTER}
+{ESPERA Nome da Viga}{PAUSA 2}{ENTER}{ESPERA edesenha}{PAUSA 3}{TELA b21_v_feito}
+T{ESPERA Posicao dos Textos}{PAUSA 2}{TELA b22_textos}T{ESPERA Continua}{PAUSA 2}{TELA b23_textos_todos}{ENTER}{ESPERA Visualiza}{PAUSA 2}R{ESPERA edesenha}{PAUSA 3}
+Z{ESPERA campo de desenho}{PAUSA 2}{TELA b24_zoom}D{ESPERA PRIMEIRO canto}{PAUSA 2}{RIGHT}{RIGHT}{ENTER}{ESPERA SEGUNDO canto}{PAUSA 2}{RIGHT}{RIGHT}{RIGHT}{RIGHT}{RIGHT}{RIGHT}{RIGHT}{RIGHT}{DOWN}{DOWN}{DOWN}{DOWN}{DOWN}{DOWN}{PAUSA 2}{TELA b25_zoom_canto}{ENTER}{ESPERA edesenha}{PAUSA 6}{TELA b26_zoom_feito}
+Z{ESPERA campo de desenho}{PAUSA 2}T{ESPERA edesenha}{PAUSA 6}{TELA b27_zoom_todo}
+C{ESPERA Cotas e Distancias}{PAUSA 2}{TELA b28_cotas}{ENTER}{ESPERA edesenha}{PAUSA 3}
+E{ESPERA Elevacao dos Elementos}{PAUSA 2}{TELA b29_elevacao}{ENTER}{ESPERA edesenha}{PAUSA 3}
+Z{ESPERA campo de desenho}{PAUSA 2}D{ESPERA PRIMEIRO canto}{PAUSA 2}{ESC}{ESPERA edesenha}{PAUSA 4}{TELA b30_esc}
+S{PAUSA 4}{TELA b31_s_alterado}
+R{PAUSA 10}{ESPERA edesenha|120}{PAUSA 3}
+G{ESPERA Gravacao dos dados da Forma}{PAUSA 2}E2E{ENTER}{ESPERA Sigo com a gravacao}{PAUSA 2}{ENTER}{ESPERA edesenha}{PAUSA 3}
+S{ESPERA escolha opcao|120}{PAUSA 3}{TELA b32_menu_volta}

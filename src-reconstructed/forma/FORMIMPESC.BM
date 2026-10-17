@@ -1,0 +1,68 @@
+' ============================================================================
+'  FORMIMPESC.BM - escala de impressao do FORMIMP: 1/E, FOTO e folhas em partes.
+'
+'  O campo vem em metros do modelo; a saida e em mm no papel, gravada com
+'  VetRetangulo (common/SISPLOT.BM). Incluir depois do SISPLOT.BM.
+'  RECONSTRUCAO: folha util 806 x 574 mm e margens 25 (esq.) e 10 (inf.) mm
+'  sao o padrao do FORMPLOT (A1 841 x 594); o FORMA.INI nao foi lido para isso.
+' ============================================================================
+
+CONST ESC_FOLHA_X = 806#
+CONST ESC_FOLHA_Y = 574#
+CONST ESC_MARG_ESQ = 25#
+CONST ESC_MARG_OUT = 10#
+
+' Milimetros no papel por metro real na escala 1/escala (1/50 -> 20 mm/m).
+FUNCTION EscMmPorM# (escala AS INTEGER)
+    EscMmPorM# = 1000# / escala
+END FUNCTION
+
+' Mm por metro que faz o campo largM x altM (em m) caber numa folha (modo FOTO).
+FUNCTION EscFotoMmPorM# (largM AS DOUBLE, altM AS DOUBLE)
+    DIM l AS DOUBLE, a AS DOUBLE, fx AS DOUBLE, fy AS DOUBLE
+    l = largM: a = altM
+    IF l < 0.001 THEN l = 0.001
+    IF a < 0.001 THEN a = 0.001
+    fx = ESC_FOLHA_X / l
+    fy = ESC_FOLHA_Y / a
+    IF fx < fy THEN EscFotoMmPorM# = fx ELSE EscFotoMmPorM# = fy
+END FUNCTION
+
+' Tamanho de uma folha em m de campo, na escala mmPorM. eixo 1 = X, 2 = Y.
+FUNCTION EscFolhaM# (mmPorM AS DOUBLE, eixo AS INTEGER)
+    IF eixo = 1 THEN EscFolhaM# = ESC_FOLHA_X / mmPorM ELSE EscFolhaM# = ESC_FOLHA_Y / mmPorM
+END FUNCTION
+
+' Folhas necessarias para mm de papel: teto de mm / folha, no minimo 1.
+FUNCTION EscTeto% (mm AS DOUBLE, folha AS DOUBLE)
+    DIM n AS INTEGER
+    n = INT((mm - 0.001) / folha) + 1
+    IF n < 1 THEN n = 1
+    EscTeto% = n
+END FUNCTION
+
+' Numero de folhas (nx na largura, ny na altura) para o campo largM x altM, em m,
+' na escala mmPorM. Ex.: 50 m a 1/50 = 1000 mm = 2 folhas em X.
+SUB EscPartes (largM AS DOUBLE, altM AS DOUBLE, mmPorM AS DOUBLE, nx AS INTEGER, ny AS INTEGER)
+    nx = EscTeto%(largM * mmPorM, ESC_FOLHA_X)
+    ny = EscTeto%(altM * mmPorM, ESC_FOLHA_Y)
+END SUB
+
+' Grava em f o retangulo (x1,y1)-(x2,y2), em m, recortado a janela lim (em m) e
+' convertido para mm no papel. lim deve ser a janela da parte ja cortada ao campo.
+' (janX1,janY1) e o canto da janela, que vira a margem da folha; partes vizinhas
+' ficam alinhadas. Nada e gravado fora da janela.
+SUB EscRetangulo (f AS INTEGER, x1 AS DOUBLE, y1 AS DOUBLE, x2 AS DOUBLE, y2 AS DOUBLE, pena AS INTEGER, janX1 AS DOUBLE, janY1 AS DOUBLE, mmPorM AS DOUBLE, limX1 AS DOUBLE, limY1 AS DOUBLE, limX2 AS DOUBLE, limY2 AS DOUBLE)
+    DIM cx1 AS DOUBLE, cy1 AS DOUBLE, cx2 AS DOUBLE, cy2 AS DOUBLE
+    DIM mx1 AS DOUBLE, my1 AS DOUBLE, mx2 AS DOUBLE, my2 AS DOUBLE
+    cx1 = x1: IF limX1 > cx1 THEN cx1 = limX1
+    cy1 = y1: IF limY1 > cy1 THEN cy1 = limY1
+    cx2 = x2: IF limX2 < cx2 THEN cx2 = limX2
+    cy2 = y2: IF limY2 < cy2 THEN cy2 = limY2
+    IF cx2 <= cx1 OR cy2 <= cy1 THEN EXIT SUB
+    mx1 = (cx1 - janX1) * mmPorM + ESC_MARG_ESQ
+    my1 = (cy1 - janY1) * mmPorM + ESC_MARG_OUT
+    mx2 = (cx2 - janX1) * mmPorM + ESC_MARG_ESQ
+    my2 = (cy2 - janY1) * mmPorM + ESC_MARG_OUT
+    VetRetangulo f, mx1, my1, mx2, my2, pena
+END SUB

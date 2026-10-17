@@ -1,0 +1,7 @@
+# exe: PILAR
+# PILAR opcao 4 (correcao dos dados): arquiva a secao 20x40 (Nk 60 tf), corrige B para 25 e lista para conferir
+# correcao: "4" abre; "1{ENTER}" e a posicao; B=25; Enter mantem H, c', nSup, nInf, nLat, bit, Nk, Mxk, Myk, Lxe, Lye; S confirma
+{TELA p04_abertura}{ENTER}{TELA p04_menu}11{ENTER}20{ENTER}40{ENTER}4{ENTER}2{ENTER}2{ENTER}0{ENTER}8{ENTER}60{ENTER}1{ENTER}0.5{ENTER}3{ENTER}3{ENTER}S{ENTER}{ENTER}
+{TELA p04_corr}4{TELA p04_pos}1{ENTER}25{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}S
+# lista para conferir B = 25
+{TELA p04_lista}3{TELA p04_lista_fim}{ENTER}{F2}

@@ -1,0 +1,27 @@
+# Sufixo (a partir do menu do ARMADURA): 6 Dimensionamento, faixas da flexao e recusas.
+# Materiais da secao: Fck 0 e tipo X recusados, Fck 0.18 e aco A; retangular com d >= H recusado,
+# 20x50 aco A: Mk 7, 9 e 12; aco B: Mk 10.5 (entre x/d(3-4) e x/d(lim)); Te 15x60 (60,10): Mk 15 (mesa
+# comprimida) e Bf/Hf negativos recusados; trapezoidal com Binf = Bsup recusada; circular com
+# diametro 0 recusado; Vk com secao triangular invertida.
+{ESTAVEL 10}
+6{ESPERA Dimensionamento de Secoes}{ESPERA escolha opcao}{PAUSA 2}
+1{ESPERA Secao para Dimensionamento}{ESPERA Fck}{PAUSA 1}0{ENTER}{PAUSA 2}{TELA e01}0.18{ENTER}{ESPERA Fyk}{PAUSA 1}{ENTER}{ESPERA Tipo de Aco}{PAUSA 1}
+X{ENTER}{PAUSA 2}{TELA e02}a{ENTER}{ESPERA Escolha o tipo}{PAUSA 1}
+R{ESPERA RETORNO}{PAUSA 1}20,50,50{ENTER}{PAUSA 2}{TELA e03}20,50{ENTER}{ESPERA Bf(cm)}{PAUSA 1}{ENTER}{ESPERA escolha opcao}{PAUSA 2}
+2{ESPERA *FIM*}{PAUSA 1}{TELA e04}7{ENTER}{ESPERA Qualquer Tecla}{PAUSA 1}{TELA e05}{ENTER}{PAUSA 2}{ESPERA *FIM*}
+9{ENTER}{ESPERA Qualquer Tecla}{PAUSA 1}{TELA e06}{ENTER}{PAUSA 2}{ESPERA *FIM*}
+12{ENTER}{ESPERA Qualquer Tecla}{PAUSA 1}{TELA e07}{ENTER}{PAUSA 2}{ESPERA *FIM*}{ENTER}{ESPERA escolha opcao}{PAUSA 2}
+1{ESPERA Secao para Dimensionamento}{ESPERA Fck}{PAUSA 1}{ENTER}{ESPERA Fyk}{PAUSA 1}{ENTER}{ESPERA Tipo de Aco}{PAUSA 1}b{ENTER}{ESPERA Escolha o tipo}{PAUSA 1}
+R{ESPERA RETORNO}{PAUSA 1}20,50{ENTER}{ESPERA Bf(cm)}{PAUSA 1}{ENTER}{ESPERA escolha opcao}{PAUSA 2}
+2{ESPERA *FIM*}{PAUSA 1}10.5{ENTER}{ESPERA Qualquer Tecla}{PAUSA 1}{TELA e08}{ENTER}{PAUSA 2}{ESPERA *FIM*}{ENTER}{ESPERA escolha opcao}{PAUSA 2}
+1{ESPERA Secao para Dimensionamento}{ESPERA Fck}{PAUSA 1}{ENTER}{ESPERA Fyk}{PAUSA 1}{ENTER}{ESPERA Tipo de Aco}{PAUSA 1}{ENTER}{ESPERA Escolha o tipo}{PAUSA 1}
+R{ESPERA RETORNO}{PAUSA 1}15,60,55{ENTER}{ESPERA Bf(cm)}{PAUSA 1}-60,10{ENTER}{PAUSA 2}{TELA e09}60,10{ENTER}{ESPERA escolha opcao}{PAUSA 2}
+2{ESPERA *FIM*}{PAUSA 1}15{ENTER}{ESPERA Qualquer Tecla}{PAUSA 1}{TELA e10}{ENTER}{PAUSA 2}{ESPERA *FIM*}{ENTER}{ESPERA escolha opcao}{PAUSA 2}
+1{ESPERA Secao para Dimensionamento}{ESPERA Fck}{PAUSA 1}{ENTER}{ESPERA Fyk}{PAUSA 1}{ENTER}{ESPERA Tipo de Aco}{PAUSA 1}{ENTER}{ESPERA Escolha o tipo}{PAUSA 1}
+Z{ESPERA RETORNO}{PAUSA 1}30,30,60{ENTER}{PAUSA 2}{TELA e11}{ENTER}{PAUSA 2}{ESPERA Escolha o tipo}{PAUSA 1}{TELA e12}
+C{ESPERA RETORNO}{PAUSA 1}0,20{ENTER}{PAUSA 2}{TELA e13}50{ENTER}{ESPERA escolha opcao}{PAUSA 2}
+2{ESPERA *FIM*}{PAUSA 1}20{ENTER}{ESPERA Qualquer Tecla}{PAUSA 1}{TELA e14}{ENTER}{PAUSA 2}{ESPERA *FIM*}{ENTER}{ESPERA escolha opcao}{PAUSA 2}
+1{ESPERA Secao para Dimensionamento}{ESPERA Fck}{PAUSA 1}{ENTER}{ESPERA Fyk}{PAUSA 1}{ENTER}{ESPERA Tipo de Aco}{PAUSA 1}{ENTER}{ESPERA Escolha o tipo}{PAUSA 1}
+I{ESPERA RETORNO}{PAUSA 1}30,60,55{ENTER}{ESPERA escolha opcao}{PAUSA 2}
+3{ESPERA *FIM*}{PAUSA 1}30{ENTER}{ESPERA Qualquer Tecla}{PAUSA 1}{TELA e15}{ENTER}{PAUSA 2}{ESPERA *FIM*}{ENTER}{ESPERA escolha opcao}{PAUSA 2}
+X{ESPERA FLEXAO SIMPLES}{ESPERA escolha opcao}{PAUSA 2}{TELA e16}

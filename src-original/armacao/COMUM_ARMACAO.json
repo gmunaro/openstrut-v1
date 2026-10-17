@@ -1,0 +1,10 @@
+{
+ "familia": "armacao",
+ "ini": "0x0dc0",
+ "fim": "0x0dc0",
+ "exes": [
+  "ARMADURA"
+ ],
+ "conflitos": [],
+ "vars": []
+}

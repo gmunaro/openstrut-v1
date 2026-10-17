@@ -1,0 +1,21 @@
+# exe: VIGA
+# VIGA item 4 (.SEC so com vigas processadas). Obra V10OBRA criada pela tela (sem dados previos).
+# Cadastro igual ao viga_05 (2 tramos de 5 m, 20 x 50 cm, carga 2 tf/m, apoios P1 P2 P3).
+# Depois: opcao 2 com lista "9" (nada marcado) -> aviso "Nenhuma viga processada", sem .SEC;
+# opcao 2 com lista "1" (V10 valida) -> .SEC gravado. Esperado: sem erro de execucao, rc 0.
+
+# 1 (arquivar): cadastro da viga V10 (como viga_05); FIM da lista
+1{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}V10OBRA{ENTER}{TELA cad_obra}V10{ENTER}
+{BS}2{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{BS}20{ENTER}{BS}50{ENTER}
+{BS}5{ENTER}{BS}2{ENTER}N
+{BS}5{ENTER}{BS}2{ENTER}N
+P1{ENTER}P2{ENTER}P3{ENTER}{TELA cad_viga}S
+{ENTER}{TELA cad_fim}
+
+# 2 com lista 9 (nenhuma viga; "9" nao e nome de viga): aviso de .SEC nao gravado; uma tecla ao fim do aviso
+29{ENTER}{TELA sec_vazio}{ENTER}
+
+# 2 com lista V10 (a viga pelo nome): processa, grava o .SEC; o desenho pergunta nome (Enter = nenhum)
+2V10{ENTER}{TELA sec_ok}{ENTER}
+
+{TELA fim}{F2}

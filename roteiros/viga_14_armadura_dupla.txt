@@ -1,0 +1,23 @@
+# exe: VIGA
+# Avisos de armadura dupla inteiros na tela e no .LST (caso do T_VIGCALC "dupla").
+# VD1: 1 tramo de 5 m, 20 x 50, P = 3,59 tf/m + peso proprio 0,25 = 3,84 tf/m -> Mk = 12 tf.m.
+# Aco classe B (ARMADURA.INI do jogo): As' = 2,93 cm2 (o T_VIGCALC usa classe A: 1,24).
+# Esperado: "armadura dupla no M+, As' = ... cm2 em cima (nao gravada no .SEC)." completo,
+# quebrado em espaco, na tela do processamento (opcao 2) e na da opcao 3 (VD2, mesmos dados).
+
+# 1 (arquivar): obra DUPLA; viga VD1; FIM da lista
+1{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}DUPLA{ENTER}VD1{ENTER}
+{BS}1{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{BS}20{ENTER}{BS}50{ENTER}
+{BS}5{ENTER}{BS}3.59{ENTER}N
+P1{ENTER}P2{ENTER}{TELA cad_viga}S
+{ENTER}{TELA cad_fim}
+
+# 2 (processa VD1): tela com o aviso; Enter no pedido de desenho
+2VD1{ENTER}{TELA processa_vd1}{ENTER}{TELA processa_fim}
+
+# 3 (uma viga): obra mantida, viga VD2 com os mesmos dados
+3{ENTER}VD2{ENTER}
+{BS}1{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{BS}20{ENTER}{BS}50{ENTER}
+{BS}5{ENTER}{BS}3.59{ENTER}N
+P1{ENTER}P2{ENTER}{TELA uma_cad}S
+{TELA uma_vd2}{ENTER}{TELA uma_fim}{F2}

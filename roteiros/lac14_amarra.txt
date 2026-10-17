@@ -1,0 +1,32 @@
+# exe: FORMEDCA
+# Item 14: amarracao de vigas e pilares (spec 3.2 a 3.4). Obra FLUXO da semente
+# mais FLUXO.EIX (eixo horizontal y = 6; verticais x = 0 e x = 9). Unidades: m.
+# 1) V4 (vertical, x = 4, bw 12): face esquerda por coordenada em x = 1.00
+#    -> eixo 1.06, faces 1.00 / 1.12.
+# 2) V2 (horizontal, y = 0, bw 12): so a face superior, no vertice 3 do pilar P5
+#    (y = 0 + 0.15 = 0.15); a inferior fica em -0.06 -> eixo 0.045, bw 21.
+# 3) G antes de R: recusa (elementos alterados). R libera.
+# 4) P2 (20x40 apos editar by): vertice 1 (face esquerda) na face direita da V4
+#    -> x = 1.12, centro 1.22; Y pelo centro no eixo horizontal y = 6 -> 6.
+# 5) P3: centro por coordenada Xref 8, Dist 0.5, Ang 60 -> 8 + 0.25 = 8.25; Y mantem.
+# 6) V com pilar alterado e P2 de novo: recusas. R, G grava o .FRM.
+{TELA menu}
+V{TELA v4_nome}V4{ENTER}{TELA v4_grade}{ENTER}{ENTER}{TELA v4_altero}S{TELA v4_sentido}
+C{TELA v4_faces}T{TELA v4_face_ref}S{TELA v4_coord}
+{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}1{ENTER}{TELA v4_aceita}S{TELA v4_confirma}S{TELA v4_ok}{ENTER}
+V{TELA v2_nome}V2{ENTER}{ENTER}{ENTER}S{TELA v2_sentido}
+P{TELA v2_faces}E{TELA v2_escolho}PS{TELA v2_escolhida}F{TELA v2_pilar}P5{ENTER}{TELA v2_vertice}OOO{TELA v2_vertice3}S{TELA v2_dist}{ENTER}{TELA v2_aceita}S{TELA v2_confirma}S{TELA v2_ok}{ENTER}
+G{TELA grava_bloqueio}{ENTER}
+R{TELA redesenha}x
+P{TELA p2_nome}P2{ENTER}{ENTER}{BS}{BS}40{ENTER}{TELA p2_altero}S{TELA p2_sentido_x}
+V{TELA p2_vertice}P{TELA p2_vertice1}S{TELA p2_viga}P{TELA p2_viga_v4}S{TELA p2_face}P{TELA p2_face_dir}S{TELA p2_dist}{ENTER}{TELA p2_aceita_x}S
+{TELA p2_sentido_y}E{TELA p2_ponto_y}S{TELA p2_eixo}S{TELA p2_dist_y}{ENTER}{TELA p2_aceita_y}S{TELA p2_confirma}S{TELA p2_ok}{ENTER}
+P{TELA p3_nome}P3{ENTER}{ENTER}{ENTER}S
+C{TELA p3_ponto}S{TELA p3_coord}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}8{ENTER}0.5{ENTER}60{ENTER}{TELA p3_aceita}S
+{TELA p3_sentido_y}M{TELA p3_confirma}S{TELA p3_ok}{ENTER}
+V{TELA v1_nome}V1{ENTER}{TELA v1_bloqueio}{ENTER}
+P{TELA p2_de_novo}P2{ENTER}{TELA p2_bloqueio}{ENTER}
+D{TELA detalhes}{ENTER}
+R{TELA redesenha2}x
+G{TELA grava_pede}S{TELA grava_ok}{ENTER}{TELA dados_nivel}{ENTER}{ENTER}{TELA dados_confirma}S{TELA dados_ok}{ENTER}
+{TELA menu_final}S

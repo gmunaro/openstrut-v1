@@ -1,0 +1,5 @@
+# exe: FORMIMP
+# FORMIMP direto, lista de elementos (tipo L) com todas as opcoes N e campo R (retorna = todo o campo).
+# Pe-direito 3 m (Enter, padrao). Sem nomes nem secoes; so vol e area por elemento.
+# Espera-se total 6.495 m3 e 86.40 m2 (igual a forma_05 com pe-direito 3).
+{TELA pe}{ENTER}{TELA tipo}{ENTER}{TELA opcoes}{BS}N{ENTER}{BS}N{ENTER}{BS}N{ENTER}{BS}N{ENTER}{BS}N{ENTER}{BS}N{ENTER}{BS}N{ENTER}{TELA campo}{BS}R{ENTER}{TELA relatorio}{ENTER}

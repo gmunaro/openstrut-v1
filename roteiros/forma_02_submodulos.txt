@@ -1,0 +1,8 @@
+# exe: FORMA
+# FORMA: opcao 3 (FORMIMP) e opcao 4 (FORMPLOT) na obra FLUXO, que nao tem .FRM.
+# Cada submodulo cai no erro "nao existe .FRM" (FalhaProcessa), sai, e o FORMA segue.
+# Obra FLUXO vem de forma_02_submodulos.dados (copia de semente).
+{ENTER}{TELA menu}
+3{TELA imp_pe}{BS}2.8{ENTER}{TELA imp_tipo}{BS}Q{ENTER}{BS}N{ENTER}{ENTER}{BS}N{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{TELA imp_erro}{ENTER}{TELA forma_volta}
+4{TELA plot_erro}{ENTER}{TELA forma_volta2}
+{F2}

@@ -1,0 +1,10 @@
+# exe: VPLOTA
+# VPLOTA, obra FLUXO. Roteiro 2 de 2: sessao 2 (opcao 2 com parametros alterados).
+# Distancia 35 -> 40 (campo 8 de ParmTela); lista vazia (todas as vigas); AVF nao gravado (N);
+# A (volta aos parametros e regrava o AVF); S com equipamento invalido (99); C; F2.
+# Roda sozinha para nao sobrescrever o FLUXO.AVF do des2_05 (ordem 3,1,2).
+2{TELA vp_18_menu2}S{TELA vp_19_param}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}40{ENTER}{ENTER}{TELA vp_20_lista}{ENTER}
+{TELA vp_21_avf_pergunta}N{ENTER}{TELA vp_22_resultado_a}A{TELA vp_23_param_a}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}
+{TELA vp_24_avf_pergunta_2}S{ENTER}{TELA vp_25_resultado_2}S{TELA vp_26_confirma_2}S{TELA vp_27_equip_99}{BS}99{ENTER}{ENTER}
+{TELA vp_28_resultado_3}C{TELA vp_29_cancela_2}S
+{F2}

@@ -1,0 +1,5 @@
+# exe: INSTALAR
+# sis_04_instalar_mantido: segunda implantacao sobre sis_inst\ que ja tem SISTRUT.INI
+# (fixture em sis_04_instalar_mantido.dados/). O INI nao deve ser sobrescrito e o
+# relatorio deve listar SISTRUT.INI em Mantido (ja existe). EXE: INSTALAR. Saida esperada: 0.
+{TELA mant_inicial}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}sis_inst\{TELA mant_destino_digitado}{ENTER}{TELA mant_origem_padrao}{ENTER}{TELA mant_monitor_pergunta}x{TELA mant_x_ignorada}h{TELA mant_lpt_pergunta}3{TELA mant_3_ignorada}2{TELA mant_com_pergunta}{ENTER}{TELA mant_relatorio}{SPACE}

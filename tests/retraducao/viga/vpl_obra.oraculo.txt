@@ -1,0 +1,23 @@
+# exe: PATH C:\SISTRUT;Z:\|CD \|SISTRUT\SISTRUT
+# Caso retraducao/VPLOTA (obra): gera no ORIGINAL a obra de partida dos casos retrad_vpl_*.
+# DESENHO (V, seta, Enter), item 1 com a viga 1 da E2E (mesmas entradas do retrad_des_p8), mas com
+# "Edito desenho da armacao" = S: no editor, F (ferragem transversal), F (fim), grava R1__E2E.EDV (S)
+# e confirma o termino (SIM). Gera tambem R1__E2E.DXF (padrao CAD, Autocad), E2E.SEC, .FOR e .TAB.
+{ESPERA Configuracao|60}{LIMITE 400}V{PAUSA 2}{RIGHT}{PAUSA 2}{ENTER}{ESPERA escolha opcao|60}{PAUSA 2}
+1{ESPERA Nome da Obra}{PAUSA 2}E2E{ENTER}{ESPERA Listo as Vigas}{PAUSA 1}{ENTER}{ESPERA Continuo}{PAUSA 1}{ENTER}{ESPERA Todas as Vigas}{PAUSA 1}{ENTER}{ESPERA Processar Registros}{PAUSA 1}
+1{ENTER}{ESPERA Bw , Hw}{PAUSA 2}20,50,0,0{ENTER}{ESPERA Secoes Diferentes}{PAUSA 1}{ENTER}{ESPERA Retangular}{PAUSA 1}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{ENTER}
+{ESPERA Largura do Apoio 0}{PAUSA 1}20{ENTER}{ESPERA Tipo do Apoio}{PAUSA 1}{ENTER}{ESPERA Titulo}{PAUSA 1}P1{ENTER}{ESPERA orre}{PAUSA 1}{ENTER}
+{ESPERA Largura do Apoio 1}{PAUSA 1}20{ENTER}{ESPERA Tipo do Apoio}{PAUSA 1}{ENTER}{ESPERA Titulo}{PAUSA 1}P2{ENTER}{ESPERA orre}{PAUSA 1}{ENTER}
+{ESPERA Largura do Apoio 2}{PAUSA 1}20{ENTER}{ESPERA Tipo do Apoio}{PAUSA 1}{ENTER}{ESPERA Titulo}{PAUSA 1}P3{ENTER}{ESPERA orre}{PAUSA 1}{ENTER}
+{ESPERA Dados Corretos}{PAUSA 1}{ENTER}{ESPERA Vao Livre do Tramo 1}{PAUSA 1}380{ENTER}{ESPERA Vao Livre do Tramo 2}{PAUSA 1}380{ENTER}
+{ESPERA Superior dos Tramos}{PAUSA 1}{ENTER}{ESPERA Centraliza}{PAUSA 1}{ENTER}{ESPERA Lajes no Corte}{PAUSA 1}N{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{ENTER}
+{ESPERA Deseja Alterar}{PAUSA 1}{ENTER}{ESPERA esforcos S}{PAUSA 1}S{ENTER}{ESPERA resultados de Armacao}{PAUSA 1}S{ENTER}{ESPERA somente os diagramas}{PAUSA 1}S{ENTER}
+{ESPERA diagramas e a Armacao}{PAUSA 1}S{ENTER}{ESPERA VIDEO}{PAUSA 1}{ENTER}{ESPERA Altero a armadura}{PAUSA 1}{ENTER}
+{ESPERA desenho definitivo}{PAUSA 1}S{ENTER}{ESPERA Escala 1/.. 200 100 *50*}{PAUSA 1}{ENTER}{ESPERA Edito}{PAUSA 1}S{ENTER}{ESPERA padrao CAD}{PAUSA 1}S{ENTER}
+{ESPERA Tipo de arquivo CAD}{PAUSA 1}{ENTER}{ESPERA medidas de forma}{PAUSA 1}{ENTER}{ESPERA dobramento}{PAUSA 1}{ENTER}
+{ESPERA CAB 1)}{PAUSA 1}OBRA E2E{ENTER}{ESPERA CAB 2)}{PAUSA 1}VIGA V1{ENTER}{ESPERA CAB 3)}{PAUSA 1}SISTRUT{ENTER}{ESPERA NOT 1)}{PAUSA 1}NOTA UM{ENTER}{ESPERA NOT 2)}{PAUSA 1}NOTA DOIS{ENTER}
+{ESPERA repeticoes *FIM*}{PAUSA 1}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{ENTER}
+{ESPERA Edicao de Ferragem Longitudinal|300}{PAUSA 3}{TELA o01}F{ESPERA er corte|120}{PAUSA 3}{TELA o02}F{ESPERA Gravo a Viga Editada|60}{PAUSA 2}{TELA o03}
+S{ENTER}{ESPERA Confirme o termino|60}{PAUSA 2}{TELA o04}SIM{ENTER}{PAUSA 8}{TELA o05}
+{ENTER}{PAUSA 8}{TELA o06}{ENTER}{PAUSA 8}{TELA o07}{ENTER}{PAUSA 8}{TELA o08}{ENTER}{PAUSA 8}{TELA o09}{ENTER}{PAUSA 8}{TELA o10}
+{ESPERA escolha opcao|300}{PAUSA 2}{TELA o11}

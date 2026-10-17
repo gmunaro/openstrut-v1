@@ -1,0 +1,14 @@
+# VIGA opcao 3 (Processar uma Viga): entrada pelo teclado de uma viga de 3 tramos com balanco a
+# esquerda, engaste a direita, inercia variavel (J do tramo 2 calculado pelas secoes, '*'), cargas
+# distribuidas e concentradas, uma COLOCACAO ERRADA DAS CARGAS; imprime resultados, diagramas na
+# escala 1/100 (impressora) e o esquema estrutural (I, copia da tela grafica para a impressora).
+3{PAUSA 3}{TELA e00}TESTE{ENTER}{PAUSA 2}{TELA e01}VT1{ENTER}{PAUSA 2}{TELA e02}3{ENTER}{PAUSA 2}{TELA e03}
+10{ENTER}{PAUSA 2}{TELA e04}01{ENTER}{PAUSA 2}{TELA e05}N{ENTER}{PAUSA 2}{TELA e06}
+1.5{ENTER}{PAUSA 2}{TELA e07}{ENTER}{PAUSA 2}{TELA e08}2,,1{ENTER}{PAUSA 2}{TELA e09}
+4{ENTER}{PAUSA 2}{TELA e10}1{ENTER}{PAUSA 2}{TELA e11}2{ENTER}{PAUSA 2}{TELA e12}1.2,2,0{ENTER}{PAUSA 2}{TELA e13}1.2,4,3{ENTER}{ESPERA CONSULTE O MANUAL}{PAUSA 2}{TELA e14_colocacao_errada}
+{ENTER}{PAUSA 2}{TELA e15}2{ENTER}{PAUSA 2}{TELA e16}1.2,2,3{ENTER}{PAUSA 2}{TELA e17}1.2,,0{ENTER}{PAUSA 2}{TELA e18}
+5{ENTER}{PAUSA 2}{TELA e19}*{ENTER}{PAUSA 2}{TELA e20}20,40{ENTER}{PAUSA 2}{TELA e21}20,50{ENTER}{PAUSA 2}{TELA e22}{ENTER}{PAUSA 2}{TELA e23}
+{ENTER}{PAUSA 2}{TELA e24}1.5,,0{ENTER}{PAUSA 2}{TELA e25}3.5{ENTER}{PAUSA 2}{TELA e26}1{ENTER}{PAUSA 2}{TELA e27}{ENTER}{PAUSA 2}{TELA e28}
+1,,0{ENTER}{ESPERA OBRA-TESTE}{PAUSA 3}{TELA e29_dados}{ENTER}{ESPERA Imprimo os Resultados}{PAUSA 1}{TELA e30}
+S{ENTER}{ESPERA Desenho Diagramas}{PAUSA 1}S{ENTER}{ESPERA VIDEO}{PAUSA 1}{TELA e31}100{ENTER}{ESPERA esquema estrutural}{PAUSA 1}{TELA e32}
+I{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA e33}{ENTER}{ESPERA para seguir}{PAUSA 1}{TELA e34}{ENTER}{ESPERA escolha opcao|400}{PAUSA 3}{TELA e35_menu}

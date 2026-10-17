@@ -1,0 +1,65 @@
+' ============================================================================
+'  PILGECAL.BM - soma das cargas por pavimento e acumulo descendente.
+'  Sem tela. Usado por PILGEEDI.BAS e por tests/T_PILGEEDI.BAS.
+'  Pre-requisitos: SISDADOS.BI/.BM carregados; CPil() lido do .REP/.RLP do
+'  nivel k (CPilNivel = k) antes de PgSomaPavimento.
+'  RECONSTRUCAO: premissas nao confirmadas na spec (docs/modules/PILGEEDI.md):
+'    - peso proprio do lance = bx*by/10000 * peDireito * 2.5 tf (bx, by em cm).
+'    - lance existe no nivel k quando o pilar consta no .REP/.RLP desse nivel.
+'    - acumulo desce so o esforco normal N; Mx/My ficam no proprio nivel.
+' ============================================================================
+
+' Indice da coluna de nome dado em Col(), 0 se nao existe.
+FUNCTION PgColuna% (nome AS STRING)
+    DIM c AS INTEGER
+    FOR c = 1 TO ColQtd
+        IF RTRIM$(Col(c).nome) = nome THEN PgColuna% = c: EXIT FUNCTION
+    NEXT
+END FUNCTION
+
+' Zera N/Mx/My do nivel k e soma as cargas de CPil() mais o peso proprio do lance,
+' uma vez por coluna (o .REP/.RLP pode trazer a mesma coluna em mais de um registro).
+' msg$ = "" se ok; senao a primeira mensagem de erro encontrada.
+SUB PgSomaPavimento (k AS INTEGER, msg AS STRING)
+    DIM i AS INTEGER, c AS INTEGER, j AS INTEGER, pp AS DOUBLE
+    REDIM somouPP(1 TO ColQtd + 1) AS INTEGER
+    msg = ""
+    IF k < 1 OR k > ColNivQtd THEN msg = "Nivel fora do intervalo": EXIT SUB
+    ' o usuario escolhe o arquivo de cada nivel; o numero de nivel gravado no
+    ' .REP/.RLP (0 por padrao no LAJE) nao e conferido
+    FOR c = 1 TO ColQtd
+        j = ColIdx%(c, k)
+        ColEsf(j).N = 0: ColEsf(j).Mx = 0: ColEsf(j).My = 0
+    NEXT
+    FOR i = 1 TO CPilQtd
+        c = PgColuna%(RTRIM$(CPil(i).nome))
+        IF c = 0 THEN
+            IF msg = "" THEN msg = "..NAO ENCONTRADO NOME CORRESPONDENTE " + RTRIM$(CPil(i).nome)
+        ELSE
+            j = ColIdx%(c, k)
+            IF NOT somouPP(c) THEN
+                IF UCASE$(Col(c).secao) = "C" THEN pp = 3.14159265358979# * Col(c).bx ^ 2 / 4# ELSE pp = Col(c).bx * Col(c).by
+                pp = pp / 10000# * ColNiv(k).peDireito * 2.5#   ' secao circular: area pi D2/4
+                ColEsf(j).N = ColEsf(j).N + pp
+                somouPP(c) = -1
+            END IF
+            ColEsf(j).N = ColEsf(j).N + CPil(i).N
+            ColEsf(j).Mx = ColEsf(j).Mx + CPil(i).Mx
+            ColEsf(j).My = ColEsf(j).My + CPil(i).My
+        END IF
+    NEXT
+END SUB
+
+' Soma o N de cada nivel no imediatamente abaixo (nivel 1 = topo); os
+' momentos sao locais ao nivel.
+' Chamar uma vez, depois de PgSomaPavimento de todos os niveis.
+SUB PgAcumula
+    DIM c AS INTEGER, k AS INTEGER, j AS INTEGER, jp AS INTEGER
+    FOR c = 1 TO ColQtd
+        FOR k = 2 TO ColNivQtd
+            j = ColIdx%(c, k): jp = ColIdx%(c, k - 1)
+            ColEsf(j).N = ColEsf(j).N + ColEsf(jp).N
+            ' momentos de ligacao viga-pilar sao locais ao no: nao acumulam
+        NEXT
+    NEXT
+END SUB

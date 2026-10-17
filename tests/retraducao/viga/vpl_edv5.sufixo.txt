@@ -1,0 +1,11 @@
+# modulo: VPLOTA
+# VPLOTA opcao 2 (montagem a partir dos .EDV e plotagem) na obra E2E (R1__E2E.EDV, .VIG, .SEC e .FOR
+# gravados pelo original, casos/retrad_vpl_obra). Configuracao: arquivo .PLT, 11o PLOTER (Calcomp 104x GT - 906/7/PCI, comandos "nao configuravel"): a
+# 1a troca de pena (VPCAD 0x30413, MID$ com comprimento -1) da erro 5, " Erro na plotagem" e RESUME de novo a cada Enter;
+# Esc + Enter volta ao menu (o CLOSE do menu fecha o FV1_E2E.PLT com as 6 linhas de inicio).
+# Parametros da folha do VPLOTA.INI. Registro 1; Seguir; grava E2E.AVF (S); plota a folha 1.
+{TELA e00}2{ESPERA Deseja alterar}{PAUSA 2}{TELA e01}{ENTER}{ESPERA ARQUIVO PARAMETRIZACAO}{PAUSA 2}{TELA e02}{ENTER}{ESPERA Arquivo no Disco}{PAUSA 2}{TELA e03}
+S{ENTER}{ESPERA HOUSTON DMP 41/42}{PAUSA 1}{ENTER}{ESPERA HOUSTON DMP 51/52}{PAUSA 1}{ENTER}{ESPERA HOUSTON DMP 52 MP}{PAUSA 1}{ENTER}{ESPERA HOUSTON DMP 56A}{PAUSA 1}{ENTER}{ESPERA HOUSTON DMP 61/62}{PAUSA 1}{ENTER}{ESPERA HEWLETT-PACKARD DraftPro}{PAUSA 1}{ENTER}{ESPERA HEWLETT-PACKARD 7580/85 A/B}{PAUSA 1}{ENTER}{ESPERA HEWLETT-PACKARD 7586 A/B}{PAUSA 1}{ENTER}{ESPERA Calcomp Artisan 1023 - CPGL}{PAUSA 1}{ENTER}{ESPERA Calcomp 1042/3/4 GT - CPGL}{PAUSA 1}{ENTER}{ESPERA Calcomp 104x GT - 906/7/PCI}{PAUSA 1}{TELA e04}S{ENTER}{ESPERA Origem da Folha}{PAUSA 2}{TELA e05}{ENTER}{ESPERA cotas e medidas}{PAUSA 2}{TELA e06}{ENTER}{ESPERA Todas as folhas}{PAUSA 2}{TELA e07}
+{ENTER}{ESPERA ravar em disco}{PAUSA 2}{TELA e08}S{ESPERA Nome da Obra}{PAUSA 2}{TELA e09}E2E{ENTER}{ESPERA Numero dos Registros}{PAUSA 2}{TELA e10}
+1{ENTER}{ESPERA isualizar a disposicao|300}{PAUSA 2}{TELA e11}S{ESPERA Confirme seguir}{PAUSA 2}{TELA e12}S{ENTER}{ESPERA Gravo o conjunto}{PAUSA 2}{TELA e13}
+S{ENTER}{ESPERA Continua ...}{PAUSA 2}{TELA e14}{ENTER}{ESPERA para inicio de plotagem|120}{PAUSA 2}{TELA e15}{ENTER}{ESPERA Erro na plotagem|120}{PAUSA 2}{TELA e16}{ENTER}{PAUSA 3}{TELA e16b}{ESC}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA e17}

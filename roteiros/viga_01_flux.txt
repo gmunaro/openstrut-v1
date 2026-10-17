@@ -1,0 +1,56 @@
+# exe: VIGA
+# VIGA cenario (a): parte da obra FLUXO (roteiros/viga_01_flux.dados).
+# Percorre as opcoes 1-8 do menu principal e os itens dos submenus 6 (VigDisco),
+# 5 (VigCorrige) e 8 (VigParametros). Termina no F2 do menu principal (codigo 0).
+# Regras de teclado: {ENTER} mantem o padrao mostrado; {BS} apaga um caractere
+# antes de digitar quando e preciso trocar o valor.
+# Item 6 "Acesso ao DOS" nao esta aqui (abre o interpretador e nao volta ao roteiro).
+
+# 6 -> 5: leitura da obra FLUXO (FLUXO.VIG; S substitui a memoria)
+{TELA menu}6{TELA disco}5FLUXO{ENTER}S{TELA leitura}{ENTER}
+
+# 6 -> 3, 4, 2, 7, 8: contar, catalogo, gravar com sobrescrita (S), alterar dir sem trocar, retorno
+3{ENTER}{TELA contar}{ENTER}
+4{ENTER}{TELA catalogo}{ENTER}
+2{ENTER}S{TELA gravar}{ENTER}
+7{ENTER}{ENTER}
+8
+
+# 4 (lista): nao listar (N); depois listar (S) e nao relistar (N)
+4N
+4S{TELA lista}N
+
+# 2 (processa): posicoes V1 a V5; desenho da V2 ao final
+2V1 A V5{ENTER}{TELA processa}V2{ENTER}{ENTER}{ENTER}{TELA processa_fim}
+
+# 3 (uma viga): OBRA mantida (Enter), VIGA UMA1; 1 tramo sem balanco, engaste a esquerda,
+# apoio 2 no pilar P2; bw 20 x h 50 cm; L 4 m; carga 1 tf/m; sem concentradas
+3{ENTER}UMA1{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}SN{BS}20{ENTER}{BS}50{ENTER}{BS}4{ENTER}{BS}1{ENTER}N{TELA uma1_entrada}P2{ENTER}S{TELA uma1}{ENTER}
+
+# 5 (correcoes): posicao 1 (renomeia para VA; tramo 1: L, carga permanente e acidental);
+# opcoes 2, 3 e 7 do submenu (recusadas com aviso); 8 sai do submenu;
+# posicao 9 inexistente; FIM encerra
+5{TELA correcoes}1{ENTER}1{BS}{BS}VA{ENTER}{TELA correcoes_pos}23
+4{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}5{ENTER}
+5{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}2.5{ENTER}
+6{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}0{ENTER}
+78
+9{ENTER}{TELA correcoes_erro}FIM{ENTER}
+
+# 7 (resumo de cargas nos pilares): grava o .REP
+7{TELA resumo}S{ENTER}{TELA resumo_fim}
+
+# 8 (parametros): 1 = 80; 2 = acidental S, G e 40 %; depois 2 = N; 3 (aviso); 4 = M e volta a E;
+# 5 = unidades mantidas; 6 = retorno. O VIGA.INI da pasta de saida recebe as mudancas.
+8{TELA parametros_ini}1{BS}{BS}{BS}80{ENTER}2S{BS}G{ENTER}{BS}{BS}40{ENTER}{TELA parametros_acid}2N3
+4{BS}M{ENTER}4{BS}E{ENTER}5{ENTER}{ENTER}{ENTER}{ENTER}{TELA parametros}6
+
+# 6 (gravacao e leitura): criar sobre FLUXO com N (nao substitui); criar TESTE;
+# gravar TESTE com N e com S; contar; catalogo; ler TESTE com S; retorno
+6{TELA disco_2}1{ENTER}N1{BS}{BS}{BS}{BS}{BS}TESTE{ENTER}{ENTER}2{ENTER}N{ENTER}2{ENTER}S{ENTER}3{ENTER}{ENTER}4{ENTER}{ENTER}5TESTE{ENTER}S{ENTER}{TELA disco_fim}8
+
+# 1 (arquivar geometria): mantem as vigas (S) e sai com obra e viga em branco; depois limpa a memoria (N)
+1S{ENTER}{ENTER}
+1N{TELA entrada}{ENTER}{ENTER}
+
+{TELA fim}{F2}

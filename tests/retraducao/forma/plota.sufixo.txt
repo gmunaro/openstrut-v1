@@ -1,0 +1,17 @@
+# obra: obra2
+# Caso retrad_frm_plota: opcao 4 (Desenhos e Plotagens) sobre E2E.FRM gravado pelo original; FORMPLOT: S (todo), M (15 parametros; Esc no 3o volta ao 2o), C (DXF E2E.DXF), T (textos), Z (todo), D,
+# P (folha, movimenta, S: plotter direto pela COM1 da 'erro no processamento'; Esc volta) e F. Depois desse erro o original entra
+# em laco de 'Segment limit violation' no DOSBox-X na tecla seguinte (runs retrad_frm_plota-20261015-024707 e -030145), por isso o P e o ultimo.
+{ESPERA escolha opcao}{PAUSA 2}4{ESPERA Arquivo de Forma}{PAUSA 2}E2E{ENTER}{ESPERA Continuo com a}{PAUSA 2}{ENTER}
+{ESPERA Montagem da Plotagem}{PAUSA 2}{TELA d01_resumo}{ENTER}{ESPERA Campo de Plotagem|120}{PAUSA 3}{TELA d02_menu}
+S{ESPERA efine um campo}{PAUSA 2}{TELA d03_s}T{ESPERA Campo de Plotagem}{PAUSA 3}
+M{ESPERA Deseja Alterar}{PAUSA 2}{TELA d04_param}S{ENTER}{ESPERA para manter}{PAUSA 2}{TELA d05_param_alt}{ENTER}{PAUSA 2}{ENTER}{PAUSA 2}{TELA d06_param_campo3}{ESC}{ENTER}{PAUSA 2}{TELA d06a_param_volta}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ESPERA Deseja Alterar}{PAUSA 2}{TELA d07_param_fim}{ENTER}{ESPERA Campo de Plotagem}{PAUSA 3}{TELA d07a_menu}
+C{ESPERA Nome do arquivo}{PAUSA 2}{TELA d13_dxf}E2E{ENTER}{ESPERA Sigo com a geracao}{PAUSA 2}{TELA d14_dxf_sigo}{ENTER}{ESPERA Campo de Plotagem|300}{PAUSA 3}{TELA d15_dxf_feito}
+T{ESPERA Nome das Lajes}{PAUSA 2}{ENTER}{ESPERA Espessura das Lajes}{PAUSA 1}{ENTER}{ESPERA Nome das Vigas}{PAUSA 1}{ENTER}{ESPERA Secao das Vigas}{PAUSA 1}{ENTER}
+{ESPERA Nome dos Pilares}{PAUSA 1}{ENTER}{ESPERA Secao dos Pilares}{PAUSA 1}N{ENTER}{ESPERA Cotas e Medidas}{PAUSA 1}{ENTER}{ESPERA Elevacao das Vigas  S}{PAUSA 1}{ENTER}
+{ESPERA valores de Elevacao}{PAUSA 2}{TELA d17_textos}{ENTER}{ESPERA Campo de Plotagem}{PAUSA 3}
+Z{ESPERA campo de desenho ampliado}{PAUSA 2}T{ESPERA Campo de Plotagem}{PAUSA 3}{TELA d18_zoom_todo}
+D{PAUSA 3}{TELA d19_detalhes}
+P{ESPERA Sigo com a Configuracao}{PAUSA 2}{TELA d08_folha}{ENTER}{ESPERA egue com a Plotagem}{PAUSA 3}{TELA d09_posiciona}{RIGHT}{PAUSA 1}{RIGHT}{PAUSA 1}{UP}{PAUSA 2}{TELA d10_movido}
+S{ESPERA erro no processamento}{PAUSA 3}{TELA d11_erro_plot}{ESC}{ENTER}{ESPERA Campo de Plotagem}{PAUSA 3}{TELA d12_menu}
+F{PAUSA 15}{TELA d20_apos_f}

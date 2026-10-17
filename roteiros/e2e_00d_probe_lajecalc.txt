@@ -1,0 +1,3 @@
+# exe: LAJECALC
+# Sonda: LAJECALC direto, dados sem roteiro.txt.pos herdado
+{TELA c00_inicio}{F2}{TELA c01_fim}

@@ -1,0 +1,8 @@
+# exe: DESENHO
+# DESENHO > I (DESINIT): obra FLUXO. Le FLUXO.SEC e grava FLUXO.EDV e
+# FLUXO_DESINIT.LST. Pausa final de DESINIT com ENTER; volta ao menu; F2 sai.
+{TELA menu}
+I{TELA desinit}
+{ENTER}
+{TELA volta}
+{F2}

@@ -1,0 +1,28 @@
+# exe: DESENHO
+# Item 5 (LACUNAS-V1): Juntar barras no DESEDCAO, obra FLUXO (semente).
+# V2: N1 positivo 2 phi10 420 [-10,410], N2 negativo 2 phi10 305,8, N4 positivo 2 phi10 370 [390,760].
+# J 1+2: positivo com negativo, mensagem. J 1+3: positivo com estribo, erro. J 1+4 com R: nao junta.
+# J 1+4 com S: sobrepostas 20 cm -> uniao 770 + emenda lb phi10 (52,9 -> 53) = 823; 5 posicoes viram 4.
+# Termino com SIM grava o .EDV e o .EDX. Depois F2 no menu do DESENHO.
+{TELA menu}
+S
+v2{ENTER}
+{TELA v2_antes}
+J{BS}1{ENTER}{BS}2{ENTER}
+{TELA juntar_pos_neg_erro}{ENTER}
+J{BS}1{ENTER}{BS}3{ENTER}S
+{TELA juntar_pos_estribo_erro}{ENTER}
+J{BS}1{ENTER}{BS}4{ENTER}
+{TELA juntar_confirma}
+R
+{TELA juntar_retorno}
+J{BS}1{ENTER}{BS}4{ENTER}S
+{TELA juntar_1_4_ok}
+{ESC}
+{TELA lista}
+{ENTER}
+{BS}SIM{ENTER}
+{TELA gravou}
+{ENTER}
+{TELA menu_volta}
+{F2}

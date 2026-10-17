@@ -1,0 +1,14 @@
+# exe: SISTRUT
+# Forma (obra E2E, dados do e2e_09 com E2E.COL). F -> pede "Nome da obra" (pre-preenchido): ENTER aceita. Depois 1 (Montagem): E2E para lajes, vigas e colunas; S -> FORMINIT.
+# FORMINIT monta e chama FORMEDCA: F (quantitativos, pe-direito 3), G grava E2E.FRM (S), dados de desenho
+# (nivel e pe-direito padrao, S) e S sai do FORMEDCA; FORMINIT encerra e volta ao FORMA.
+# Depois 2 (Reedicao) com nome E2E: E2E.FRM existe; N recusa a reedicao.
+# Depois 3 (FORMIMP): pe-direito 3 (Enter), tipo Q, 7 opcoes em Enter, campo todo (Enter).
+# Saida esperada: codigo 0; E2E.FRM, E2E.FOR, E2E.CFO e E2E_FORMIMP.LST com o volume das lajes 8,00 m3 (4 x 4 x 5 x 0,10).
+{TELA s01_menu}F{TELA f00_obra}{ENTER}{TELA f01_forma_menu}1{TELA f02_lajes}E2E{ENTER}{TELA f03_vigas}E2E{ENTER}{TELA f04_colunas}E2E{ENTER}{TELA f05_confirma}S
+{TELA f06_formedca_menu}F{TELA f07_quant_pe}{ENTER}{TELA f08_quant_res}{ENTER}
+G{TELA f09_grava_pede}S{TELA f10_grava_ok}{ENTER}{TELA f11_dados_nivel}{ENTER}{ENTER}{TELA f12_dados_confirma}S{TELA f13_dados_ok}{ENTER}
+{TELA f14_formedca_fim}S
+{TELA f15_forma_menu}2{TELA f16_reed_nome}E2E{ENTER}{TELA f17_reed_confirma}N
+{TELA f18_forma_menu}3{TELA f19_formimp_pe}{ENTER}{TELA f20_formimp_tipo}{BS}Q{ENTER}{TELA f21_formimp_opcoes}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{TELA f22_formimp_campo}{ENTER}{TELA f23_formimp_relatorio}{ENTER}
+{TELA f24_formimp_ret}{F2}{TELA s02_menu}{F2}

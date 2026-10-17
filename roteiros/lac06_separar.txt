@@ -1,0 +1,31 @@
+# exe: DESENHO
+# Item 6 (LACUNAS-V1): Separar barra no DESEDCAO, obra FLUXO (semente).
+# V2: N2 negativo 2 phi10 305,8 (h = 40: lb = 1,5 x 52,9 = 79,35 -> emenda padrao da Separacao = 2 x lb = 158,7 -> 159).
+# S 2, emenda 159 (padrao), inicio da emenda a 100 da ponta: N2 = 100 + 159 = 259,
+# N6 = 305,8 - 100 = 205,8; total 464,8 = 305,8 + 159; 5 posicoes viram 6.
+# S 2 de novo com 150: 150 + 159 >= 259, erro. S 3 (estribo): erro.
+# J 2+6 (sobrepostas 159): uniao 305,8 + emenda 80 (Junta usa lb) = 385,8; volta a 5 posicoes.
+{TELA menu}
+S
+v2{ENTER}
+{TELA v2_antes}
+S{BS}2{ENTER}
+{TELA separar_emenda}
+{ENTER}
+{TELA separar_distancia}
+{BS}{BS}{BS}100{ENTER}
+{TELA separar_2_ok}
+S{BS}2{ENTER}{ENTER}{BS}{BS}{BS}150{ENTER}
+{TELA separar_nao_cabe_erro}{ENTER}
+S{BS}3{ENTER}
+{TELA separar_estribo_erro}{ENTER}
+J{BS}2{ENTER}{BS}6{ENTER}S
+{TELA juntar_2_6_volta}
+{ESC}
+{TELA lista}
+{ENTER}
+{BS}SIM{ENTER}
+{TELA gravou}
+{ENTER}
+{TELA menu_volta}
+{F2}

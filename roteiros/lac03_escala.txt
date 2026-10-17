@@ -1,0 +1,4 @@
+# exe: FORMIMP
+# Escala 1/50 (ENTER aceita o 50 padrao), impressao em partes para arquivo .VET.
+# Obra FLUXO do forma_05 (FRM junto): L1 0..4 m em X, 5 m em Y. Espera-se o lado X de L1 com 80 mm (1/50).
+{TELA pe}{BS}2.8{ENTER}{TELA tipo}{ENTER}{TELA opcoes}{ENTER}{BS}N{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{TELA campo}{ENTER}{TELA relatorio}E{ENTER}{TELA escala}{ENTER}{TELA partes}{ENTER}

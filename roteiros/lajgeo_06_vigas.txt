@@ -1,0 +1,26 @@
+# exe: LAJEGEOM
+# lajgeo_06_vigas: menu 7 (ItemVigas): N (nivel das vigas), G (GeraVigas: confirma S, grava .LAJ, roda LAJEMONT).
+# Base: roteiros/lajgeo_base.dados. Falha do LAJEMONT e submodulo: anotar, nao corrigir.
+# Pergunta% com ENTER devolve o padrao (S em "Confirme prosseguir").
+7
+{TELA g06_vigas_menu}
+N
+{BS}1{ENTER}
+{TELA g06_vigas_nivel_1}
+G
+{TELA g06_vigas_atencao}
+{ENTER}
+# LAJEMONT mostra "Qualquer tecla para Continuar" e devolve o controle ao LAJEGEOM (menu de vigas).
+{TELA g06_vigas_apos_confirma}
+{ENTER}
+# Segunda tela do LAJEMONT (totais de cargas), tambem "Qualquer tecla para Continuar".
+{TELA g06_vigas_apos_lajemont}
+{ENTER}
+# Terceira tela do LAJEMONT: "Lajes sem calculo (L1): execute o Dimensionamento". Ao sair, volta ao menu de vigas.
+{TELA g06_vigas_lajes_sem_calculo}
+{ENTER}
+F
+9
+S
+{TELA g06_retorno}
+{ENTER}

@@ -1,0 +1,11 @@
+# exe: FORMPLOT
+# FORMPLOT direto, zoom R (mantem a janela total) e abandono: obra FLUXO de forma_06c_formplot_abandona.dados.
+# Opcoes e selecao em Enter. Montagem S. Movimenta uma vez e A abandona sem gravar a plotagem.
+# Esperado: sem FLUXO_FORMA.PLT nem FLUXO_FORMA.DXF na pasta do run; programa termina (saida 0).
+{TELA param}{ENTER}
+{TELA opcoes}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}
+{TELA selecao}{ENTER}{ENTER}{ENTER}{ENTER}
+{TELA zoom}{ENTER}
+{TELA montagem}{ENTER}
+{TELA previa_abandona}{ENTER}{RIGHT}
+{TELA previa_abandona2}{ENTER}A

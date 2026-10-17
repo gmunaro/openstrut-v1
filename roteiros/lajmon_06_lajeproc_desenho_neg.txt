@@ -1,0 +1,4 @@
+# exe: LAJEPROC
+# LAJEPROC roteiro 06: E com S, depois N (negativo): modo T tipo 2 (padrao); modo I laje 1 tipo 3;
+# modo I TODAS tipo 1; modo T tipo 4; dados N (cancela); R.
+{TELA lp6_menu}E{ENTER}{ENTER}N{TELA lp6_n_modo}{ENTER}{TELA lp6_n_tipo}{ENTER}{ENTER}{TELA lp6_n_vet}{ENTER}N{BS}I{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}1{ENTER}{BS}3{ENTER}{ENTER}{TELA lp6_n_isol1_t3}{ENTER}N{BS}I{ENTER}{ENTER}{BS}1{ENTER}{ENTER}{TELA lp6_n_todas_t1}{ENTER}N{ENTER}{BS}4{ENTER}{ENTER}{TELA lp6_n_t4}{ENTER}N{ENTER}{ENTER}{BS}N{ENTER}R

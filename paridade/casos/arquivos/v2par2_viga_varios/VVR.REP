@@ -1,0 +1,36 @@
+SISTRUT Software e Tecnologia s/c Ltda
+Versao 4.0    Abril 1990
+
+ SOMATORIA DE REACOES EM PILARES
+ OBRA VVR
+ GERADO EM 10-14-2026   12:00
+ REGISTROS 1 A 3
+ Cargas Totais e Acidentais  Momentos Externos  Reacoes Maximas
+
+P   1         5.45
+*5.45 (VA) + 
+>4.91@1 [5]  (VA) > 
+P   2         9.36
+*9.36 (VA) + 
+>
+P   3         4.21
+*4.21 (VA) + 
+>3.40@2 [4]  (VA) > 
+P   4         3.88
+*3.88 (VB) + 
+>-3.33@1 [4]  (VB) > 
+P   5        12.69
+*12.69 (VB) + 
+>
+P   6        12.69
+*12.69 (VB) + 
+>
+P   7         3.88
+*3.88 (VB) + 
+>-3.33@3 [4]  (VB) > 
+P   8        30.00
+*3 (VC) + 
+>-2@1 [4]  (VC) > 
+P   9        30.00
+*3 (VC) + 
+>-2@1 [4]  (VC) > 

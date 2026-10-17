@@ -1,0 +1,4 @@
+# exe: LAJEPROC
+# LAJEPROC roteiro 05: E com S, depois P (positivo): modo T tipo 1 (padrao); modo I laje 2 tipo 4;
+# tipo 9 (erro); laje 9 (erro); dados N (cancela); R.
+{TELA lp5_menu}E{ENTER}{ENTER}P{TELA lp5_p_modo}{ENTER}{TELA lp5_p_tipo}{ENTER}{ENTER}{TELA lp5_p_vet}{ENTER}P{BS}I{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}2{ENTER}{BS}4{ENTER}{ENTER}{TELA lp5_p_isol2}{ENTER}P{ENTER}{BS}9{ENTER}{TELA lp5_erro_tipo}{ENTER}P{BS}I{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}9{ENTER}{TELA lp5_erro_laje}{ENTER}P{ENTER}{ENTER}{BS}N{ENTER}R

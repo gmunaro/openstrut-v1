@@ -1,0 +1,3 @@
+# exe: SISTRUT
+# Sonda: menu LAJE opcao 3 (LAJECALC) - qual programa abre de fato
+{TELA s01_menu}L{TELA l01_menu_laje}3{TELA x01_destino}{F2}{TELA s02_menu}{F2}

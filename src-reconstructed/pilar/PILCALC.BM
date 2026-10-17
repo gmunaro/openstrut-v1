@@ -1,0 +1,396 @@
+' PILCALC.BM - calculo de pilares de concreto armado pela NB-1/78 (flexo-compressao
+' e flexo-tracao). RECONSTRUCAO FUNCIONAL. Unidades: tf, cm, tf/cm2, tf.cm.
+' Uso: '$INCLUDE: '../pilar/PILCALC.BM' no fim do modulo, depois de common/CALCCA.BM
+' (usa CcaEs# e CcaAcoClasse%).
+'
+' Convencoes:
+'   b, h     largura e altura da secao (cm); flexao em torno do eixo de largura b,
+'            a borda mais comprimida em y = 0 e a menos comprimida em y = h.
+'   camadas  nc barras ou grupos de barras: yc(i) = profundidade (cm, a partir da borda
+'            mais comprimida), ac(i) = area (cm2). Vetores 1 a nc.
+'   dl       cobrimento ate o centro da barra (cm). RECONSTRUCAO: o chamador escolhe.
+'   as1/as2  (rotinas de duas faces) area da face menos comprimida (y = h - dl) e da
+'            face mais comprimida (y = dl).
+'   fcd,fyd  resistencias de calculo (tf/cm2).
+'   nd       forca normal de calculo (tf), compressao positiva, tracao negativa.
+'   md, m    momento (tf.cm) em torno do centro geometrico; positivo comprime y = 0.
+'
+' Modelo (NB-1/78):
+'   - deformacoes pela regra dos pivos (PcDeformacao#), dominios 1 a 5;
+'   - concreto pelo diagrama parabola-retangulo 0,85 fcd (eps 2 e 3,5 por mil),
+'     integrado em forma fechada (PcIntConcreto#). RECONSTRUCAO: a NB-1/78 admite o
+'     retangulo 0,85 fcd em 0,8x, mas no dominio 5 ele superestima a resistencia
+'     (ate ~20% menos As que a parabola-retangulo com nu 0,65 a 0,9); adotado o
+'     diagrama base, a favor da seguranca;
+'   - aco classe A (bilinear) ou B (NB-1/78, CcaAcoClasse%), PcTensaoAco#;
+'   - concreto sob as barras comprimidas descontado (tensao do concreto na barra).
+' Todas as locais sao DOUBLE declaradas: variavel implicita e SINGLE e, passada por
+' referencia a SUB de parametro DOUBLE, o QB64 nao devolve o valor.
+
+' Indice de esbeltez lambda = 3.464*le/h (secao retangular). le e h em cm.
+FUNCTION PcEsbeltez# (le AS DOUBLE, h AS DOUBLE)
+    PcEsbeltez# = 3.464# * le / h
+END FUNCTION
+
+' Excentricidade acidental minima ea (cm): maior valor entre h/30 e 2 cm.
+' RECONSTRUCAO: os 2 cm vem do INI (linha 25); a regra h/30 vem do PIP (verifica h/30).
+FUNCTION PcExcAcidental# (h AS DOUBLE)
+    IF h / 30# > 2# THEN
+        PcExcAcidental# = h / 30#
+    ELSE
+        PcExcAcidental# = 2#
+    END IF
+END FUNCTION
+
+' Deformacao de escoamento de calculo do aco: fyd/Es (classe A) ou fyd/Es + 0,002
+' (classe B, NB-1/78).
+FUNCTION PcEpsYd# (fyd AS DOUBLE)
+    IF CcaAcoClasse%(-1) = 1 THEN
+        PcEpsYd# = fyd / CcaEs# + 0.002#
+    ELSE
+        PcEpsYd# = fyd / CcaEs#
+    END IF
+END FUNCTION
+
+' Excentricidade de 2a ordem e2 (cm). Zero para lambda <= 40.
+' e2 = le^2/10 * (0.0035 + eps_yd) / ((nu + 0.5) * h), nu = nd/(ac*fcd).
+' ac = area da secao (cm2). Aplicada para lambda entre 40 e 140 (ver PILAR.BAS).
+' RECONSTRUCAO: eps_yd = PcEpsYd# (fyd/Es + 0,002 no aco classe B, a favor da seguranca).
+FUNCTION PcE2# (le AS DOUBLE, h AS DOUBLE, nd AS DOUBLE, ac AS DOUBLE, fcd AS DOUBLE, fyd AS DOUBLE)
+    DIM nu AS DOUBLE
+    IF PcEsbeltez#(le, h) <= 40# THEN
+        PcE2# = 0#
+    ELSE
+        nu = nd / (ac * fcd)
+        IF nu + 0.5# < 1# THEN nu = 0.5#   ' NB-1/78: (nu + 0,5) >= 1
+        PcE2# = le * le / 10# * (0.0035# + PcEpsYd#(fyd)) / ((nu + 0.5#) * h)
+    END IF
+END FUNCTION
+
+' Tensao do aco (tf/cm2) para a deformacao eps (positiva = encurtamento), simetrica.
+' Classe A: sigma = Es*eps limitada a fyd.
+' Classe B (NB-1/78): eps = sigma/Es ate 0,7 fyd; acima,
+'   eps = sigma/Es + 0,823*(sigma/fyd - 0,7)^5, ate fyd em eps = fyd/Es + 0,002.
+'   sigma(eps) por bisseccao (40 passos: erro < fyd/1E12).
+FUNCTION PcTensaoAco# (eps AS DOUBLE, fyd AS DOUBLE)
+    DIM s AS DOUBLE, e AS DOUBLE, lo AS DOUBLE, hi AS DOUBLE, em AS DOUBLE, k AS INTEGER
+    e = ABS(eps)
+    IF CcaAcoClasse%(-1) = 1 THEN
+        IF e >= fyd / CcaEs# + 0.002# THEN
+            s = fyd
+        ELSEIF CcaEs# * e <= 0.7# * fyd THEN
+            s = CcaEs# * e
+        ELSE
+            lo = 0.7# * fyd: hi = fyd
+            FOR k = 1 TO 40
+                s = (lo + hi) / 2#
+                em = s / CcaEs# + 0.823# * (s / fyd - 0.7#) ^ 5
+                IF em < e THEN lo = s ELSE hi = s
+            NEXT
+            s = (lo + hi) / 2#
+        END IF
+    ELSE
+        s = CcaEs# * e
+        IF s > fyd THEN s = fyd
+    END IF
+    IF eps < 0# THEN s = -s
+    PcTensaoAco# = s
+END FUNCTION
+
+' Tensao do concreto (tf/cm2), parabola-retangulo: 0,85 fcd [1 - (1 - eps/0,002)^2]
+' ate 2 por mil, 0,85 fcd acima; zero na tracao.
+FUNCTION PcTensaoConcreto# (eps AS DOUBLE, fcd AS DOUBLE)
+    IF eps <= 0# THEN
+        PcTensaoConcreto# = 0#
+    ELSEIF eps >= 0.002# THEN
+        PcTensaoConcreto# = 0.85# * fcd
+    ELSE
+        PcTensaoConcreto# = 0.85# * fcd * (1# - (1# - eps / 0.002#) ^ 2)
+    END IF
+END FUNCTION
+
+' Primitivas da parabola-retangulo de 0 a eps: ordem 0 = integral de sigma d(eps);
+' ordem 1 = integral de sigma*eps d(eps). Usadas por PcNMCamadas.
+FUNCTION PcIntConcreto# (eps AS DOUBLE, fcd AS DOUBLE, ordem AS INTEGER)
+    DIM fc AS DOUBLE, e2 AS DOUBLE
+    fc = 0.85# * fcd: e2 = 0.002#
+    IF eps <= 0# THEN
+        PcIntConcreto# = 0#
+    ELSEIF eps <= e2 THEN
+        IF ordem = 0 THEN
+            PcIntConcreto# = fc * (eps * eps / e2 - eps ^ 3 / (3# * e2 * e2))
+        ELSE
+            PcIntConcreto# = fc * (2# * eps ^ 3 / (3# * e2) - eps ^ 4 / (4# * e2 * e2))
+        END IF
+    ELSE
+        IF ordem = 0 THEN
+            PcIntConcreto# = fc * (2# * e2 / 3# + (eps - e2))
+        ELSE
+            PcIntConcreto# = fc * (5# * e2 * e2 / 12# + (eps * eps - e2 * e2) / 2#)
+        END IF
+    END IF
+END FUNCTION
+
+' Deformacao (encurtamento positivo) na profundidade y (cm, medida da borda mais
+' comprimida) para a linha neutra x, pela regra dos pivos da NB-1/78:
+'   x <= 0,259 d : pivo A, -10 por mil em d (dominio 2; x < 0 = dominio 1, toda tracionada);
+'   x <= h       : pivo B, 3,5 por mil na borda (dominios 3, 4 e 4a);
+'   x > h        : pivo C, 2 por mil a 3h/7 da borda mais comprimida (dominio 5; x
+'                  infinito = compressao uniforme de 2 por mil).
+' d = profundidade da barra mais afastada da borda comprimida.
+FUNCTION PcDeformacao# (x AS DOUBLE, y AS DOUBLE, h AS DOUBLE, d AS DOUBLE)
+    IF x <= 0.0035# * d / 0.0135# THEN
+        PcDeformacao# = 0.01# * (x - y) / (d - x)
+    ELSEIF x <= h THEN
+        PcDeformacao# = 0.0035# * (x - y) / x
+    ELSE
+        PcDeformacao# = 0.002# * (x - y) / (x - 3# * h / 7#)
+    END IF
+END FUNCTION
+
+' Profundidade da camada mais afastada da borda comprimida (h se nao ha camadas).
+FUNCTION PcDCamadas# (h AS DOUBLE, nc AS INTEGER, yc() AS DOUBLE)
+    DIM i AS INTEGER, d AS DOUBLE
+    IF nc < 1 THEN PcDCamadas# = h: EXIT FUNCTION
+    d = yc(1)
+    FOR i = 2 TO nc
+        IF yc(i) > d THEN d = yc(i)
+    NEXT
+    PcDCamadas# = d
+END FUNCTION
+
+' Para a linha neutra x (cm, qualquer valor: dominios 1 a 5), calcula n (tf) e m (tf.cm)
+' da secao b x h com as camadas de barras yc()/ac(). Concreto parabola-retangulo em forma
+' fechada: com eps linear de et (y = 0) a eb (y = h), k = (et - eb)/h,
+'   Nc = b/k [F0(et) - F0(eb)],  Mc = b/k [(h/2 - et/k)(F0(et) - F0(eb)) + (F1(et) - F1(eb))/k].
+' Cada barra soma ac*(sigma_aco - sigma_concreto no mesmo ponto).
+SUB PcNMCamadas (x AS DOUBLE, b AS DOUBLE, h AS DOUBLE, nc AS INTEGER, yc() AS DOUBLE, ac() AS DOUBLE, fcd AS DOUBLE, fyd AS DOUBLE, n AS DOUBLE, m AS DOUBLE)
+    DIM d AS DOUBLE, et AS DOUBLE, eb AS DOUBLE, k AS DOUBLE, f0 AS DOUBLE, f1 AS DOUBLE
+    DIM e AS DOUBLE, s AS DOUBLE, i AS INTEGER
+    d = PcDCamadas#(h, nc, yc())
+    et = PcDeformacao#(x, 0#, h, d)
+    eb = PcDeformacao#(x, h, h, d)
+    k = (et - eb) / h
+    IF k < 0.000000000001# THEN
+        n = b * h * PcTensaoConcreto#(et, fcd)
+        m = 0#
+    ELSE
+        f0 = PcIntConcreto#(et, fcd, 0) - PcIntConcreto#(eb, fcd, 0)
+        f1 = PcIntConcreto#(et, fcd, 1) - PcIntConcreto#(eb, fcd, 1)
+        n = b / k * f0
+        m = b / k * ((h / 2# - et / k) * f0 + f1 / k)
+    END IF
+    FOR i = 1 TO nc
+        e = PcDeformacao#(x, yc(i), h, d)
+        s = PcTensaoAco#(e, fyd) - PcTensaoConcreto#(e, fcd)
+        n = n + ac(i) * s
+        m = m + ac(i) * s * (h / 2# - yc(i))
+    NEXT
+END SUB
+
+' Acha a linha neutra x com N(x) = nd por bisseccao e devolve x e o momento m.
+' Varre x de -500h a +500h por x = h p / (1 - p^2), p em [-0,999; 0,999]: nas pontas a
+' secao esta, na pratica, toda tracionada a 10 por mil ou toda comprimida a 2 por mil.
+' N(x) cresce com x (o encurtamento cresce em todas as fibras ate o dominio 4a; no 5
+' a borda passa de 3,5 a 2 por mil, onde o concreto ja esta no patamar).
+SUB PcEquilibrio (nd AS DOUBLE, b AS DOUBLE, h AS DOUBLE, nc AS INTEGER, yc() AS DOUBLE, ac() AS DOUBLE, fcd AS DOUBLE, fyd AS DOUBLE, x AS DOUBLE, m AS DOUBLE)
+    DIM pl AS DOUBLE, ph AS DOUBLE, pm AS DOUBLE, nm AS DOUBLE, it AS INTEGER
+    pl = -0.999#: ph = 0.999#
+    FOR it = 1 TO 60
+        pm = (pl + ph) / 2#
+        x = h * pm / (1# - pm * pm)
+        CALL PcNMCamadas(x, b, h, nc, yc(), ac(), fcd, fyd, nm, m)
+        IF nm < nd THEN pl = pm ELSE ph = pm
+    NEXT
+    pm = (pl + ph) / 2#
+    x = h * pm / (1# - pm * pm)
+    CALL PcNMCamadas(x, b, h, nc, yc(), ac(), fcd, fyd, nm, m)
+END SUB
+
+' Soma das areas das camadas (cm2).
+FUNCTION PcAsCamadas# (nc AS INTEGER, ac() AS DOUBLE)
+    DIM i AS INTEGER, t AS DOUBLE
+    FOR i = 1 TO nc
+        t = t + ac(i)
+    NEXT
+    PcAsCamadas# = t
+END FUNCTION
+
+' Momento resistente (tf.cm, comprimindo y = 0) para a normal nd com as camadas dadas.
+' Retorna -1 se nd passa da compressao centrada (PcNmaxAxial#) ou da tracao maxima
+' (-As*fyd, todas as barras escoando).
+FUNCTION PcMRCamadas# (nd AS DOUBLE, b AS DOUBLE, h AS DOUBLE, nc AS INTEGER, yc() AS DOUBLE, ac() AS DOUBLE, fcd AS DOUBLE, fyd AS DOUBLE)
+    DIM asT AS DOUBLE, x AS DOUBLE, m AS DOUBLE
+    asT = PcAsCamadas#(nc, ac())
+    IF nd > PcNmaxAxial#(b * h, fcd, asT, fyd) OR nd < -asT * fyd THEN
+        PcMRCamadas# = -1#
+        EXIT FUNCTION
+    END IF
+    CALL PcEquilibrio(nd, b, h, nc, yc(), ac(), fcd, fyd, x, m)
+    PcMRCamadas# = m
+END FUNCTION
+
+' Linha neutra x (cm, a partir da borda mais comprimida) do estado limite com N = nd.
+' x < 0: secao toda tracionada; x > h: toda comprimida (dominio 5).
+FUNCTION PcXCamadas# (nd AS DOUBLE, b AS DOUBLE, h AS DOUBLE, nc AS INTEGER, yc() AS DOUBLE, ac() AS DOUBLE, fcd AS DOUBLE, fyd AS DOUBLE)
+    DIM x AS DOUBLE, m AS DOUBLE
+    CALL PcEquilibrio(nd, b, h, nc, yc(), ac(), fcd, fyd, x, m)
+    PcXCamadas# = x
+END FUNCTION
+
+' Capacidade axial (tf) de compressao centrada (2 por mil uniforme):
+' 0,85 fcd (ac - as) + as * sigma_aco(0,002). as = armadura total (cm2).
+FUNCTION PcNmaxAxial# (ac AS DOUBLE, fcd AS DOUBLE, asTot AS DOUBLE, fyd AS DOUBLE)
+    PcNmaxAxial# = 0.85# * fcd * (ac - asTot) + asTot * PcTensaoAco#(0.002#, fyd)
+END FUNCTION
+
+' Duas faces: as2 em y = dl (face mais comprimida) e as1 em y = h - dl.
+' Para a linha neutra x calcula n (tf) e m (tf.cm). Ver PcNMCamadas.
+SUB PcNMdeX (x AS DOUBLE, b AS DOUBLE, h AS DOUBLE, dl AS DOUBLE, as1 AS DOUBLE, as2 AS DOUBLE, fcd AS DOUBLE, fyd AS DOUBLE, n AS DOUBLE, m AS DOUBLE)
+    DIM yc(1 TO 2) AS DOUBLE, ac(1 TO 2) AS DOUBLE
+    yc(1) = dl: ac(1) = as2
+    yc(2) = h - dl: ac(2) = as1
+    CALL PcNMCamadas(x, b, h, 2, yc(), ac(), fcd, fyd, n, m)
+END SUB
+
+' Momento resistente m (tf.cm) para a normal nd (compressao ou tracao), com as armaduras
+' as1 (face menos comprimida) e as2 (face mais comprimida). -1 fora da capacidade.
+FUNCTION PcMRparaN# (nd AS DOUBLE, b AS DOUBLE, h AS DOUBLE, dl AS DOUBLE, as1 AS DOUBLE, as2 AS DOUBLE, fcd AS DOUBLE, fyd AS DOUBLE)
+    DIM yc(1 TO 2) AS DOUBLE, ac(1 TO 2) AS DOUBLE
+    yc(1) = dl: ac(1) = as2
+    yc(2) = h - dl: ac(2) = as1
+    PcMRparaN# = PcMRCamadas#(nd, b, h, 2, yc(), ac(), fcd, fyd)
+END FUNCTION
+
+' Menor armadura por face (cm2), simetrica (as1 = as2), com MR(nd) >= md.
+' Bisseccao em as entre 0 e 3% de b*h por face (taxa total de 6%).
+' Retorna -1 se nem a taxa maxima basta.
+FUNCTION PcAsMinCentrado# (nd AS DOUBLE, md AS DOUBLE, b AS DOUBLE, h AS DOUBLE, dl AS DOUBLE, fcd AS DOUBLE, fyd AS DOUBLE)
+    DIM asMax AS DOUBLE, lo AS DOUBLE, hi AS DOUBLE, mid AS DOUBLE, it AS INTEGER
+    asMax = 0.03# * b * h
+    IF PcMRparaN#(nd, b, h, dl, asMax, asMax, fcd, fyd) < md THEN
+        PcAsMinCentrado# = -1#
+        EXIT FUNCTION
+    END IF
+    lo = 0#
+    hi = asMax
+    FOR it = 1 TO 40
+        mid = (lo + hi) / 2#
+        IF PcMRparaN#(nd, b, h, dl, mid, mid, fcd, fyd) >= md THEN hi = mid ELSE lo = mid
+    NEXT
+    PcAsMinCentrado# = hi
+END FUNCTION
+
+' Indice de interacao da flexao obliqua com armadura asf em cada face extrema:
+'   (mxd/mrx)^1.2 + (myd/mry)^1.2. Menor ou igual a 1 indica secao suficiente.
+' mrx: flexao em torno de h. mry: flexao em torno de b (secao trocada). Retorna 99 se
+' nd nao cabe na secao (MR nao positivo).
+' Supoe asf concentrada nas faces extremas de cada direcao: so vale como estimativa;
+' o arranjo real das barras deve ser verificado com PcMRCamadas# (ver PILEDCAL).
+FUNCTION PcIndiceObliquo# (nd AS DOUBLE, mxd AS DOUBLE, myd AS DOUBLE, b AS DOUBLE, h AS DOUBLE, dl AS DOUBLE, asf AS DOUBLE, fcd AS DOUBLE, fyd AS DOUBLE)
+    DIM ix AS DOUBLE, iy AS DOUBLE, mrx AS DOUBLE, mry AS DOUBLE
+    ix = 0#
+    iy = 0#
+    IF mxd > 0# THEN
+        mrx = PcMRparaN#(nd, b, h, dl, asf, asf, fcd, fyd)
+        IF mrx <= 0# THEN
+            PcIndiceObliquo# = 99#
+            EXIT FUNCTION
+        END IF
+        ix = (mxd / mrx) ^ 1.2#
+    END IF
+    IF myd > 0# THEN
+        mry = PcMRparaN#(nd, h, b, dl, asf, asf, fcd, fyd)
+        IF mry <= 0# THEN
+            PcIndiceObliquo# = 99#
+            EXIT FUNCTION
+        END IF
+        iy = (myd / mry) ^ 1.2#
+    END IF
+    PcIndiceObliquo# = ix + iy
+END FUNCTION
+
+' Menor armadura por face (cm2) para flexao obliqua, com indice <= 1.
+' Bisseccao em as. Retorna -1 se nem a taxa maxima basta.
+' RECONSTRUCAO: as barras sao tratadas em duas faces por direcao, nao em quatro faces.
+FUNCTION PcAsMinObliquo# (nd AS DOUBLE, mxd AS DOUBLE, myd AS DOUBLE, b AS DOUBLE, h AS DOUBLE, dl AS DOUBLE, fcd AS DOUBLE, fyd AS DOUBLE)
+    DIM asMax AS DOUBLE, lo AS DOUBLE, hi AS DOUBLE, mid AS DOUBLE, it AS INTEGER
+    asMax = 0.03# * b * h
+    IF PcIndiceObliquo#(nd, mxd, myd, b, h, dl, asMax, fcd, fyd) > 1# THEN
+        PcAsMinObliquo# = -1#
+        EXIT FUNCTION
+    END IF
+    lo = 0#
+    hi = asMax
+    FOR it = 1 TO 40
+        mid = (lo + hi) / 2#
+        IF PcIndiceObliquo#(nd, mxd, myd, b, h, dl, mid, fcd, fyd) <= 1# THEN hi = mid ELSE lo = mid
+    NEXT
+    PcAsMinObliquo# = hi
+END FUNCTION
+
+' Profundidade (cm, a partir da borda superior) da k-esima de nLat barras laterais da
+' secao retangular de altura h (PILAR): di <= 0 distribui igualmente entre as barras
+' das bordas (dl e h - dl); senao de di a df.
+FUNCTION PcYLateral# (k AS INTEGER, nLat AS INTEGER, h AS DOUBLE, dl AS DOUBLE, di AS DOUBLE, df AS DOUBLE)
+    IF di <= 0# THEN
+        PcYLateral# = dl + k * (h - 2# * dl) / (nLat + 1)
+    ELSEIF nLat = 1 THEN
+        PcYLateral# = di
+    ELSE
+        PcYLateral# = di + (k - 1) * (df - di) / (nLat - 1)
+    END IF
+END FUNCTION
+
+' Camadas de barras da secao retangular b x h do PILAR (nSup barras na borda superior,
+' nInf na inferior, nLat por lado nas laterais, area ab cada) para a flexao na direcao
+' dir: 1 = ao longo de h (Mx, borda superior comprimida), 2 = ao longo de b (My, face
+' esquerda comprimida). As barras de borda sao igualmente espacadas de dl a b - dl;
+' as laterais ficam em x = dl e x = b - dl (PcYLateral#). Uma camada por barra.
+' Devolve nc e yc()/ac() redimensionados.
+SUB PcCamadasRet (dir AS INTEGER, b AS DOUBLE, h AS DOUBLE, dl AS DOUBLE, nSup AS INTEGER, nInf AS INTEGER, nLat AS INTEGER, di AS DOUBLE, df AS DOUBLE, ab AS DOUBLE, nc AS INTEGER, yc() AS DOUBLE, ac() AS DOUBLE)
+    DIM j AS INTEGER, i AS INTEGER, xb AS DOUBLE, yb AS DOUBLE, lado AS INTEGER
+    nc = nSup + nInf + 2 * nLat
+    IF nc < 1 THEN
+        REDIM yc(1 TO 1) AS DOUBLE, ac(1 TO 1) AS DOUBLE
+        nc = 0
+        EXIT SUB
+    END IF
+    REDIM yc(1 TO nc) AS DOUBLE, ac(1 TO nc) AS DOUBLE
+    i = 0
+    FOR j = 1 TO nSup + nInf
+        IF j <= nSup THEN
+            yb = dl
+            IF nSup = 1 THEN xb = b / 2# ELSE xb = dl + (j - 1) * (b - 2# * dl) / (nSup - 1)
+        ELSE
+            yb = h - dl
+            IF nInf = 1 THEN xb = b / 2# ELSE xb = dl + (j - nSup - 1) * (b - 2# * dl) / (nInf - 1)
+        END IF
+        i = i + 1
+        IF dir = 1 THEN yc(i) = yb ELSE yc(i) = xb
+        ac(i) = ab
+    NEXT
+    FOR j = 1 TO nLat
+        yb = PcYLateral#(j, nLat, h, dl, di, df)
+        FOR lado = 0 TO 1
+            IF lado = 0 THEN xb = dl ELSE xb = b - dl
+            i = i + 1
+            IF dir = 1 THEN yc(i) = yb ELSE yc(i) = xb
+            ac(i) = ab
+        NEXT
+    NEXT
+END SUB
+
+' Menor momento resistente (tf.cm) entre os dois sentidos da flexao (borda y = 0 ou
+' y = h comprimida), para arranjos nao simetricos. -1 se nd fora da capacidade.
+FUNCTION PcMRDoisSentidos# (nd AS DOUBLE, b AS DOUBLE, h AS DOUBLE, nc AS INTEGER, yc() AS DOUBLE, ac() AS DOUBLE, fcd AS DOUBLE, fyd AS DOUBLE)
+    DIM m1 AS DOUBLE, m2 AS DOUBLE, i AS INTEGER
+    DIM yv(1 TO nc + 1) AS DOUBLE
+    m1 = PcMRCamadas#(nd, b, h, nc, yc(), ac(), fcd, fyd)
+    FOR i = 1 TO nc
+        yv(i) = h - yc(i)
+    NEXT
+    m2 = PcMRCamadas#(nd, b, h, nc, yv(), ac(), fcd, fyd)
+    IF m2 < m1 THEN m1 = m2
+    PcMRDoisSentidos# = m1
+END FUNCTION

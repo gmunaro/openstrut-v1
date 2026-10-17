@@ -1,0 +1,302 @@
+' ============================================================================
+'  PILPRED.BM - predimensionamento da secao das colunas de edificio (PILAREDI,
+'  tela 3.9) e resumo de cargas na fundacao (tela 3.5). Sem tela.
+'  Usado por PILAREDI.BAS, PIPROEDI.BAS (PpClasseAco%) e tests/T_PILPRED.BAS.
+'  Pre-requisitos: SISDADOS.BI/.BM (Col, ColNiv, ColEsf, ColIdx%), PILCALC.BM
+'  (PcEsbeltez#) e PILEDCAL.BM (PeParam#: lambda maximo aceito no dimensionamento).
+'  Unidades: N tf, M tf.m, dimensoes cm, tensoes tf/cm2, pe-direito m.
+'
+'  Regra do predimensionamento (sistrut-game/SISTRUT.PIP, "PARAMETRIZACAO DAS
+'  OPCOES PARA PREDIMENSIONAMENTO DA SECAO"), sobre a carga caracteristica Nk:
+'    Nk/Area        <= tensao admissivel (1)   (padrao 0,6 Fck)
+'    Nk/Area + Mk/W <= tensao admissivel (2)   (padrao 0,75 Fck)
+'  tensao = multiplicador * Fck ou, com valor negativo, -valor e a tensao.
+'  A medida procurada e multipla de "MULTIPLO" (5 cm) e nao menor que "MINIMA
+'  MEDIDA" (14 cm).
+'  RECONSTRUCAO (sem evidencia; adotada a opcao a favor da seguranca):
+'    - Mx flete na direcao de bx (Wx = by*bx^2/6) e My na de by, como PILEDCAL.BM;
+'      circular: M = raiz(Mx^2 + My^2) e W = pi*D^3/32;
+'    - a secao proposta tambem respeita o lambda maximo do dimensionamento
+'      (PeParam#(2), PILAR.INI linha 31), para nao ser recusada depois;
+'    - a taxa ideal de armadura (item 3) nao reduz a area: o aco nao entra na
+'      tensao admissivel;
+'    - a menor medida aceita e o primeiro multiplo de MULTIPLO >= MINIMA (15 cm);
+'    - busca ate PP_DMAX cm; acima disso a secao fica marcada como insuficiente;
+'    - o N do .COL ja traz o peso proprio somado pelo PILGEEDI (PILGECAL.BM:
+'      secao atual, 2,5 t/m3, nos niveis em que a coluna recebe carga). Com
+'      "Acrescento o peso Proprio" = S, esse peso sai e entra o da secao nova,
+'      na densidade da parametrizacao; com N, o N do .COL fica como esta;
+'    - a excentricidade entre os centros de gravidade de duas secoes gera, em
+'      todos os niveis da secao de baixo, Mx = N * Ex e My = N * Ey, com N do
+'      ultimo nivel da secao de cima;
+'    - a reducao das acidentais para a fundacao segue a NBR 6120:1980 (2.2.1.8):
+'      0% ate 3 pavimentos, 20% com 4, 40% com 5 e 60% com 6 ou mais, sobre a
+'      parcela acidental (porcentagem da carga, item 7).
+' ============================================================================
+
+' Parametros do predimensionamento e da fundacao, guardados entre chamadas
+' (como PeParam#). define <> 0 grava novo; sempre devolve o valor atual.
+' qual: 1 tensao (1) Nk/Area; 2 tensao (2) Nk/Area + Mk/W (multiplicador de Fck
+' ou -tensao); 3 taxa ideal (%); 4 minima medida (cm); 5 multiplo (cm);
+' 6 acrescenta peso proprio (1 = S); 7 densidade (t/m3); 8 porcentagem acidental;
+' 9 reduz acidentais na fundacao (1 = S); 10 reduz acidentais no dimensionamento.
+' Padroes do SISTRUT.PIP distribuido.
+FUNCTION PpParam# (qual AS INTEGER, novo AS DOUBLE, define AS INTEGER)
+    STATIC lido AS INTEGER, v() AS DOUBLE
+    IF lido = 0 THEN
+        REDIM v(1 TO 10) AS DOUBLE
+        v(1) = 0.6#: v(2) = 0.75#: v(3) = 1.5#: v(4) = 14#: v(5) = 5#
+        v(6) = 1#: v(7) = 2.5#: v(8) = 10#: v(9) = 0#: v(10) = 0#
+        lido = 1
+    END IF
+    IF qual < 1 OR qual > 10 THEN PpParam# = 0#: EXIT FUNCTION
+    IF define <> 0 THEN v(qual) = novo
+    PpParam# = v(qual)
+END FUNCTION
+
+' Tensao admissivel (tf/cm2): coef > 0 multiplica Fck; coef < 0 e a tensao (-coef).
+FUNCTION PpTensaoAdm# (coef AS DOUBLE, fck AS DOUBLE)
+    IF coef < 0# THEN PpTensaoAdm# = -coef ELSE PpTensaoAdm# = coef * fck
+END FUNCTION
+
+' Area (cm2): "C" circular de diametro bx; senao retangular bx*by.
+FUNCTION PpArea# (tipo AS STRING, bx AS DOUBLE, by AS DOUBLE)
+    IF UCASE$(tipo) = "C" THEN PpArea# = 3.14159265358979# * bx * bx / 4# ELSE PpArea# = bx * by
+END FUNCTION
+
+' Maior tensao de compressao na borda (tf/cm2): N/A + |Mx|/Wx + |My|/Wy.
+' N em tf, M em tf.m. Secao invalida devolve 1E+30.
+FUNCTION PpTensaoNM# (n AS DOUBLE, mx AS DOUBLE, my AS DOUBLE, tipo AS STRING, bx AS DOUBLE, by AS DOUBLE)
+    DIM a AS DOUBLE, w AS DOUBLE, wx AS DOUBLE, wy AS DOUBLE
+    a = PpArea#(tipo, bx, by)
+    IF a <= 0# OR bx <= 0# THEN PpTensaoNM# = 1E+30: EXIT FUNCTION
+    IF UCASE$(tipo) = "C" THEN
+        w = 3.14159265358979# * bx ^ 3 / 32#
+        PpTensaoNM# = n / a + SQR(mx * mx + my * my) * 100# / w
+    ELSE
+        IF by <= 0# THEN PpTensaoNM# = 1E+30: EXIT FUNCTION
+        wx = by * bx * bx / 6#: wy = bx * by * by / 6#
+        PpTensaoNM# = n / a + ABS(mx) * 100# / wx + ABS(my) * 100# / wy
+    END IF
+END FUNCTION
+
+' Primeira medida aceita (cm): o menor multiplo de mult que nao e menor que dmin.
+FUNCTION PpMedidaMinima# (dmin AS DOUBLE, mult AS DOUBLE)
+    IF mult <= 0# THEN PpMedidaMinima# = dmin: EXIT FUNCTION
+    PpMedidaMinima# = -INT(-dmin / mult) * mult
+END FUNCTION
+
+' -1 se a coluna c recebe carga no nivel k (N proprio do nivel > 0).
+' Nivel 1 = topo; o N do .COL e acumulado de cima para baixo.
+FUNCTION PpPresente% (c AS INTEGER, k AS INTEGER)
+    DIM acima AS DOUBLE
+    IF k > 1 THEN acima = ColEsf(ColIdx%(c, k - 1)).N
+    PpPresente% = (ColEsf(ColIdx%(c, k)).N - acima > 0.0000001#)
+END FUNCTION
+
+' Peso proprio que o PILGEEDI somou ate o nivel k (tf): secao do .COL, 2,5 t/m3,
+' nos niveis em que a coluna recebe carga (ver PILGECAL.BM, PgSomaPavimento).
+FUNCTION PpPesoGeedi# (c AS INTEGER, k AS INTEGER)
+    DIM i AS INTEGER, s AS DOUBLE, a AS DOUBLE
+    a = PpArea#(Col(c).secao, Col(c).bx, Col(c).by)
+    FOR i = 1 TO k
+        IF PpPresente%(c, i) THEN s = s + a / 10000# * ColNiv(i).peDireito * 2.5#
+    NEXT
+    PpPesoGeedi# = s
+END FUNCTION
+
+' Aplica a secao aceita no predimensionamento a coluna c: grava tipo, bx e by em
+' Col(c) e corrige o N de cada nivel pela diferenca de peso proprio entre a secao
+' nova e a atual (2,5 t/m3, nos niveis em que a coluna recebe carga), acumulada de
+' cima para baixo. O N fica igual ao que o PILGEEDI somaria com a secao nova, e o
+' dimensionamento (PeDimensiona) passa a usar o peso da secao nova.
+' Circular: bx = diametro; by recebe bx.
+SUB PpAplicaSecao (c AS INTEGER, tipo AS STRING, bx AS DOUBLE, by AS DOUBLE)
+    DIM k AS INTEGER, da AS DOUBLE, acum AS DOUBLE
+    REDIM pres(1 TO ColNivQtd + 1) AS INTEGER
+    da = PpArea#(tipo, bx, by) - PpArea#(Col(c).secao, Col(c).bx, Col(c).by)
+    ' presenca lida antes de mexer no N: PpPresente% compara niveis vizinhos
+    FOR k = 1 TO ColNivQtd
+        pres(k) = PpPresente%(c, k)
+    NEXT
+    FOR k = 1 TO ColNivQtd
+        IF pres(k) THEN acum = acum + da / 10000# * ColNiv(k).peDireito * 2.5#
+        ColEsf(ColIdx%(c, k)).N = ColEsf(ColIdx%(c, k)).N + acum
+    NEXT
+    Col(c).secao = UCASE$(tipo)
+    Col(c).bx = bx
+    IF UCASE$(tipo) = "C" THEN Col(c).by = bx ELSE Col(c).by = by
+END SUB
+
+' Classe do aco para CcaAcoClasse% (0 = A, 1 = B) pela linha 19 do PILAR.INI
+' ("TIPO DE ACO"). Sem INI (temIni = 0) ou sem B na linha: classe A, o padrao de
+' CcaAcoClasse% e dos outros modulos. Usado por PILAREDI e PIPROEDI.
+FUNCTION PpClasseAco% (temIni AS INTEGER, linha AS STRING)
+    PpClasseAco% = 0
+    IF temIni THEN
+        IF UCASE$(LEFT$(LTRIM$(linha), 1)) = "B" THEN PpClasseAco% = 1
+    END IF
+END FUNCTION
+
+' Carga acumulada no nivel k sem o peso proprio somado pelo PILGEEDI (tf, >= 0).
+FUNCTION PpCargaSemPP# (c AS INTEGER, k AS INTEGER)
+    DIM v AS DOUBLE
+    v = ColEsf(ColIdx%(c, k)).N - PpPesoGeedi#(c, k)
+    IF v < 0# THEN v = 0#
+    PpCargaSemPP# = v
+END FUNCTION
+
+' Fracao de reducao das cargas acidentais pelo numero de pavimentos (NBR 6120).
+FUNCTION PpReducao# (nPav AS INTEGER)
+    SELECT CASE nPav
+        CASE IS <= 3: PpReducao# = 0#
+        CASE 4: PpReducao# = 0.2#
+        CASE 5: PpReducao# = 0.4#
+        CASE ELSE: PpReducao# = 0.6#
+    END SELECT
+END FUNCTION
+
+' Resumo da fundacao da coluna c (nivel mais baixo, ColNivQtd). Devolve em
+' carga a carga acumulada sem peso proprio, em pp o peso proprio da secao atual
+' na densidade da parametrizacao e em fund a carga na fundacao:
+' carga * (1 - acidental% * reducao) [se reduz] + pp [se acrescenta].
+SUB PpFundacao (c AS INTEGER, carga AS DOUBLE, pp AS DOUBLE, fund AS DOUBLE)
+    DIM k AS INTEGER, nPav AS INTEGER, a AS DOUBLE
+    a = PpArea#(Col(c).secao, Col(c).bx, Col(c).by)
+    carga = PpCargaSemPP#(c, ColNivQtd)
+    pp = 0#: nPav = 0
+    FOR k = 1 TO ColNivQtd
+        IF PpPresente%(c, k) THEN
+            nPav = nPav + 1
+            pp = pp + a / 10000# * ColNiv(k).peDireito * PpParam#(7, 0, 0)
+        END IF
+    NEXT
+    fund = carga
+    IF PpParam#(9, 0, 0) <> 0# THEN fund = carga * (1# - PpParam#(8, 0, 0) / 100# * PpReducao#(nPav))
+    IF PpParam#(6, 0, 0) <> 0# THEN fund = fund + pp
+END SUB
+
+' Verifica a secao (tipo, bx, by) da coluna c nos niveis kTopo a kBase.
+' fck em tf/cm2. ppAcima = peso proprio novo acumulado acima de kTopo (tf);
+' mxAdd/myAdd = momentos da excentricidade entre secoes (tf.m).
+' Saida: maiores tensoes sig1 (N/A) e sig2 (N/A + M/W) e seus niveis k1 e k2,
+' maior carga nMax, peso proprio acumulado em kBase (ppBase) e N em kBase (nBase).
+' Devolve -1 se sig1 e sig2 cabem nas admissiveis e lambda <= PeParam#(2).
+FUNCTION PpVerifica% (c AS INTEGER, kTopo AS INTEGER, kBase AS INTEGER, tipo AS STRING, bx AS DOUBLE, by AS DOUBLE, fck AS DOUBLE, ppAcima AS DOUBLE, mxAdd AS DOUBLE, myAdd AS DOUBLE, sig1 AS DOUBLE, k1 AS INTEGER, sig2 AS DOUBLE, k2 AS INTEGER, nMax AS DOUBLE, ppBase AS DOUBLE, nBase AS DOUBLE)
+    DIM k AS INTEGER, j AS INTEGER, a AS DOUBLE, n AS DOUBLE, pp AS DOUBLE, s AS DOUBLE
+    DIM hx AS DOUBLE, hy AS DOUBLE, okLam AS INTEGER, lam AS DOUBLE
+    a = PpArea#(tipo, bx, by)
+    ' circular: o lambda usa o lado do quadrado de mesma area, como PILEDCAL.BM
+    hx = bx: hy = by
+    IF UCASE$(tipo) = "C" THEN hx = bx * SQR(3.14159265358979#) / 2#: hy = hx
+    sig1 = 0#: sig2 = 0#: k1 = kTopo: k2 = kTopo: nMax = 0#: okLam = -1
+    pp = ppAcima
+    FOR k = kTopo TO kBase
+        j = ColIdx%(c, k)
+        IF PpPresente%(c, k) THEN pp = pp + a / 10000# * ColNiv(k).peDireito * PpParam#(7, 0, 0)
+        IF PpParam#(6, 0, 0) <> 0# THEN n = PpCargaSemPP#(c, k) + pp ELSE n = ColEsf(j).N
+        IF n > nMax THEN nMax = n
+        IF a > 0# THEN s = n / a ELSE s = 1E+30
+        IF s > sig1 THEN sig1 = s: k1 = k
+        s = PpTensaoNM#(n, ABS(ColEsf(j).Mx) + ABS(mxAdd), ABS(ColEsf(j).My) + ABS(myAdd), tipo, bx, by)
+        IF s > sig2 THEN sig2 = s: k2 = k
+        IF hx > 0# AND hy > 0# THEN
+            lam = PcEsbeltez#(ColEsf(j).lex * 100#, hx)
+            IF PcEsbeltez#(ColEsf(j).ley * 100#, hy) > lam THEN lam = PcEsbeltez#(ColEsf(j).ley * 100#, hy)
+            IF lam > PeParam#(2, 0) THEN okLam = 0
+        ELSE
+            okLam = 0
+        END IF
+        nBase = n
+    NEXT
+    ppBase = pp
+    PpVerifica% = okLam AND sig1 <= PpTensaoAdm#(PpParam#(1, 0, 0), fck) + 0.0000001# AND sig2 <= PpTensaoAdm#(PpParam#(2, 0, 0), fck) + 0.0000001#
+END FUNCTION
+
+' Predimensiona uma secao da coluna c nos niveis kTopo a kBase.
+' tipo "R": bFix/hFix = bx/by dados (> 0) ou a procurar (0); os dois a procurar
+' dao secao quadrada. tipo "C": bFix = diametro dado ou 0 a procurar.
+' A medida procurada cresce de PpMedidaMinima# em passos de MULTIPLO ate PP_DMAX.
+' Saida: bx, by, ok (-1 se a secao atende) e as saidas de PpVerifica%.
+SUB PpTrecho (c AS INTEGER, kTopo AS INTEGER, kBase AS INTEGER, tipo AS STRING, bFix AS DOUBLE, hFix AS DOUBLE, fck AS DOUBLE, ppAcima AS DOUBLE, mxAdd AS DOUBLE, myAdd AS DOUBLE, bx AS DOUBLE, by AS DOUBLE, ok AS INTEGER, sig1 AS DOUBLE, k1 AS INTEGER, sig2 AS DOUBLE, k2 AS INTEGER, nMax AS DOUBLE, ppBase AS DOUBLE, nBase AS DOUBLE)
+    CONST PP_DMAX = 300#
+    DIM d AS DOUBLE, passo AS DOUBLE, circ AS INTEGER
+    circ = (UCASE$(tipo) = "C")
+    passo = PpParam#(5, 0, 0): IF passo <= 0# THEN passo = 1#
+    d = PpMedidaMinima#(PpParam#(4, 0, 0), PpParam#(5, 0, 0))
+    IF d <= 0# THEN d = passo
+    IF (circ AND bFix > 0#) OR (NOT circ AND bFix > 0# AND hFix > 0#) THEN
+        bx = bFix: by = hFix: IF circ THEN by = bFix
+        ok = PpVerifica%(c, kTopo, kBase, tipo, bx, by, fck, ppAcima, mxAdd, myAdd, sig1, k1, sig2, k2, nMax, ppBase, nBase)
+        EXIT SUB
+    END IF
+    DO
+        IF circ THEN
+            bx = d: by = d
+        ELSEIF bFix > 0# THEN
+            bx = bFix: by = d
+        ELSEIF hFix > 0# THEN
+            bx = d: by = hFix
+        ELSE
+            bx = d: by = d
+        END IF
+        ok = PpVerifica%(c, kTopo, kBase, tipo, bx, by, fck, ppAcima, mxAdd, myAdd, sig1, k1, sig2, k2, nMax, ppBase, nBase)
+        IF ok THEN EXIT SUB
+        d = d + passo
+    LOOP WHILE d <= PP_DMAX + 0.0000001#
+END SUB
+
+' Predimensiona as q secoes da coluna c, de cima para baixo.
+' Secao 1 = a de baixo. nivIni(s) = nivel mais baixo da secao s (1 = topo):
+' nivIni(1) = ColNivQtd e nivIni decresce com s; a secao s vai do nivel
+' nivIni(s + 1) + 1 (ou 1, na ultima) ate nivIni(s).
+' tipo(), bFix(), hFix(): como PpTrecho. ex(s), ey(s) (cm): distancia do CG da
+' secao s - 1 (de baixo) ao CG da secao s (s >= 2).
+' Saida por secao: bx(), by(), ok(), sig1(), k1(), sig2(), k2(), nMax().
+SUB PpColuna (c AS INTEGER, q AS INTEGER, nivIni() AS INTEGER, tipo() AS STRING, bFix() AS DOUBLE, hFix() AS DOUBLE, ex() AS DOUBLE, ey() AS DOUBLE, fck AS DOUBLE, bx() AS DOUBLE, by() AS DOUBLE, ok() AS INTEGER, sig1() AS DOUBLE, k1() AS INTEGER, sig2() AS DOUBLE, k2() AS INTEGER, nMax() AS DOUBLE)
+    DIM s AS INTEGER, kTopo AS INTEGER, pp AS DOUBLE, nSup AS DOUBLE, mxA AS DOUBLE, myA AS DOUBLE
+    DIM rbx AS DOUBLE, rby AS DOUBLE, rok AS INTEGER, rs1 AS DOUBLE, rk1 AS INTEGER, rs2 AS DOUBLE, rk2 AS INTEGER
+    DIM rn AS DOUBLE, ppBase AS DOUBLE, nBase AS DOUBLE, t AS STRING, b0 AS DOUBLE, h0 AS DOUBLE
+    pp = 0#: nSup = 0#
+    FOR s = q TO 1 STEP -1
+        IF s = q THEN kTopo = 1 ELSE kTopo = nivIni(s + 1) + 1
+        mxA = 0#: myA = 0#
+        IF s < q THEN mxA = nSup * ex(s + 1) / 100#: myA = nSup * ey(s + 1) / 100#
+        ' variaveis simples: elemento de vetor passado a SUB nao volta alterado
+        t = tipo(s): b0 = bFix(s): h0 = hFix(s)
+        PpTrecho c, kTopo, nivIni(s), t, b0, h0, fck, pp, mxA, myA, rbx, rby, rok, rs1, rk1, rs2, rk2, rn, ppBase, nBase
+        bx(s) = rbx: by(s) = rby: ok(s) = rok: sig1(s) = rs1: k1(s) = rk1: sig2(s) = rs2: k2(s) = rk2: nMax(s) = rn
+        pp = ppBase: nSup = nBase
+    NEXT
+END SUB
+
+' Le a lista de posicoes "I/J/N a M/.../K" (numeros de 1 a maxPos; "a" tambem
+' em maiuscula) e grava em lista() sem repetir, ate maxLista. Devolve a quantidade.
+' Posicao invalida ou fora da faixa e ignorada.
+FUNCTION PpListaPosicoes% (txt AS STRING, maxPos AS INTEGER, lista() AS INTEGER, maxLista AS INTEGER)
+    DIM t AS STRING, pc AS STRING, p AS INTEGER, q AS INTEGER, a AS INTEGER, b AS INTEGER
+    DIM i AS INTEGER, m AS INTEGER, n AS INTEGER, dup AS INTEGER, s AS INTEGER
+    t = UCASE$(LTRIM$(RTRIM$(txt)))
+    n = 0
+    DO WHILE t <> ""
+        p = INSTR(t, "/")
+        IF p > 0 THEN pc = LEFT$(t, p - 1): t = MID$(t, p + 1) ELSE pc = t: t = ""
+        q = INSTR(pc, " A ")
+        IF q > 0 THEN
+            a = VAL(LEFT$(pc, q - 1)): b = VAL(MID$(pc, q + 3))
+        ELSE
+            a = VAL(pc): b = a
+        END IF
+        IF a > b THEN s = a: a = b: b = s
+        IF a < 1 THEN a = 1
+        IF b > maxPos THEN b = maxPos
+        FOR i = a TO b
+            dup = 0
+            FOR m = 1 TO n
+                IF lista(m) = i THEN dup = -1
+            NEXT
+            IF NOT dup AND n < maxLista THEN n = n + 1: lista(n) = i
+        NEXT
+    LOOP
+    PpListaPosicoes% = n
+END FUNCTION

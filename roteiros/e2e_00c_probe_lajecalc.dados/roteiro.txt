@@ -1,0 +1,15 @@
+# exe: SISTRUT
+# e2e_01_laje_geo: obra nova E2E pelo menu principal. Laje (L) -> LAJEGEOM (8).
+# Grade 2x2: L1 (0,0)  L2 (4,0)  L3 (0,5)  L4 (4,5); vaos lx=4 m, ly=5 m; h 10 cm.
+# Cargas g 0.1 e q 0.15 (menu 6). Bordos: padrao AAAA; a continuidade marca E nas
+# bordas internas. Campo numerico vem com padrao 0: {BS} apaga o zero.
+# Sem SISTRUT.OBR na pasta: LAJEGEOM pede o nome da obra (E2E).
+# Saida: 9 grava (S), ENTER do retorno, ENTER do Espera do LAJE; F2 de LAJE e do SISTRUT.
+{TELA s01_menu}L{TELA l01_menu_laje}8{TELA l02_pede_obra}E2E{ENTER}{TELA l03_geo_menu}2{TELA l04_tab_vazia}
+I{ENTER}{ENTER}{ENTER}{BS}4{ENTER}{BS}5{ENTER}{BS}10{ENTER}{ENTER}{TELA l05_L1}
+I{ENTER}{BS}4{ENTER}{ENTER}{BS}4{ENTER}{BS}5{ENTER}{BS}10{ENTER}{ENTER}{TELA l06_L2}
+I{ENTER}{ENTER}{BS}5{ENTER}{BS}4{ENTER}{BS}5{ENTER}{BS}10{ENTER}{ENTER}{TELA l07_L3}
+I{ENTER}{BS}4{ENTER}{BS}5{ENTER}{BS}4{ENTER}{BS}5{ENTER}{BS}10{ENTER}{ENTER}{TELA l08_L4}
+F
+6{TELA l09_cargas_vazia}E{BS}0.1{ENTER}{BS}0.15{ENTER}{DOWN}E{BS}0.1{ENTER}{BS}0.15{ENTER}{DOWN}E{BS}0.1{ENTER}{BS}0.15{ENTER}{DOWN}E{BS}0.1{ENTER}{BS}0.15{ENTER}{TELA l10_cargas_ok}F
+9S{TELA l11_retorno}{ENTER}{ENTER}{TELA l12_menu_laje}{F2}{TELA s02_menu}{F2}

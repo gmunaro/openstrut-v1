@@ -1,0 +1,4 @@
+# exe: DESGRAF
+# Item 13: escolha de adaptador (VIDEO, CGA..HER) antes da lista; qualquer tecla cai em SCREEN 12.
+# Depois: lista; v3 abre o desenho; tecla fecha o desenho; nome vazio encerra.
+{TELA lac13_01_video}{SPACE}{TELA lac13_02_lista}v3{ENTER}{TELA lac13_03_desenho}{SPACE}{SPACE}{TELA lac13_04_volta}{ENTER}

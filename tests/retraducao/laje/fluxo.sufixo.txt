@@ -1,0 +1,32 @@
+# Sufixo (a partir do menu do LAJE): o caso_a_laje do oraculo com telas, mais o LAJEPROC.
+# Obra E2E (painel 2x2 de lajes macicas 4 x 5 m) criada do zero no LAJEGEOM (1 a 6), calculada no
+# LAJECALC (1 a 6, com impressao), vigas no LAJEGEOM 7 (LAJEMONT gera E2E.VIG/E2E.RLP), relatorios
+# do LAJEGEOM (8), gravacao no LAJEGRAV (1 e 2), armaduras no LAJEPROC (1, 2 e 5) e volta ao LAJE.
+# Partida: C: sem obra.
+{TELA l01}2{ESPERA Geometria do Painel}{ESPERA escolha opcao}{PAUSA 2}{TELA g01_menu}
+1{ESPERA Eixo HORIZONTAL}{PAUSA 1}{TELA g02_eixos}0{ENTER}5{ENTER}10{ENTER}V{ENTER}0{ENTER}4{ENTER}8{ENTER}{PAUSA 1}{TELA g03_eixos}{ENTER}{ESPERA Geometria do Painel}{ESPERA escolha opcao}{PAUSA 2}{TELA g04_menu}
+2{ESPERA Nome da Obra|30}{PAUSA 1}{TELA g05_obra}E2E{ENTER}{ESPERA A R Q U I T E T U R A}{PAUSA 2}{TELA g06_arq}I{RIGHT}{RIGHT}{ENTER}{UP}{UP}{ENTER}{LEFT}{LEFT}{ENTER}{DOWN}{DOWN}{ENTER}{PAUSA 2}{TELA g07_arq}F{ESPERA escolha opcao}{PAUSA 2}{TELA g08_menu}
+3{ESPERA C A R G A S}{PAUSA 2}{TELA g09_ocup}A{PAUSA 2}I{RIGHT}{RIGHT}{ENTER}{UP}{UP}{ENTER}{LEFT}{LEFT}{ENTER}{DOWN}{DOWN}{ENTER}{ESPERA Carga de Ocupacao Total}{PAUSA 1}{TELA g10_ocup}0.15{ENTER}{ESPERA Parcela Acidental}{PAUSA 1}{TELA g11_ocup}0.15{ENTER}{ESPERA Carga por Area}{PAUSA 2}{TELA g12_ocup}F{ESPERA escolha opcao}{PAUSA 2}{TELA g13_menu}
+4{ESPERA E S T R U T U R A}{PAUSA 2}{TELA g14_estr}I{RIGHT}{RIGHT}{ENTER}{UP}I{LEFT}{LEFT}{ENTER}{UP}I{RIGHT}{RIGHT}{ENTER}I{DOWN}{DOWN}{ENTER}{LEFT}I{UP}{UP}{ENTER}{LEFT}I{DOWN}{DOWN}{ENTER}{PAUSA 2}{TELA g15_estr}F{ESPERA escolha opcao}{PAUSA 2}{TELA g16_menu}
+5{ESPERA P I L A R E S}{PAUSA 2}{TELA g17_pil}{ENTER}{ESPERA Nome do Pilar}{PAUSA 1}{TELA g18_pil}{ENTER}{RIGHT}I{ENTER}{ESPERA Nome do Pilar}{ENTER}{RIGHT}I{ENTER}{ESPERA Nome do Pilar}{ENTER}{UP}I{ENTER}{ESPERA Nome do Pilar}{ENTER}{LEFT}I{ENTER}{ESPERA Nome do Pilar}{ENTER}{LEFT}I{ENTER}{ESPERA Nome do Pilar}{ENTER}{UP}I{ENTER}{ESPERA Nome do Pilar}{ENTER}{RIGHT}I{ENTER}{ESPERA Nome do Pilar}{ENTER}{RIGHT}I{ENTER}{ESPERA Nome do Pilar}{PAUSA 1}{TELA p9}{ENTER}{PAUSA 2}{TELA pf}F{ESPERA escolha opcao}{PAUSA 2}{TELA g19_menu}
+6{ESPERA C A R G A S   D E   L A J E}{PAUSA 2}{TELA g20_lajes}T{ESPERA lajes Macicas}{PAUSA 1}{TELA g21_lajes}M{ENTER}{PAUSA 3}{TELA g22_lajes}{ENTER}{ESPERA <F>im}{PAUSA 2}{TELA g23_lajes}C{ESPERA Todas as Lajes}{PAUSA 1}{TELA g24_lajes}T{ENTER}{ESPERA Carga permanente}{PAUSA 1}{TELA g25_lajes}0.1{ENTER}{PAUSA 1}0.25{ENTER}{PAUSA 3}{TELA g26_lajes}{ENTER}{ESPERA <F>im}{PAUSA 2}{TELA g27_lajes}F{ESPERA Posicionadas}{PAUSA 2}{TELA g01_geo_menu}
+9{ESPERA LAJES EM REGIME}{ESPERA escolha opcao}{PAUSA 2}{TELA l02}
+3{ESPERA Calculo e Detalhamento}{ESPERA escolha opcao}{PAUSA 2}{TELA c03_menu_calc}1{ESPERA C O N T I N U I D A D E}{PAUSA 2}{TELA c04_continuidade}F{ESPERA escolha opcao}{PAUSA 2}{TELA c05_menu}
+2{ESPERA Predominante}{PAUSA 1}{TELA c06_direcao}{ENTER}{ESPERA <F>im}{PAUSA 2}{TELA c07_direcao}F{ESPERA escolha opcao}{PAUSA 2}{TELA c08_menu}
+3{ESPERA TODAS}{PAUSA 1}{ENTER}{ESPERA Imprimo Relatorio}{PAUSA 1}S{ENTER}{ESPERA Visualizo}{PAUSA 1}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA c09_esp}{ENTER}{ESPERA para seguir}{PAUSA 1}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA c10_menu}
+4{ESPERA H em cm}{PAUSA 1}10{ENTER}{ESPERA RETORNA}{PAUSA 1}1 a 4{ENTER}{ESPERA H em cm}{PAUSA 1}{TELA c11_imp}{ENTER}{ESPERA Imprimo Relatorio}{PAUSA 1}S{ENTER}{ESPERA Visualizo}{PAUSA 1}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{ENTER}{ESPERA para seguir}{PAUSA 1}{TELA c12_imp}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA c13_menu}
+5{ESPERA Momentos/Armaduras}{ESPERA TODAS}{PAUSA 1}{ENTER}{ESPERA Imprimo Relatorio}{PAUSA 1}S{ENTER}{ESPERA Visualizo}{PAUSA 1}{ENTER}{ESPERA Deseja Visualizar}{PAUSA 1}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{ENTER}{ESPERA para seguir}{PAUSA 1}{TELA c14_mom}{ENTER}{ESPERA escolha opcao|180}{PAUSA 2}{TELA c15_menu}
+6{ESPERA odas serao equilibradas}{PAUSA 1}{TELA c16_otim}{ENTER}{ESPERA escolha opcao|180}{PAUSA 2}{TELA c17_menu}
+5{ESPERA Momentos/Armaduras}{ESPERA TODAS}{PAUSA 1}{ENTER}{ESPERA Imprimo Relatorio}{PAUSA 1}S{ENTER}{ESPERA Visualizo}{PAUSA 1}{ENTER}{ESPERA Deseja Visualizar}{PAUSA 1}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{ENTER}{ESPERA para seguir}{PAUSA 1}{ENTER}{ESPERA escolha opcao|180}{PAUSA 2}{TELA c18_menu}
+8{ESPERA LAJES EM REGIME}{ESPERA escolha opcao}{PAUSA 2}{TELA l03}
+2{ESPERA Posicionadas}{PAUSA 2}{TELA g30_menu}7{ESPERA <G>eracao}{PAUSA 1}{TELA v01_vigas}G{ESPERA Confirme prosseguir}{PAUSA 1}{TELA v02_vigas}{ENTER}{ESPERA PREDOMINANTE}{PAUSA 1}{TELA v03_vigas}0.15{ENTER}{ESPERA NENHUMA}{PAUSA 1}{TELA v04_vigas}1{ENTER}{ESPERA Peso t/m}0.12{ENTER}{PAUSA 2}2{ENTER}{ESPERA Peso t/m}0.12{ENTER}{PAUSA 2}3{ENTER}{ESPERA Peso t/m}0.12{ENTER}{PAUSA 2}{TELA v05_pesos}{ENTER}{ESPERA Carregamento das Vigas}{PAUSA 1}{TELA v06_vigas}S{ENTER}{PAUSA 3}{TELA v07_apos_imprimo}
+{ESPERA Posicionadas}{PAUSA 2}{TELA g31_menu}
+8{PAUSA 3}{TELA g32_rel}{ENTER}{PAUSA 3}{TELA g33_rel}{ENTER}{PAUSA 3}{TELA g34_rel}{ENTER}{ESPERA Posicionadas}{PAUSA 2}{TELA g35_menu}
+9{ESPERA LAJES EM REGIME}{ESPERA escolha opcao}{PAUSA 2}{TELA l04}
+6{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}{TELA w00}1{ESPERA NAO CRIAR}{PAUSA 1}{TELA w01}E2E{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA w02}2{ESPERA Nome da Obra}{PAUSA 1}{TELA w03}{ENTER}{ESPERA Continuo}{PAUSA 1}{TELA w04}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA w05_gravado}
+7{ESPERA LAJES EM REGIME}{ESPERA escolha opcao}{PAUSA 2}{TELA l05}
+4{ESPERA Escolha de Armaduras}{ESPERA escolha opcao}{PAUSA 2}{TELA p01}
+1{ESPERA N/*S*}{PAUSA 1}{TELA p02}{ENTER}{ESPERA Escolha de Armaduras}{ESPERA escolha opcao}{PAUSA 2}{TELA p03}
+2{ESPERA *TODAS*}{PAUSA 1}{ENTER}{ESPERA Visualizo}{PAUSA 1}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA p04}{ENTER}{PAUSA 10}{TELA p05_desenho}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA p06}
+5{ESPERA *TODAS*}{PAUSA 1}{ENTER}{ESPERA Visualizo}{PAUSA 1}{ENTER}{ESPERA Ambas}{PAUSA 1}{TELA p07}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{ENTER}{ESPERA escolha opcao|400}{PAUSA 2}{TELA p08}
+6{ESPERA LAJES EM REGIME}{ESPERA escolha opcao}{PAUSA 2}{TELA l06}

@@ -1,0 +1,17 @@
+# exe: DESGRAF
+# DESGRAF, obra FLUXO (5 vigas: V3 V2 V4 V1 V5)
+# Antes da lista, a tela de adaptador (VIDEO) aceita qualquer tecla.
+# Em desenho, a primeira tecla fecha o grafico (VetMostra%); a segunda cai no menu X/D.
+# lista; nome inexistente; V3 com X (DXF); V3 com D (DESDIM, ESC sai);
+# V2 sem exportar; nome vazio encerra
+{TELA gr_00_video}{SPACE}
+{TELA gr_01_lista}NAOEXISTE{ENTER}
+{TELA gr_02_inexiste}{ENTER}
+{TELA gr_03_lista_volta}v3{ENTER}
+{TELA gr_04_v3}{SPACE}X
+{TELA gr_05_apos_x}v3{ENTER}
+{TELA gr_06_v3_again}{SPACE}D
+{TELA gr_07_desdim}{ESC}
+{TELA gr_08_volta_lista}v2{ENTER}
+{TELA gr_09_v2}{SPACE}{SPACE}
+{TELA gr_10_fim}{ENTER}

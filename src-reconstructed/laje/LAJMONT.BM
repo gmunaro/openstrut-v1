@@ -1,0 +1,237 @@
+' ============================================================================
+'  LAJMONT.BM - montagem das cargas das lajes em vigas e pilares (.VIG/.RLP)
+'  Sem I/O de tela. Usado por LAJEMONT.BAS; testado em tests/T_LAJMONT.BAS.
+'
+'  Entrada: Laj(1..LajQtd) com resultados do LAJECALC (temRes, p, q, r1..r4,
+'  reacoes em tf/m por bordo esq/inf/dir/sup) e vigas de apoio por bordo.
+'  Saida: Vig()/VigApo()/VigTra() (carregamento das vigas) e CPil() (pilares).
+'
+'  RECONSTRUCAO FUNCIONAL:
+'  - O eixo de cada viga e a uniao dos bordos de laje com o mesmo nome
+'    (colineares). A reacao rk vira carga distribuida no trecho do bordo;
+'    parcela permanente rk*(p-q)/p e acidental rk*q/p.
+'  - Pilares: extremidades de vigas e cruzamentos entre vigas horizontais
+'    e verticais (no original vinham da planta de arquitetura; aqui sao
+'    inferidos). Numerados de cima para baixo, da esquerda para a direita.
+'  - Carga de cada tramo = media das cargas sobre o trecho (preserva o total).
+'  - Secao inicial das vigas: bw = 12 cm, h = vao maximo/10 arredondado a
+'    5 cm, minimo 30 cm (o usuario ajusta no modulo VIGA).
+'  - .RLP sai com N = 0: neste modelo as lajes so descarregam em vigas.
+' ============================================================================
+
+' Nome da viga de apoio do bordo k (1..4) da laje i ("" ou "-" = sem viga).
+FUNCTION LmLado$ (i AS INTEGER, k AS INTEGER)
+    DIM s AS STRING, n AS INTEGER, p AS INTEGER, q AS INTEGER
+    s = RTRIM$(Laj(i).vigas): p = 1
+    FOR n = 1 TO k - 1
+        q = INSTR(p, s, "/")
+        IF q = 0 THEN EXIT FUNCTION
+        p = q + 1
+    NEXT
+    q = INSTR(p, s, "/")
+    IF q = 0 THEN LmLado$ = LTRIM$(RTRIM$(MID$(s, p))) ELSE LmLado$ = LTRIM$(RTRIM$(MID$(s, p, q - p)))
+END FUNCTION
+
+' Comprimento (m) do bordo k da laje i: bordos 1 e 3 medem ly, 2 e 4 medem lx.
+FUNCTION LmLadoLen# (i AS INTEGER, k AS INTEGER)
+    IF k = 1 OR k = 3 THEN LmLadoLen# = Laj(i).ly ELSE LmLadoLen# = Laj(i).lx
+END FUNCTION
+
+' Reacao (tf/m) do bordo k da laje i.
+FUNCTION LmReacao# (i AS INTEGER, k AS INTEGER)
+    SELECT CASE k
+        CASE 1: LmReacao# = Laj(i).r1
+        CASE 2: LmReacao# = Laj(i).r2
+        CASE 3: LmReacao# = Laj(i).r3
+        CASE ELSE: LmReacao# = Laj(i).r4
+    END SELECT
+END FUNCTION
+
+' Area de influencia (m2) do bordo k da laje i = reacao * comprimento / p.
+FUNCTION LmArea# (i AS INTEGER, k AS INTEGER)
+    IF Laj(i).p <= 0 THEN EXIT FUNCTION
+    LmArea# = LmReacao#(i, k) * LmLadoLen#(i, k) / Laj(i).p
+END FUNCTION
+
+' Geometria do bordo k da laje i: horizontal? (-1/0), coordenada do eixo
+' (y se horizontal, x se vertical) e extensao s1..s2 ao longo do eixo.
+SUB LmBordo (i AS INTEGER, k AS INTEGER, horiz AS INTEGER, c AS DOUBLE, s1 AS DOUBLE, s2 AS DOUBLE)
+    SELECT CASE k
+        CASE 1: horiz = 0: c = Laj(i).x0: s1 = Laj(i).y0: s2 = Laj(i).y0 + Laj(i).ly
+        CASE 2: horiz = -1: c = Laj(i).y0: s1 = Laj(i).x0: s2 = Laj(i).x0 + Laj(i).lx
+        CASE 3: horiz = 0: c = Laj(i).x0 + Laj(i).lx: s1 = Laj(i).y0: s2 = Laj(i).y0 + Laj(i).ly
+        CASE ELSE: horiz = -1: c = Laj(i).y0 + Laj(i).ly: s1 = Laj(i).x0: s2 = Laj(i).x0 + Laj(i).lx
+    END SELECT
+END SUB
+
+' Acrescenta um aviso a msg$ (avisos separados por "|").
+SUB LmAvisa (msg AS STRING, texto AS STRING)
+    IF msg = "" THEN msg = texto ELSE msg = msg + "|" + texto
+END SUB
+
+' Monta Vig()/VigApo()/VigTra() e CPil() a partir de Laj(). msg$ recebe
+' avisos (vazio se tudo ok). Lajes sem resultado interrompem a montagem.
+SUB LmMonta (msg AS STRING)
+    CONST TOL = 0.001
+    DIM i AS INTEGER, k AS INTEGER, j AS INTEGER, n AS INTEGER, v AS INTEGER, t AS INTEGER, a AS INTEGER, b AS INTEGER
+    DIM horiz AS INTEGER, c AS DOUBLE, s1 AS DOUBLE, s2 AS DOUBLE, nome AS STRING, r AS DOUBLE, tmp AS DOUBLE
+    DIM ns AS INTEGER
+    DIM tot AS DOUBLE, totLaj AS DOUBLE, ov AS DOUBLE, L AS DOUBLE, lmax AS DOUBLE, h AS DOUBLE
+    msg = ""
+    VigLimpa: CPilQtd = 0
+    VigObra = LajObra: VigNivel = LajNivel: CPilObra = LajObra: CPilNivel = LajNivel
+    FOR i = 1 TO LajQtd
+        IF NOT Laj(i).temRes THEN LmAvisa msg, "Lajes sem calculo (" + RTRIM$(Laj(i).nome) + "): execute o Dimensionamento": EXIT SUB
+    NEXT
+
+    ' 1) segmentos de carga por bordo
+    DIM segNome(1 TO 4 * LajQtd + 1) AS STRING, segH(1 TO 4 * LajQtd + 1) AS INTEGER
+    DIM segC(1 TO 4 * LajQtd + 1) AS DOUBLE, segS1(1 TO 4 * LajQtd + 1) AS DOUBLE, segS2(1 TO 4 * LajQtd + 1) AS DOUBLE
+    DIM segQp(1 TO 4 * LajQtd + 1) AS DOUBLE, segQa(1 TO 4 * LajQtd + 1) AS DOUBLE
+    DIM nSeg AS INTEGER
+    FOR i = 1 TO LajQtd
+        totLaj = totLaj + Laj(i).p * Laj(i).lx * Laj(i).ly
+        FOR k = 1 TO 4
+            nome = LmLado$(i, k)
+            r = LmReacao#(i, k)
+            IF nome <> "" AND nome <> "-" THEN
+                nSeg = nSeg + 1
+                LmBordo i, k, horiz, c, s1, s2
+                segNome(nSeg) = nome: segH(nSeg) = horiz: segC(nSeg) = c: segS1(nSeg) = s1: segS2(nSeg) = s2
+                IF Laj(i).p > 0 THEN
+                    segQp(nSeg) = r * (Laj(i).p - Laj(i).q) / Laj(i).p: segQa(nSeg) = r * Laj(i).q / Laj(i).p
+                END IF
+            ELSEIF r > TOL THEN
+                LmAvisa msg, RTRIM$(Laj(i).nome) + ": bordo" + STR$(k) + " com reacao e sem viga de apoio"
+            END IF
+        NEXT
+    NEXT
+
+    ' 2) vigas: uniao dos segmentos de mesmo nome (devem ser colineares)
+    DIM vNome(1 TO nSeg + 1) AS STRING, vH(1 TO nSeg + 1) AS INTEGER, vC(1 TO nSeg + 1) AS DOUBLE
+    DIM vS1(1 TO nSeg + 1) AS DOUBLE, vS2(1 TO nSeg + 1) AS DOUBLE, nv AS INTEGER
+    FOR j = 1 TO nSeg
+        FOR v = 1 TO nv
+            IF vNome(v) = segNome(j) THEN EXIT FOR
+        NEXT
+        IF v > nv THEN
+            nv = nv + 1: v = nv
+            vNome(v) = segNome(j): vH(v) = segH(j): vC(v) = segC(j): vS1(v) = segS1(j): vS2(v) = segS2(j)
+        ELSE
+            IF vH(v) <> segH(j) OR ABS(vC(v) - segC(j)) > TOL THEN
+                LmAvisa msg, "Viga " + vNome(v) + " com trechos nao alinhados: verifique a numeracao das vigas"
+            END IF
+            IF segS1(j) < vS1(v) THEN vS1(v) = segS1(j)
+            IF segS2(j) > vS2(v) THEN vS2(v) = segS2(j)
+        END IF
+    NEXT
+
+    ' 3) pilares: extremidades e cruzamentos horizontal x vertical
+    DIM px(1 TO 4 * nv * nv + 2 * nv + 1) AS DOUBLE, py(1 TO 4 * nv * nv + 2 * nv + 1) AS DOUBLE, np AS INTEGER
+    FOR v = 1 TO nv
+        LmPonto vH(v), vC(v), vS1(v), px(), py(), np, TOL
+        LmPonto vH(v), vC(v), vS2(v), px(), py(), np, TOL
+        IF vH(v) THEN
+            FOR j = 1 TO nv
+                IF NOT vH(j) THEN
+                    ' vertical j em x = vC(j), de vS1(j) a vS2(j); horizontal v em y = vC(v)
+                    IF vC(j) >= vS1(v) - TOL AND vC(j) <= vS2(v) + TOL AND vC(v) >= vS1(j) - TOL AND vC(v) <= vS2(j) + TOL THEN
+                        LmPonto 0, vC(j), vC(v), px(), py(), np, TOL
+                    END IF
+                END IF
+            NEXT
+        END IF
+    NEXT
+    ' ordena: y decrescente, depois x crescente
+    FOR a = 1 TO np - 1
+        FOR b = a + 1 TO np
+            IF py(b) > py(a) + TOL OR (ABS(py(b) - py(a)) <= TOL AND px(b) < px(a)) THEN
+                tmp = px(a): px(a) = px(b): px(b) = tmp
+                tmp = py(a): py(a) = py(b): py(b) = tmp
+            END IF
+        NEXT
+    NEXT
+    FOR a = 1 TO np
+        IF CPilQtd < DAD_MAXPIL THEN
+            CPilQtd = CPilQtd + 1
+            CPil(CPilQtd).nome = "P" + LTRIM$(STR$(a)): CPil(CPilQtd).x = px(a): CPil(CPilQtd).y = py(a)
+            CPil(CPilQtd).N = 0: CPil(CPilQtd).Mx = 0: CPil(CPilQtd).My = 0
+        END IF
+    NEXT
+
+    ' 4) tramos entre pilares consecutivos sobre o eixo de cada viga
+    FOR v = 1 TO nv
+        REDIM sup(1 TO np + 1) AS DOUBLE, sid(1 TO np + 1) AS INTEGER
+        ns = 0
+        FOR a = 1 TO np
+            IF vH(v) THEN
+                IF ABS(py(a) - vC(v)) <= TOL AND px(a) >= vS1(v) - TOL AND px(a) <= vS2(v) + TOL THEN ns = ns + 1: sup(ns) = px(a): sid(ns) = a
+            ELSE
+                IF ABS(px(a) - vC(v)) <= TOL AND py(a) >= vS1(v) - TOL AND py(a) <= vS2(v) + TOL THEN ns = ns + 1: sup(ns) = py(a): sid(ns) = a
+            END IF
+        NEXT
+        FOR a = 1 TO ns - 1
+            FOR b = a + 1 TO ns
+                IF sup(b) < sup(a) THEN
+                    tmp = sup(a): sup(a) = sup(b): sup(b) = tmp
+                    n = sid(a): sid(a) = sid(b): sid(b) = n
+                END IF
+            NEXT
+        NEXT
+        IF ns < 2 THEN
+            LmAvisa msg, "Viga " + vNome(v) + " sem apoios suficientes"
+        ELSE
+            lmax = 0
+            FOR a = 1 TO ns - 1
+                IF sup(a + 1) - sup(a) > lmax THEN lmax = sup(a + 1) - sup(a)
+            NEXT
+            h = -INT(-lmax * 100 / 10 / 5) * 5: IF h < 30 THEN h = 30
+            n = VigAdiciona%(vNome(v), ns - 1, 12, h)
+            IF n = 0 THEN LmAvisa msg, "NUMERO MAXIMO DE VIGAS INSUFICIENTE": EXIT SUB
+            FOR a = 1 TO ns
+                VigApo(VigApoio%(n, a)).nome = "P" + LTRIM$(STR$(sid(a)))
+                VigApo(VigApoio%(n, a)).x = px(sid(a)): VigApo(VigApoio%(n, a)).y = py(sid(a))
+            NEXT
+            FOR a = 1 TO ns - 1
+                t = VigTramo%(n, a): L = sup(a + 1) - sup(a)
+                VigTra(t).vao = L
+                FOR j = 1 TO nSeg
+                    IF segNome(j) = vNome(v) THEN
+                        ov = LmSobrepoe#(sup(a), sup(a + 1), segS1(j), segS2(j))
+                        IF ov > 0 THEN
+                            VigTra(t).qPerm = VigTra(t).qPerm + segQp(j) * ov / L
+                            VigTra(t).qAcid = VigTra(t).qAcid + segQa(j) * ov / L
+                        END IF
+                    END IF
+                NEXT
+                tot = tot + (VigTra(t).qPerm + VigTra(t).qAcid) * L
+            NEXT
+        END IF
+    NEXT
+
+    ' 5) conferencia global das cargas (mensagem do original)
+    IF totLaj > 0 THEN
+        IF ABS(tot - totLaj) / totLaj > 0.03 THEN
+            LmAvisa msg, "A Somatoria de Todas as Cargas por Area aplicadas nas Lajes/ difere em mais de 3% da Carga total das Lajes"
+        END IF
+    END IF
+END SUB
+
+' Registra o ponto (pilar) do eixo de uma viga se ainda nao existir.
+' horiz/c/s: viga horizontal em y = c, ponto em x = s (vertical: x = c, y = s).
+SUB LmPonto (horiz AS INTEGER, c AS DOUBLE, s AS DOUBLE, px() AS DOUBLE, py() AS DOUBLE, np AS INTEGER, tol AS DOUBLE)
+    DIM x AS DOUBLE, y AS DOUBLE, a AS INTEGER
+    IF horiz THEN x = s: y = c ELSE x = c: y = s
+    FOR a = 1 TO np
+        IF ABS(px(a) - x) <= tol AND ABS(py(a) - y) <= tol THEN EXIT SUB
+    NEXT
+    np = np + 1: px(np) = x: py(np) = y
+END SUB
+
+' Comprimento da sobreposicao entre os intervalos [a1,a2] e [b1,b2].
+FUNCTION LmSobrepoe# (a1 AS DOUBLE, a2 AS DOUBLE, b1 AS DOUBLE, b2 AS DOUBLE)
+    DIM lo AS DOUBLE, hi AS DOUBLE
+    IF a1 > b1 THEN lo = a1 ELSE lo = b1
+    IF a2 < b2 THEN hi = a2 ELSE hi = b2
+    IF hi > lo THEN LmSobrepoe# = hi - lo
+END FUNCTION

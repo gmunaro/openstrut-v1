@@ -1,0 +1,15 @@
+# Sufixo (a partir do menu do ARMADURA): menu principal; 1 Materiais (ENTER nos campos e depois
+# valores, com recusas Fck=0 e aco C); 7 Parametros (item 12 recusado, item 3 = 1.5); 8, 3 e 5 sem
+# secoes (voltam ao menu); tecla invalida; 2 Arquivar com posicao invalida e saida pelo tipo (F = FIM).
+{ESTAVEL 10}{TELA a00}
+1{ESPERA Definicao dos Materiais}{PAUSA 1}{TELA m01}{ENTER}{ESPERA Fyk}{PAUSA 1}{TELA m02}{ENTER}{ESPERA Tipo de Aco}{PAUSA 1}{TELA m03}
+{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA a01}
+1{ESPERA Definicao dos Materiais}{PAUSA 1}0{ENTER}{PAUSA 2}{TELA m04}0.18{ENTER}{ESPERA Unidade de grandeza}{PAUSA 1}{TELA m05}
+{ENTER}{ESPERA Multiplicador}{PAUSA 1}{TELA m06}{ENTER}{ESPERA Fyk}{PAUSA 1}{TELA m07}4.2{ENTER}{ESPERA Tipo de Aco}{PAUSA 1}{TELA m08}
+c{ENTER}{PAUSA 2}{TELA m09}A{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA a02}
+7{ESPERA Correcao de Parametros}{ESPERA NAO}{PAUSA 1}{TELA p01}12,1{ENTER}{PAUSA 2}{TELA p02}3,1.5{ENTER}{PAUSA 2}{TELA p03}
+{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA a03}
+8{PAUSA 3}{ESPERA escolha opcao}{PAUSA 2}{TELA a04}3{PAUSA 3}{ESPERA escolha opcao}{PAUSA 2}{TELA a05}
+5{PAUSA 3}{ESPERA escolha opcao}{PAUSA 2}{TELA a06}X{PAUSA 2}{TELA a07}
+2{ESPERA Arquivo de Secoes}{ESPERA Posicao}{PAUSA 1}{TELA s01}3{ENTER}{PAUSA 2}{TELA s02}{ENTER}{ESPERA Escolha o tipo}{PAUSA 1}{TELA s03}
+F{ESPERA escolha opcao}{PAUSA 2}{TELA a08}

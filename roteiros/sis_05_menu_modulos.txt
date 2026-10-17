@@ -1,0 +1,24 @@
+# exe: SISTRUT
+# sis_05_menu_modulos: menu principal do SISTRUT com cada modulo instalado
+# (L V A F I D O e o editor E). Para cada letra: grava {TELA} da tela inicial do
+# modulo e sai com a tecla de saida dele, conferida no fonte:
+#   LAJE, VIGA, ARMADURA, DESENHO, VPLOTA -> F2 (CHR$(0)+CHR$(60)).
+#   FORMA abre primeiro "Nome da obra" (TelaObra): ENTER confirma o nome
+#   padrao; depois o menu principal do FORMA, que sai com F2.
+#   DESENHO abre primeiro "Nome da Obra *RETORNO*" (DesObra, so quando nao ha
+#   obra atual): ENTER com campo vazio segue para o menu, que sai com F2.
+#   PILAR abre com "+ Qualquer Tecla para Continuar" (SPACE) e depois o menu
+#   principal, que sai com F2.
+#   SISEDIT abre direto no pedido "Nome do Arquivo": ESC cancela o pedido (editor
+#   vazio, sem alteracao), ESC abre o menu e F = Fim (sai sem perguntar).
+# Termina com F2 no menu principal. Saida esperada: 0.
+{TELA mod_inicial}
+L{TELA mod_L}{F2}
+V{TELA mod_V}{F2}
+A{TELA mod_A}{F2}
+F{TELA mod_F}{ENTER}{TELA mod_F_principal}{F2}
+I{TELA mod_I}{SPACE}{TELA mod_I_principal}{F2}
+D{TELA mod_D}{ENTER}{TELA mod_D_menu}{F2}
+O{TELA mod_O}{F2}
+E{TELA mod_E}{ESC}{ESC}F
+{F2}

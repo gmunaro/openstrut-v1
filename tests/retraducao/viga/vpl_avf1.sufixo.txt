@@ -1,0 +1,10 @@
+# modulo: VPLOTA
+# VPLOTA opcao 3 (recuperacao de folhas .AVF): E2E.AVF gravado pelo original no caso retrad_vpl_edv1
+# (mais a obra de casos/retrad_vpl_obra). Diretorio padrao, obra E2E; configuracao: arquivo .PLT,
+# 2o PLOTER (HOUSTON DMP 51/52), origem 0,0, sem cotas, todas as folhas; visualizacao (tela grafica)
+# sem alterar, Seguir; grava de novo o E2E.AVF (S) e plota FV1_E2E.PLT (comparados byte a byte).
+{TELA a00}3{ESPERA arquivos contendo os}{PAUSA 2}{TELA a01}{ENTER}{ESPERA Nome da OBRA}{PAUSA 2}{TELA a02}E2E{ENTER}{ESPERA ARQUIVO PARAMETRIZACAO|60}{PAUSA 2}{TELA a03}
+{ENTER}{ESPERA Arquivo no Disco}{PAUSA 2}S{ENTER}{ESPERA HOUSTON DMP 41/42}{PAUSA 1}{ENTER}{ESPERA HOUSTON DMP 51/52}{PAUSA 1}{TELA a04}S{ENTER}{ESPERA Origem da Folha}{PAUSA 2}{ENTER}{ESPERA cotas e medidas}{PAUSA 2}{ENTER}{ESPERA Todas as folhas}{PAUSA 2}{TELA a05}
+{ENTER}{ESPERA posicionamento das Vigas|120}{PAUSA 3}{TELA a06}{ENTER}{ESPERA arranjo inicial|60}{PAUSA 2}{TELA a07}{ENTER}{ESPERA Gravo o conjunto|60}{PAUSA 2}{TELA a08}
+S{ENTER}{ESPERA Continua ...}{PAUSA 2}{TELA a09}{ENTER}{ESPERA para inicio de plotagem|120}{PAUSA 2}{TELA a10}{ENTER}{ESPERA Plotagem terminada|900}{PAUSA 2}{TELA a11}
+{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA a12}

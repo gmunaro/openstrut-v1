@@ -1,0 +1,613 @@
+' ============================================================================
+'  RT45GFX.BM - primitivas graficas do BRUN45 (QuickBASIC 4.5) pixel a pixel.
+'  LINE, PSET/PRESET, CIRCLE, PMAP e os cantos de GET/PUT com a conversao WINDOW/VIEW
+'  do runtime original. Estado em RT45GFX.BI; algoritmos e enderecos do BRUN45 em
+'  tests/retraducao/gfx/GRAFICO.md. O desenho vai direto na imagem (_MEMIMAGE de _DEST),
+'  sem passar pelo VIEW/WINDOW do QB64, que o RT45 continua ligando para os outros comandos.
+'  Os parametros sao passados por referencia; o tradutor passa expressoes do tipo certo
+'  (coordenadas SINGLE com RT_SNG!, como o B$N1R4 recebe).
+' ============================================================================
+
+' FISTP dword com arredondamento ao par (palavra de controle 1332h): 2.5 -> 2, 3.5 -> 4.
+' Fora de 32 bits o x87 do oraculo (DOSBox-X) nao gera excecao e grava o "inteiro indefinido"
+' 80000000h (os 16 bits baixos valem 0), como 1/0 sem erro (docs/RETRADUCAO.md).
+FUNCTION RG_FIST& (v AS _FLOAT)
+    DIM f AS _FLOAT, d AS _FLOAT
+    f = INT(v): d = v - f
+    IF d > 0.5## THEN
+        f = f + 1
+    ELSEIF d = 0.5## THEN
+        IF f - 2 * INT(f / 2) <> 0 THEN f = f + 1
+    END IF
+    IF f >= 2147483648## OR f < -2147483648## THEN RG_FIST& = -2147483648: EXIT FUNCTION
+    RG_FIST& = f
+END FUNCTION
+
+' Inteiro de 16 bits com sinal (o BRUN45 usa so o AX do FISTP e soma em 16 bits).
+FUNCTION RG_W16% (v AS LONG)
+    DIM w AS LONG
+    w = v AND &HFFFF&
+    IF w > 32767 THEN w = w - 65536
+    RG_W16% = w
+END FUNCTION
+
+' Erro do BASIC dentro de uma primitiva: o comando inteiro e abandonado (RESUME NEXT do
+' programa continua no comando seguinte, como no original).
+SUB RG_ERRO (n AS INTEGER)
+    RG_FALHA = -1
+    ERROR n
+END SUB
+
+' ---------------------------------------------------------------- estado
+' Aplica ao estado do BRUN45 o que o RT45 guardou de SCREEN, VIEW e WINDOW desde a ultima
+' primitiva (RT_SCREEN, RT_VIEW, RT_WINDOW).
+SUB RG_SINC
+    DIM a AS STRING, av AS STRING, aw AS STRING, i AS INTEGER
+    a = MKI$(RT_MODO) + MKL$(_DEST) + MKL$(_WIDTH(_DEST)) + MKL$(_HEIGHT(_DEST))
+    av = MKI$(RT_VW_T)
+    aw = MKI$(RT_WIN_T)
+    FOR i = 1 TO 4
+        av = av + MKI$(RT_VW(i))
+        aw = aw + MKS$(RT_WIN(i))
+    NEXT
+    IF a <> RG_ASS THEN
+        RG_ASS = a: RG_ASSV = "": RG_ASSW = ""
+        RG_W = _WIDTH(_DEST) - 1: RG_H = _HEIGHT(_DEST) - 1
+        RG_WIN = 0: RG_WSCR = 0: RG_EST = &HFFFF&
+    END IF
+    IF av <> RG_ASSV THEN RG_ASSV = av: RG_VIEW_APLICA
+    IF aw <> RG_ASSW THEN RG_ASSW = aw: RG_WINDOW_APLICA
+    RG_FALHA = 0
+END SUB
+
+' VIEW (B$VIEW 017D:41C8, B$VEW0 017D:426F, 774D/76F0): recorte, origem e ultimo ponto no
+' centro da area; a escala do WINDOW e refeita.
+SUB RG_VIEW_APLICA
+    DIM a AS INTEGER, b AS INTEGER
+    RG_X1 = 0: RG_Y1 = 0: RG_X2 = RG_W: RG_Y2 = RG_H: RG_OX = 0: RG_OY = 0
+    IF RT_VW_T <> 0 THEN
+        a = RT_VW(1): b = RT_VW(3): IF a > b THEN SWAP a, b
+        RG_X1 = a: RG_X2 = b
+        a = RT_VW(2): b = RT_VW(4): IF a > b THEN SWAP a, b
+        RG_Y1 = a: RG_Y2 = b
+        IF RT_VW_T = 1 THEN
+            RG_VSCR = 1
+        ELSE
+            RG_VSCR = 0: RG_OX = RG_X1: RG_OY = RG_Y1
+        END IF
+    END IF
+    ' 76F0: largura da escala ([65d]) e ultimo ponto no centro
+    IF RG_VSCR THEN
+        RG_VW = RG_W: RG_PX = (RG_VW + 1) \ 2
+        RG_VH = RG_H: RG_PY = (RG_VH + 1) \ 2
+    ELSE
+        RG_VW = RG_X2 - RG_X1: RG_PX = RG_X1 + (RG_VW + 1) \ 2
+        RG_VH = RG_Y2 - RG_Y1: RG_PY = RG_Y1 + (RG_VH + 1) \ 2
+    END IF
+    RG_ESCALA
+END SUB
+
+' WINDOW (B$WIND 017D:9EEF, B$WIN0 017D:9F70): cantos em DOUBLE, ordenados (x1 < x2, y1 < y2).
+SUB RG_WINDOW_APLICA
+    RG_WIN = 0: RG_WSCR = 0
+    IF RT_WIN_T <> 0 THEN
+        RG_WX1 = RT_WIN(1): RG_WY1 = RT_WIN(2): RG_WX2 = RT_WIN(3): RG_WY2 = RT_WIN(4)
+        IF RG_WX1 > RG_WX2 THEN SWAP RG_WX1, RG_WX2
+        IF RG_WY1 > RG_WY2 THEN SWAP RG_WY1, RG_WY2
+        IF RT_WIN_T = 1 THEN RG_WSCR = 1
+        RG_WIN = 1
+    END IF
+    RG_ESCALA
+END SUB
+
+' Escala do WINDOW (017D:A05C e A0B5). Sem WINDOW: (0,0)-(largura, altura) da area.
+' Fator = [65d] / (x2 - x1) calculado no x87 (estendido) e guardado em DOUBLE; o inverso e
+' 1 / (valor estendido). O ultimo ponto logico (para STEP) vem do ultimo ponto em pixels.
+SUB RG_ESCALA
+    DIM q AS _FLOAT
+    IF RG_WIN = 0 THEN
+        RG_WX1 = 0: RG_WY1 = 0
+        IF RG_VSCR THEN RG_WX2 = RG_W: RG_WY2 = RG_H ELSE RG_WX2 = RG_X2 - RG_X1: RG_WY2 = RG_Y2 - RG_Y1
+    END IF
+    q = RG_VW / (FX##(RG_WX2) - RG_WX1): RG_SX = q: RG_IX = 1## / q
+    q = RG_VH / (FX##(RG_WY2) - RG_WY1): RG_SY = q: RG_IY = 1## / q
+    RG_LX = FX##(RG_PX - RG_OX) * RG_IX + RG_WX1
+    IF RG_WIN <> 0 AND RG_WSCR = 0 THEN
+        RG_LY = -(FX##(RG_PY - RG_OY) * RG_IY) + RG_WY2
+    ELSE
+        RG_LY = FX##(RG_PY - RG_OY) * RG_IY + RG_WY1
+    END IF
+END SUB
+
+' ---------------------------------------------------------------- pontos
+' Ponto (x, y) de um comando grafico -> pixel em RG_PX, RG_PY (que vira o ultimo ponto).
+' Sem WINDOW (017D:A1BD): FISTP de cada coordenada, + origem do VIEW ou + ultimo ponto (STEP).
+' Com WINDOW (017D:9F83): STEP soma no ultimo ponto logico (SINGLE); pixel =
+' FISTP((x - x1) * fator) + origem; no WINDOW cartesiano y = -FISTP((y - y2) * fator).
+SUB RG_PONTO (x AS SINGLE, y AS SINGLE, passo AS INTEGER)
+    DIM a AS LONG, b AS LONG
+    IF RG_WIN THEN
+        IF passo THEN RG_LX = FX##(x) + RG_LX: RG_LY = FX##(y) + RG_LY ELSE RG_LX = x: RG_LY = y
+        a = RG_W16%(RG_FIST&((FX##(RG_LX) - RG_WX1) * RG_SX))
+        IF RG_WSCR THEN
+            b = RG_W16%(RG_FIST&((FX##(RG_LY) - RG_WY1) * RG_SY))
+        ELSE
+            b = RG_W16%(-RG_FIST&((FX##(RG_LY) - RG_WY2) * RG_SY))
+        END IF
+        RG_PX = RG_W16%(a + RG_OX): RG_PY = RG_W16%(b + RG_OY)
+    ELSE
+        a = RG_W16%(RG_FIST&(x)): b = RG_W16%(RG_FIST&(y))
+        IF passo THEN
+            RG_PX = RG_W16%(a + RG_PX): RG_PY = RG_W16%(b + RG_PY)
+        ELSE
+            RG_PX = RG_W16%(a + RG_OX): RG_PY = RG_W16%(b + RG_OY)
+        END IF
+    END IF
+END SUB
+
+' Cor do comando (-1 = cor corrente) ajustada como o driver do modo (B$LINE 017D:B978 ->
+' [9ab]): CGA 640x200 qualquer cor <> 0 acende (017D:89B2); EGA/VGA 16 cores limita a 15
+' (017D:8E1E). So o byte baixo conta.
+SUB RG_COR_DEF (c AS INTEGER)
+    DIM v AS INTEGER
+    IF c = -1 THEN v = _DEFAULTCOLOR ELSE v = c
+    v = v AND 255
+    SELECT CASE RT_MODO
+        CASE 2, 11: IF v THEN v = 1
+        CASE 3: IF v THEN v = _DEFAULTCOLOR
+        CASE 1, 10: IF v > 3 THEN v = 3
+        CASE 7, 8, 9, 12: IF v > 15 THEN v = 15
+    END SELECT
+    RG_COR = v
+END SUB
+
+SUB RG_ABRE
+    RG_M = _MEMIMAGE(_DEST)
+    RG_LARG = _WIDTH(_DEST): RG_ALT = _HEIGHT(_DEST)
+END SUB
+
+SUB RG_FECHA
+    _MEMFREE RG_M
+END SUB
+
+SUB RG_PIXEL (x AS LONG, y AS LONG)
+    IF x >= 0 AND y >= 0 AND x < RG_LARG AND y < RG_ALT THEN
+        _MEMPUT RG_M, RG_M.OFFSET + y * RG_LARG + x, RG_COR AS _UNSIGNED _BYTE
+    END IF
+END SUB
+
+' Codigo de Cohen-Sutherland (017D:B906): 1 esquerda, 2 direita, 4 acima, 8 abaixo do recorte.
+FUNCTION RG_CODIGO% (x AS INTEGER, y AS INTEGER)
+    DIM c AS INTEGER
+    IF RG_X1 > x THEN c = 1
+    IF RG_X2 < x THEN c = c OR 2
+    IF RG_Y1 > y THEN c = c OR 4
+    IF RG_Y2 < y THEN c = c OR 8
+    RG_CODIGO% = c
+END FUNCTION
+
+' Comprimento em bits de um inteiro sem sinal.
+FUNCTION RG_BITS% (v AS _UNSIGNED LONG)
+    DIM n AS INTEGER, w AS _UNSIGNED LONG
+    w = v
+    DO WHILE w: n = n + 1: w = w \ 2: LOOP
+    RG_BITS% = n
+END FUNCTION
+
+' IDIV de 32 por 16 bits com as guardas do BRUN45 (017D:2F5A): divisor 0 -> erro 11;
+' dividendo 0 -> 0 e resto 0; bits(|dividendo|) - bits(|divisor|) > 14 -> erro 6 (Overflow).
+SUB RG_IDIV (n AS LONG, d AS INTEGER, qq AS LONG, rr AS LONG)
+    qq = 0: rr = 0
+    IF d = 0 THEN RG_ERRO 11: EXIT SUB
+    IF n = 0 THEN EXIT SUB
+    IF RG_BITS%(ABS(n)) - RG_BITS%(ABS(CLNG(d))) > 14 THEN RG_ERRO 6: EXIT SUB
+    qq = n \ d: rr = n - qq * d
+END SUB
+
+' Recorte de uma ponta na reta x = b (017D:2F24): devolve o novo y.
+' y = py + q * (b - px) + arredonda(2 * r * (b - px) / (qx - px)), com q, r = divisao de
+' (qy - py) por (qx - px); o arredondamento e (v + 1) \ 2 para v >= 0 e piso(v / 2) para v < 0.
+FUNCTION RG_CORTA% (px AS INTEGER, py AS INTEGER, qx AS INTEGER, qy AS INTEGER, b AS INTEGER)
+    DIM s AS INTEGER, den AS INTEGER, qq AS LONG, rr AS LONG, y AS LONG, t AS LONG, v AS LONG, w AS LONG
+    s = RG_W16%(CLNG(b) - px)
+    den = RG_W16%(CLNG(qx) - px)
+    RG_IDIV CLNG(RG_W16%(CLNG(qy) - py)), den, qq, rr
+    IF RG_FALHA THEN EXIT FUNCTION
+    y = RG_W16%(py + RG_W16%(qq * s))
+    t = rr * s * 2 ' |r| < |qx - px| <= 32768: cabe em 32 bits
+    RG_IDIV t, den, v, w
+    IF RG_FALHA THEN EXIT FUNCTION
+    v = RG_W16%(v)
+    IF v >= 0 THEN v = RG_W16%(v + 1) \ 2 ELSE v = INT(v / 2)
+    RG_CORTA% = RG_W16%(y + v)
+END FUNCTION
+
+' Uma reta da LINE (017D:2E62 -> 2E99): recorta (017D:2EC7) e traca a partir da ponta da
+' esquerda (017D:2FD7). P = (cx, dx), Q = ([23c], [23e]) como no runtime.
+SUB RG_SEG (px AS INTEGER, py AS INTEGER, qx AS INTEGER, qy AS INTEGER)
+    DIM cx AS INTEGER, dx AS INTEGER, ex AS INTEGER, ey AS INTEGER, c1 AS INTEGER, c2 AS INTEGER
+    cx = px: dx = py: ex = qx: ey = qy
+    DO
+        c1 = RG_CODIGO%(cx, dx): c2 = RG_CODIGO%(ex, ey)
+        IF c1 = 0 AND c2 = 0 THEN EXIT DO
+        IF c1 AND c2 THEN EXIT SUB
+        IF c1 = 0 THEN SWAP cx, ex: SWAP dx, ey: SWAP c1, c2
+        IF c1 AND 1 THEN
+            dx = RG_CORTA%(cx, dx, ex, ey, RG_X1): cx = RG_X1
+        ELSEIF c1 AND 2 THEN
+            dx = RG_CORTA%(cx, dx, ex, ey, RG_X2): cx = RG_X2
+        ELSEIF c1 AND 4 THEN
+            cx = RG_CORTA%(dx, cx, ey, ex, RG_Y1): dx = RG_Y1
+        ELSE
+            cx = RG_CORTA%(dx, cx, ey, ex, RG_Y2): dx = RG_Y2
+        END IF
+        IF RG_FALHA THEN EXIT SUB
+    LOOP
+    RG_RETA cx, dx, ex, ey
+END SUB
+
+' Bresenham do BRUN45 (017D:2FD7 e os passos do driver: CGA 017D:8CEA/8D53/8D95, EGA
+' 017D:8ECD/8F0F/8F39). Comeca na ponta da esquerda (a primeira em caso de empate).
+' Eixo maior x (|dy| < dx): erro inicial 4|dy| - dx; erro < 0 -> erro += 4|dy|, senao
+' erro += 4|dy| - 4dx e um passo em y. Eixo maior y: o mesmo com x e y trocados. O pixel do
+' passo k fica em piso(k * menor / maior + 3/4). Estilo: bit 15 do [252] decide o pixel e
+' o estilo gira 1 bit para a esquerda a cada pixel.
+SUB RG_RETA (ax AS INTEGER, ay AS INTEGER, bx AS INTEGER, by AS INTEGER)
+    DIM x AS LONG, y AS LONG, x2 AS LONG, y2 AS LONG, ddx AS LONG, ddy AS LONG, sy AS LONG
+    DIM e AS LONG, i1 AS LONG, i2 AS LONG, n AS LONG, k AS LONG, b AS LONG
+    x = ax: y = ay: x2 = bx: y2 = by
+    IF x > x2 THEN SWAP x, x2: SWAP y, y2
+    ddx = x2 - x: ddy = y2 - y: sy = 1
+    IF ddy < 0 THEN ddy = -ddy: sy = -1
+    IF ddy < ddx THEN
+        e = 4 * ddy - ddx: i1 = 4 * ddy: i2 = 4 * ddy - 4 * ddx: n = ddx + 1
+        FOR k = 1 TO n
+            b = RG_EST AND &H8000&: RG_EST = ((RG_EST * 2) AND &HFFFF&) OR (b \ &H8000&)
+            IF b THEN RG_PIXEL x, y
+            IF e < 0 THEN e = e + i1 ELSE e = e + i2: y = y + sy
+            x = x + 1
+        NEXT
+    ELSEIF ddx = 0 THEN
+        n = ddy + 1
+        FOR k = 1 TO n
+            b = RG_EST AND &H8000&: RG_EST = ((RG_EST * 2) AND &HFFFF&) OR (b \ &H8000&)
+            IF b THEN RG_PIXEL x, y
+            y = y + sy
+        NEXT
+    ELSE
+        e = 4 * ddx - ddy: i1 = 4 * ddx: i2 = 4 * ddx - 4 * ddy: n = ddy + 1
+        FOR k = 1 TO n
+            b = RG_EST AND &H8000&: RG_EST = ((RG_EST * 2) AND &HFFFF&) OR (b \ &H8000&)
+            IF b THEN RG_PIXEL x, y
+            IF e < 0 THEN e = e + i1 ELSE e = e + i2: x = x + 1
+            y = y + sy
+        NEXT
+    END IF
+END SUB
+
+' Menor que sem sinal de 16 bits (CF do CMP).
+FUNCTION RG_MENORU% (a AS INTEGER, b AS INTEGER)
+    RG_MENORU% = ((a AND &HFFFF&) < (b AND &HFFFF&))
+END FUNCTION
+
+' LINE ..., BF (017D:B872): caixa cheia recortada pelo VIEW. Teste de fora (017D:B8E0):
+' cada comparacao e com sinal (JL), mas o retorno usa o CF dela; uma caixa toda a esquerda
+' ou acima de um VIEW que comeca em 0 nao e rejeitada e sai presa na borda (como no original).
+SUB RG_CHEIA (px AS INTEGER, py AS INTEGER, qx AS INTEGER, qy AS INTEGER)
+    DIM mx AS INTEGER, nx AS INTEGER, my AS INTEGER, ny AS INTEGER, x AS LONG, y AS LONG
+    DIM ax AS INTEGER, ay AS INTEGER, bx AS INTEGER, by AS INTEGER
+    mx = qx: nx = px: IF mx < nx THEN SWAP mx, nx
+    my = qy: ny = py: IF my < ny THEN SWAP my, ny
+    IF mx < RG_X1 THEN
+        IF RG_MENORU%(mx, RG_X1) THEN EXIT SUB
+    ELSEIF RG_X2 < nx THEN
+        IF RG_MENORU%(RG_X2, nx) THEN EXIT SUB
+    ELSEIF my < RG_Y1 THEN
+        IF RG_MENORU%(my, RG_Y1) THEN EXIT SUB
+    ELSEIF RG_Y2 < ny THEN
+        IF RG_MENORU%(RG_Y2, ny) THEN EXIT SUB
+    END IF
+    ax = px: ay = py: bx = qx: by = qy
+    RG_PRENDE ax, ay: RG_PRENDE bx, by
+    IF ax > bx THEN SWAP ax, bx
+    IF ay > by THEN SWAP ay, by
+    FOR y = ay TO by
+        FOR x = ax TO bx
+            RG_PIXEL x, y
+        NEXT
+    NEXT
+END SUB
+
+' Ponta presa na borda do recorte (017D:B928).
+SUB RG_PRENDE (x AS INTEGER, y AS INTEGER)
+    DIM c AS INTEGER
+    c = RG_CODIGO%(x, y)
+    IF c AND 1 THEN
+        x = RG_X1
+    ELSEIF c AND 2 THEN
+        x = RG_X2
+    END IF
+    IF c AND 4 THEN
+        y = RG_Y1
+    ELSEIF c AND 8 THEN
+        y = RG_Y2
+    END IF
+END SUB
+
+' ---------------------------------------------------------------- comandos
+' LINE [[STEP](x1, y1)]-[STEP](x2, y2)[, [cor][, [B|BF][, estilo]]]   (B$LINE 017D:2DE4)
+' f: 1 = tem o 1o ponto, 2 = STEP no 1o, 4 = STEP no 2o, 8 = tem cor, 16 = B, 32 = BF,
+' 64 = tem estilo. Sem o 1o ponto a reta parte do ultimo ponto. O ultimo ponto fica no 2o.
+SUB RT_LINE (x1 AS SINGLE, y1 AS SINGLE, x2 AS SINGLE, y2 AS SINGLE, f AS INTEGER, cor AS INTEGER, estilo AS INTEGER)
+    DIM ax AS INTEGER, ay AS INTEGER, bx AS INTEGER, by AS INTEGER
+    RG_SINC
+    IF f AND 1 THEN RG_PONTO x1, y1, (f AND 2)
+    IF RG_FALHA THEN EXIT SUB
+    ax = RG_PX: ay = RG_PY
+    RG_PONTO x2, y2, (f AND 4)
+    IF RG_FALHA THEN EXIT SUB
+    bx = RG_PX: by = RG_PY
+    IF f AND 64 THEN RG_EST = estilo AND &HFFFF& ELSE RG_EST = &HFFFF&
+    IF f AND 8 THEN RG_COR_DEF cor ELSE RG_COR_DEF -1
+    RG_ABRE
+    IF f AND 32 THEN
+        RG_CHEIA ax, ay, bx, by
+    ELSEIF f AND 16 THEN
+        ' 017D:2E37: lado y2, lado y1, lado x2, lado x1, com o estilo continuando
+        RG_SEG ax, by, bx, by
+        IF RG_FALHA = 0 THEN RG_SEG ax, ay, bx, ay
+        IF RG_FALHA = 0 THEN RG_SEG bx, ay, bx, by
+        IF RG_FALHA = 0 THEN RG_SEG ax, ay, ax, by
+    ELSE
+        RG_SEG ax, ay, bx, by
+    END IF
+    RG_FECHA
+    RG_EST = &HFFFF&
+END SUB
+
+' PSET/PRESET [STEP](x, y)[, cor]   (B$PSET 017D:309A, B$PRST 017D:30EB, com cor 017D:306B)
+' f: 2 = STEP, 8 = tem cor, 128 = PRESET (sem cor: cor 0). Fora do VIEW nao desenha.
+SUB RT_PSET (x AS SINGLE, y AS SINGLE, f AS INTEGER, cor AS INTEGER)
+    RG_SINC
+    IF f AND 8 THEN
+        RG_COR_DEF cor
+    ELSEIF f AND 128 THEN
+        RG_COR_DEF 0
+    ELSE
+        RG_COR_DEF -1
+    END IF
+    RG_PONTO x, y, (f AND 2)
+    IF RG_FALHA THEN EXIT SUB
+    IF RG_CODIGO%(RG_PX, RG_PY) = 0 THEN
+        RG_ABRE: RG_PIXEL RG_PX, RG_PY: RG_FECHA
+    END IF
+END SUB
+
+' Aspecto do CIRCLE (B$CASP 017D:9949): aspecto > 1 vira 1/aspecto com o indicador 1
+' (o raio dado vale em y); guardado em 8.8: FISTP(a * 256), so o byte baixo (exceto 256).
+SUB RG_ASPECTO (a AS SINGLE)
+    DIM v AS _FLOAT, w AS LONG
+    RG_CF = RG_CF OR 8
+    v = a
+    IF NOT (1## >= v) THEN RG_CF = RG_CF OR 1: v = 1## / v
+    w = RG_FIST&(v * 256##) AND &HFFFF&
+    IF (w AND 255) = 0 AND (w AND &HFF00&) <> 0 THEN RG_ASP = 256 ELSE RG_ASP = w AND 255
+END SUB
+
+' Aspecto padrao por modo (palavra [99b]/[99d] da tabela do driver; > 255 = indicador 1).
+SUB RG_ASPECTO_PADRAO
+    DIM a AS LONG, b AS LONG
+    SELECT CASE RT_MODO
+        CASE 2: a = 107: b = 614
+        CASE 9, 10: a = 187: b = 351
+        CASE 1, 13: a = 213: b = 307
+        CASE 3: a = 165: b = 397
+        CASE ELSE: a = 256: b = 256
+    END SELECT
+    IF a > 255 THEN RG_CF = RG_CF OR 1: RG_ASP = b ELSE RG_ASP = a
+END SUB
+
+' Escala do aspecto em 8.8 com arredondamento (017D:9B40): (asp * v + 128) \ 256.
+FUNCTION RG_A& (v AS LONG)
+    RG_A& = (RG_ASP * v + 128) \ 256
+END FUNCTION
+
+' Angulo de inicio/fim do arco -> posicao no contorno (017D:9AD7). O contorno tem 8 oitavos
+' de [25a] = FISTP(raio * sqr(.5)) passos; angulo negativo liga o raio da ponta (cl).
+' oct = FIX(a * 4/pi), q = (oct + 1) \ 2; pos = 2q[25a] +- raio * |SIN a| (q par) ou |COS a|
+' (q impar), com + quando oct e par.
+FUNCTION RG_ANGULO& (ang AS SINGLE, bit AS INTEGER)
+    DIM a AS _FLOAT, o AS LONG, q AS LONG, bs AS LONG, t AS _FLOAT
+    a = ang
+    IF a < 0 THEN RG_LF = RG_LF OR bit: a = -a
+    IF 6.283185482025146484375## < a THEN RG_ERRO 5: EXIT FUNCTION
+    o = FIX(a * 1.27323949337005615234375##)
+    q = (o + 1) \ 2
+    bs = RG_W16%((2 * q * RG_OCT) AND &HFFFF&)
+    IF q AND 1 THEN t = ABS(COS(a)) ELSE t = ABS(SIN(a))
+    IF (o AND 1) THEN t = -t
+    RG_ANGULO& = RG_FIST&(t * RG_R + bs) AND &HFFFF&
+END FUNCTION
+
+' Um ponto do contorno do CIRCLE (017D:9BF5 e 9C2E): com arco, so desenha entre as posicoes
+' de inicio e fim; a primeira passagem por uma ponta com angulo negativo traca o raio.
+SUB RG_CPONTO (dxp AS LONG, dyp AS LONG, p AS LONG)
+    DIM x AS INTEGER, y AS INTEGER, desenha AS INTEGER
+    x = RG_W16%(RG_PX + dxp): y = RG_W16%(RG_PY + dyp)
+    desenha = -1
+    IF RG_CF AND 6 THEN
+        p = p AND &HFFFF&
+        IF p = RG_AS THEN
+            IF RG_LF AND 1 THEN
+                desenha = 0
+                IF (RG_LF AND 2) = 0 THEN RG_LF = RG_LF OR 2: RG_SEG x, y, RG_PX, RG_PY
+            END IF
+        ELSEIF p < RG_AS THEN
+            desenha = RG_INV
+        ELSEIF p = RG_AE THEN
+            IF RG_LF AND &H80 THEN
+                desenha = 0
+                IF (RG_LF AND &H40) = 0 THEN RG_LF = RG_LF OR &H40: RG_SEG x, y, RG_PX, RG_PY
+            END IF
+        ELSEIF p < RG_AE THEN
+            desenha = NOT RG_INV
+        ELSE
+            desenha = RG_INV
+        END IF
+    END IF
+    IF desenha THEN
+        IF RG_CODIGO%(x, y) = 0 THEN RG_PIXEL x, y
+    END IF
+END SUB
+
+' CIRCLE [STEP](x, y), raio[, [cor][, [inicio][, [fim][, aspecto]]]]   (B$CIRC 017D:9990)
+' f: 2 = STEP, 8 = tem cor, 256 = inicio, 512 = fim, 1024 = aspecto.
+' Raio em pixels = FISTP(raio * fator x do WINDOW). Ponto medio (017D:9B58): x = 0, y = raio,
+' d = 1 - raio; d < 0 -> d += 2x + 3, senao d += 2(x - y) + 5 e y -= 1; x += 1; ate x >= y.
+' Os 8 pontos de cada passo (017D:9BA3) tem o eixo menor escalado pelo aspecto 8.8.
+SUB RT_CIRCLE (x AS SINGLE, y AS SINGLE, r AS SINGLE, f AS INTEGER, cor AS INTEGER, inicio AS SINGLE, fim AS SINGLE, aspecto AS SINGLE)
+    DIM v AS _FLOAT, rp AS LONG, d AS LONG, e AS LONG, xx AS LONG, yy AS LONG
+    DIM sxx AS LONG, sxy AS LONG, syx AS LONG, syy AS LONG, g AS LONG
+    RG_SINC
+    RG_CF = 0: RG_LF = 0
+    IF f AND 1024 THEN RG_ASPECTO aspecto
+    RG_PONTO x, y, (f AND 2)
+    IF RG_FALHA THEN EXIT SUB
+    IF (f AND 8) <> 0 AND cor < -1 THEN RG_ERRO 5: EXIT SUB ' 017D:99A2: cor < -1
+    IF r < 0 THEN RG_ERRO 5: EXIT SUB
+    v = r: IF RG_WIN THEN v = v * RG_SX
+    rp = RG_FIST&(v)
+    IF RG_FALHA THEN EXIT SUB
+    IF rp < 0 OR rp > 32767 THEN RG_ERRO 6: EXIT SUB
+    RG_R = rp
+    RG_OCT = RG_FIST&(FX##(rp) * 0.707106769084930419921875##)
+    IF (RG_CF AND 8) = 0 THEN RG_ASPECTO_PADRAO
+    IF f AND 8 THEN RG_COR_DEF cor ELSE RG_COR_DEF -1
+    ' arco (017D:9A25)
+    d = 0
+    IF f AND 256 THEN RG_CF = RG_CF OR 4: d = RG_ANGULO&(inicio, 1)
+    IF RG_FALHA THEN EXIT SUB
+    IF f AND 512 THEN
+        RG_CF = RG_CF OR 2
+        e = RG_ANGULO&(fim, &H80)
+        IF RG_FALHA THEN EXIT SUB
+        IF e >= d THEN
+            RG_INV = 0: RG_AS = d: RG_AE = e
+        ELSE
+            g = RG_LF
+            IF g THEN g = g XOR &H81: IF g THEN RG_LF = g
+            RG_INV = -1: RG_AS = e: RG_AE = d
+        END IF
+    ELSE
+        RG_INV = 0: RG_AS = d: RG_AE = &HFFFF&
+    END IF
+    IF RG_AS = RG_AE THEN IF RG_LF AND &H81 THEN RG_LF = RG_LF OR &H81
+    RG_ABRE
+    xx = 0: yy = rp: d = 1 - rp
+    DO
+        ' eixo escalado: indicador 1 -> x, senao y
+        IF RG_CF AND 1 THEN
+            sxx = RG_A&(xx): sxy = RG_A&(yy): syx = xx: syy = yy
+        ELSE
+            sxx = xx: sxy = yy: syx = RG_A&(xx): syy = RG_A&(yy)
+        END IF
+        RG_CPONTO sxy, -syx, xx
+        RG_CPONTO -sxx, -syy, 2 * RG_OCT + xx
+        RG_CPONTO -sxy, syx, 4 * RG_OCT + xx
+        RG_CPONTO sxx, syy, 6 * RG_OCT + xx
+        RG_CPONTO sxx, -syy, 2 * RG_OCT - xx
+        RG_CPONTO -sxy, -syx, 4 * RG_OCT - xx
+        RG_CPONTO -sxx, syy, 6 * RG_OCT - xx
+        RG_CPONTO sxy, syx, 8 * RG_OCT - xx
+        IF RG_FALHA THEN EXIT DO
+        IF xx >= yy THEN EXIT DO
+        e = d
+        IF d >= 0 THEN e = d - 2 * yy + 2: yy = yy - 1
+        d = e + 2 * xx + 3: xx = xx + 1
+    LOOP
+    RG_FECHA
+END SUB
+
+' PMAP(v, n) (B$PMAP 017D:A1E4): 0/1 = logico -> pixel sem a origem do VIEW; 2/3 = pixel
+' (arredondado) -> logico. Resultado SINGLE.
+FUNCTION RT_PMAP! (v AS SINGLE, n AS INTEGER)
+    DIM p AS LONG
+    RG_SINC
+    SELECT CASE n
+        CASE 0
+            RT_PMAP! = RG_W16%(RG_FIST&((FX##(v) - RG_WX1) * RG_SX))
+        CASE 1
+            IF RG_WIN <> 0 AND RG_WSCR = 0 THEN
+                RT_PMAP! = RG_W16%(-RG_FIST&((FX##(v) - RG_WY2) * RG_SY))
+            ELSE
+                RT_PMAP! = RG_W16%(RG_FIST&((FX##(v) - RG_WY1) * RG_SY))
+            END IF
+        CASE 2
+            p = RG_W16%(RG_FIST&(v))
+            RT_PMAP! = FX##(p) * RG_IX + RG_WX1
+        CASE 3
+            p = RG_W16%(RG_FIST&(v))
+            IF RG_WIN <> 0 AND RG_WSCR = 0 THEN
+                RT_PMAP! = -(FX##(p) * RG_IY) + RG_WY2
+            ELSE
+                RT_PMAP! = FX##(p) * RG_IY + RG_WY1
+            END IF
+        CASE ELSE
+            RG_ERRO 5
+    END SELECT
+END FUNCTION
+
+' ---------------------------------------------------------------- GET/PUT
+' GET [STEP](x1, y1)-[STEP](x2, y2), matriz: cantos em pixels pela conversao do BRUN45
+' (B$GGET 017D:2C86) em RG_GX1..RG_GY2 (canto de cima a esquerda e de baixo a direita) e o
+' QB64 passa a desenhar em pixels; o tradutor emite
+'   RT_GCAIXA x1, y1, x2, y2, f: GET (RG_GX1, RG_GY1)-(RG_GX2, RG_GY2), m: RT_GFIM
+' f: 2 = STEP no 1o ponto, 4 = STEP no 2o.
+SUB RT_GCAIXA (x1 AS SINGLE, y1 AS SINGLE, x2 AS SINGLE, y2 AS SINGLE, f AS INTEGER)
+    RG_SINC
+    RG_PONTO x1, y1, (f AND 2)
+    RG_GX1 = RG_PX: RG_GY1 = RG_PY
+    RG_PONTO x2, y2, (f AND 4)
+    RG_GX2 = RG_PX: RG_GY2 = RG_PY
+    IF RG_GX1 > RG_GX2 THEN SWAP RG_GX1, RG_GX2
+    IF RG_GY1 > RG_GY2 THEN SWAP RG_GY1, RG_GY2
+    RG_CRU
+END SUB
+
+' PUT [STEP](x, y), matriz[, acao] (B$GPUT 017D:2D42): canto em RG_GX1, RG_GY1;
+'   RT_GPONTO x, y, f: PUT (RG_GX1, RG_GY1), m, acao: RT_GFIM        (f: 2 = STEP)
+' O VIEW do QB64 continua ligado (canto relativo a ele no VIEW comum), para o PUT que nao cabe
+' no VIEW dar erro 5 como no original (017D:2DA2). So o WINDOW e desligado.
+' No WINDOW cartesiano o ponto e o canto de baixo (NAO TESTADO; o SISTRUT nao usa).
+SUB RT_GPONTO (x AS SINGLE, y AS SINGLE, f AS INTEGER)
+    RG_SINC
+    RG_PONTO x, y, (f AND 2)
+    RG_GX1 = RG_PX - RG_OX: RG_GY1 = RG_PY - RG_OY
+    WINDOW
+END SUB
+
+' Desliga VIEW e WINDOW do QB64 (coordenadas em pixels) para o GET/PUT seguinte.
+SUB RG_CRU
+    WINDOW
+    VIEW
+END SUB
+
+' Religa o VIEW e o WINDOW do QB64 que o RT45 guardou (sem cor nem borda: nao apaga).
+SUB RT_GFIM
+    IF RT_VW_T = 1 THEN VIEW SCREEN (RT_VW(1), RT_VW(2))-(RT_VW(3), RT_VW(4))
+    IF RT_VW_T = 2 THEN VIEW (RT_VW(1), RT_VW(2))-(RT_VW(3), RT_VW(4))
+    IF RT_WIN_T = 1 THEN WINDOW SCREEN (RT_WIN(1), RT_WIN(2))-(RT_WIN(3), RT_WIN(4))
+    IF RT_WIN_T = 2 THEN WINDOW (RT_WIN(1), RT_WIN(2))-(RT_WIN(3), RT_WIN(4))
+END SUB
+
+' CLS em modo grafico (G4; sonda T16 no oraculo): o ultimo ponto vai para o centro da area do
+' VIEW, como na troca de VIEW (76F0); com VIEW SCREEN, o centro da tela.
+SUB RG_CLS
+    RG_SINC
+    IF RG_VSCR THEN
+        RG_PX = (RG_VW + 1) \ 2: RG_PY = (RG_VH + 1) \ 2
+    ELSE
+        RG_PX = RG_X1 + (RG_VW + 1) \ 2: RG_PY = RG_Y1 + (RG_VH + 1) \ 2
+    END IF
+    RG_ESCALA
+END SUB

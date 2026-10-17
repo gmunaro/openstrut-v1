@@ -1,0 +1,13 @@
+# exe: SISTRUT
+# lajgeo_08_launcher: abre LAJE pelo SISTRUT (tecla L), 5 (lista das lajes arquivadas), Enter, F2 (fim do LAJE) e F2 (fim do SISTRUT).
+# Base: roteiros/lajgeo_base.dados (obra TESTE, 4 lajes). Nao grava nada.
+{TELA l00_sistrut_menu}
+L
+{TELA l01_laje_menu}
+5
+{TELA l02_laje_lista}
+{ENTER}
+{TELA l03_laje_menu_apos_lista}
+{F2}
+{TELA l04_retorno_sistrut}
+{F2}

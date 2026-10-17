@@ -1,0 +1,10 @@
+# modulo: VPLOTA
+# VPLOTA opcao 1 (folha .DXF) com os parametros alterados (sem gravar o VPLOTA.INI): folha 1189x841,
+# margens 20/5, carimbo 180x100, escala 100, distancia 50, tabela a esquerda (E), numeracao isolada (I),
+# letras 5/2.5/2/2.5/2/2/2. Registro 1; <V>isualizar (tela grafica): altera o posicionamento da viga
+# (6, 6, seta acima, +, seta a direita, 2), F, Seguir; grava FV1_E2E.DXF (comparado byte a byte).
+{TELA d00}1{ESPERA Deseja alterar}{PAUSA 2}S{ENTER}{ESPERA para manter}{PAUSA 2}{TELA d01}
+1189{ENTER}{PAUSA 1}841{ENTER}{PAUSA 1}20{ENTER}{PAUSA 1}5{ENTER}{PAUSA 1}180{ENTER}{PAUSA 1}100{ENTER}{PAUSA 1}100{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}50{ENTER}{PAUSA 1}E{ENTER}{PAUSA 1}I{ENTER}{PAUSA 1}5{ENTER}{PAUSA 1}2.5{ENTER}{PAUSA 1}2{ENTER}{PAUSA 1}2.5{ENTER}{PAUSA 1}2{ENTER}{PAUSA 1}2{ENTER}{PAUSA 1}2{ENTER}{PAUSA 1}{ESPERA ravar em disco}{PAUSA 2}{TELA d02}S{ESPERA Nome da Obra}{PAUSA 2}{TELA d03}E2E{ENTER}{ESPERA Numero dos Registros}{PAUSA 2}{TELA d04}
+1{ENTER}{ESPERA isualizar a disposicao|300}{PAUSA 2}{TELA d05}V{ESPERA posicionamento das Vigas|120}{PAUSA 3}{TELA d06}S{ENTER}{ESPERA alteracao registro|60}{PAUSA 2}{TELA d07}
+6{PAUSA 2}6{PAUSA 2}{UP}{PAUSA 2}+{PAUSA 1}{RIGHT}{PAUSA 2}2{PAUSA 3}{TELA d08}F{ESPERA arranjo inicial|60}{PAUSA 2}{TELA d09}{ENTER}{ESPERA Montagem terminada|600}{PAUSA 2}{TELA d10}
+{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA d11}

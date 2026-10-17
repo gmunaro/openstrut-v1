@@ -1,0 +1,25 @@
+# Sufixo (a partir do menu do LAJE): itens de menu fora do fluxo principal.
+# LAJE 1 (materiais, ENTER nos tres campos), 7 (parametrizacao, sem alterar), 5 sem obra;
+# LAJEGRAV 1 (NAO CRIAR), 3 (lajes gravadas em E2E e nome inexistente), 6 (drive/diretorio), 4 (leitura);
+# LAJE 5 com a obra; LAJEPROC 1 e 3 (negativas, cada laje isolada); LAJECALC 7 (parametros).
+{TELA l01}1{ESPERA Fck}{PAUSA 1}{TELA m01}{ENTER}{ESPERA Fyk}{PAUSA 1}{TELA m02}{ENTER}{ESPERA Tipo de Aco}{PAUSA 1}{TELA m03}
+{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA m04}
+7{ESPERA Correcao de Parametros}{ESPERA NAO}{PAUSA 1}{TELA m05}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA m06}
+5{PAUSA 3}{ESPERA escolha opcao}{PAUSA 2}{TELA m07}
+6{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}{TELA g00}
+1{ESPERA NAO CRIAR}{PAUSA 1}{TELA g01}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA g02}
+3{ESPERA Pesquisar}{PAUSA 1}{TELA g03}E2E{ENTER}{ESPERA Gravadas}{PAUSA 1}{TELA g04}{ENTER}{PAUSA 2}{TELA g05}
+XYZ{ENTER}{ESPERA NAO EXISTE}{PAUSA 1}{TELA g06}{ENTER}{PAUSA 2}{TELA g07}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA g08}
+6{ESPERA Drive que contem}{PAUSA 1}{TELA g09}{ENTER}{ESPERA Subdiretorio}{PAUSA 1}{TELA g10}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA g11}
+4{ESPERA *RETORNO*}{PAUSA 2}{TELA g12}E2E{ENTER}{ESPERA Continuo}{PAUSA 1}{TELA g13}{ENTER}{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}{TELA g14}
+7{ESPERA LAJES EM REGIME}{ESPERA escolha opcao}{PAUSA 2}{TELA l02}
+5{ESPERA Qualquer Tecla}{PAUSA 1}{TELA m08}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA m09}
+4{ESPERA Escolha de Armaduras}{ESPERA escolha opcao}{PAUSA 2}{TELA p01}
+1{ESPERA N/*S*}{PAUSA 1}{TELA p02}{ENTER}{ESPERA Escolha de Armaduras}{ESPERA escolha opcao}{PAUSA 2}{TELA p03}
+3{ESPERA *TODAS*}{PAUSA 1}{TELA p04}{ENTER}{ESPERA Visualizo}{PAUSA 1}{TELA p05}I{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA p06}
+{ENTER}{ESPERA LAJE L1}{PAUSA 3}{TELA p07_l1}{ENTER}{ESPERA LAJE L2}{PAUSA 3}{TELA p08_l2}{ENTER}{ESPERA LAJE L3}{PAUSA 3}{TELA p09_l3}
+{ENTER}{ESPERA LAJE L4}{PAUSA 3}{TELA p10_l4}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA p11}
+6{ESPERA LAJES EM REGIME}{ESPERA escolha opcao}{PAUSA 2}{TELA l03}
+3{ESPERA Calculo e Detalhamento}{ESPERA escolha opcao}{PAUSA 2}{TELA c01}
+7{ESPERA Correcao de Parametros}{ESPERA escolha opcao}{PAUSA 2}{TELA c02}{ENTER}{ESPERA Calculo e Detalhamento}{ESPERA escolha opcao}{PAUSA 2}{TELA c03}
+8{ESPERA LAJES EM REGIME}{ESPERA escolha opcao}{PAUSA 2}{TELA l04}

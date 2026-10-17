@@ -1,0 +1,25 @@
+  Definicao dos dados de Geometria do Painel
+  Obra - E2E   Dados em ...dist\roteiros\saida\e2e_01_laje_geo-20261012-071302\
+
+
+
+
+         1  -  Eixos de Auxilio
+         2  -  Arquitetura, definicoes de contorno
+         3  -  Ocupacao / Cargas de Arquitetura
+
+
+         6  -  Lajes / Cargas de Estrutura
+         7  -  Vigas / Geracao de Arquivos (.VIG e .RLP)
+         8  -  Impressao de Relatorios
+         9  -  Retorno ao Menu Principal
+
+
+
+
+
+
+
+
+
+escolha opcao

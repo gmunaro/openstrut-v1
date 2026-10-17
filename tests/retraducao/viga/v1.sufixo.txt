@@ -1,0 +1,11 @@
+# modulo: VPLOTA
+# VPLOTA: menu; opcao 1 (montagem de folha .DXF): altera a largura da folha para 1189 mm, mantem
+# os outros 17 campos e grava o VPLOTA.INI (G; comparado byte a byte); sem .DXF no disco, volta.
+# Opcao 2 (.EDV): sem alterar parametros; configuracao da plotagem (VPAUXIM: SISTRUT.DSP, plotagem
+# em arquivo .PLT, 3o PLOTER do PLOTER.INI, origem, cotas, todas as folhas), Seguir; sem .EDV, volta.
+# Opcao 3 (.AVF) ate o pedido do nome da obra (sem arquivos no disco).
+{TELA v00}1{ESPERA Deseja alterar}{PAUSA 2}{TELA v01}S{ENTER}{ESPERA para manter}{PAUSA 2}{TELA v02}1189{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ENTER}{PAUSA 1}{ESPERA ravar em disco}{PAUSA 2}{TELA v03}G{ESPERA Nome da Obra}{PAUSA 2}{TELA v04}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA v05}
+2{ESPERA Deseja alterar}{PAUSA 2}{TELA v06}{ENTER}{ESPERA ARQUIVO PARAMETRIZACAO}{PAUSA 2}{TELA v07}{ENTER}{ESPERA Arquivo no Disco}{PAUSA 2}{TELA v08}S{ENTER}{ESPERA PLOTER utilizado}{PAUSA 2}{TELA v09}
+N{ENTER}{PAUSA 2}N{ENTER}{PAUSA 2}{TELA v10}S{ENTER}{ESPERA Origem da Folha}{PAUSA 2}{TELA v11}{ENTER}{ESPERA cotas e medidas}{PAUSA 2}{TELA v12}{ENTER}{ESPERA Todas as folhas}{PAUSA 2}{TELA v13}{ENTER}{ESPERA ravar em disco}{PAUSA 2}{TELA v14}
+S{ESPERA Nome da Obra}{PAUSA 2}{TELA v15}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA v16}
+3{ESPERA arquivos contendo os}{PAUSA 2}{TELA v17}{ENTER}{ESPERA Nome da OBRA}{PAUSA 2}{TELA v18}{ENTER}{ESPERA escolha opcao}{PAUSA 2}{TELA v19}

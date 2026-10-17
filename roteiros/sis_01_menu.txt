@@ -1,0 +1,6 @@
+# exe: SISTRUT
+# sis_01_menu: menu principal do SISTRUT (EXE: SISTRUT)
+# Cobre: P G T M (modulos sem executavel nesta copia: mensagem e espera de tecla),
+# letra minuscula (p), tecla invalida (Z), F1 (informacoes), C (configuracao
+# gravando SISTRUT.INI), e F2 (fim). Saida esperada: 0.
+{TELA menu_inicial}p{TELA nao_inst_portico}{SPACE}G{TELA nao_inst_grelha}{SPACE}T{TELA nao_inst_trelica}{SPACE}M{TELA nao_inst_pdesenho}{SPACE}{TELA menu_apos_nao_inst}Z{TELA menu_tecla_invalida}{F1}{TELA info}{SPACE}{TELA menu_apos_info}C{TELA config_inicial}1{TELA config_tecla_1}2{TELA config_hercules}3{TELA config_ega}4{TELA config_vga}5{TELA config_mcga}L{TELA config_lpt_trocada}S{TELA config_com_trocada}{ENTER}{TELA menu_apos_config}{F2}

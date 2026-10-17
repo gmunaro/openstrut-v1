@@ -1,0 +1,3 @@
+# exe: PILAREDI
+# PILAREDI direto (hipotese g): obra NOVAOBRA sem .COL digitada no prompt de identificacao; o aviso de obra nova aparece no inicio
+{TELA od_nome}{BS}{BS}{BS}{BS}{BS}NOVAOBRA{ENTER}{TELA od_aviso}{ENTER}{TELA od_menu}{F2}

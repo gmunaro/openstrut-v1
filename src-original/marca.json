@@ -1,0 +1,135 @@
+{
+  "_doc": "Camada de marca do OpenStrut, aplicada por tools/retraduz.py (--marca openstrut, o padrao; --marca original gera os fontes com o texto do SISTRUT 4.0). Cada troca vale para a string literal inteira, igual ao texto do original, fora de comentario e fora de PRINT #/WRITE # para arquivo (os arquivos gravados sao formato e ficam iguais aos do original). O texto novo tem a mesma largura do original: a tela, os campos e a impressao ficam com o mesmo leiaute. O texto do original fica em claro ('original') ou, quando tem nome de pessoa ou da empresa do original, so como sha256 do texto em UTF-8 ('original_sha256'): o tradutor reconhece o literal pelo hash, e quem precisa do texto (tools/compara_retrad.py, tools/troca_semente.py --marca original) o le de V1_MARCA_ORIGINAL, fora do repositorio (ver tools/marca.py). tools/compara_retrad.py --marca aplica a mesma tabela as telas e a impressora do oraculo. Ver docs/RETRADUCAO.md, secao 'Marca OpenStrut'.",
+  "credito": "OpenStrut - engenharia reversa independente do SISTRUT 4.0 (1991)",
+  "trocas": [
+    {
+      "original": " Termino da Utilizacao do Sistema SISTRUT   Obrigado ..",
+      "openstrut": " Termino da Utilizacao do Sistema OpenStrut Obrigado ..",
+      "onde": "mensagem de saida (F2 e fim) dos 27 modulos",
+      "motivo": "nome do produto na tela; os dois espacos a mais de OpenStrut saem do intervalo antes de 'Obrigado'"
+    },
+    {
+      "original": " Termino da Utilizacao do Sistema SISTRUT     Obrigado ...",
+      "openstrut": " Termino da Utilizacao do Sistema OpenStrut   Obrigado ...",
+      "onde": "SISTRUT (gerenciador), saida por F2",
+      "motivo": "nome do produto na tela; mesma largura"
+    },
+    {
+      "original": "S I S T R U T",
+      "openstrut": "  OpenStrut  ",
+      "onde": "SISTRUT, abertura do menu (linha 2, coluna 34)",
+      "motivo": "titulo do produto"
+    },
+    {
+      "original_sha256": "265bd754a958ee8a7f2e424bde86b685d76b87de00f783b871275b9708dd2f0b",
+      "openstrut": " Eng. reversa independente do ",
+      "onde": "SISTRUT, abertura do menu (linha 3, coluna 25)",
+      "motivo": "nome da empresa do original; vira o credito, que continua nas linhas 4 e 5"
+    },
+    {
+      "original": "Versao 4.0          Abril 1991",
+      "openstrut": "      SISTRUT 4.0 (1991)      ",
+      "onde": "SISTRUT, abertura do menu (linha 4, coluna 25)",
+      "motivo": "credito: qual programa foi retraduzido"
+    },
+    {
+      "original_sha256": "f31749bfab108dde8e2e8dbe4d9f211c97de39ec7a592c9d53b8b8e69fa4acf3",
+      "openstrut": "   sem vinculo oficial    ",
+      "onde": "SISTRUT, abertura do menu (linha 5, coluna 27)",
+      "motivo": "nome do autor do original; o OpenStrut nao e obra dele nem tem vinculo com a empresa do original"
+    },
+    {
+      "id": "chain_linha3",
+      "original_sha256": "05828557845d11e484f13896b44c2cd5eb28653ad3b53ccb9e111ff6837208db",
+      "openstrut": "OpenStrut (eng. reversa independente) ",
+      "onde": "SISTRUT, linha 3 da tela deixada no CHAIN para o modulo (0x141d3)",
+      "motivo": "nome da empresa do original na tela. Os modulos so leem as linhas 4 e 5 dessa tela (SCREEN(4, i) e SCREEN(5, i)); a linha 3 nao e lida. O mesmo texto gravado no cabecalho dos arquivos .LAJ, .RLP, .FRM, .COL fica (ver 'ficam')"
+    },
+    {
+      "original": "entramos no sistema SISTRUT ",
+      "openstrut": "entramos no sist. OpenStrut ",
+      "onde": "SISTRUT, ajuda (F1), pagina CONFIGURACAO, linha 19",
+      "motivo": "nome do produto no texto de ajuda; mesma largura para o ' C:\\DOS\\CHKDSK /F' seguinte ficar na mesma coluna"
+    },
+    {
+      "original_sha256": "746fdc5e362079f45529f917ccafb26450a65afe64bdfd584f0fb521d74bd04f",
+      "openstrut": " OpenStrut - engenharia reversa independente do SISTRUT 4.0 (1991)     EDITOR",
+      "onde": "SISEDIT, linha de titulo do editor",
+      "motivo": "empresa, versao e data do original; vira o credito, com 'EDITOR' na mesma coluna"
+    },
+    {
+      "original_sha256": "4d451e9c08eb3dd79e22778f8f7894c9ebc4ae9f72e0ba913de68a9673708b5c",
+      "openstrut": "   OpenStrut  eng. reversa independente do",
+      "onde": "cabecalho do menu de LAJE, VIGA, VPLOTA, ARMADURA, FORMA, PILAR, PILAREDI, DESENHO e DESDIM (linha 3)",
+      "motivo": "nome da empresa do original; vira o credito, que continua na linha 4"
+    },
+    {
+      "original_sha256": "f165aacb42d9c48aa5c670ec5b7e42a32bcd54a908b73f2eb037d884b49091ea",
+      "openstrut": "   SISTRUT 4.0 (1991), sem vinculo oficial",
+      "onde": "cabecalho do menu dos mesmos modulos (linha 4), menos FORMA",
+      "motivo": "data e autor do original; continua o credito da linha 3"
+    },
+    {
+      "original_sha256": "a1964d3fb09cb5806ec9eb59776cc6ee3d86226db3a1c469041bcce20c8d2617",
+      "openstrut": "   SISTRUT 4.0 (1991), sem vinculo oficial  ",
+      "onde": "cabecalho do menu do FORMA (linha 4)",
+      "motivo": "data e autor do original; continua o credito da linha 3"
+    },
+    {
+      "original_sha256": "2ca896e687854b7a726fbd192adbfbdb828bba9da3b99392ee5ee897f6bb8d07",
+      "openstrut": "OpenStrut (eng. reversa)",
+      "onde": "nome do licenciado, atribuido numa SUB de LAJE, ARMADURA, VIGA, VPLOTA, FORMA, PILAR e DESENHO e passado pelo COMMON aos outros programas da familia; aparece depois de 'Versao 4.0' no cabecalho dos menus e em toda tela, desenho ou relatorio impresso em que o original mostrava o licenciado (ex.: desenho do LAJEPROC, relatorios do LAJECALC, LAJEGEOM, ARMADURA, VIGA, PILAR, PILAREDI, DESDIM, DESGRAF)",
+      "motivo": "nome de pessoa da copia licenciada; nos relatorios impressos passa a ser o credito do OpenStrut, sem linha nova"
+    }
+  ],
+  "ficam": [
+    {
+      "texto": "SISTRUT (nome de EXE em RUN/CHAIN: \"SISTRUT\", RT_INICIO \"SISTRUT\")",
+      "motivo": "nome de arquivo: o RUN do F2 de cada modulo chama SISTRUT.EXE"
+    },
+    {
+      "texto": ":\\SISTRUT\\EXEC40\\, :\\SISTRUT\\, \\QB\\SISTRUT\\, C:\\SISTRUT\\EXEC40 (ajuda do SISTRUT e do SISEDIT), 'no subdiretorio SISTRUT quando implantado em Winchester'",
+      "motivo": "caminhos DOS da instalacao; mudar quebra a compatibilidade com instalacoes do original e o RT_ACHA_EXE"
+    },
+    {
+      "texto": "SISTRUT.INI, SISTRUT.DSP, SISTRUT.LAP, SISTRUT.PIP, SISTRUT.FOP; ' As parametrizacoes SISTRUT .DSP .LAP .PIP nao devem ser alteradas'",
+      "motivo": "nomes de arquivo 8.3 (OPENSTRUT.INI tem 9 caracteres no nome e o RT45 recusa com erro 64, como o DOS)"
+    },
+    {
+      "texto": "\"SISTRUT\" e \"SISTRUTINICIAL\" como nome de parametrizacao (LAJE, PILAR, PILAREDI, DESENHO, FORMA, VPLOTA) e ' Sera adotada a parametrizacao SISTRUT'",
+      "motivo": "e o nome do arquivo de parametrizacao (SISTRUT.LAP, .PIP, .DSP), lido dos .INI e comparado no codigo"
+    },
+    {
+      "texto": "SISTRUTREDE",
+      "motivo": "nome de variavel de ambiente que o gerenciador procura"
+    },
+    {
+      "texto": "\"Leitura do Modulo \" e a linha 5 da tela do CHAIN",
+      "motivo": "texto que o gerenciador mostra ao chamar um modulo; os modulos leem a configuracao da linha 5 dessa tela"
+    },
+    {
+      "texto": "PRINT #n com a linha de assinatura do formato (nome da empresa do original, e \"Versao 4.0    Abril 1991\", \"Versao 4.0    Abril 1990\") no cabecalho de .LAJ (LAJEGRAV), .RLP (LAJEMONT), .FRM (FORMEDCA), .COL (PIGRAEDI), .REP (VIGA), VPLOTA.INI e .AVF (VPLOTA), e no SISTRUT.INI (SISTRUT, configuracao)",
+      "motivo": "formato de arquivo: o proprio sistema rele esses arquivos (PILGEEDI le .REP e .RLP, VPLOTA le .AVF, o gerenciador le o SISTRUT.INI por posicao de linha), a V2 reconhece o .LAJ pela primeira linha, e uma obra gravada pela V1 tem que ser igual byte a byte a do original"
+    },
+    {
+      "texto": "PRINT #2, \"* PROGER   SISTRUT-DESENHO VERSAO 40\" (DESIMP, arquivo .PUB)",
+      "motivo": "linha de cabecalho do formato .PUB, lido por programa de CAD de terceiros; sem evidencia de que o leitor a ignore"
+    },
+    {
+      "texto": "\"Versao 4.0\", \"Versao 3.2\", EXEC32, \"Versao 4.0 nao encontrda\"",
+      "motivo": "versao do sistema reproduzido e escolha de pasta (comportamento), nao marca"
+    },
+    {
+      "texto": "\"PARAMETRIZADO EM:\", \"FINAL DE PARAMETRIZACAO\"",
+      "motivo": "formato do SISTRUT.INI"
+    },
+    {
+      "texto": "variaveis de ambiente SISTRUT_* do RT45 (SISTRUT_ROTEIRO, SISTRUT_C, SISTRUT_DATA...) e o cabecalho 'SISTRUT CHAIN 3' do arquivo de troca",
+      "motivo": "interface interna dos testes e do RT45, nao aparece ao usuario; renomear muda todos os scripts de teste"
+    },
+    {
+      "texto": "dados dos .INI, .DSP, .LAP, .PIP, .FOP e PLOTER.INI da instalacao (sistrut-game/)",
+      "motivo": "arquivos de dados do original, nao gerados pelo tradutor. O cabecalho de comentario que identificava a empresa e o autor foi trocado por texto neutro de mesma largura ('OpenStrut', '(omitido)'); os bytes de dados ficam iguais"
+    }
+  ]
+}

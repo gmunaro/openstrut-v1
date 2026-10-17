@@ -1,0 +1,6 @@
+# exe: PIPROEDI
+# pilged_06b_lst_p4p1: PIPROEDI sobre FLUXO; pedido P4/P1 e saida (o LST final tem P4 e P1).
+# Mesma fixture do pilged_06 (roteiros/pilged_06b_lst_p4p1.dados = copia de roteiros/semente).
+
+{TELA b00_prompt}P4/P1{ENTER}{TELA b01_relatorio_P4_P1}{ENTER}
+*RETORNO*{ENTER}{TELA b02_retorno_pilaredi}{ENTER}

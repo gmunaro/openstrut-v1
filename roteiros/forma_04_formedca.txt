@@ -1,0 +1,22 @@
+# exe: FORMEDCA
+# FORMEDCA direto: obra FLUXO de forma_04_formedca.dados.
+# Cobre o menu inteiro: P, V, B (com nome invalido e fim de campo), E, R, Z, D, F, G
+# (com a geracao de dados de desenho), tecla invalida e S.
+# Campos numericos vem com o valor atual: {BS} apaga o padrao antes de digitar.
+# P1 vai para bx 25 cm (de 20); o resto fica como esta na obra.
+{TELA menu}
+P{TELA pilar_nome}P1{ENTER}{TELA pilar_dim}{BS}{BS}25{ENTER}{ENTER}{TELA pilar_confirma}S{TELA pilar_ok}{ENTER}
+P{TELA pilar_nao_existe}ZZ{ENTER}{TELA pilar_erro}{ENTER}
+V{ENTER}
+V{TELA viga_nome}V1{ENTER}{TELA viga_dims}{ENTER}{ENTER}{TELA viga_confirma}S{TELA viga_ok}{ENTER}
+V9{ENTER}{TELA viga_erro}{ENTER}
+B{TELA laje_nome}L1{ENTER}{TELA laje_h}{ENTER}{TELA laje_confirma}S{TELA laje_ok}{ENTER}
+B{ENTER}
+B{TELA laje_nao}L9{ENTER}{TELA laje_erro}{ENTER}
+E{TELA elev_cota}{BS}3.5{ENTER}{TELA elev_alin}I{TELA elev_confirma}S{TELA elev_ok}{ENTER}
+R{TELA desenho_r}x
+Z{TELA zoom_pede}{BS}1.5{ENTER}{TELA zoom_desenho}x
+D{TELA detalhes}{ENTER}
+F{TELA quant_pede}{ENTER}{TELA quant_res}{ENTER}
+G{TELA grava_pede}S{TELA grava_ok}{ENTER}{TELA dados_nivel}{ENTER}{TELA dados_pe}{BS}2.8{ENTER}{TELA dados_confirma}S{TELA dados_ok}{ENTER}
+X{TELA menu_final}S

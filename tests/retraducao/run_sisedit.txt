@@ -1,0 +1,19 @@
+# Teste do RT_RUN (RT45): o Fim do SISEDIT faz RUN SISTRUT; o roteiro continua no SISTRUT
+# (mesma posicao e mesma numeracao de telas). Base: caso retrad_sis_onkey_editor do oraculo.
+# Rodar: tools/roda_retrad.sh <bin> SISTRUT tests/retraducao/run_sisedit.txt <saida> <pasta C: da instalacao>
+# Caso retraducao/familia sistema: SISEDIT com as teclas do ON KEY (0x10664): F1 = ajuda de 2
+# paginas (0x12085), F2 = BEEP, Esc = funcoes Ler/Salvar/Deletar/Incluir/Fim (0x12a42).
+# Le C:\SISTRUT\EXEC40\LAJE.INI, deleta (N), inclui linha, salva como TESTE.INI, volta ao editor e
+# para na confirmacao do Fim (o Fim faz RUN SISTRUT).
+# Depende de {F1}/{F2}/{ESC} irem pelo controlador de teclado (rot2bin.py novo, "teclado de verdade").
+{ESPERA Configuracao|60}{PAUSA 2}{TELA m00}E{ENTER}{ESPERA EDITOR}{ESTAVEL 1}{PAUSA 2}{TELA s01}
+{F1}{ESPERA TECLAS DE FUNCIONAMENTO}{PAUSA 1}{TELA h01}{ENTER}{ESPERA GRAVACAO E LEITURA}{PAUSA 1}{TELA h02}
+{ENTER}{PAUSA 1}{TELA h03}{F2}{PAUSA 1}{TELA h04}
+{ESC}{ESPERA ncluir Linha}{PAUSA 1}{TELA f01}L{ESPERA Nome do Arquivo}{PAUSA 1}{TELA f02}
+LAJE.INI{ENTER}{ESPERA ncluir Linha}{PAUSA 1}{TELA f03}
+D{ESPERA Confirme DELETAR}{PAUSA 1}{TELA f04}N{ENTER}{ESPERA ncluir Linha}{PAUSA 1}{TELA f05}
+I{ESPERA Confirme INCLUIR}{PAUSA 1}{TELA f06}{ENTER}{ESPERA ncluir Linha}{PAUSA 1}{TELA f07}
+S{ESPERA Nome do Arquivo}{PAUSA 1}{TELA f08}TESTE.INI{ENTER}{ESPERA gravacao terminada}{PAUSA 1}{TELA f09}
+{ENTER}{ESPERA ncluir Linha}{PAUSA 1}{TELA f10}x{PAUSA 2}{TELA f11}{ESC}{ESPERA ncluir Linha}{PAUSA 1}
+F{ESPERA Confirme FIM}{PAUSA 1}{TELA f12}
+{ENTER}{ESPERA Configuracao}{PAUSA 2}{TELA r01_sistrut}

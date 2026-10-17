@@ -1,0 +1,216 @@
+' ============================================================================
+'  PILEDCAL.BM - dimensionamento das colunas de um edificio (.COL), por nivel.
+'  Sem I/O de tela. Usado por PILAREDI/PIPROEDI/PILAR; testado em tests/T_PILEDCAL.BAS.
+'  Requer SISDADOS.BI (Col, ColEsf), CALCCA.BM e PILCALC.BM.
+'
+'  RECONSTRUCAO FUNCIONAL (NB-1/78):
+'  - Mx flete na direcao de bx (altura da secao = bx); My na direcao de by.
+'  - Momento de calculo por direcao: gf*|M|*100 + Nd*(ea + e2*fluencia) (tf.cm),
+'    ea e e2 de PILCALC; esbeltez com le em cada direcao. Com Nd <= 0 (tracao)
+'    ea e e2 nao entram (como em PILAR).
+'  - Um so momento de 1a ordem (ou nenhum): flexo-compressao normal nas duas
+'    direcoes, cada uma isolada; os dois: flexao obliqua (indice 1,2).
+'  - Armadura simetrica: estimativa 2 x a de uma face (PcAsMinCentrado#/
+'    PcAsMinObliquo#); minima 0,8% (lambda > 30) ou 0,5%; maxima 6%.
+'    Barras em numero par >= 4, distribuidas por PeArranjo e VERIFICADAS nas
+'    posicoes reais (PeArranjoOk%); se o arranjo nao passa, a area sobe.
+'  - Estribos: phi >= phi/4 e 5 mm; s <= 30 cm, menor lado e 12 phi.
+'  - Secao circular: quadrado de mesma area (D * raiz(pi)/2).
+'  - Parametros do PILAR.INI (lambda de fluencia, lambda maximo, Mult. Fluencia)
+'    vem de PeParam#, definido pelos modulos de tela.
+' ============================================================================
+
+' Dimensiona a coluna c no nivel k e grava asTot, phi, nBarras, phiEstribo,
+' sEstribo em ColEsf. Unidades do .COL: N tf, M tf.m, le m, secao cm.
+' dl = distancia da barra a face (cm). msg$ recebe aviso ("" se ok).
+' Ver PeDimensionaArranjo (que tambem devolve a distribuicao das barras).
+SUB PeDimensiona (c AS INTEGER, k AS INTEGER, fck AS DOUBLE, fyk AS DOUBLE, gf AS DOUBLE, gc AS DOUBLE, gs AS DOUBLE, dl AS DOUBLE, msg AS STRING)
+    DIM nfx AS INTEGER, nfy AS INTEGER
+    PeDimensionaArranjo c, k, fck, fyk, gf, gc, gs, dl, msg, nfx, nfy
+END SUB
+
+' Como PeDimensiona; nfx e nfy recebem o numero de barras (com as de canto) em cada
+' face perpendicular a bx (comprimento by) e em cada face perpendicular a by
+' (comprimento bx). Zero quando nao ha arranjo.
+' ColEsf.asTot = area necessaria: a estimativa (>= minima) ou, se o primeiro arranjo
+' nao passou na verificacao, a area do arranjo que passou.
+SUB PeDimensionaArranjo (c AS INTEGER, k AS INTEGER, fck AS DOUBLE, fyk AS DOUBLE, gf AS DOUBLE, gc AS DOUBLE, gs AS DOUBLE, dl AS DOUBLE, msg AS STRING, nfx AS INTEGER, nfy AS INTEGER)
+    DIM j AS INTEGER, bx AS DOUBLE, by AS DOUBLE, ac AS DOUBLE, fcd AS DOUBLE, fyd AS DOUBLE, nd AS DOUBLE
+    DIM lx AS DOUBLE, ly AS DOUBLE, lam AS DOUBLE, mdx AS DOUBLE, mdy AS DOUBLE, asf AS DOUBLE, asx AS DOUBLE, asy AS DOUBLE
+    DIM asTot AS DOUBLE, asMin AS DOUBLE, phi AS DOUBLE, n AS INTEGER, phiT AS DOUBLE, s AS DOUBLE, i AS INTEGER, nome AS STRING
+    DIM obliqua AS INTEGER, asTry AS DOUBLE, tent AS INTEGER, ok AS INTEGER
+    j = ColIdx%(c, k): nome = RTRIM$(Col(c).nome)
+    msg = "": nfx = 0: nfy = 0
+    ' resultado anterior nao sobrevive a uma saida antecipada
+    ColEsf(j).asTot = 0: ColEsf(j).phi = 0: ColEsf(j).nBarras = 0: ColEsf(j).phiEstribo = 0: ColEsf(j).sEstribo = 0
+    bx = Col(c).bx: by = Col(c).by
+    IF UCASE$(Col(c).secao) = "C" THEN bx = Col(c).bx * SQR(3.14159265358979#) / 2#: by = bx
+    IF bx <= 0 OR by <= 0 THEN msg = nome + ": secao nao definida": EXIT SUB
+    ac = bx * by: fcd = fck / gc: fyd = fyk / gs
+    nd = gf * ColEsf(j).N
+    lx = PcEsbeltez#(ColEsf(j).lex * 100#, bx): ly = PcEsbeltez#(ColEsf(j).ley * 100#, by)
+    lam = lx: IF ly > lam THEN lam = ly
+    IF lam > PeParam#(2, 0) THEN msg = nome + ": Esbeltez maxima excedida": EXIT SUB
+    mdx = gf * ABS(ColEsf(j).Mx) * 100#
+    mdy = gf * ABS(ColEsf(j).My) * 100#
+    ' tracao (nd <= 0): ea e e2 nao se aplicam; nd*(ea+e2) negativo reduziria Md
+    IF nd > 0# THEN
+        mdx = mdx + nd * (PcExcAcidental#(bx) + PcE2#(ColEsf(j).lex * 100#, bx, nd, ac, fcd, fyd) * PeFluencia#(lx))
+        mdy = mdy + nd * (PcExcAcidental#(by) + PcE2#(ColEsf(j).ley * 100#, by, nd, ac, fcd, fyd) * PeFluencia#(ly))
+    END IF
+    obliqua = (ColEsf(j).Mx <> 0 AND ColEsf(j).My <> 0)
+    asx = PcAsMinCentrado#(nd, mdx, by, bx, dl, fcd, fyd)
+    asy = PcAsMinCentrado#(nd, mdy, bx, by, dl, fcd, fyd)
+    IF obliqua THEN
+        asf = PcAsMinObliquo#(nd, mdx, mdy, by, bx, dl, fcd, fyd)
+    ELSEIF asx < 0 OR asy < 0 THEN
+        asf = -1
+    ELSE
+        asf = asx: IF asy > asf THEN asf = asy
+    END IF
+    IF asf < 0 THEN msg = nome + ": Armadura excede o maximo, aumente a secao": ColEsf(j).asTot = -1: EXIT SUB
+    asTot = 2# * asf
+    IF lam > 30 THEN asMin = 0.008# * ac ELSE asMin = 0.005# * ac
+    IF asTot < asMin THEN asTot = asMin
+
+    ' arranjo real: escolhe as barras, distribui e verifica; se nao passa, mais area
+    asTry = asTot: ok = 0
+    FOR tent = 1 TO 60
+        CcaEscolheBarras asTry, 10, 4, 20, phi, n
+        IF phi = 0 THEN EXIT FOR
+        IF n MOD 2 = 1 THEN n = n + 1
+        PeArranjo n, asx, asy, bx, by, nfx, nfy
+        IF PeArranjoOk%(nd, mdx, mdy, obliqua, bx, by, dl, nfx, nfy, CcaAreaBarra#(phi), fcd, fyd) THEN ok = -1: EXIT FOR
+        asTry = n * CcaAreaBarra#(phi) + 0.01#
+    NEXT
+    IF phi = 0 THEN
+        n = 0: nfx = 0: nfy = 0
+        msg = msg + nome + ": barras nao cabem (mais de 20). "
+    ELSEIF NOT ok THEN
+        msg = msg + nome + ": arranjo de barras nao verificado. "
+    ELSEIF tent > 1 THEN
+        asTot = n * CcaAreaBarra#(phi)
+    END IF
+    IF asTot > 0.06# * ac THEN msg = nome + ": Armadura excede o maximo, aumente a secao. " + msg
+    phiT = 5
+    FOR i = 1 TO 9
+        IF CcaBitola#(i) >= phi / 4# AND CcaBitola#(i) >= 5 THEN phiT = CcaBitola#(i): EXIT FOR
+    NEXT
+    s = 30: IF bx < s THEN s = bx
+    IF by < s THEN s = by
+    IF 12# * phi / 10# < s THEN s = INT(12# * phi / 10#)
+    ColEsf(j).asTot = asTot: ColEsf(j).phi = phi: ColEsf(j).nBarras = n
+    ColEsf(j).phiEstribo = phiT: ColEsf(j).sEstribo = s
+END SUB
+
+' Distribuicao de n barras (par, >= 4) simetrica nas 4 faces: uma em cada canto e os
+' (n - 4)/2 pares restantes divididos entre as faces perpendiculares a bx (nfx) e a by
+' (nfy) na proporcao das areas por face necessarias asx e asy (flexao normal em cada
+' direcao). Sem demanda (asx + asy <= 0), a metade maior vai para as faces mais longas.
+' RECONSTRUCAO: regra de distribuicao adotada; o original nao a mostra.
+SUB PeArranjo (n AS INTEGER, asx AS DOUBLE, asy AS DOUBLE, bx AS DOUBLE, by AS DOUBLE, nfx AS INTEGER, nfy AS INTEGER)
+    DIM e AS INTEGER, ex AS INTEGER, ax AS DOUBLE, ay AS DOUBLE
+    e = (n - 4) \ 2: IF e < 0 THEN e = 0
+    ax = asx: IF ax < 0 THEN ax = 0
+    ay = asy: IF ay < 0 THEN ay = 0
+    IF ax + ay > 0 THEN
+        ex = INT(e * ax / (ax + ay) + 0.5#)
+    ELSEIF by >= bx THEN
+        ex = (e + 1) \ 2
+    ELSE
+        ex = e \ 2
+    END IF
+    nfx = 2 + ex
+    nfy = 2 + e - ex
+END SUB
+
+' Camadas da direcao de altura hh: as duas faces extremas com nfFace barras cada e,
+' entre elas, as nfOutra - 2 barras intermediarias de cada uma das outras duas faces
+' (2 barras por profundidade), igualmente espacadas de dl a hh - dl.
+SUB PeCamadasFace (hh AS DOUBLE, dl AS DOUBLE, nfFace AS INTEGER, nfOutra AS INTEGER, ab AS DOUBLE, nc AS INTEGER, yc() AS DOUBLE, ac() AS DOUBLE)
+    DIM i AS INTEGER
+    nc = nfOutra
+    REDIM yc(1 TO nc) AS DOUBLE, ac(1 TO nc) AS DOUBLE
+    yc(1) = dl: ac(1) = nfFace * ab
+    yc(2) = hh - dl: ac(2) = nfFace * ab
+    FOR i = 1 TO nfOutra - 2
+        yc(2 + i) = dl + i * (hh - 2# * dl) / (nfOutra - 1)
+        ac(2 + i) = 2# * ab
+    NEXT
+END SUB
+
+' -1 se o arranjo (nfx, nfy barras por face, area ab cada) resiste: flexao normal,
+' MRx >= mdx e MRy >= mdy (cada direcao isolada); obliqua, (mdx/MRx)^1,2 + (mdy/MRy)^1,2 <= 1.
+' MR com as barras nas posicoes reais (PcMRCamadas#).
+FUNCTION PeArranjoOk% (nd AS DOUBLE, mdx AS DOUBLE, mdy AS DOUBLE, obliqua AS INTEGER, bx AS DOUBLE, by AS DOUBLE, dl AS DOUBLE, nfx AS INTEGER, nfy AS INTEGER, ab AS DOUBLE, fcd AS DOUBLE, fyd AS DOUBLE)
+    DIM nc AS INTEGER, mrx AS DOUBLE, mry AS DOUBLE
+    REDIM yc(1 TO 1) AS DOUBLE, ac(1 TO 1) AS DOUBLE
+    PeArranjoOk% = 0
+    PeCamadasFace bx, dl, nfx, nfy, ab, nc, yc(), ac()
+    mrx = PcMRCamadas#(nd, by, bx, nc, yc(), ac(), fcd, fyd)
+    PeCamadasFace by, dl, nfy, nfx, ab, nc, yc(), ac()
+    mry = PcMRCamadas#(nd, bx, by, nc, yc(), ac(), fcd, fyd)
+    IF mrx < 0# OR mry < 0# THEN EXIT FUNCTION
+    IF obliqua THEN
+        IF mrx <= 0# OR mry <= 0# THEN EXIT FUNCTION
+        IF (mdx / mrx) ^ 1.2# + (mdy / mry) ^ 1.2# <= 1# THEN PeArranjoOk% = -1
+    ELSE
+        IF mrx >= mdx AND mry >= mdy THEN PeArranjoOk% = -1
+    END IF
+END FUNCTION
+
+' Dimensiona todas as colunas em todos os niveis; avisos separados por "|".
+SUB PeDimensionaTodas (fck AS DOUBLE, fyk AS DOUBLE, gf AS DOUBLE, gc AS DOUBLE, gs AS DOUBLE, dl AS DOUBLE, msg AS STRING)
+    DIM c AS INTEGER, k AS INTEGER, m AS STRING
+    msg = ""
+    FOR c = 1 TO ColQtd
+        FOR k = 1 TO ColNivQtd
+            PeDimensiona c, k, fck, fyk, gf, gc, gs, dl, m
+            IF m <> "" THEN
+                IF msg = "" THEN msg = m + " (nivel" + STR$(k) + ")" ELSE msg = msg + "|" + m + " (nivel" + STR$(k) + ")"
+            END IF
+        NEXT
+    NEXT
+END SUB
+
+' Parametros do PILAR.INI usados no calculo, guardados entre chamadas (como
+' CcaAcoClasse%). qual: 1 = lambda a partir do qual se considera a fluencia (linha 30,
+' padrao 80); 2 = lambda maximo aceito (linha 31, padrao 140: acima dele o original
+' usava o processo exato, que nao foi reconstruido); 3 = Mult. Fluencia (linha 34,
+' padrao 1,1). novo > 0 define; novo <= 0 so consulta.
+FUNCTION PeParam# (qual AS INTEGER, novo AS DOUBLE)
+    STATIC lido AS INTEGER, l80 AS DOUBLE, l140 AS DOUBLE, mf AS DOUBLE
+    IF lido = 0 THEN l80 = 80#: l140 = 140#: mf = 1.1#: lido = 1
+    SELECT CASE qual
+        CASE 1
+            IF novo > 0# THEN l80 = novo
+            PeParam# = l80
+        CASE 2
+            IF novo > 0# THEN l140 = novo
+            PeParam# = l140
+        CASE ELSE
+            IF novo > 0# THEN mf = novo
+            PeParam# = mf
+    END SELECT
+END FUNCTION
+
+' Fator sobre e2 para a fluencia nos pilares esbeltos: 1 ate lambda = PeParam#(1)
+' (lim80); acima, o maior entre o Mult. Fluencia (PeParam#(3), 1,1 a 1,25) e a rampa
+' linear de 1 em lim80 a 1,25 em lim140 (PeParam#(2)), limitada a 1,25.
+' RECONSTRUCAO: a lei exata nao aparece no binario (o original mostra "Mflu" e o
+' multiplicador 1,1 a 1,25, docs/modules/PILAR.md). A rampa da reconstrucao anterior
+' fica como piso, a favor da seguranca. O coeficiente de fluencia (linha 32) e o
+' multiplicador de Nk (linha 33) nao entram nesta reconstrucao.
+FUNCTION PeFluencia# (lambda AS DOUBLE)
+    DIM l80 AS DOUBLE, l140 AS DOUBLE, f AS DOUBLE, rampa AS DOUBLE
+    l80 = PeParam#(1, 0): l140 = PeParam#(2, 0)
+    IF lambda <= l80 THEN
+        PeFluencia# = 1
+        EXIT FUNCTION
+    END IF
+    IF l140 > l80 THEN rampa = 1# + 0.25# * (lambda - l80) / (l140 - l80) ELSE rampa = 1.25#
+    IF rampa > 1.25# THEN rampa = 1.25#
+    f = PeParam#(3, 0)
+    IF rampa > f THEN f = rampa
+    PeFluencia# = f
+END FUNCTION

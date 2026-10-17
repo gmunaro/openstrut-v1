@@ -1,0 +1,16 @@
+# exe: FORMPLOT
+# acab_04_formplot_msg: reproduz a tela corrigida em RelataGeracao (FORMPLOT.BAS).
+# Mesmas teclas de forma_06b: zoom D 2..6 x 0..5, S, PLT S, DXF S.
+# Conferir em dxf.txt: linha 12 'Arquivo gravado: FLUXO_FORMA.PLT' e linha 13 '.DXF  S/N' sem sobreposicao. Saida esperada: 0.
+{TELA param}{ENTER}
+{TELA opcoes}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}N{ENTER}
+{TELA selecao}{ENTER}{ENTER}{ENTER}{ENTER}
+{TELA zoom}D
+{TELA zoom_xmin}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}2{ENTER}
+{TELA zoom_xmax}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}6{ENTER}
+{TELA zoom_ymin}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}0{ENTER}
+{TELA zoom_ymax}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}5{ENTER}
+{TELA montagem}{ENTER}
+{TELA previa_zoom}{ENTER}S
+{TELA plt}S
+{TELA dxf}S

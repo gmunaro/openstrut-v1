@@ -1,0 +1,6 @@
+# exe: PILAR
+# PILAR opcao 2 (processar calculo): arquiva a mesma secao 20x40 (Nk 60 tf) e depois processa
+# "1" do menu abre Arquivar; "11{ENTER}" e a posicao 1; S + Enter (aviso de obra) + Enter sai da posicao
+{TELA p02_abertura}{ENTER}{TELA p02_menu}11{ENTER}20{ENTER}40{ENTER}4{ENTER}2{ENTER}2{ENTER}0{ENTER}8{ENTER}60{ENTER}1{ENTER}0.5{ENTER}3{ENTER}3{ENTER}S{ENTER}{ENTER}
+# menu: 2 = processar; uma tecla por posicao com secao
+{TELA p02_proc}2{TELA p02_res}{ENTER}{TELA p02_fim}{ENTER}{F2}

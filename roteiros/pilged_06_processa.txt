@@ -1,0 +1,19 @@
+# exe: PIPROEDI
+# pilged_06_processa: PIPROEDI sobre a obra FLUXO (1 nivel TERREO; colunas P4 P1 P5 P6 P2 P3)
+# (roteiros/pilged_06_processa.dados = copia de roteiros/semente).
+# Cada pedido de posicoes dimensiona as colunas (PeDimensionaTodas, d' = 4 cm),
+# regrava o .COL e grava FLUXO_PIPROEDI.LST. Espera (aviso) so sai com ENTER.
+# O LST e refeito a cada pedido: ao final da execucao ele contem so o ultimo pedido (p5).
+# Entrada vazia ou *RETORNO* sai do laco; depois "Retorno ao Modulo" pede ENTER.
+
+# Pedido 1: nome nao arquivado; LST sem colunas
+{TELA p00_prompt}P9{ENTER}{TELA p01_sem_colunas}{ENTER}
+
+# Pedido 2: duas colunas; aviso "Relatorio gravado" pede ENTER
+P4/P1{ENTER}{TELA p02_relatorio_P4_P1}{ENTER}
+
+# Pedido 3: minusculas (UCASE); uma coluna; e o ultimo LST da execucao
+p5{ENTER}{TELA p03_relatorio_p5}{ENTER}
+
+# Saida do laco e retorno ao pai
+*RETORNO*{ENTER}{TELA p04_retorno_pilaredi}{ENTER}

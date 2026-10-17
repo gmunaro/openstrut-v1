@@ -1,0 +1,295 @@
+{
+ "caso": "caso_c_pilar",
+ "run": "runs/caso_c_pilar-20261014-182757",
+ "programa": "PILAR opção 6",
+ "descricao": "Verificação NB-1/78 do P5 da obra E2E: seção 20×20, c' 3 cm, 2 + 2 barras de 12,5 mm, Nk 17,37 t, Mk 0, le 3 m.",
+ "entrada": {
+  "b_cm": 20,
+  "h_cm": 20,
+  "cLinha_cm": 3,
+  "barras": "2 em cima + 2 embaixo, 12.5 mm",
+  "Nk_t": 17.37,
+  "Mxk_tm": 0,
+  "Myk_tm": 0,
+  "lex_m": 3,
+  "ley_m": 3,
+  "fck_tcm2": 0.15,
+  "fyk_tcm2": 5,
+  "classeAco": "B"
+ },
+ "valores": [
+  {
+   "id": "P.Jx",
+   "grandeza": "momento de inércia Jx",
+   "unidade": "cm4",
+   "impresso": "13333.33",
+   "fonte": "impressora.prn:16"
+  },
+  {
+   "id": "P.Jy",
+   "grandeza": "momento de inércia Jy",
+   "unidade": "cm4",
+   "impresso": "13333.34",
+   "fonte": "impressora.prn:17"
+  },
+  {
+   "id": "P.lambdaX",
+   "grandeza": "esbeltez λx",
+   "unidade": "",
+   "impresso": "52",
+   "fonte": "impressora.prn:23"
+  },
+  {
+   "id": "P.lambdaY",
+   "grandeza": "esbeltez λy",
+   "unidade": "",
+   "impresso": "52",
+   "fonte": "impressora.prn:23"
+  },
+  {
+   "id": "c1.situacao",
+   "grandeza": "caso 1: situação",
+   "unidade": "",
+   "impresso": "Compressao Centrada",
+   "fonte": "impressora.prn:25"
+  },
+  {
+   "id": "c1.Mx",
+   "grandeza": "caso 1: momento solicitante Mx",
+   "unidade": "tm",
+   "impresso": "0.35",
+   "fonte": "impressora.prn:26"
+  },
+  {
+   "id": "c1.My",
+   "grandeza": "caso 1: momento solicitante My",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:27"
+  },
+  {
+   "id": "c1.Mtotal",
+   "grandeza": "caso 1: momento solicitante total",
+   "unidade": "tm",
+   "impresso": ".35",
+   "fonte": "impressora.prn:28"
+  },
+  {
+   "id": "c1.incl",
+   "grandeza": "caso 1: inclinação do momento",
+   "unidade": "graus",
+   "impresso": "0",
+   "fonte": "impressora.prn:28"
+  },
+  {
+   "id": "c1.MRx1a",
+   "grandeza": "caso 1: momento resistente Mx de 1ª ordem",
+   "unidade": "tm",
+   "impresso": "0.60",
+   "fonte": "impressora.prn:30"
+  },
+  {
+   "id": "c1.MRx2a",
+   "grandeza": "caso 1: momento resistente Mx, parcela de 2ª ordem",
+   "unidade": "tm",
+   "impresso": "0.09",
+   "fonte": "impressora.prn:30"
+  },
+  {
+   "id": "c1.MRx",
+   "grandeza": "caso 1: momento resistente Mx",
+   "unidade": "tm",
+   "impresso": "0.51",
+   "fonte": "impressora.prn:30"
+  },
+  {
+   "id": "c1.MRy1a",
+   "grandeza": "caso 1: momento resistente My de 1ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:31"
+  },
+  {
+   "id": "c1.MRy",
+   "grandeza": "caso 1: momento resistente My",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:31"
+  },
+  {
+   "id": "c1.MRtotal",
+   "grandeza": "caso 1: momento resistente total",
+   "unidade": "tm",
+   "impresso": "0.51",
+   "fonte": "impressora.prn:32"
+  },
+  {
+   "id": "c1.ln",
+   "grandeza": "caso 1: inclinação da linha neutra",
+   "unidade": "graus",
+   "impresso": "270",
+   "fonte": "impressora.prn:33"
+  },
+  {
+   "id": "c1.Xln",
+   "grandeza": "caso 1: profundidade da linha neutra",
+   "unidade": "cm",
+   "impresso": "17.96",
+   "fonte": "impressora.prn:33"
+  },
+  {
+   "id": "c1.1/r",
+   "grandeza": "caso 1: curvatura 1/r",
+   "unidade": "10-3/cm",
+   "impresso": "0.05550",
+   "fonte": "impressora.prn:33"
+  },
+  {
+   "id": "c1.defCon",
+   "grandeza": "caso 1: deformação do concreto",
+   "unidade": "‰",
+   "impresso": "0.9966",
+   "fonte": "impressora.prn:34"
+  },
+  {
+   "id": "c1.defAco",
+   "grandeza": "caso 1: deformação do aço",
+   "unidade": "‰",
+   "impresso": "-0.0531",
+   "fonte": "impressora.prn:34"
+  },
+  {
+   "id": "c1.veredito",
+   "grandeza": "caso 1: veredito",
+   "unidade": "",
+   "impresso": "ok",
+   "fonte": "impressora.prn:35"
+  },
+  {
+   "id": "c2.situacao",
+   "grandeza": "caso 2: situação",
+   "unidade": "",
+   "impresso": "Compressao Centrada",
+   "fonte": "impressora.prn:36"
+  },
+  {
+   "id": "c2.Mx",
+   "grandeza": "caso 2: momento solicitante Mx",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:37"
+  },
+  {
+   "id": "c2.My",
+   "grandeza": "caso 2: momento solicitante My",
+   "unidade": "tm",
+   "impresso": "0.35",
+   "fonte": "impressora.prn:38"
+  },
+  {
+   "id": "c2.Mtotal",
+   "grandeza": "caso 2: momento solicitante total",
+   "unidade": "tm",
+   "impresso": ".35",
+   "fonte": "impressora.prn:39"
+  },
+  {
+   "id": "c2.incl",
+   "grandeza": "caso 2: inclinação do momento",
+   "unidade": "graus",
+   "impresso": "90",
+   "fonte": "impressora.prn:39"
+  },
+  {
+   "id": "c2.MRx1a",
+   "grandeza": "caso 2: momento resistente Mx de 1ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:41"
+  },
+  {
+   "id": "c2.MRx2a",
+   "grandeza": "caso 2: momento resistente Mx, parcela de 2ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:41"
+  },
+  {
+   "id": "c2.MRx",
+   "grandeza": "caso 2: momento resistente Mx",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:41"
+  },
+  {
+   "id": "c2.MRy1a",
+   "grandeza": "caso 2: momento resistente My de 1ª ordem",
+   "unidade": "tm",
+   "impresso": "0.60",
+   "fonte": "impressora.prn:42"
+  },
+  {
+   "id": "c2.MRy2a",
+   "grandeza": "caso 2: momento resistente My, parcela de 2ª ordem",
+   "unidade": "tm",
+   "impresso": "0.09",
+   "fonte": "impressora.prn:42"
+  },
+  {
+   "id": "c2.MRy",
+   "grandeza": "caso 2: momento resistente My",
+   "unidade": "tm",
+   "impresso": "0.51",
+   "fonte": "impressora.prn:42"
+  },
+  {
+   "id": "c2.MRtotal",
+   "grandeza": "caso 2: momento resistente total",
+   "unidade": "tm",
+   "impresso": "0.51",
+   "fonte": "impressora.prn:43"
+  },
+  {
+   "id": "c2.ln",
+   "grandeza": "caso 2: inclinação da linha neutra",
+   "unidade": "graus",
+   "impresso": "0",
+   "fonte": "impressora.prn:44"
+  },
+  {
+   "id": "c2.Xln",
+   "grandeza": "caso 2: profundidade da linha neutra",
+   "unidade": "cm",
+   "impresso": "17.96",
+   "fonte": "impressora.prn:44"
+  },
+  {
+   "id": "c2.1/r",
+   "grandeza": "caso 2: curvatura 1/r",
+   "unidade": "10-3/cm",
+   "impresso": "0.05550",
+   "fonte": "impressora.prn:44"
+  },
+  {
+   "id": "c2.defCon",
+   "grandeza": "caso 2: deformação do concreto",
+   "unidade": "‰",
+   "impresso": "0.9966",
+   "fonte": "impressora.prn:45"
+  },
+  {
+   "id": "c2.defAco",
+   "grandeza": "caso 2: deformação do aço",
+   "unidade": "‰",
+   "impresso": "-0.0531",
+   "fonte": "impressora.prn:45"
+  },
+  {
+   "id": "c2.veredito",
+   "grandeza": "caso 2: veredito",
+   "unidade": "",
+   "impresso": "ok",
+   "fonte": "impressora.prn:46"
+  }
+ ]
+}

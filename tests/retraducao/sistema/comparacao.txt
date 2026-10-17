@@ -1,0 +1,222 @@
+# Comparacao oraculo x V1 da familia sistema (tests/retraducao/sistema/roda_sistema.sh, 2026-10-15 08:49)
+# DATE$/TIME$ congelados em 10-14-2026 12:00:00 nos dois lados (oraculo: KEYFEED; V1: RT45).
+# V1: src-original/sistema/SISTRUT.BAS e SISEDIT.BAS (md5 dcf406ce, 06885ee4), LAJE.BAS de src-original/laje, RT45 do repositorio (commit 6fe5644)
+
+## resumo
+menu (retrad_sis_menu-20261015-082555): 37 iguais, 0 diferentes
+inexist (retrad_sis_inexist-20261015-082455): 19 iguais, 0 diferentes
+exec32 (retrad_sis_exec32-20261015-082501): 12 iguais, 0 diferentes
+config (retrad_sis_config-20261015-082500): 14 iguais, 0 diferentes
+laje (retrad_sis_laje-20261015-082608): 4 iguais, 0 diferentes
+editor (retrad_sis_editor-20261015-082548): 18 iguais, 0 diferentes
+onkey (retrad_sis_onkey-20261015-082456): 10 iguais, 0 diferentes
+onkey_editor (retrad_sis_onkey_editor-20261015-082501): 19 iguais, 1 diferentes
+onkey_editor2 (retrad_sis_onkey_editor2-20261015-082603): 18 iguais, 0 diferentes
+chain_portico (retrad_sis_chain_portico-20261015-082520): 3 iguais, 0 diferentes
+config SISTRUT.INI: igual byte a byte (338 bytes)
+onkey_editor TESTE.INI: igual byte a byte (1926 bytes)
+sonda LAJE: 'Leitura do Modulo LAJE' / 'CGA LPT1: COM1: C:\SISTRUT\EXEC40\' / bytes de COMMON depois da tela: 0 
+sonda VIGA: 'Leitura do Modulo VIGA' / 'CGA LPT1: COM1: C:\SISTRUT\EXEC40\' / bytes de COMMON depois da tela: 0 
+sonda PILAR: 'Leitura do Modulo PILAR' / 'CGA LPT1: COM1: C:\SISTRUT\EXEC40\' / bytes de COMMON depois da tela: 0 
+sonda ARMADURA: 'Leitura do Modulo ARMADURA' / 'CGA LPT1: COM1: C:\SISTRUT\EXEC40\' / bytes de COMMON depois da tela: 0 
+sonda FORMA: 'Leitura do Modulo FORMA' / 'CGA LPT1: COM1: C:\SISTRUT\EXEC40\' / bytes de COMMON depois da tela: 0 
+sonda DESENHO: 'Leitura do Modulo DESENHO' / 'CGA LPT1: COM1: C:\SISTRUT\EXEC40\' / bytes de COMMON depois da tela: 0 
+sonda VPLOTA: 'Leitura do Modulo VPLOTA' / 'CGA LPT1: COM1: C:\SISTRUT\EXEC40\' / bytes de COMMON depois da tela: 0 
+sonda SISEDIT: 'Leitura do Modulo SISEDIT' / 'CGA LPT1: COM1: C:\SISTRUT\EXEC40\' / bytes de COMMON depois da tela: 0 
+
+## menu
+OK     001_m00
+OK     002_m01
+OK     003_m02
+OK     004_m03
+OK     005_m04
+OK     006_m05
+OK     007_m06
+OK     008_m07
+OK     009_m08
+OK     010_m09
+OK     011_m10
+OK     012_m11
+OK     013_m12
+OK     014_m13
+OK     015_m14
+OK     016_m15
+OK     017_m16
+OK     018_m17
+OK     019_m18
+OK     020_m19
+OK     021_m20
+OK     022_m21
+OK     023_m22
+OK     024_m23
+OK     025_m24
+OK     026_m25
+OK     027_m26
+OK     028_m27
+OK     029_m28
+OK     030_m29
+OK     031_m30
+OK     032_m31
+OK     033_m32
+OK     034_m33
+OK     035_m34
+OK     036_m35
+OK     impressora.prn (0 bytes iguais)
+
+37 iguais, 0 diferentes
+
+## inexist
+OK     001_m00
+OK     002_e01
+OK     003_e02
+OK     004_e03
+OK     005_e04
+OK     006_e05
+OK     007_e06
+OK     008_e07
+OK     009_e08
+OK     010_e09
+OK     011_e10
+OK     012_e11
+OK     013_e12
+OK     014_e13
+OK     015_e14
+OK     016_e15
+OK     017_e16
+OK     018_e17
+OK     impressora.prn (0 bytes iguais)
+
+19 iguais, 0 diferentes
+
+## exec32
+OK     001_m00
+OK     002_x01
+OK     003_x02
+OK     004_x03
+OK     005_x04
+OK     006_x05
+OK     007_x06
+OK     008_x07
+OK     009_x08
+OK     010_x09
+OK     011_x10
+OK     impressora.prn (0 bytes iguais)
+
+12 iguais, 0 diferentes
+
+## config
+OK     001_m00
+OK     002_c00
+OK     003_c01
+OK     004_c02
+OK     005_c03
+OK     006_c04
+OK     007_c05
+OK     008_c06
+OK     009_c07
+OK     010_c08
+OK     011_c09
+OK     012_c10
+OK     013_c11
+OK     impressora.prn (0 bytes iguais)
+
+14 iguais, 0 diferentes
+
+## laje
+OK     001_m00
+OK     002_m01
+OK     003_l01
+OK     impressora.prn (0 bytes iguais)
+
+4 iguais, 0 diferentes
+
+## editor
+OK     001_m00
+OK     002_m01
+OK     003_s01
+OK     004_s02
+OK     005_s03
+OK     006_s04
+OK     007_s05
+OK     008_s06
+OK     009_s07
+OK     010_s08
+OK     011_s09
+OK     012_s10
+OK     013_s11
+OK     014_s12
+OK     015_s13
+OK     016_s14
+OK     017_s15
+OK     impressora.prn (0 bytes iguais)
+
+18 iguais, 0 diferentes
+
+## onkey
+OK     001_m00
+OK     002_k00
+OK     003_k01
+OK     004_k02
+OK     005_k03
+OK     006_k04
+OK     007_k05
+OK     008_k06
+OK     009_k07
+OK     impressora.prn (0 bytes iguais)
+
+10 iguais, 0 diferentes
+
+## onkey_editor
+OK     001_m00
+OK     002_s01
+OK     003_h01
+DIFERE 004_h02:
+   linha 16 oráculo: '  │ <│ Memoria Livre disponivel 463 kb                                     │█'
+           V1     : '  │ <│ Memoria Livre disponivel 292 kb                                     │█'
+OK     005_h03
+OK     006_h04
+OK     007_f01
+OK     008_f02
+OK     009_f03
+OK     010_f04
+OK     011_f05
+OK     012_f06
+OK     013_f07
+OK     014_f08
+OK     015_f09
+OK     016_f10
+OK     017_f11
+OK     018_f12
+OK     019_f13
+OK     impressora.prn (0 bytes iguais)
+
+19 iguais, 1 diferentes
+
+## onkey_editor2
+OK     001_m00
+OK     002_s01
+OK     003_t01
+OK     004_t02
+OK     005_t03
+OK     006_t04
+OK     007_t05
+OK     008_t06
+OK     009_t07
+OK     010_t08
+OK     011_t09
+OK     012_t10
+OK     013_t11
+OK     014_t12
+OK     015_t13
+OK     016_t14
+OK     017_t15
+OK     impressora.prn (0 bytes iguais)
+
+18 iguais, 0 diferentes
+
+## chain_portico
+OK     001_m00
+OK     002_chain_portico
+OK     impressora.prn (0 bytes iguais)
+
+3 iguais, 0 diferentes

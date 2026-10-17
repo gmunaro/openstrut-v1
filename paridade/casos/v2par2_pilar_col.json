@@ -1,0 +1,1556 @@
+{
+ "caso": "v2par2_pilar_col",
+ "run": "runs/v2par2_pilar_col-20261016-050750",
+ "programa": "PILAREDI (PILGEEDI, PIPROEDI, PIGRAEDI)",
+ "descricao": ".COL com seções retangular girada (com troca de seção e excentricidade entre seções), circular e poligonal; vínculo por nível (C1 livre em x no PAV1: λx 58); vento com dois momentos; coluna que começa acima da fundação (C3).",
+ "entrada": {
+  "parametros": {
+   "norma": "NB-1/78 (PILAR.INI e SISTRUT.PIP de fábrica)",
+   "fck_tcm2": 0.15,
+   "fyk_tcm2": 5,
+   "classeAco": "B",
+   "fluencia": 0,
+   "secaoComprimidaCritica": "N (resposta à pergunta 'Secao comprimida')",
+   "cobrimento_cm": 2.0
+  },
+  "niveis": [
+   {
+    "n": 1,
+    "cota_m": 0,
+    "nome": "FUND"
+   },
+   {
+    "n": 2,
+    "cota_m": 3,
+    "nome": "PAV1"
+   },
+   {
+    "n": 3,
+    "cota_m": 6,
+    "nome": "PAV2"
+   },
+   {
+    "n": 4,
+    "cota_m": 9,
+    "nome": "COB"
+   }
+  ],
+  "colunas": {
+   "C1": {
+    "niveis": [
+     1,
+     4
+    ],
+    "esforcos": "Nk 15 t nos níveis 2, 3, 4",
+    "vento": "nível 2: Nkv 1 t, Ma 0,6 tm a 0 grau, Mb 0,4 tm a 90 graus",
+    "travamento": "nível 2: Rx livre, Ry continuidade",
+    "secao": "retangular 30 × 50 girada 30 graus até o PAV2; a partir do nível 3 (PAV2) 25 × 40 girada 30 graus, excentricidade do CG no nível COB Ex 5, Ey 3 cm"
+   },
+   "C2": {
+    "niveis": [
+     1,
+     3
+    ],
+    "esforcos": "Nk 20 t nos níveis 2, 3",
+    "secao": "circular, diâmetro 40 cm"
+   },
+   "C3": {
+    "niveis": [
+     2,
+     4
+    ],
+    "esforcos": "Nk 10 t nos níveis 3, 4",
+    "secao": "poligonal de 6 vértices (cm): (0,0) (0,50) (20,50) (20,20) (50,20) (50,0)"
+   }
+  },
+  "dimensionamento": "1 A 3, uma armadura por trecho de seção, relatório impresso; A nas 3",
+  "gravacao": "COLS.COL"
+ },
+ "valores": [
+  {
+   "id": "C1.FUND.lambdaX",
+   "grandeza": "C1 nível FUND: esbeltez λx",
+   "unidade": "",
+   "impresso": "58",
+   "fonte": "impressora.prn:5"
+  },
+  {
+   "id": "C1.FUND.lambdaY",
+   "grandeza": "C1 nível FUND: esbeltez λy",
+   "unidade": "",
+   "impresso": "23",
+   "fonte": "impressora.prn:5"
+  },
+  {
+   "id": "C1.FUND.Nk",
+   "grandeza": "C1 nível FUND: Nk (cargas do .REP acumuladas + peso próprio)",
+   "unidade": "t",
+   "impresso": "48.00",
+   "fonte": "impressora.prn:6"
+  },
+  {
+   "id": "C1.FUND.Mkxi",
+   "grandeza": "C1 nível FUND: Mkx inicial",
+   "unidade": "tm",
+   "impresso": "0.38",
+   "fonte": "impressora.prn:6"
+  },
+  {
+   "id": "C1.FUND.Mkyi",
+   "grandeza": "C1 nível FUND: Mky inicial",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:6"
+  },
+  {
+   "id": "C1.FUND.cobrimento",
+   "grandeza": "C1 nível FUND: cobrimento",
+   "unidade": "cm",
+   "impresso": "2.0",
+   "fonte": "impressora.prn:7"
+  },
+  {
+   "id": "C1.FUND.1e.Mkx",
+   "grandeza": "C1 nível FUND, caso 1e: Mk atuante x",
+   "unidade": "tm",
+   "impresso": "1.34",
+   "fonte": "impressora.prn:12"
+  },
+  {
+   "id": "C1.FUND.1e.Mky",
+   "grandeza": "C1 nível FUND, caso 1e: Mk atuante y",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:12"
+  },
+  {
+   "id": "C1.FUND.1e.Mktot",
+   "grandeza": "C1 nível FUND, caso 1e: Mk atuante total",
+   "unidade": "tm",
+   "impresso": "1.34",
+   "fonte": "impressora.prn:12"
+  },
+  {
+   "id": "C1.FUND.1e.MRx1a",
+   "grandeza": "C1 nível FUND, caso 1e: Mk resistente x, 1ª ordem",
+   "unidade": "tm",
+   "impresso": "5.14",
+   "fonte": "impressora.prn:12"
+  },
+  {
+   "id": "C1.FUND.1e.MRx2a",
+   "grandeza": "C1 nível FUND, caso 1e: Mk resistente x, 2ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:12"
+  },
+  {
+   "id": "C1.FUND.1e.MRy1a",
+   "grandeza": "C1 nível FUND, caso 1e: Mk resistente y, 1ª ordem",
+   "unidade": "tm",
+   "impresso": "-0.14",
+   "fonte": "impressora.prn:12"
+  },
+  {
+   "id": "C1.FUND.1e.MRy2a",
+   "grandeza": "C1 nível FUND, caso 1e: Mk resistente y, 2ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:12"
+  },
+  {
+   "id": "C1.FUND.1e.MRtot",
+   "grandeza": "C1 nível FUND, caso 1e: Mk resistente total",
+   "unidade": "tm",
+   "impresso": "5.15",
+   "fonte": "impressora.prn:12"
+  },
+  {
+   "id": "C1.FUND.1e.incLN",
+   "grandeza": "C1 nível FUND, caso 1e: inclinação da linha neutra",
+   "unidade": "graus",
+   "impresso": "284.0",
+   "fonte": "impressora.prn:12"
+  },
+  {
+   "id": "C1.FUND.1e.1/r",
+   "grandeza": "C1 nível FUND, caso 1e: curvatura 1/r",
+   "unidade": "10-3/cm",
+   "impresso": "0.0881",
+   "fonte": "impressora.prn:12"
+  },
+  {
+   "id": "C1.FUND.1e.x/d",
+   "grandeza": "C1 nível FUND, caso 1e: x/d",
+   "unidade": "",
+   "impresso": "0.65",
+   "fonte": "impressora.prn:12"
+  },
+  {
+   "id": "C1.FUND.1e.defCon",
+   "grandeza": "C1 nível FUND, caso 1e: deformação do concreto",
+   "unidade": "‰",
+   "impresso": "2.2719",
+   "fonte": "impressora.prn:12"
+  },
+  {
+   "id": "C1.FUND.1e.defAco",
+   "grandeza": "C1 nível FUND, caso 1e: deformação do aço",
+   "unidade": "‰",
+   "impresso": "1.2093",
+   "fonte": "impressora.prn:12"
+  },
+  {
+   "id": "C1.FUND.1f.Mkx",
+   "grandeza": "C1 nível FUND, caso 1f: Mk atuante x",
+   "unidade": "tm",
+   "impresso": "-1.26",
+   "fonte": "impressora.prn:13"
+  },
+  {
+   "id": "C1.FUND.1f.Mky",
+   "grandeza": "C1 nível FUND, caso 1f: Mk atuante y",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:13"
+  },
+  {
+   "id": "C1.FUND.1f.Mktot",
+   "grandeza": "C1 nível FUND, caso 1f: Mk atuante total",
+   "unidade": "tm",
+   "impresso": "1.26",
+   "fonte": "impressora.prn:13"
+  },
+  {
+   "id": "C1.FUND.1f.MRx1a",
+   "grandeza": "C1 nível FUND, caso 1f: Mk resistente x, 1ª ordem",
+   "unidade": "tm",
+   "impresso": "-5.12",
+   "fonte": "impressora.prn:13"
+  },
+  {
+   "id": "C1.FUND.1f.MRx2a",
+   "grandeza": "C1 nível FUND, caso 1f: Mk resistente x, 2ª ordem",
+   "unidade": "tm",
+   "impresso": "1.52",
+   "fonte": "impressora.prn:13"
+  },
+  {
+   "id": "C1.FUND.1f.MRy1a",
+   "grandeza": "C1 nível FUND, caso 1f: Mk resistente y, 1ª ordem",
+   "unidade": "tm",
+   "impresso": "-0.04",
+   "fonte": "impressora.prn:13"
+  },
+  {
+   "id": "C1.FUND.1f.MRy2a",
+   "grandeza": "C1 nível FUND, caso 1f: Mk resistente y, 2ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:13"
+  },
+  {
+   "id": "C1.FUND.1f.MRtot",
+   "grandeza": "C1 nível FUND, caso 1f: Mk resistente total",
+   "unidade": "tm",
+   "impresso": "3.60",
+   "fonte": "impressora.prn:13"
+  },
+  {
+   "id": "C1.FUND.1f.incLN",
+   "grandeza": "C1 nível FUND, caso 1f: inclinação da linha neutra",
+   "unidade": "graus",
+   "impresso": "105.0",
+   "fonte": "impressora.prn:13"
+  },
+  {
+   "id": "C1.FUND.1f.1/r",
+   "grandeza": "C1 nível FUND, caso 1f: curvatura 1/r",
+   "unidade": "10-3/cm",
+   "impresso": "0.0896",
+   "fonte": "impressora.prn:13"
+  },
+  {
+   "id": "C1.FUND.1f.x/d",
+   "grandeza": "C1 nível FUND, caso 1f: x/d",
+   "unidade": "",
+   "impresso": "0.65",
+   "fonte": "impressora.prn:13"
+  },
+  {
+   "id": "C1.FUND.1f.defCon",
+   "grandeza": "C1 nível FUND, caso 1f: deformação do concreto",
+   "unidade": "‰",
+   "impresso": "2.2719",
+   "fonte": "impressora.prn:13"
+  },
+  {
+   "id": "C1.FUND.1f.defAco",
+   "grandeza": "C1 nível FUND, caso 1f: deformação do aço",
+   "unidade": "‰",
+   "impresso": "1.2093",
+   "fonte": "impressora.prn:13"
+  },
+  {
+   "id": "C1.FUND.2e.Mkx",
+   "grandeza": "C1 nível FUND, caso 2e: Mk atuante x",
+   "unidade": "tm",
+   "impresso": "0.38",
+   "fonte": "impressora.prn:14"
+  },
+  {
+   "id": "C1.FUND.2e.Mky",
+   "grandeza": "C1 nível FUND, caso 2e: Mk atuante y",
+   "unidade": "tm",
+   "impresso": "0.96",
+   "fonte": "impressora.prn:14"
+  },
+  {
+   "id": "C1.FUND.2e.Mktot",
+   "grandeza": "C1 nível FUND, caso 2e: Mk atuante total",
+   "unidade": "tm",
+   "impresso": "1.03",
+   "fonte": "impressora.prn:14"
+  },
+  {
+   "id": "C1.FUND.2e.MRx1a",
+   "grandeza": "C1 nível FUND, caso 2e: Mk resistente x, 1ª ordem",
+   "unidade": "tm",
+   "impresso": "1.79",
+   "fonte": "impressora.prn:14"
+  },
+  {
+   "id": "C1.FUND.2e.MRx2a",
+   "grandeza": "C1 nível FUND, caso 2e: Mk resistente x, 2ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:14"
+  },
+  {
+   "id": "C1.FUND.2e.MRy1a",
+   "grandeza": "C1 nível FUND, caso 2e: Mk resistente y, 1ª ordem",
+   "unidade": "tm",
+   "impresso": "5.04",
+   "fonte": "impressora.prn:14"
+  },
+  {
+   "id": "C1.FUND.2e.MRy2a",
+   "grandeza": "C1 nível FUND, caso 2e: Mk resistente y, 2ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:14"
+  },
+  {
+   "id": "C1.FUND.2e.MRtot",
+   "grandeza": "C1 nível FUND, caso 2e: Mk resistente total",
+   "unidade": "tm",
+   "impresso": "5.35",
+   "fonte": "impressora.prn:14"
+  },
+  {
+   "id": "C1.FUND.2e.incLN",
+   "grandeza": "C1 nível FUND, caso 2e: inclinação da linha neutra",
+   "unidade": "graus",
+   "impresso": "320.8",
+   "fonte": "impressora.prn:14"
+  },
+  {
+   "id": "C1.FUND.2e.1/r",
+   "grandeza": "C1 nível FUND, caso 2e: curvatura 1/r",
+   "unidade": "10-3/cm",
+   "impresso": "0.0818",
+   "fonte": "impressora.prn:14"
+  },
+  {
+   "id": "C1.FUND.2e.x/d",
+   "grandeza": "C1 nível FUND, caso 2e: x/d",
+   "unidade": "",
+   "impresso": "0.65",
+   "fonte": "impressora.prn:14"
+  },
+  {
+   "id": "C1.FUND.2e.defCon",
+   "grandeza": "C1 nível FUND, caso 2e: deformação do concreto",
+   "unidade": "‰",
+   "impresso": "2.2719",
+   "fonte": "impressora.prn:14"
+  },
+  {
+   "id": "C1.FUND.2e.defAco",
+   "grandeza": "C1 nível FUND, caso 2e: deformação do aço",
+   "unidade": "‰",
+   "impresso": "1.2093",
+   "fonte": "impressora.prn:14"
+  },
+  {
+   "id": "C1.FUND.2f.Mkx",
+   "grandeza": "C1 nível FUND, caso 2f: Mk atuante x",
+   "unidade": "tm",
+   "impresso": "-0.30",
+   "fonte": "impressora.prn:15"
+  },
+  {
+   "id": "C1.FUND.2f.Mky",
+   "grandeza": "C1 nível FUND, caso 2f: Mk atuante y",
+   "unidade": "tm",
+   "impresso": "0.96",
+   "fonte": "impressora.prn:15"
+  },
+  {
+   "id": "C1.FUND.2f.Mktot",
+   "grandeza": "C1 nível FUND, caso 2f: Mk atuante total",
+   "unidade": "tm",
+   "impresso": "1.01",
+   "fonte": "impressora.prn:15"
+  },
+  {
+   "id": "C1.FUND.2f.MRx1a",
+   "grandeza": "C1 nível FUND, caso 2f: Mk resistente x, 1ª ordem",
+   "unidade": "tm",
+   "impresso": "-2.52",
+   "fonte": "impressora.prn:15"
+  },
+  {
+   "id": "C1.FUND.2f.MRx2a",
+   "grandeza": "C1 nível FUND, caso 2f: Mk resistente x, 2ª ordem",
+   "unidade": "tm",
+   "impresso": "0.07",
+   "fonte": "impressora.prn:15"
+  },
+  {
+   "id": "C1.FUND.2f.MRy1a",
+   "grandeza": "C1 nível FUND, caso 2f: Mk resistente y, 1ª ordem",
+   "unidade": "tm",
+   "impresso": "7.13",
+   "fonte": "impressora.prn:15"
+  },
+  {
+   "id": "C1.FUND.2f.MRy2a",
+   "grandeza": "C1 nível FUND, caso 2f: Mk resistente y, 2ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:15"
+  },
+  {
+   "id": "C1.FUND.2f.MRtot",
+   "grandeza": "C1 nível FUND, caso 2f: Mk resistente total",
+   "unidade": "tm",
+   "impresso": "7.54",
+   "fonte": "impressora.prn:15"
+  },
+  {
+   "id": "C1.FUND.2f.incLN",
+   "grandeza": "C1 nível FUND, caso 2f: inclinação da linha neutra",
+   "unidade": "graus",
+   "impresso": "356.7",
+   "fonte": "impressora.prn:15"
+  },
+  {
+   "id": "C1.FUND.2f.1/r",
+   "grandeza": "C1 nível FUND, caso 2f: curvatura 1/r",
+   "unidade": "10-3/cm",
+   "impresso": "0.0645",
+   "fonte": "impressora.prn:15"
+  },
+  {
+   "id": "C1.FUND.2f.x/d",
+   "grandeza": "C1 nível FUND, caso 2f: x/d",
+   "unidade": "",
+   "impresso": "0.64",
+   "fonte": "impressora.prn:15"
+  },
+  {
+   "id": "C1.FUND.2f.defCon",
+   "grandeza": "C1 nível FUND, caso 2f: deformação do concreto",
+   "unidade": "‰",
+   "impresso": "2.2719",
+   "fonte": "impressora.prn:15"
+  },
+  {
+   "id": "C1.FUND.2f.defAco",
+   "grandeza": "C1 nível FUND, caso 2f: deformação do aço",
+   "unidade": "‰",
+   "impresso": "1.2628",
+   "fonte": "impressora.prn:15"
+  },
+  {
+   "id": "C1.FUND.Bw",
+   "grandeza": "C1 nível FUND: largura da seção",
+   "unidade": "cm",
+   "impresso": "30",
+   "fonte": "impressora.prn:17"
+  },
+  {
+   "id": "C1.FUND.Hw",
+   "grandeza": "C1 nível FUND: altura da seção",
+   "unidade": "cm",
+   "impresso": "50",
+   "fonte": "impressora.prn:17"
+  },
+  {
+   "id": "C1.FUND.rot",
+   "grandeza": "C1 nível FUND: rotação da seção",
+   "unidade": "graus",
+   "impresso": "30",
+   "fonte": "impressora.prn:17"
+  },
+  {
+   "id": "C1.FUND.As",
+   "grandeza": "C1 nível FUND: armadura As",
+   "unidade": "cm2",
+   "impresso": "8.00",
+   "fonte": "impressora.prn:18"
+  },
+  {
+   "id": "C1.FUND.taxa",
+   "grandeza": "C1 nível FUND: taxa de armadura",
+   "unidade": "%",
+   "impresso": "0.53",
+   "fonte": "impressora.prn:18"
+  },
+  {
+   "id": "C1.FUND.barras.n",
+   "grandeza": "C1 nível FUND: número de barras",
+   "unidade": "",
+   "impresso": "10",
+   "fonte": "impressora.prn:18"
+  },
+  {
+   "id": "C1.FUND.barras.phi",
+   "grandeza": "C1 nível FUND: bitola das barras",
+   "unidade": "mm",
+   "impresso": "10",
+   "fonte": "impressora.prn:18"
+  },
+  {
+   "id": "C1.FUND.estribo.phi",
+   "grandeza": "C1 nível FUND: bitola do estribo",
+   "unidade": "mm",
+   "impresso": "6.3",
+   "fonte": "impressora.prn:18"
+  },
+  {
+   "id": "C1.FUND.estribo.s",
+   "grandeza": "C1 nível FUND: espaçamento do estribo",
+   "unidade": "cm",
+   "impresso": "12",
+   "fonte": "impressora.prn:18"
+  },
+  {
+   "id": "C1.PAV2.lambdaX",
+   "grandeza": "C1 nível PAV2: esbeltez λx",
+   "unidade": "",
+   "impresso": "35",
+   "fonte": "impressora.prn:26"
+  },
+  {
+   "id": "C1.PAV2.lambdaY",
+   "grandeza": "C1 nível PAV2: esbeltez λy",
+   "unidade": "",
+   "impresso": "28",
+   "fonte": "impressora.prn:26"
+  },
+  {
+   "id": "C1.PAV2.Nk",
+   "grandeza": "C1 nível PAV2: Nk (cargas do .REP acumuladas + peso próprio)",
+   "unidade": "t",
+   "impresso": "15.75",
+   "fonte": "impressora.prn:27"
+  },
+  {
+   "id": "C1.PAV2.Mkxi",
+   "grandeza": "C1 nível PAV2: Mkx inicial",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:27"
+  },
+  {
+   "id": "C1.PAV2.Mkyi",
+   "grandeza": "C1 nível PAV2: Mky inicial",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:27"
+  },
+  {
+   "id": "C1.PAV2.cobrimento",
+   "grandeza": "C1 nível PAV2: cobrimento",
+   "unidade": "cm",
+   "impresso": "2.0",
+   "fonte": "impressora.prn:28"
+  },
+  {
+   "id": "C1.PAV2.1e.Mkx",
+   "grandeza": "C1 nível PAV2, caso 1e: Mk atuante x",
+   "unidade": "tm",
+   "impresso": "0.31",
+   "fonte": "impressora.prn:33"
+  },
+  {
+   "id": "C1.PAV2.1e.Mky",
+   "grandeza": "C1 nível PAV2, caso 1e: Mk atuante y",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:33"
+  },
+  {
+   "id": "C1.PAV2.1e.Mktot",
+   "grandeza": "C1 nível PAV2, caso 1e: Mk atuante total",
+   "unidade": "tm",
+   "impresso": "0.31",
+   "fonte": "impressora.prn:33"
+  },
+  {
+   "id": "C1.PAV2.1e.MRx1a",
+   "grandeza": "C1 nível PAV2, caso 1e: Mk resistente x, 1ª ordem",
+   "unidade": "tm",
+   "impresso": "3.00",
+   "fonte": "impressora.prn:33"
+  },
+  {
+   "id": "C1.PAV2.1e.MRx2a",
+   "grandeza": "C1 nível PAV2, caso 1e: Mk resistente x, 2ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:33"
+  },
+  {
+   "id": "C1.PAV2.1e.MRy1a",
+   "grandeza": "C1 nível PAV2, caso 1e: Mk resistente y, 1ª ordem",
+   "unidade": "tm",
+   "impresso": "-0.03",
+   "fonte": "impressora.prn:33"
+  },
+  {
+   "id": "C1.PAV2.1e.MRy2a",
+   "grandeza": "C1 nível PAV2, caso 1e: Mk resistente y, 2ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:33"
+  },
+  {
+   "id": "C1.PAV2.1e.MRtot",
+   "grandeza": "C1 nível PAV2, caso 1e: Mk resistente total",
+   "unidade": "tm",
+   "impresso": "3.00",
+   "fonte": "impressora.prn:33"
+  },
+  {
+   "id": "C1.PAV2.1e.incLN",
+   "grandeza": "C1 nível PAV2, caso 1e: inclinação da linha neutra",
+   "unidade": "graus",
+   "impresso": "282.8",
+   "fonte": "impressora.prn:33"
+  },
+  {
+   "id": "C1.PAV2.1e.1/r",
+   "grandeza": "C1 nível PAV2, caso 1e: curvatura 1/r",
+   "unidade": "10-3/cm",
+   "impresso": "0.1398",
+   "fonte": "impressora.prn:33"
+  },
+  {
+   "id": "C1.PAV2.1e.x/d",
+   "grandeza": "C1 nível PAV2, caso 1e: x/d",
+   "unidade": "",
+   "impresso": "0.49",
+   "fonte": "impressora.prn:33"
+  },
+  {
+   "id": "C1.PAV2.1e.defCon",
+   "grandeza": "C1 nível PAV2, caso 1e: deformação do concreto",
+   "unidade": "‰",
+   "impresso": "2.2344",
+   "fonte": "impressora.prn:33"
+  },
+  {
+   "id": "C1.PAV2.1e.defAco",
+   "grandeza": "C1 nível PAV2, caso 1e: deformação do aço",
+   "unidade": "‰",
+   "impresso": "2.3228",
+   "fonte": "impressora.prn:33"
+  },
+  {
+   "id": "C1.PAV2.2e.Mkx",
+   "grandeza": "C1 nível PAV2, caso 2e: Mk atuante x",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:34"
+  },
+  {
+   "id": "C1.PAV2.2e.Mky",
+   "grandeza": "C1 nível PAV2, caso 2e: Mk atuante y",
+   "unidade": "tm",
+   "impresso": "0.31",
+   "fonte": "impressora.prn:34"
+  },
+  {
+   "id": "C1.PAV2.2e.Mktot",
+   "grandeza": "C1 nível PAV2, caso 2e: Mk atuante total",
+   "unidade": "tm",
+   "impresso": "0.31",
+   "fonte": "impressora.prn:34"
+  },
+  {
+   "id": "C1.PAV2.2e.MRx1a",
+   "grandeza": "C1 nível PAV2, caso 2e: Mk resistente x, 1ª ordem",
+   "unidade": "tm",
+   "impresso": "-0.07",
+   "fonte": "impressora.prn:34"
+  },
+  {
+   "id": "C1.PAV2.2e.MRx2a",
+   "grandeza": "C1 nível PAV2, caso 2e: Mk resistente x, 2ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:34"
+  },
+  {
+   "id": "C1.PAV2.2e.MRy1a",
+   "grandeza": "C1 nível PAV2, caso 2e: Mk resistente y, 1ª ordem",
+   "unidade": "tm",
+   "impresso": "3.35",
+   "fonte": "impressora.prn:34"
+  },
+  {
+   "id": "C1.PAV2.2e.MRy2a",
+   "grandeza": "C1 nível PAV2, caso 2e: Mk resistente y, 2ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:34"
+  },
+  {
+   "id": "C1.PAV2.2e.MRtot",
+   "grandeza": "C1 nível PAV2, caso 2e: Mk resistente total",
+   "unidade": "tm",
+   "impresso": "3.35",
+   "fonte": "impressora.prn:34"
+  },
+  {
+   "id": "C1.PAV2.2e.incLN",
+   "grandeza": "C1 nível PAV2, caso 2e: inclinação da linha neutra",
+   "unidade": "graus",
+   "impresso": "340.0",
+   "fonte": "impressora.prn:34"
+  },
+  {
+   "id": "C1.PAV2.2e.1/r",
+   "grandeza": "C1 nível PAV2, caso 2e: curvatura 1/r",
+   "unidade": "10-3/cm",
+   "impresso": "0.1074",
+   "fonte": "impressora.prn:34"
+  },
+  {
+   "id": "C1.PAV2.2e.x/d",
+   "grandeza": "C1 nível PAV2, caso 2e: x/d",
+   "unidade": "",
+   "impresso": "0.50",
+   "fonte": "impressora.prn:34"
+  },
+  {
+   "id": "C1.PAV2.2e.defCon",
+   "grandeza": "C1 nível PAV2, caso 2e: deformação do concreto",
+   "unidade": "‰",
+   "impresso": "2.2297",
+   "fonte": "impressora.prn:34"
+  },
+  {
+   "id": "C1.PAV2.2e.defAco",
+   "grandeza": "C1 nível PAV2, caso 2e: deformação do aço",
+   "unidade": "‰",
+   "impresso": "2.2087",
+   "fonte": "impressora.prn:34"
+  },
+  {
+   "id": "C1.PAV2.Bw",
+   "grandeza": "C1 nível PAV2: largura da seção",
+   "unidade": "cm",
+   "impresso": "25",
+   "fonte": "impressora.prn:36"
+  },
+  {
+   "id": "C1.PAV2.Hw",
+   "grandeza": "C1 nível PAV2: altura da seção",
+   "unidade": "cm",
+   "impresso": "40",
+   "fonte": "impressora.prn:36"
+  },
+  {
+   "id": "C1.PAV2.rot",
+   "grandeza": "C1 nível PAV2: rotação da seção",
+   "unidade": "graus",
+   "impresso": "30",
+   "fonte": "impressora.prn:36"
+  },
+  {
+   "id": "C1.PAV2.As",
+   "grandeza": "C1 nível PAV2: armadura As",
+   "unidade": "cm2",
+   "impresso": "6.40",
+   "fonte": "impressora.prn:37"
+  },
+  {
+   "id": "C1.PAV2.taxa",
+   "grandeza": "C1 nível PAV2: taxa de armadura",
+   "unidade": "%",
+   "impresso": "0.64",
+   "fonte": "impressora.prn:37"
+  },
+  {
+   "id": "C1.PAV2.barras.n",
+   "grandeza": "C1 nível PAV2: número de barras",
+   "unidade": "",
+   "impresso": "8",
+   "fonte": "impressora.prn:37"
+  },
+  {
+   "id": "C1.PAV2.barras.phi",
+   "grandeza": "C1 nível PAV2: bitola das barras",
+   "unidade": "mm",
+   "impresso": "10",
+   "fonte": "impressora.prn:37"
+  },
+  {
+   "id": "C1.PAV2.estribo.phi",
+   "grandeza": "C1 nível PAV2: bitola do estribo",
+   "unidade": "mm",
+   "impresso": "6.3",
+   "fonte": "impressora.prn:37"
+  },
+  {
+   "id": "C1.PAV2.estribo.s",
+   "grandeza": "C1 nível PAV2: espaçamento do estribo",
+   "unidade": "cm",
+   "impresso": "12",
+   "fonte": "impressora.prn:37"
+  },
+  {
+   "id": "C2.FUND.lambdaX",
+   "grandeza": "C2 nível FUND: esbeltez λx",
+   "unidade": "",
+   "impresso": "30",
+   "fonte": "impressora.prn:45"
+  },
+  {
+   "id": "C2.FUND.lambdaY",
+   "grandeza": "C2 nível FUND: esbeltez λy",
+   "unidade": "",
+   "impresso": "30",
+   "fonte": "impressora.prn:45"
+  },
+  {
+   "id": "C2.FUND.Nk",
+   "grandeza": "C2 nível FUND: Nk (cargas do .REP acumuladas + peso próprio)",
+   "unidade": "t",
+   "impresso": "41.88",
+   "fonte": "impressora.prn:46"
+  },
+  {
+   "id": "C2.FUND.Mkxi",
+   "grandeza": "C2 nível FUND: Mkx inicial",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:46"
+  },
+  {
+   "id": "C2.FUND.Mkyi",
+   "grandeza": "C2 nível FUND: Mky inicial",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:46"
+  },
+  {
+   "id": "C2.FUND.cobrimento",
+   "grandeza": "C2 nível FUND: cobrimento",
+   "unidade": "cm",
+   "impresso": "2.0",
+   "fonte": "impressora.prn:47"
+  },
+  {
+   "id": "C2.FUND.1e.Mkx",
+   "grandeza": "C2 nível FUND, caso 1e: Mk atuante x",
+   "unidade": "tm",
+   "impresso": "0.84",
+   "fonte": "impressora.prn:52"
+  },
+  {
+   "id": "C2.FUND.1e.Mky",
+   "grandeza": "C2 nível FUND, caso 1e: Mk atuante y",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:52"
+  },
+  {
+   "id": "C2.FUND.1e.Mktot",
+   "grandeza": "C2 nível FUND, caso 1e: Mk atuante total",
+   "unidade": "tm",
+   "impresso": "0.84",
+   "fonte": "impressora.prn:52"
+  },
+  {
+   "id": "C2.FUND.1e.MRx1a",
+   "grandeza": "C2 nível FUND, caso 1e: Mk resistente x, 1ª ordem",
+   "unidade": "tm",
+   "impresso": "4.52",
+   "fonte": "impressora.prn:52"
+  },
+  {
+   "id": "C2.FUND.1e.MRx2a",
+   "grandeza": "C2 nível FUND, caso 1e: Mk resistente x, 2ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:52"
+  },
+  {
+   "id": "C2.FUND.1e.MRy1a",
+   "grandeza": "C2 nível FUND, caso 1e: Mk resistente y, 1ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:52"
+  },
+  {
+   "id": "C2.FUND.1e.MRy2a",
+   "grandeza": "C2 nível FUND, caso 1e: Mk resistente y, 2ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:52"
+  },
+  {
+   "id": "C2.FUND.1e.MRtot",
+   "grandeza": "C2 nível FUND, caso 1e: Mk resistente total",
+   "unidade": "tm",
+   "impresso": "4.52",
+   "fonte": "impressora.prn:52"
+  },
+  {
+   "id": "C2.FUND.1e.incLN",
+   "grandeza": "C2 nível FUND, caso 1e: inclinação da linha neutra",
+   "unidade": "graus",
+   "impresso": "270.0",
+   "fonte": "impressora.prn:52"
+  },
+  {
+   "id": "C2.FUND.1e.1/r",
+   "grandeza": "C2 nível FUND, caso 1e: curvatura 1/r",
+   "unidade": "10-3/cm",
+   "impresso": "0.0905",
+   "fonte": "impressora.prn:52"
+  },
+  {
+   "id": "C2.FUND.1e.x/d",
+   "grandeza": "C2 nível FUND, caso 1e: x/d",
+   "unidade": "",
+   "impresso": "0.66",
+   "fonte": "impressora.prn:52"
+  },
+  {
+   "id": "C2.FUND.1e.defCon",
+   "grandeza": "C2 nível FUND, caso 1e: deformação do concreto",
+   "unidade": "‰",
+   "impresso": "2.2438",
+   "fonte": "impressora.prn:52"
+  },
+  {
+   "id": "C2.FUND.1e.defAco",
+   "grandeza": "C2 nível FUND, caso 1e: deformação do aço",
+   "unidade": "‰",
+   "impresso": "1.1519",
+   "fonte": "impressora.prn:52"
+  },
+  {
+   "id": "C2.FUND.2e.Mkx",
+   "grandeza": "C2 nível FUND, caso 2e: Mk atuante x",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:53"
+  },
+  {
+   "id": "C2.FUND.2e.Mky",
+   "grandeza": "C2 nível FUND, caso 2e: Mk atuante y",
+   "unidade": "tm",
+   "impresso": "0.84",
+   "fonte": "impressora.prn:53"
+  },
+  {
+   "id": "C2.FUND.2e.Mktot",
+   "grandeza": "C2 nível FUND, caso 2e: Mk atuante total",
+   "unidade": "tm",
+   "impresso": "0.84",
+   "fonte": "impressora.prn:53"
+  },
+  {
+   "id": "C2.FUND.2e.MRx1a",
+   "grandeza": "C2 nível FUND, caso 2e: Mk resistente x, 1ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:53"
+  },
+  {
+   "id": "C2.FUND.2e.MRx2a",
+   "grandeza": "C2 nível FUND, caso 2e: Mk resistente x, 2ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:53"
+  },
+  {
+   "id": "C2.FUND.2e.MRy1a",
+   "grandeza": "C2 nível FUND, caso 2e: Mk resistente y, 1ª ordem",
+   "unidade": "tm",
+   "impresso": "4.52",
+   "fonte": "impressora.prn:53"
+  },
+  {
+   "id": "C2.FUND.2e.MRy2a",
+   "grandeza": "C2 nível FUND, caso 2e: Mk resistente y, 2ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:53"
+  },
+  {
+   "id": "C2.FUND.2e.MRtot",
+   "grandeza": "C2 nível FUND, caso 2e: Mk resistente total",
+   "unidade": "tm",
+   "impresso": "4.52",
+   "fonte": "impressora.prn:53"
+  },
+  {
+   "id": "C2.FUND.2e.incLN",
+   "grandeza": "C2 nível FUND, caso 2e: inclinação da linha neutra",
+   "unidade": "graus",
+   "impresso": "0.0",
+   "fonte": "impressora.prn:53"
+  },
+  {
+   "id": "C2.FUND.2e.1/r",
+   "grandeza": "C2 nível FUND, caso 2e: curvatura 1/r",
+   "unidade": "10-3/cm",
+   "impresso": "0.0905",
+   "fonte": "impressora.prn:53"
+  },
+  {
+   "id": "C2.FUND.2e.x/d",
+   "grandeza": "C2 nível FUND, caso 2e: x/d",
+   "unidade": "",
+   "impresso": "0.66",
+   "fonte": "impressora.prn:53"
+  },
+  {
+   "id": "C2.FUND.2e.defCon",
+   "grandeza": "C2 nível FUND, caso 2e: deformação do concreto",
+   "unidade": "‰",
+   "impresso": "2.2438",
+   "fonte": "impressora.prn:53"
+  },
+  {
+   "id": "C2.FUND.2e.defAco",
+   "grandeza": "C2 nível FUND, caso 2e: deformação do aço",
+   "unidade": "‰",
+   "impresso": "1.1519",
+   "fonte": "impressora.prn:53"
+  },
+  {
+   "id": "C2.FUND.Dext",
+   "grandeza": "C2 nível FUND: diâmetro externo",
+   "unidade": "cm",
+   "impresso": "40",
+   "fonte": "impressora.prn:55"
+  },
+  {
+   "id": "C2.FUND.As",
+   "grandeza": "C2 nível FUND: armadura As",
+   "unidade": "cm2",
+   "impresso": "6.40",
+   "fonte": "impressora.prn:56"
+  },
+  {
+   "id": "C2.FUND.taxa",
+   "grandeza": "C2 nível FUND: taxa de armadura",
+   "unidade": "%",
+   "impresso": "0.50",
+   "fonte": "impressora.prn:56"
+  },
+  {
+   "id": "C2.FUND.barras.n",
+   "grandeza": "C2 nível FUND: número de barras",
+   "unidade": "",
+   "impresso": "8",
+   "fonte": "impressora.prn:56"
+  },
+  {
+   "id": "C2.FUND.barras.phi",
+   "grandeza": "C2 nível FUND: bitola das barras",
+   "unidade": "mm",
+   "impresso": "10",
+   "fonte": "impressora.prn:56"
+  },
+  {
+   "id": "C2.FUND.estribo.phi",
+   "grandeza": "C2 nível FUND: bitola do estribo",
+   "unidade": "mm",
+   "impresso": "6.3",
+   "fonte": "impressora.prn:56"
+  },
+  {
+   "id": "C2.FUND.estribo.s",
+   "grandeza": "C2 nível FUND: espaçamento do estribo",
+   "unidade": "cm",
+   "impresso": "12",
+   "fonte": "impressora.prn:56"
+  },
+  {
+   "id": "C3.PAV1.lambdaX",
+   "grandeza": "C3 nível PAV1: esbeltez λx",
+   "unidade": "",
+   "impresso": "21",
+   "fonte": "impressora.prn:64"
+  },
+  {
+   "id": "C3.PAV1.lambdaY",
+   "grandeza": "C3 nível PAV1: esbeltez λy",
+   "unidade": "",
+   "impresso": "21",
+   "fonte": "impressora.prn:64"
+  },
+  {
+   "id": "C3.PAV1.Nk",
+   "grandeza": "C3 nível PAV1: Nk (cargas do .REP acumuladas + peso próprio)",
+   "unidade": "t",
+   "impresso": "22.40",
+   "fonte": "impressora.prn:65"
+  },
+  {
+   "id": "C3.PAV1.Mkxi",
+   "grandeza": "C3 nível PAV1: Mkx inicial",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:65"
+  },
+  {
+   "id": "C3.PAV1.Mkyi",
+   "grandeza": "C3 nível PAV1: Mky inicial",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:65"
+  },
+  {
+   "id": "C3.PAV1.cobrimento",
+   "grandeza": "C3 nível PAV1: cobrimento",
+   "unidade": "cm",
+   "impresso": "2.0",
+   "fonte": "impressora.prn:66"
+  },
+  {
+   "id": "C3.PAV1.1e.Mkx",
+   "grandeza": "C3 nível PAV1, caso 1e: Mk atuante x",
+   "unidade": "tm",
+   "impresso": "0.45",
+   "fonte": "impressora.prn:71"
+  },
+  {
+   "id": "C3.PAV1.1e.Mky",
+   "grandeza": "C3 nível PAV1, caso 1e: Mk atuante y",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:71"
+  },
+  {
+   "id": "C3.PAV1.1e.Mktot",
+   "grandeza": "C3 nível PAV1, caso 1e: Mk atuante total",
+   "unidade": "tm",
+   "impresso": "0.45",
+   "fonte": "impressora.prn:71"
+  },
+  {
+   "id": "C3.PAV1.1e.MRx1a",
+   "grandeza": "C3 nível PAV1, caso 1e: Mk resistente x, 1ª ordem",
+   "unidade": "tm",
+   "impresso": "5.96",
+   "fonte": "impressora.prn:71"
+  },
+  {
+   "id": "C3.PAV1.1e.MRx2a",
+   "grandeza": "C3 nível PAV1, caso 1e: Mk resistente x, 2ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:71"
+  },
+  {
+   "id": "C3.PAV1.1e.MRy1a",
+   "grandeza": "C3 nível PAV1, caso 1e: Mk resistente y, 1ª ordem",
+   "unidade": "tm",
+   "impresso": "0.19",
+   "fonte": "impressora.prn:71"
+  },
+  {
+   "id": "C3.PAV1.1e.MRy2a",
+   "grandeza": "C3 nível PAV1, caso 1e: Mk resistente y, 2ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:71"
+  },
+  {
+   "id": "C3.PAV1.1e.MRtot",
+   "grandeza": "C3 nível PAV1, caso 1e: Mk resistente total",
+   "unidade": "tm",
+   "impresso": "5.96",
+   "fonte": "impressora.prn:71"
+  },
+  {
+   "id": "C3.PAV1.1e.incLN",
+   "grandeza": "C3 nível PAV1, caso 1e: inclinação da linha neutra",
+   "unidade": "graus",
+   "impresso": "302.9",
+   "fonte": "impressora.prn:71"
+  },
+  {
+   "id": "C3.PAV1.1e.1/r",
+   "grandeza": "C3 nível PAV1, caso 1e: curvatura 1/r",
+   "unidade": "10-3/cm",
+   "impresso": "0.1006",
+   "fonte": "impressora.prn:71"
+  },
+  {
+   "id": "C3.PAV1.1e.x/d",
+   "grandeza": "C3 nível PAV1, caso 1e: x/d",
+   "unidade": "",
+   "impresso": "0.45",
+   "fonte": "impressora.prn:71"
+  },
+  {
+   "id": "C3.PAV1.1e.defCon",
+   "grandeza": "C3 nível PAV1, caso 1e: deformação do concreto",
+   "unidade": "‰",
+   "impresso": "2.2438",
+   "fonte": "impressora.prn:71"
+  },
+  {
+   "id": "C3.PAV1.1e.defAco",
+   "grandeza": "C3 nível PAV1, caso 1e: deformação do aço",
+   "unidade": "‰",
+   "impresso": "2.7223",
+   "fonte": "impressora.prn:71"
+  },
+  {
+   "id": "C3.PAV1.2e.Mkx",
+   "grandeza": "C3 nível PAV1, caso 2e: Mk atuante x",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:72"
+  },
+  {
+   "id": "C3.PAV1.2e.Mky",
+   "grandeza": "C3 nível PAV1, caso 2e: Mk atuante y",
+   "unidade": "tm",
+   "impresso": "0.45",
+   "fonte": "impressora.prn:72"
+  },
+  {
+   "id": "C3.PAV1.2e.Mktot",
+   "grandeza": "C3 nível PAV1, caso 2e: Mk atuante total",
+   "unidade": "tm",
+   "impresso": "0.45",
+   "fonte": "impressora.prn:72"
+  },
+  {
+   "id": "C3.PAV1.2e.MRx1a",
+   "grandeza": "C3 nível PAV1, caso 2e: Mk resistente x, 1ª ordem",
+   "unidade": "tm",
+   "impresso": "-0.02",
+   "fonte": "impressora.prn:72"
+  },
+  {
+   "id": "C3.PAV1.2e.MRx2a",
+   "grandeza": "C3 nível PAV1, caso 2e: Mk resistente x, 2ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:72"
+  },
+  {
+   "id": "C3.PAV1.2e.MRy1a",
+   "grandeza": "C3 nível PAV1, caso 2e: Mk resistente y, 1ª ordem",
+   "unidade": "tm",
+   "impresso": "5.68",
+   "fonte": "impressora.prn:72"
+  },
+  {
+   "id": "C3.PAV1.2e.MRy2a",
+   "grandeza": "C3 nível PAV1, caso 2e: Mk resistente y, 2ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:72"
+  },
+  {
+   "id": "C3.PAV1.2e.MRtot",
+   "grandeza": "C3 nível PAV1, caso 2e: Mk resistente total",
+   "unidade": "tm",
+   "impresso": "5.68",
+   "fonte": "impressora.prn:72"
+  },
+  {
+   "id": "C3.PAV1.2e.incLN",
+   "grandeza": "C3 nível PAV1, caso 2e: inclinação da linha neutra",
+   "unidade": "graus",
+   "impresso": "330.0",
+   "fonte": "impressora.prn:72"
+  },
+  {
+   "id": "C3.PAV1.2e.1/r",
+   "grandeza": "C3 nível PAV1, caso 2e: curvatura 1/r",
+   "unidade": "10-3/cm",
+   "impresso": "0.0985",
+   "fonte": "impressora.prn:72"
+  },
+  {
+   "id": "C3.PAV1.2e.x/d",
+   "grandeza": "C3 nível PAV1, caso 2e: x/d",
+   "unidade": "",
+   "impresso": "0.46",
+   "fonte": "impressora.prn:72"
+  },
+  {
+   "id": "C3.PAV1.2e.defCon",
+   "grandeza": "C3 nível PAV1, caso 2e: deformação do concreto",
+   "unidade": "‰",
+   "impresso": "2.2438",
+   "fonte": "impressora.prn:72"
+  },
+  {
+   "id": "C3.PAV1.2e.defAco",
+   "grandeza": "C3 nível PAV1, caso 2e: deformação do aço",
+   "unidade": "‰",
+   "impresso": "2.6679",
+   "fonte": "impressora.prn:72"
+  },
+  {
+   "id": "C3.PAV1.3e.Mkx",
+   "grandeza": "C3 nível PAV1, caso 3e: Mk atuante x",
+   "unidade": "tm",
+   "impresso": "-0.45",
+   "fonte": "impressora.prn:73"
+  },
+  {
+   "id": "C3.PAV1.3e.Mky",
+   "grandeza": "C3 nível PAV1, caso 3e: Mk atuante y",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:73"
+  },
+  {
+   "id": "C3.PAV1.3e.Mktot",
+   "grandeza": "C3 nível PAV1, caso 3e: Mk atuante total",
+   "unidade": "tm",
+   "impresso": "0.45",
+   "fonte": "impressora.prn:73"
+  },
+  {
+   "id": "C3.PAV1.3e.MRx1a",
+   "grandeza": "C3 nível PAV1, caso 3e: Mk resistente x, 1ª ordem",
+   "unidade": "tm",
+   "impresso": "-6.36",
+   "fonte": "impressora.prn:73"
+  },
+  {
+   "id": "C3.PAV1.3e.MRx2a",
+   "grandeza": "C3 nível PAV1, caso 3e: Mk resistente x, 2ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:73"
+  },
+  {
+   "id": "C3.PAV1.3e.MRy1a",
+   "grandeza": "C3 nível PAV1, caso 3e: Mk resistente y, 1ª ordem",
+   "unidade": "tm",
+   "impresso": "-0.10",
+   "fonte": "impressora.prn:73"
+  },
+  {
+   "id": "C3.PAV1.3e.MRy2a",
+   "grandeza": "C3 nível PAV1, caso 3e: Mk resistente y, 2ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:73"
+  },
+  {
+   "id": "C3.PAV1.3e.MRtot",
+   "grandeza": "C3 nível PAV1, caso 3e: Mk resistente total",
+   "unidade": "tm",
+   "impresso": "6.36",
+   "fonte": "impressora.prn:73"
+  },
+  {
+   "id": "C3.PAV1.3e.incLN",
+   "grandeza": "C3 nível PAV1, caso 3e: inclinação da linha neutra",
+   "unidade": "graus",
+   "impresso": "103.5",
+   "fonte": "impressora.prn:73"
+  },
+  {
+   "id": "C3.PAV1.3e.1/r",
+   "grandeza": "C3 nível PAV1, caso 3e: curvatura 1/r",
+   "unidade": "10-3/cm",
+   "impresso": "0.1239",
+   "fonte": "impressora.prn:73"
+  },
+  {
+   "id": "C3.PAV1.3e.x/d",
+   "grandeza": "C3 nível PAV1, caso 3e: x/d",
+   "unidade": "",
+   "impresso": "0.36",
+   "fonte": "impressora.prn:73"
+  },
+  {
+   "id": "C3.PAV1.3e.defCon",
+   "grandeza": "C3 nível PAV1, caso 3e: deformação do concreto",
+   "unidade": "‰",
+   "impresso": "2.2250",
+   "fonte": "impressora.prn:73"
+  },
+  {
+   "id": "C3.PAV1.3e.defAco",
+   "grandeza": "C3 nível PAV1, caso 3e: deformação do aço",
+   "unidade": "‰",
+   "impresso": "4.0037",
+   "fonte": "impressora.prn:73"
+  },
+  {
+   "id": "C3.PAV1.4e.Mkx",
+   "grandeza": "C3 nível PAV1, caso 4e: Mk atuante x",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:74"
+  },
+  {
+   "id": "C3.PAV1.4e.Mky",
+   "grandeza": "C3 nível PAV1, caso 4e: Mk atuante y",
+   "unidade": "tm",
+   "impresso": "-0.45",
+   "fonte": "impressora.prn:74"
+  },
+  {
+   "id": "C3.PAV1.4e.Mktot",
+   "grandeza": "C3 nível PAV1, caso 4e: Mk atuante total",
+   "unidade": "tm",
+   "impresso": "0.45",
+   "fonte": "impressora.prn:74"
+  },
+  {
+   "id": "C3.PAV1.4e.MRx1a",
+   "grandeza": "C3 nível PAV1, caso 4e: Mk resistente x, 1ª ordem",
+   "unidade": "tm",
+   "impresso": "0.19",
+   "fonte": "impressora.prn:74"
+  },
+  {
+   "id": "C3.PAV1.4e.MRx2a",
+   "grandeza": "C3 nível PAV1, caso 4e: Mk resistente x, 2ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:74"
+  },
+  {
+   "id": "C3.PAV1.4e.MRy1a",
+   "grandeza": "C3 nível PAV1, caso 4e: Mk resistente y, 1ª ordem",
+   "unidade": "tm",
+   "impresso": "-6.33",
+   "fonte": "impressora.prn:74"
+  },
+  {
+   "id": "C3.PAV1.4e.MRy2a",
+   "grandeza": "C3 nível PAV1, caso 4e: Mk resistente y, 2ª ordem",
+   "unidade": "tm",
+   "impresso": "0.00",
+   "fonte": "impressora.prn:74"
+  },
+  {
+   "id": "C3.PAV1.4e.MRtot",
+   "grandeza": "C3 nível PAV1, caso 4e: Mk resistente total",
+   "unidade": "tm",
+   "impresso": "6.34",
+   "fonte": "impressora.prn:74"
+  },
+  {
+   "id": "C3.PAV1.4e.incLN",
+   "grandeza": "C3 nível PAV1, caso 4e: inclinação da linha neutra",
+   "unidade": "graus",
+   "impresso": "165.6",
+   "fonte": "impressora.prn:74"
+  },
+  {
+   "id": "C3.PAV1.4e.1/r",
+   "grandeza": "C3 nível PAV1, caso 4e: curvatura 1/r",
+   "unidade": "10-3/cm",
+   "impresso": "0.1116",
+   "fonte": "impressora.prn:74"
+  },
+  {
+   "id": "C3.PAV1.4e.x/d",
+   "grandeza": "C3 nível PAV1, caso 4e: x/d",
+   "unidade": "",
+   "impresso": "0.39",
+   "fonte": "impressora.prn:74"
+  },
+  {
+   "id": "C3.PAV1.4e.defCon",
+   "grandeza": "C3 nível PAV1, caso 4e: deformação do concreto",
+   "unidade": "‰",
+   "impresso": "2.1875",
+   "fonte": "impressora.prn:74"
+  },
+  {
+   "id": "C3.PAV1.4e.defAco",
+   "grandeza": "C3 nível PAV1, caso 4e: deformação do aço",
+   "unidade": "‰",
+   "impresso": "3.4328",
+   "fonte": "impressora.prn:74"
+  },
+  {
+   "id": "C3.PAV1.nvert",
+   "grandeza": "C3 nível PAV1: seção poligonal, número de vértices",
+   "unidade": "",
+   "impresso": "6",
+   "fonte": "impressora.prn:76"
+  },
+  {
+   "id": "C3.PAV1.As",
+   "grandeza": "C3 nível PAV1: armadura As",
+   "unidade": "cm2",
+   "impresso": "8.00",
+   "fonte": "impressora.prn:77"
+  },
+  {
+   "id": "C3.PAV1.taxa",
+   "grandeza": "C3 nível PAV1: taxa de armadura",
+   "unidade": "%",
+   "impresso": "0.50",
+   "fonte": "impressora.prn:77"
+  },
+  {
+   "id": "C3.PAV1.barras.n",
+   "grandeza": "C3 nível PAV1: número de barras",
+   "unidade": "",
+   "impresso": "10",
+   "fonte": "impressora.prn:77"
+  },
+  {
+   "id": "C3.PAV1.barras.phi",
+   "grandeza": "C3 nível PAV1: bitola das barras",
+   "unidade": "mm",
+   "impresso": "10",
+   "fonte": "impressora.prn:77"
+  },
+  {
+   "id": "C3.PAV1.estribo.phi",
+   "grandeza": "C3 nível PAV1: bitola do estribo",
+   "unidade": "mm",
+   "impresso": "6.3",
+   "fonte": "impressora.prn:77"
+  },
+  {
+   "id": "C3.PAV1.estribo.s",
+   "grandeza": "C3 nível PAV1: espaçamento do estribo",
+   "unidade": "cm",
+   "impresso": "12",
+   "fonte": "impressora.prn:77"
+  }
+ ],
+ "comparacao_v1": "igual (16 de 17: e07 = FRE do PIGRAEDI); impressora e COLS.COL iguais"
+}

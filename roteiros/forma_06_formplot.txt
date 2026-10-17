@@ -1,0 +1,21 @@
+# exe: FORMPLOT
+# FORMPLOT direto, zoom T (todo o campo): obra FLUXO de forma_06_formplot.dados.
+# Opcoes: as 9 em Enter (S), exceto a 8 (corte) em N. Selecao: Enter x4. Montagem: S.
+# Movimento: sobe, direita, desce, esquerda; passo 5 mm; C cancela; S segue.
+# Cada preview (VetMostra%) espera uma tecla: {ENTER} dispensa antes de cada comando.
+# Depois: PLT S e DXF S. TELA previa_1 deve trazer as duas lajes lado a lado (PNG).
+{TELA param}{ENTER}
+{TELA opcoes}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}N{ENTER}
+{TELA selecao}{ENTER}{ENTER}{ENTER}{ENTER}
+{TELA zoom}T
+{TELA montagem}{ENTER}
+{TELA previa_1}{ENTER}{UP}
+{TELA previa_2}{ENTER}{RIGHT}
+{ENTER}{DOWN}
+{ENTER}{LEFT}
+{ENTER}P{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}5{ENTER}
+{ENTER}{UP}
+{TELA previa_passo}{ENTER}C
+{TELA previa_cancela}{ENTER}S
+{TELA plt}S
+{TELA dxf}S

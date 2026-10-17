@@ -1,0 +1,54 @@
+# exe: LAJECALC
+# roteiro lajcal_01_calc (v2): LAJECALC sobre a obra FLUXO (copia de roteiros/semente).
+# Passa por C, D, E, I, M, O, V e R.
+# Numero digitado sobre o padrao: 8 {BS} apagam o padrao (EntradaNumero# mostra STR$, ex.: "1.5").
+# Lista de lajes: ENTER aceita *TODAS*; para outra lista, 7 {BS} apagam *TODAS* antes de digitar.
+# Loops de trecho e de espessura saem com ENTER em campo vazio.
+# SimNao% responde S/N sem ENTER.
+# MostraErro e RelMostra pedem uma tecla: ENTER depois de cada erro ou pagina.
+# ENTER extra no menu principal e ignorado.
+{ENTER}{ENTER}
+{TELA c00_menu}
+# C - continuidade: coef 3 (erro), depois 1.8; elimina L1 lado 3 e recusa L2 lado 1; zera tudo; impoe L1/3 e L2/1
+C{TELA c01_cont}
+A{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}3{ENTER}{TELA c02_coef_fora}{ENTER}
+A{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}1.8{ENTER}{TELA c03_coef_18}
+EEL1{ENTER}3{ENTER}S
+L2{ENTER}1{ENTER}N
+{ENTER}{TELA c04_elim}
+ET
+IL1{ENTER}3{ENTER}S
+L2{ENTER}1{ENTER}S
+{ENTER}{TELA c05_restaurado}
+F
+# D - direcao: laje ZZ (inexistente, sem aviso), L1 com 90; relacao de L2 com 1.5
+D{TELA d01_dir}
+DZZ{ENTER}{TELA d02_laje_zz}
+DL1{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}90{ENTER}{TELA d03_L1_90}
+RL2{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}1.5{ENTER}{TELA d04_L2_15}
+F
+# E - espessura minima, todas as lajes, com impressao e visualizacao
+E{ENTER}SS{TELA e01_grav}{ENTER}{TELA e02_tabela}{ENTER}{ENTER}{ENTER}
+# E sem impressao e sem visualizacao
+E{ENTER}NN{TELA e03_sem_saida}
+# I - imposicao: 50 cm (erro, acima do H maximo), depois 10 cm em L1/L2; ENTER sai do loop
+I{TELA i01_pede}
+{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}50{ENTER}{TELA i02_hmax}{ENTER}
+{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}10{ENTER}L1/L2{ENTER}{ENTER}SS{TELA i03_grav}{ENTER}{TELA i04_tabela}{ENTER}{ENTER}{ENTER}
+# M - momentos e armaduras, todas as lajes, visao 1, conjunto T, sem impressao, visualiza
+M{ENTER}1TNS{TELA m01_mom_arm}{ENTER}{ENTER}{ENTER}{ENTER}
+# M - so momentos (2), por laje (I), imprime e visualiza uma laje por tela
+M{ENTER}2ISS{TELA m02_grav}{ENTER}{TELA m03_L1}{ENTER}{TELA m04_L2}{ENTER}{ENTER}{ENTER}
+# M - so L1, armaduras (3), conjunto T, imprime, sem visualizacao
+M{BS}{BS}{BS}{BS}{BS}{BS}{BS}L1{ENTER}3TSN{TELA m05_grav_arm}{ENTER}{ENTER}
+# O - otimizacao so em L1 (E), depois todas (T)
+O{TELA o01_tela}E{BS}{BS}{BS}{BS}{BS}{BS}{BS}L1{ENTER}{TELA o02_L1}{ENTER}{ENTER}{ENTER}
+OT{TELA o03_todas}{ENTER}{ENTER}{ENTER}{ENTER}
+# V - parametros: item 9 (ignorado), cobrimento 2.0 e volta para 1.5, densidade 2.5, retorno (8)
+V{TELA v01_par}9{TELA v02_opcao9}
+2{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}2.0{ENTER}{TELA v03_cob20}
+2{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}1.5{ENTER}{TELA v04_cob15}
+4{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}2.5{ENTER}{TELA v05_dens}
+8
+# R - termina o modulo e grava o .LAJ (se alterado)
+{TELA r01_menu}R

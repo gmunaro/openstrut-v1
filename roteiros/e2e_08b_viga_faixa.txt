@@ -1,0 +1,7 @@
+# exe: SISTRUT
+# Selecao por faixa em VIGA opcao 2. Dados: e2e_08b_viga_faixa.dados (copia de e2e_08_viga.dados).
+# Ordem no .VIG: V4 V5 V2 V3 V6 V1. A faixa compara o numero do nome, nas duas ordens.
+# Passo A: "V1 A V6" -> processa as 6 vigas e grava E2E.SEC.
+# Passo B: "V4 A V1" -> processa V1..V4.
+# Passo C: "V7 A V9" -> aviso "Nenhuma viga em: V7 A V9" e volta ao menu.
+{TELA s01_menu}V{TELA v01_menu_viga}6{TELA v02_disco}5{TELA v03_leit_nome}E2E{ENTER}{TELA v04_leit_memoria}S{TELA v05_leit_fim}{ENTER}8{TELA v06_menu_pos_leit}2{TELA v07_faixa_pede}V1 A V6{ENTER}{TELA v08_faixa_A_resultado}{ENTER}{TELA v09_faixa_A_menu}2{TELA v10_faixa_B_pede}V4 A V1{ENTER}{TELA v11_faixa_B_resultado}{ENTER}{TELA v12_faixa_B_menu}2{TELA v13_faixa_C_pede}V7 A V9{ENTER}{TELA v14_faixa_C_aviso}{ENTER}{TELA v15_faixa_C_menu}{F2}{TELA s02_menu}{F2}

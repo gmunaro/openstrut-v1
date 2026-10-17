@@ -1,0 +1,33 @@
+# exe: LAJEGEOM
+# lajgeo_09_recarga: menu 3 (L1 area), menu 6 (g de L1 digitado como base), menu 3 de novo, gravar.
+# Base: roteiros/lajgeo_09_recarga.dados (copia de lajgeo_base.dados: 4 lajes, g=0, q=0).
+# Sequencia: 3 (L1 area 2 m2 x 0.3 -> eq 0.6/20 = 0.03); 6 (L1 g 0.10, q mantido em 0);
+# 3 (L1 area 1 m2 x 0.2 -> lista tem 2 m2 + 1 m2 -> eq 0.8/20 = 0.04); gravar (9 S).
+# Esperado com a correcao: L1 g = 0.10 + 0.04 = 0.14 no .LAJ.
+# Pelo codigo antigo (CargaGAplicado 0.03 nao zerado pelo menu 6): 0.10 - 0.03 + 0.04 = 0.11.
+{TELA c9_01_menu_inicial}
+3
+E
+A
+{BS}2{ENTER}{BS}0.3{ENTER}
+{TELA c9_02_L1_area}
+F
+F
+# Campo g vem com o padrao 0.03 (menu 3 ja somou): 8 {BS} apagam o padrao antes de digitar.
+# q: ENTER mantem o padrao (0).
+6
+E
+{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}0.1{ENTER}{ENTER}
+{TELA c9_03_menu6_L1}
+F
+3
+E
+A
+{BS}1{ENTER}{BS}0.2{ENTER}
+{TELA c9_04_L1_area_extra}
+F
+F
+9
+S
+{TELA c9_05_retorno}
+{ENTER}

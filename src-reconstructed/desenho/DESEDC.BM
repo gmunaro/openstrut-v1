@@ -1,0 +1,417 @@
+' ============================================================================
+'  DESEDC.BM - contas do editor de ferragem DESEDCAO (juntar, separar,
+'  porta-estribo, corte). Sem I/O de tela. Testado em tests/T_DESEDC.BAS.
+'  Precisa de SISDADOS.BI/BM, SISPLOT.BM e DESCALC.BM.
+'
+'  Geometria das posicoes: o .EDV (TPosFerro) nao guarda o tipo da barra nem
+'  onde ela comeca. O editor guarda isso em dois vetores paralelos a VigPos,
+'  passados as rotinas daqui:
+'    gT(j) tipo: "P" positivo, "N" negativo, "PE" porta-estribo,
+'          "G" grampo, "E" estribo;
+'    gX(j) inicio da barra (cm) a partir da ponta esquerda da viga.
+'  A barra ocupa [gX(j), gX(j) + compr]. Sem informacao gravada, o tipo e o
+'  inicio sao deduzidos como DcDesenhaViga desenha (DecGeoInfere).
+'  RECONSTRUCAO: TPosFerro nao tem camada; todas as barras contam como
+'  1a camada.
+' ============================================================================
+
+' Tipo da posicao pela forma e pela bitola, como DcDesenhaViga: E estribo,
+' U positivo, R/L com phi <= 6,3 porta-estribo, R/L maiores negativo.
+FUNCTION DecInfereTipo$ (forma AS STRING, phi AS DOUBLE)
+    SELECT CASE forma
+        CASE "E": DecInfereTipo$ = "E"
+        CASE "U": DecInfereTipo$ = "P"
+        CASE ELSE
+            IF phi > 6.3 THEN DecInfereTipo$ = "N" ELSE DecInfereTipo$ = "PE"
+    END SELECT
+END FUNCTION
+
+' Inicio (cm) da barra de comprimento c no tramo que comeca em x0 e tem vao L
+' (cm), como DcDesenhaViga desenha: positivo e grampo centrados no vao;
+' porta-estribo e estribo na face esquerda; negativo centrado no apoio
+' direito, salvo o de extremidade esquerda (extE, comeca em x0) e o de
+' extremidade direita (extD, termina em x0 + L).
+FUNCTION DecInfereXi# (tipo AS STRING, x0 AS DOUBLE, L AS DOUBLE, c AS DOUBLE, extE AS INTEGER, extD AS INTEGER)
+    SELECT CASE tipo
+        CASE "P", "G": DecInfereXi# = x0 + L / 2# - c / 2#
+        CASE "N"
+            IF extE THEN
+                DecInfereXi# = x0
+            ELSEIF extD THEN
+                DecInfereXi# = x0 + L - c
+            ELSE
+                DecInfereXi# = x0 + L - c / 2#
+            END IF
+        CASE ELSE: DecInfereXi# = x0
+    END SELECT
+END FUNCTION
+
+' Deduz tipo e inicio de todas as posicoes da viga v (ver DecInfereXi#).
+SUB DecGeoInfere (v AS INTEGER, gT() AS STRING, gX() AS DOUBLE)
+    DIM t AS INTEGER, ti AS INTEGER, k AS INTEGER, j AS INTEGER, x0 AS DOUBLE, L AS DOUBLE
+    DIM extE AS INTEGER, extD AS INTEGER
+    x0 = 0
+    FOR t = 1 TO Vig(v).nTramos
+        ti = VigTramo%(v, t)
+        L = VigTra(ti).vao * 100#
+        FOR k = 0 TO VigTra(ti).nPosFerro - 1
+            j = VigTra(ti).iPosFerro + k
+            gT(j) = DecInfereTipo$(VigPos(j).forma, VigPos(j).phi)
+            extE = (t = 1 AND k = 0 AND DcNegExtremo%(v, 0))
+            extD = (t = Vig(v).nTramos AND DcNegExtremo%(v, 1))
+            gX(j) = DecInfereXi#(gT(j), x0, L, VigPos(j).compr, extE, extD)
+            ' balanco de 1 tramo (ENG / -): o negativo corre o vao inteiro e termina
+            ' na ponta livre, como DcDetalha/DcDesenhaViga (L + lb, lb dentro do engaste)
+            IF gT(j) = "N" AND extE AND Vig(v).nTramos = 1 THEN
+                IF RTRIM$(VigApo(Vig(v).iApo + 1).nome) = "-" THEN gX(j) = x0 + L - VigPos(j).compr
+            END IF
+        NEXT
+        x0 = x0 + L
+    NEXT
+END SUB
+
+' Inicio (cm) do tramo t da viga v, a partir da ponta esquerda da viga.
+FUNCTION DecX0# (v AS INTEGER, t AS INTEGER)
+    DIM k AS INTEGER, x AS DOUBLE
+    FOR k = 1 TO t - 1
+        x = x + VigTra(VigTramo%(v, k)).vao * 100#
+    NEXT
+    DecX0# = x
+END FUNCTION
+
+' Comprimento de emenda (cm) arredondado para cima, a partir de lb.
+FUNCTION DecEmenda# (lb AS DOUBLE)
+    DecEmenda# = -INT(-lb + 0.000001#) ' tolera erro de ponto flutuante
+END FUNCTION
+
+' Emenda padrao da Separacao (cm): psi x lb, arredondado para cima (DecEmenda#).
+' RECONSTRUCAO: psi = 2 (100% das barras emendadas na mesma secao); tabela de psi da NB-1/78 nao conferida
+' O editor nao sabe se a barra esta comprimida, entao psi = 2 para todas.
+FUNCTION DecEmendaSepara# (lb AS DOUBLE)
+    DecEmendaSepara# = DecEmenda#(2# * lb)
+END FUNCTION
+
+' Comprimento (cm) da barra que junta [xi1, xi1 + c1] e [xi2, xi2 + c2]:
+' a uniao das duas e, se elas se sobrepoem (traspasse), mais a emenda.
+' Devolve -1 se ha folga entre elas (nao sao contiguas). Tolerancia de 1 cm.
+FUNCTION DecJuntaCompr# (xi1 AS DOUBLE, c1 AS DOUBLE, xi2 AS DOUBLE, c2 AS DOUBLE, emenda AS DOUBLE)
+    DIM a AS DOUBLE, b AS DOUBLE, sobre AS DOUBLE
+    a = xi1: IF xi2 < a THEN a = xi2
+    b = xi1 + c1: IF xi2 + c2 > b THEN b = xi2 + c2
+    sobre = xi1 + c1: IF xi2 + c2 < sobre THEN sobre = xi2 + c2
+    IF xi2 > xi1 THEN sobre = sobre - xi2 ELSE sobre = sobre - xi1
+    IF sobre < -1# THEN
+        DecJuntaCompr# = -1#
+    ELSEIF sobre > 1# THEN
+        DecJuntaCompr# = b - a + emenda
+    ELSE
+        DecJuntaCompr# = b - a
+    END IF
+END FUNCTION
+
+' Partes da barra de comprimento c separada com a emenda comecando a d cm da
+' ponta esquerda e com e cm de comprimento. A = [0, d + e], B = [d, c]; as
+' duas contem a emenda e A + B = c + e. Devolve 0 se d ou e nao cabem.
+FUNCTION DecSeparaPartes% (c AS DOUBLE, d AS DOUBLE, e AS DOUBLE, cA AS DOUBLE, cB AS DOUBLE)
+    IF d <= 0 OR e < 0 OR d + e >= c THEN EXIT FUNCTION
+    cA = d + e
+    cB = c - d
+    DecSeparaPartes% = -1
+END FUNCTION
+
+' Trecho superior do tramo (vao L, cm) coberto pelos negativos a partir da
+' face esquerda (cobE) e da direita (cobD), contando a barra [xi, xf] (cm,
+' coordenada da viga) num tramo que comeca em x0. Barras que nao tocam
+' nenhuma das pontas do tramo nao contam.
+SUB DecCobertura (x0 AS DOUBLE, L AS DOUBLE, xi AS DOUBLE, xf AS DOUBLE, cobE AS DOUBLE, cobD AS DOUBLE)
+    DIM a AS DOUBLE
+    IF xi <= x0 + 1# AND xf > x0 THEN
+        a = xf: IF a > x0 + L THEN a = x0 + L
+        IF a - x0 > cobE THEN cobE = a - x0
+    END IF
+    IF xf >= x0 + L - 1# AND xi < x0 + L THEN
+        a = xi: IF a < x0 THEN a = x0
+        IF x0 + L - a > cobD THEN cobD = x0 + L - a
+    END IF
+END SUB
+
+' Porta-estribo do tramo de vao L (cm): do fim do negativo da esquerda ao
+' inicio do da direita, entrando "emenda" cm em cada negativo, sem sair do
+' tramo. ini/fim em cm a partir da face esquerda. Devolve 0 se os negativos
+' cobrem o tramo todo.
+FUNCTION DecPortaTrecho% (L AS DOUBLE, cobE AS DOUBLE, cobD AS DOUBLE, emenda AS DOUBLE, ini AS DOUBLE, fim AS DOUBLE)
+    IF cobE + cobD >= L - 1# THEN EXIT FUNCTION
+    ini = 0: fim = L
+    IF cobE > 0 THEN ini = cobE - emenda: IF ini < 0 THEN ini = 0
+    IF cobD > 0 THEN fim = L - cobD + emenda: IF fim > L THEN fim = L
+    DecPortaTrecho% = -1
+END FUNCTION
+
+' Primeiro valor da linha do arquivo arq que contem chave (sem caixa).
+' "" se o arquivo ou a linha nao existirem.
+FUNCTION DecDspTexto$ (arq AS STRING, chave AS STRING)
+    DIM f AS INTEGER, l AS STRING, p AS INTEGER
+    IF NOT _FILEEXISTS(arq) THEN EXIT FUNCTION
+    f = FREEFILE
+    OPEN arq FOR INPUT AS #f
+    DO WHILE NOT EOF(f)
+        LINE INPUT #f, l
+        IF INSTR(UCASE$(l), UCASE$(chave)) > 0 THEN
+            l = LTRIM$(l)
+            p = INSTR(l, " ")
+            IF p > 0 THEN l = LEFT$(l, p - 1)
+            DecDspTexto$ = l
+            EXIT DO
+        END IF
+    LOOP
+    CLOSE #f
+END FUNCTION
+
+' Bitola minima (mm) do porta-estribo: a linha "NUMERO DE ORDEM PARA A MINIMA
+' BITOLA DE PORTA ESTRIBO" do .DSP da a ordem, e a tabela "BITOLAS UTILIZADAS"
+' ("  <ordem>  -  <bitola>  -  <area>  -  <peso>") da a bitola. Sem o arquivo
+' ou a linha, 6,3 (como DcDetalha%).
+FUNCTION DecPortaPhi# (arq AS STRING)
+    DIM f AS INTEGER, l AS STRING, ordem AS STRING, fase AS INTEGER, p AS INTEGER
+    DecPortaPhi# = 6.3#
+    ordem = DecDspTexto$(arq, "MINIMA BITOLA DE PORTA ESTRIBO")
+    IF ordem = "" THEN EXIT FUNCTION
+    f = FREEFILE
+    OPEN arq FOR INPUT AS #f
+    DO WHILE NOT EOF(f)
+        LINE INPUT #f, l
+        l = LTRIM$(RTRIM$(l))
+        IF fase = 0 THEN
+            IF LEFT$(UCASE$(l), 5) = "ORDEM" AND INSTR(UCASE$(l), "BITOLA") > 0 THEN fase = 1
+        ELSE
+            p = INSTR(l, "-")
+            IF LEFT$(l, 1) = "*" OR p = 0 THEN EXIT DO
+            IF VAL(LEFT$(l, p - 1)) = VAL(ordem) THEN
+                IF VAL(MID$(l, p + 1)) > 0 THEN DecPortaPhi# = VAL(MID$(l, p + 1))
+                EXIT DO
+            END IF
+        END IF
+    LOOP
+    CLOSE #f
+END FUNCTION
+
+' Traspasse (cm) do porta-estribo com o negativo, pela linha "TRANSPASSE
+' PORTA ESTRIBO" do .DSP: "15" sao 15 cm, "D20" sao 20 diametros de phi
+' (mm). Sem o arquivo ou a linha, 15 cm (valor do SISTRUT.DSP).
+FUNCTION DecPortaTraspasse# (arq AS STRING, phi AS DOUBLE)
+    DIM s AS STRING
+    s = UCASE$(DecDspTexto$(arq, "TRANSPASSE PORTA ESTRIBO"))
+    IF LEFT$(s, 1) = "D" THEN
+        DecPortaTraspasse# = VAL(MID$(s, 2)) * phi / 10#
+    ELSEIF VAL(s) > 0 THEN
+        DecPortaTraspasse# = VAL(s)
+    ELSE
+        DecPortaTraspasse# = 15#
+    END IF
+END FUNCTION
+
+' Tramo global da posicao j (indice de VigPos) na viga v; 0 se nao e da viga.
+FUNCTION DecTramoDaPos% (v AS INTEGER, j AS INTEGER)
+    DIM t AS INTEGER, ti AS INTEGER
+    FOR t = 1 TO Vig(v).nTramos
+        ti = VigTramo%(v, t)
+        IF j >= VigTra(ti).iPosFerro AND j < VigTra(ti).iPosFerro + VigTra(ti).nPosFerro THEN
+            DecTramoDaPos% = ti
+            EXIT FUNCTION
+        END IF
+    NEXT
+END FUNCTION
+
+' Maior numero de posicao da viga v em VigPos, com n = 0 incluido. 0 se a
+' viga nao tem posicao.
+FUNCTION DecMaxPos% (v AS INTEGER)
+    DIM t AS INTEGER, ti AS INTEGER, j AS INTEGER, mx AS INTEGER
+    FOR t = 1 TO Vig(v).nTramos
+        ti = VigTramo%(v, t)
+        FOR j = VigTra(ti).iPosFerro TO VigTra(ti).iPosFerro + VigTra(ti).nPosFerro - 1
+            IF VigPos(j).numPos > mx THEN mx = VigPos(j).numPos
+        NEXT
+    NEXT
+    DecMaxPos% = mx
+END FUNCTION
+
+' Quantidade de posicoes com n > 0 da viga v.
+FUNCTION DecQtdPos% (v AS INTEGER)
+    DIM t AS INTEGER, ti AS INTEGER, j AS INTEGER, q AS INTEGER
+    FOR t = 1 TO Vig(v).nTramos
+        ti = VigTramo%(v, t)
+        FOR j = VigTra(ti).iPosFerro TO VigTra(ti).iPosFerro + VigTra(ti).nPosFerro - 1
+            IF VigPos(j).n > 0 THEN q = q + 1
+        NEXT
+    NEXT
+    DecQtdPos% = q
+END FUNCTION
+
+' Reconstroi VigPos (e gT/gX junto) na ordem viga > tramo > posicao.
+' Descarta posicoes com n = 0 e mantem o numero de cada posicao; entradas de
+' VigPos fora dos tramos (orfas de um DcDetalha% repetido) somem.
+' novoTi > 0 inclui uma posicao nova no fim do tramo novoTi, com o maior
+' numero da viga + 1; novoTi = 0 nao inclui.
+SUB DecReconstroi (novoTi AS INTEGER, novoPhi AS DOUBLE, novoN AS INTEGER, novoCompr AS DOUBLE, novoForma AS STRING, novoTipo AS STRING, novoXi AS DOUBLE, gT() AS STRING, gX() AS DOUBLE)
+    DIM v AS INTEGER, t AS INTEGER, ti AS INTEGER, j AS INTEGER, k AS INTEGER, q AS INTEGER
+    DIM wP(1 TO DAD_MAXPOS) AS TPosFerro, wTi(1 TO DAD_MAXPOS) AS INTEGER
+    DIM wT(1 TO DAD_MAXPOS) AS STRING, wX(1 TO DAD_MAXPOS) AS DOUBLE
+    ' 1) copia as posicoes atuais (inclusive n = 0) para a area de trabalho.
+    FOR v = 1 TO VigQtd
+        FOR t = 1 TO Vig(v).nTramos
+            ti = VigTramo%(v, t)
+            FOR j = VigTra(ti).iPosFerro TO VigTra(ti).iPosFerro + VigTra(ti).nPosFerro - 1
+                k = k + 1
+                wP(k) = VigPos(j): wTi(k) = ti: wT(k) = gT(j): wX(k) = gX(j)
+            NEXT
+            IF ti = novoTi AND k < DAD_MAXPOS THEN
+                k = k + 1
+                wP(k).numPos = DecMaxPos%(v) + 1
+                wP(k).phi = novoPhi: wP(k).n = novoN: wP(k).compr = novoCompr: wP(k).forma = novoForma
+                wTi(k) = ti: wT(k) = novoTipo: wX(k) = novoXi
+            END IF
+        NEXT
+    NEXT
+    ' 2) zera as posicoes de todas as vigas e de todos os tramos.
+    VigPosQtd = 0
+    FOR ti = 1 TO VigTraQtd
+        VigTra(ti).nPosFerro = 0
+    NEXT
+    ' 3) reinsere as posicoes validas, na ordem, com o numero original.
+    FOR q = 1 TO k
+        IF wP(q).n > 0 THEN
+            VigAddPos wTi(q), wP(q).numPos, wP(q).phi, wP(q).n, wP(q).compr, wP(q).forma
+            gT(VigPosQtd) = wT(q): gX(VigPosQtd) = wX(q)
+        END IF
+    NEXT
+END SUB
+
+' Junta as posicoes j1 e j2 (indices de VigPos) da viga v na j1; a j2 sai.
+' Regras: mesmo tipo, mesma bitola, barras contiguas ou sobrepostas
+' (DecJuntaCompr#). Quantidade = a maior; forma U se alguma for U, senao L
+' se alguma for L, senao R. Retorno: 0 juntou; 1 positivo com negativo;
+' 2 tipo ou bitola diferentes (ou estribo); 3 barras afastadas.
+' RECONSTRUCAO: o original juntava pela maior bitola ("Junto pela maior
+' Bitola"); aqui so junta bitolas iguais.
+FUNCTION DecJunta% (v AS INTEGER, j1 AS INTEGER, j2 AS INTEGER, emenda AS DOUBLE, gT() AS STRING, gX() AS DOUBLE)
+    DIM c AS DOUBLE, a AS DOUBLE, f1 AS STRING, f2 AS STRING
+    IF (gT(j1) = "P" AND gT(j2) = "N") OR (gT(j1) = "N" AND gT(j2) = "P") THEN DecJunta% = 1: EXIT FUNCTION
+    IF gT(j1) <> gT(j2) OR gT(j1) = "E" OR j1 = j2 OR ABS(VigPos(j1).phi - VigPos(j2).phi) > 0.01 THEN DecJunta% = 2: EXIT FUNCTION
+    c = DecJuntaCompr#(gX(j1), VigPos(j1).compr, gX(j2), VigPos(j2).compr, emenda)
+    IF c < 0 THEN DecJunta% = 3: EXIT FUNCTION
+    a = gX(j1): IF gX(j2) < a THEN a = gX(j2)
+    f1 = VigPos(j1).forma: f2 = VigPos(j2).forma
+    IF f1 = "U" OR f2 = "U" THEN
+        VigPos(j1).forma = "U"
+    ELSEIF f1 = "L" OR f2 = "L" THEN
+        VigPos(j1).forma = "L"
+    ELSE
+        VigPos(j1).forma = "R"
+    END IF
+    IF VigPos(j2).n > VigPos(j1).n THEN VigPos(j1).n = VigPos(j2).n
+    VigPos(j1).compr = c
+    gX(j1) = a
+    VigPos(j2).n = 0
+    DecReconstroi 0, 0#, 0, 0#, "", "", 0#, gT(), gX()
+END FUNCTION
+
+' Separa a posicao j da viga v com emenda de e cm comecando a d cm da ponta
+' esquerda (DecSeparaPartes%). A posicao j vira a parte esquerda; a direita
+' entra com numero novo no fim do mesmo tramo. Formas: U vira L + L; L vira
+' L + R; R vira R + R. Devolve 0 se d/e nao cabem ou j e estribo.
+' RECONSTRUCAO: o .EDV nao diz em que ponta fica o gancho da forma L; supoe
+' a esquerda.
+FUNCTION DecSepara% (v AS INTEGER, j AS INTEGER, d AS DOUBLE, e AS DOUBLE, gT() AS STRING, gX() AS DOUBLE)
+    DIM cA AS DOUBLE, cB AS DOUBLE, ti AS INTEGER, fB AS STRING
+    IF gT(j) = "E" THEN EXIT FUNCTION
+    IF NOT DecSeparaPartes%(VigPos(j).compr, d, e, cA, cB) THEN EXIT FUNCTION
+    ti = DecTramoDaPos%(v, j)
+    IF ti = 0 OR VigPosQtd >= DAD_MAXPOS THEN EXIT FUNCTION
+    SELECT CASE VigPos(j).forma
+        CASE "U": VigPos(j).forma = "L": fB = "L"
+        CASE "L": fB = "R"
+        CASE ELSE: fB = "R"
+    END SELECT
+    VigPos(j).compr = cA
+    DecReconstroi ti, VigPos(j).phi, VigPos(j).n, cB, fB, gT(j), gX(j) + d, gT(), gX()
+    DecSepara% = -1
+END FUNCTION
+
+' Gera os porta-estribos da viga v: apaga os existentes e, em cada tramo
+' que os negativos (tipo N) nao cobrem, poe 2 barras de bitola phi no
+' trecho descoberto, entrando "emenda" cm nos negativos (DecPortaTrecho%).
+' Devolve quantas posicoes criou.
+FUNCTION DecPortaEstribo% (v AS INTEGER, phi AS DOUBLE, emenda AS DOUBLE, gT() AS STRING, gX() AS DOUBLE)
+    DIM t AS INTEGER, ti AS INTEGER, j AS INTEGER, k AS INTEGER, q AS INTEGER, x0 AS DOUBLE, L AS DOUBLE
+    DIM cobE AS DOUBLE, cobD AS DOUBLE, ini AS DOUBLE, fim AS DOUBLE
+    FOR t = 1 TO Vig(v).nTramos
+        ti = VigTramo%(v, t)
+        FOR j = VigTra(ti).iPosFerro TO VigTra(ti).iPosFerro + VigTra(ti).nPosFerro - 1
+            IF gT(j) = "PE" THEN VigPos(j).n = 0
+        NEXT
+    NEXT
+    DecReconstroi 0, 0#, 0, 0#, "", "", 0#, gT(), gX()
+    FOR t = 1 TO Vig(v).nTramos
+        ti = VigTramo%(v, t)
+        x0 = DecX0#(v, t): L = VigTra(ti).vao * 100#
+        cobE = 0: cobD = 0
+        ' negativos de todos os tramos da viga (um negativo de apoio fica no tramo da esquerda)
+        FOR k = 1 TO Vig(v).nTramos
+            FOR j = VigTra(VigTramo%(v, k)).iPosFerro TO VigTra(VigTramo%(v, k)).iPosFerro + VigTra(VigTramo%(v, k)).nPosFerro - 1
+                IF gT(j) = "N" AND VigPos(j).n > 0 THEN DecCobertura x0, L, gX(j), gX(j) + VigPos(j).compr, cobE, cobD
+            NEXT
+        NEXT
+        IF DecPortaTrecho%(L, cobE, cobD, emenda, ini, fim) AND VigPosQtd < DAD_MAXPOS THEN
+            DecReconstroi ti, phi, 2, fim - ini, "R", "PE", x0 + ini, gT(), gX()
+            q = q + 1
+        END IF
+    NEXT
+    DecPortaEstribo% = q
+END FUNCTION
+
+' Desenha em arq (.VET, escala 1:10, mm no papel = cm) o corte da viga v no
+' ponto x (cm da ponta esquerda): contorno bw x h, estribo com cobrimento
+' cob e as barras que passam por x, embaixo (P, G) e em cima (N, PE), em
+' circulos distribuidos na largura. Devolve o numero de barras desenhadas.
+' RECONSTRUCAO: uma camada so, sem conferir se as barras cabem na largura.
+FUNCTION DecCorteVet% (v AS INTEGER, x AS DOUBLE, arq AS STRING, cob AS DOUBLE, titulo AS STRING, gT() AS STRING, gX() AS DOUBLE)
+    DIM f AS INTEGER, t AS INTEGER, ti AS INTEGER, j AS INTEGER, k AS INTEGER, lado AS INTEGER
+    DIM bw AS DOUBLE, h AS DOUBLE, phiE AS DOUBLE, nb AS INTEGER, phi AS DOUBLE, r AS DOUBLE
+    DIM y AS DOUBLE, xa AS DOUBLE, xb AS DOUBLE, tot AS INTEGER, txt AS STRING, xt AS DOUBLE
+    bw = Vig(v).bw: h = Vig(v).h
+    ' bitola do estribo no tramo que contem x
+    FOR t = 1 TO Vig(v).nTramos
+        ti = VigTramo%(v, t)
+        IF x >= DecX0#(v, t) AND x <= DecX0#(v, t) + VigTra(ti).vao * 100# THEN phiE = VigTra(ti).phiEst
+    NEXT
+    f = VetAbre%(arq, titulo)
+    VetRetangulo f, 0, 0, bw, h, 1
+    VetRetangulo f, cob, cob, bw - cob, h - cob, 2
+    FOR lado = 0 TO 1 ' 0 = embaixo, 1 = em cima
+        nb = 0: phi = 0: txt = ""
+        FOR j = 1 TO VigPosQtd
+            IF DecTramoDaPos%(v, j) > 0 AND VigPos(j).n > 0 AND x >= gX(j) AND x <= gX(j) + VigPos(j).compr THEN
+                IF (lado = 0 AND (gT(j) = "P" OR gT(j) = "G")) OR (lado = 1 AND (gT(j) = "N" OR gT(j) = "PE")) THEN
+                    nb = nb + VigPos(j).n
+                    IF VigPos(j).phi > phi THEN phi = VigPos(j).phi
+                    txt = txt + " N" + LTRIM$(STR$(VigPos(j).numPos)) + " " + LTRIM$(STR$(VigPos(j).n)) + " d" + LTRIM$(STR$(VigPos(j).phi))
+                END IF
+            END IF
+        NEXT
+        IF nb > 0 THEN
+            r = phi / 20#
+            IF lado = 0 THEN y = cob + phiE / 10# + r ELSE y = h - cob - phiE / 10# - r
+            xa = cob + phiE / 10# + r: xb = bw - cob - phiE / 10# - r
+            FOR k = 1 TO nb
+                IF nb = 1 THEN xt = bw / 2# ELSE xt = xa + (xb - xa) * (k - 1) / (nb - 1)
+                VetCirculo f, xt, y, r, 2
+            NEXT
+            VetTexto f, bw + 3, y, 2, 0, 3, LTRIM$(txt)
+            tot = tot + nb
+        END IF
+    NEXT
+    VetTexto f, 0, -6, 2, 0, 3, LTRIM$(STR$(bw)) + " x " + LTRIM$(STR$(h))
+    VetTexto f, 0, h + 4, 3, 0, 5, titulo
+    VetFecha f
+    DecCorteVet% = tot
+END FUNCTION

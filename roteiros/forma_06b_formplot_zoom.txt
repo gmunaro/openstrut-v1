@@ -1,0 +1,17 @@
+# exe: FORMPLOT
+# FORMPLOT direto, zoom D (janela 2..6 m em x, 0..5 m em y): obra FLUXO de forma_06b_formplot_zoom.dados.
+# Opcoes: todas em Enter, exceto a 8 (corte) em N. Selecao em Enter. Montagem S. Preview com a janela (PNG em SCREEN 12).
+# A janela corta as duas lajes: L1 vai de 2 a 4 m e L2 de 4 a 6 m em x.
+# Depois S segue, PLT S e DXF S.
+{TELA param}{ENTER}
+{TELA opcoes}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}N{ENTER}
+{TELA selecao}{ENTER}{ENTER}{ENTER}{ENTER}
+{TELA zoom}D
+{TELA zoom_xmin}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}2{ENTER}
+{TELA zoom_xmax}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}6{ENTER}
+{TELA zoom_ymin}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}0{ENTER}
+{TELA zoom_ymax}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}5{ENTER}
+{TELA montagem}{ENTER}
+{TELA previa_zoom}{ENTER}S
+{TELA plt}S
+{TELA dxf}S

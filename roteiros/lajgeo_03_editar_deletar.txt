@@ -1,0 +1,46 @@
+# exe: LAJEGEOM
+# lajgeo_03_editar_deletar: menu 2 (TabelaLajes modo 2): E (edita), D (deleta com S/N), I (inclui).
+# Base: roteiros/lajgeo_base.dados (L1 (0,0), L2 (4,0), L3 (0,5), L4 (4,5)).
+# Eixos: menu 1 cadastra V0 e V4 para testar E<n> em x0 (E2 = V2 = 4 m).
+# Campos da laje: nome, x0, y0, lx, ly, h, bordos. ENTER mantem o padrao; {BS} apaga um caractere.
+# Erros: Espera pede ENTER ou ESC; depois o campo repete.
+# Teste de nome duplicado: deleta L2 e inclui outra; a nova recebe "L4", que ja existe.
+1
+V{BS}0{ENTER}
+V{BS}4{ENTER}
+F
+2
+{TELA t00_tabela_base}
+{DOWN}
+E
+{ENTER}{BS}E2{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}
+{TELA t01_L2_x0_eixo}
+{DOWN}
+E
+{ENTER}{BS}E9{ENTER}
+{TELA t02_x0_eixo_inexistente}
+{ENTER}
+{BS}0{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}
+{TELA t03_L3_apos_erro}
+{UP}
+{UP}
+E
+{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{BS}{BS}{BS}{BS}AXYZ{ENTER}
+{TELA t04_bordos_invalidos}
+{ENTER}
+{TELA t05_apos_bordos_invalidos}
+{DOWN}
+D
+N
+{TELA t06_apos_D_N}
+D
+S
+{TELA t07_apos_D_S_L2}
+I
+{ENTER}{BS}8{ENTER}{ENTER}{BS}4{ENTER}{BS}5{ENTER}{BS}10{ENTER}{ENTER}
+{TELA t08_tabela_nova_laje}
+F
+9
+S
+{TELA t09_retorno}
+{ENTER}

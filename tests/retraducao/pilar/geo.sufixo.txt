@@ -1,0 +1,30 @@
+# Sufixo (a partir do menu do PILAR): PILAREDI -> PILGEEDI (todos os itens, impressao dos dados),
+# PILAREDI 5/1/7, PIGRAEDI 1 (cria E2E.COL), 2 (grava), 3, 4 (catalogo), 5 (leitura), 7, 8.
+# Obra de partida: E2E.REP gravado pelo VIGA original (casos/caso_c_pilaredi.dados).
+8{ESPERA MULTIPLOS ANDARES}{ESPERA escolha opcao}{PAUSA 2}{TELA e01}
+2{ESPERA dados de Colunas}{ESPERA escolha opcao}{PAUSA 2}{TELA g01}
+1{ESPERA Nivel (1)}{PAUSA 1}{TELA g02}0,FUND{ENTER}{ESPERA Nivel (2)}3,PAV1{ENTER}{ESPERA Nivel (3)}{PAUSA 1}{TELA g03}{ENTER}{ESPERA dados de Colunas}{ESPERA escolha opcao}{PAUSA 2}
+2{ESPERA Posicao}{PAUSA 1}{TELA g04}{ENTER}{ESPERA Nome da Obra}E2E{ENTER}{ESPERA Nome da Coluna}P   5{ENTER}{ESPERA Nivel inferior}1{ENTER}{ESPERA Nivel superior}2{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA g05}{ENTER}{ESPERA POSICAO 2}{PAUSA 1}{TELA g06}{ENTER}{ESPERA dados de Colunas}{ESPERA escolha opcao}{PAUSA 2}
+5{ESPERA Arquivo Carregamento}{PAUSA 1}{TELA g07}E2E{ENTER}{ESPERA serao introduzidas}2{ENTER}{ESPERA Confirme Nivel}{PAUSA 1}{TELA g08}{ENTER}
+{ESPERA carga P   7}{PAUSA 1}{TELA g09}A{ENTER}{ESPERA carga P   8}{PAUSA 1}A{ENTER}{ESPERA carga P   9}{PAUSA 1}A{ENTER}{ESPERA carga P   6}{PAUSA 1}A{ENTER}{ESPERA carga P   5}{PAUSA 1}{TELA g10}S{ENTER}{ESPERA carga P   4}{PAUSA 1}A{ENTER}{ESPERA carga P   1}{PAUSA 1}A{ENTER}{ESPERA carga P   2}{PAUSA 1}A{ENTER}{ESPERA carga P   3}{PAUSA 1}A{ENTER}
+{ESPERA para encontra-los}{PAUSA 1}{TELA g11}{ENTER}{ESPERA Defino secao}{PAUSA 1}{TELA g12}N{ENTER}{ESPERA Posicionadas 1 Colunas}{ESPERA escolha opcao}{PAUSA 2}{TELA g13}
+6{ESPERA Vinculos de extremidade}{ESPERA Nome da Coluna}{PAUSA 1}{TELA g14}{ENTER}{ESPERA Posicionadas 1 Colunas}{ESPERA escolha opcao}{PAUSA 2}
+3{ESPERA Normal + Momento}{PAUSA 1}{TELA g15}C{ENTER}{ESPERA *RETORNO*}1{ENTER}{ESPERA *NAO*}{PAUSA 1}{TELA g16}{ENTER}{ESPERA termino - Nivel}{PAUSA 1}{TELA g17}
+2{ENTER}{ESPERA *n para igualar}{PAUSA 1}17.37{ENTER}{PAUSA 1}0.5{ENTER}{PAUSA 1}0{ENTER}{PAUSA 1}{TELA g18}{ENTER}{PAUSA 2}{TELA g19}{ENTER}{ESPERA <C>oluna ou}{PAUSA 1}{ENTER}{ESPERA escolha opcao}{PAUSA 2}
+4{ESPERA Momento de Vento}{PAUSA 1}{TELA g20}C{ENTER}{ESPERA *RETORNO*}1{ENTER}{ESPERA *NAO*}{PAUSA 1}{ENTER}{ESPERA termino - Nivel}{PAUSA 1}{TELA g21}
+2{ENTER}{ESPERA Inb}{PAUSA 1}1{ENTER}{PAUSA 1}0.3{ENTER}{PAUSA 1}90{ENTER}{PAUSA 1}{TELA g22}{ENTER}{PAUSA 2}{TELA g23}{ENTER}{ESPERA <C>oluna ou}{PAUSA 1}{ENTER}{ESPERA escolha opcao}{PAUSA 2}
+7{ESPERA Impressao dos Niveis}{PAUSA 1}{TELA g24}C{ENTER}{ESPERA Dados Geometricos}S{ENTER}{ESPERA *RETORNO*}1{ENTER}{ESPERA avancar o formulario}{PAUSA 1}{TELA g25}{ENTER}{ESPERA Visualizar os dados}{PAUSA 2}{TELA g26}
+N{ENTER}{ESPERA Dados Geometricos}N{ENTER}{ESPERA Niveis que serao}{PAUSA 1}{TELA g27}1A2{ENTER}{ESPERA <Enter> para seguir}{PAUSA 1}{TELA g28}{ENTER}{ESPERA P E R M A N}{PAUSA 2}{TELA g29}{ENTER}{ESPERA PAV1}{PAUSA 2}{TELA g30}{ENTER}{ESPERA Visualizar os dados}{PAUSA 1}{TELA g31}{ENTER}{ESPERA dados de Colunas}{ESPERA escolha opcao}{PAUSA 2}{TELA g32}
+8{ESPERA MULTIPLOS ANDARES}{ESPERA escolha opcao}{PAUSA 2}{TELA e02}
+5{ESPERA Lista das Colunas}{PAUSA 2}{TELA e03}{ENTER}{ESPERA MULTIPLOS ANDARES}{ESPERA escolha opcao}{PAUSA 2}
+1{ESPERA Fck}{PAUSA 1}{TELA e04}.2{ENTER}{ESPERA Unidade de grandeza}{PAUSA 1}{ENTER}{ESPERA Multiplicador de}{PAUSA 1}{ENTER}{ESPERA Fyk}{PAUSA 1}{ENTER}{ESPERA Tipo de Aco}{PAUSA 1}{TELA e05}A{ENTER}{ESPERA MULTIPLOS ANDARES}{ESPERA escolha opcao}{PAUSA 2}
+7{ESPERA Correcao de Parametros}{ESPERA *NAO*}{PAUSA 1}{TELA e06}1,1.5{ENTER}{PAUSA 2}{TELA e07}{ENTER}{ESPERA MULTIPLOS ANDARES}{ESPERA escolha opcao}{PAUSA 2}
+6{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}{TELA r01}
+1{ESPERA NAO CRIAR}{PAUSA 1}{TELA r02}E2E{ENTER}{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}
+2{ESPERA Gravacao de Colunas}{ESPERA *E2E*}{PAUSA 1}{TELA r03}{ENTER}{ESPERA Continuo}{PAUSA 1}{TELA r04}{ENTER}{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}
+3{ESPERA Pesquisa do Numero}{ESPERA *FIM*}{PAUSA 1}{TELA r05}E2E{ENTER}{ESPERA Gravadas 1 Colunas}{PAUSA 1}{TELA r06}{ENTER}{ESPERA *FIM*}{PAUSA 1}{TELA r07}{ENTER}{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}
+4{ESPERA Catalogo de Colunas}{ESPERA *FIM*}{PAUSA 1}{TELA r08}E2E{ENTER}{ESPERA Qualquer Tecla}{PAUSA 1}{TELA r09}{ENTER}{ESPERA Catalogar}{PAUSA 1}{TELA r10}{ENTER}{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}
+5{ESPERA Leitura de Colunas}{ESPERA *E2E*}{PAUSA 1}{TELA r11}{ENTER}{ESPERA SIM/*N*}{PAUSA 1}{TELA r12}SIM{ENTER}{ESPERA Continuo}{PAUSA 1}{TELA r13}{ENTER}{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}{TELA r14}
+7{ESPERA Drive que contem}{PAUSA 1}{TELA r16}{ENTER}{ESPERA Subdiretorio}{PAUSA 1}{TELA r17}{ENTER}{ESPERA Gravacao e Leitura}{ESPERA escolha opcao}{PAUSA 2}
+8{ESPERA MULTIPLOS ANDARES}{ESPERA escolha opcao}{PAUSA 2}{TELA e08}
+5{ESPERA Lista das Colunas}{PAUSA 2}{TELA e09}{ENTER}{ESPERA MULTIPLOS ANDARES}{ESPERA escolha opcao}{PAUSA 2}{TELA e10}

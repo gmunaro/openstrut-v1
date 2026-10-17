@@ -1,0 +1,15 @@
+# exe: LAJEGEOM
+# lajgeo_05_visualiza: menu 2, V (TabelaLajes modo 2 -> Desenha) em SCREEN 12.
+# Base: roteiros/lajgeo_base.dados (4 lajes, 2x2). Desenha espera uma tecla; {ENTER} volta a SCREEN 0.
+{TELA v00_tabela_base}
+2
+{TELA v01_tabela_antes_V}
+V
+{TELA v02_desenha_grafico}
+{ENTER}
+{TELA v03_tabela_apos_V}
+F
+9
+S
+{TELA v04_retorno}
+{ENTER}

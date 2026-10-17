@@ -1,0 +1,36 @@
+# exe: DESEDITA
+# DESEDITA, obra FLUXO (5 vigas: 1=V3 2=V2 3=V4 4=V1 5=V5)
+# Parte A: nome da obra inexistente, volta, obra FLUXO, registro 99, viga 1 com escala, CAB/NOT, desenho, HP-GL, CAD A
+{TELA ed_01_nome}{BS}{BS}{BS}{BS}{BS}NAOEXISTE{ENTER}
+{TELA ed_02_obra_inexiste}{ENTER}
+{TELA ed_03_nome_volta}{ENTER}
+{TELA ed_04_lista}99{ENTER}
+{TELA ed_05_reg_inexiste}{ENTER}
+1{ENTER}
+{TELA ed_06_confirma}S
+{TELA ed_07_escala}{ENTER}
+{TELA ed_08_form}TESTE CAB1{ENTER}{ENTER}{ENTER}NOTA 1{ENTER}{ENTER}
+{TELA ed_09_desenho}{ENTER}
+{TELA ed_10_reedita}N
+{TELA ed_11_impressora}S
+{TELA ed_12_cad}S
+{TELA ed_13_tipo}{ENTER}
+{TELA ed_14_dados_corretos}S
+# Parte B: volta a lista, registro 2 marcado como nao correto (N) e depois editado
+{TELA ed_15_lista_volta}2{ENTER}N
+{TELA ed_16_lista_2}2{ENTER}S
+{TELA ed_17_escala_v2}{BS}{BS}100{ENTER}
+{TELA ed_18_form_v2}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}
+{TELA ed_19_desenho_v2}{ENTER}
+{TELA ed_20_reedita_s}S
+{TELA ed_21_escala_again}{ENTER}
+{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}
+{TELA ed_22_desenho_again}{ENTER}
+{TELA ed_23_reedita_n}N
+{TELA ed_24_impressora_n}N
+{TELA ed_25_cad_c}S
+{BS}C{ENTER}
+{TELA ed_26_tipo_c_erro}{ENTER}
+# Parte C: lista vazia sai da obra; nome em branco sai do programa
+{TELA ed_27_lista_fim}{ENTER}
+{BS}{BS}{BS}{BS}{BS}{ENTER}

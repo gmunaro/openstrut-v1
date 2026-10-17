@@ -1,0 +1,13 @@
+# T10 v2par_viga_r6 (sufixo a partir do menu do VIGA). Sem obra de partida.
+# Objetivo: R6 do PLANO (VIGA.BAS ~5434, U62-025): o percentual de carga acidental gerada e validado com
+# "VAL > 96 AND VAL < 4" (AND no lugar de OR), entao a tela aceita qualquer valor. Opcao 8 -> 2: acidentais S,
+# Geradas, 150 %; opcao 3: viga VR6 da obra R6, 2 tramos (4 e 5 m), sem balanco nem engaste, inercia constante,
+# carga total 2 t/m nos dois tramos; resultados impressos (a acidental gerada e 1,5 x a total).
+8{ESPERA Correcao dos Parametros}{ESPERA Escolha opcao}{PAUSA 2}{TELA p00}
+2{ESPERA Considero Cargas}{PAUSA 1}S{ENTER}{ESPERA ornecidas ou}{PAUSA 1}G{ENTER}{ESPERA Percentual de Carga Acidental}{PAUSA 1}{TELA p01}150{ENTER}{ESPERA Escolha opcao}{PAUSA 2}{TELA p02_150}
+6{ESPERA VIGAS CONTINUAS}{ESPERA escolha opcao}{PAUSA 2}
+3{ESPERA OBRA}{PAUSA 2}R6{ENTER}{ESPERA Viga *FIM*}{PAUSA 1}VR6{ENTER}{ESPERA Numero de tramos}{PAUSA 1}2{ENTER}{ESPERA Balanco  esquerda}{PAUSA 1}{ENTER}
+{ESPERA Engaste  esquerda}{PAUSA 1}{ENTER}{ESPERA Inercia e constante}{PAUSA 1}{ENTER}{ESPERA L 1}{PAUSA 1}4{ENTER}{ESPERA divisoes de carga}{PAUSA 1}{ENTER}{ESPERA cargas totais}{PAUSA 1}2,,0{ENTER}
+{ESPERA L 2}{PAUSA 1}5{ENTER}{ESPERA divisoes de carga}{PAUSA 1}{ENTER}{ESPERA cargas totais}{PAUSA 1}2,,0{ENTER}
+{ESPERA OBRA-R6}{PAUSA 3}{TELA e01_dados}{ENTER}{ESPERA Imprimo os Resultados}{PAUSA 1}S{ENTER}{ESPERA Desenho Diagramas}{PAUSA 1}{ENTER}{ESPERA esquema estrutural}{PAUSA 1}{ENTER}{ESPERA Dados Corretos}{PAUSA 1}{TELA e02}{ENTER}{ESPERA para seguir}{PAUSA 1}{ENTER}{ESPERA escolha opcao|300}{PAUSA 3}{TELA e03_menu}
+{F2}{ENTER}{ESPERA Configuracao|60}{PAUSA 2}{F2}

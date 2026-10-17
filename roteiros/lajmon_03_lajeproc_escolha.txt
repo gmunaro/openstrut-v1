@@ -1,0 +1,3 @@
+# exe: LAJEPROC
+# LAJEPROC roteiro 03: E com S (escolha automatica), depois I (listagem) e R.
+{TELA lp3_menu}E{TELA lp3_pergunta}{ENTER}{TELA lp3_espera}{ENTER}I{TELA lp3_lst}{ENTER}R

@@ -1,0 +1,395 @@
+' ============================================================================
+'  DESCALC.BM - detalhamento de armaduras de vigas (familia DESENHO)
+'  Sem I/O de tela. Usado por DESDIM/DESEDCAO/DESEDITA/DESIMP/DESGRAF;
+'  testado em tests/T_DESCALC.BAS. Chama CALCCA.BM (DcTabelaAco#,
+'  DcAvisoAsLinha$).
+'
+'  Entrada: viga v carregada de um .SEC (VigLe% arq, "SEC"): por tramo vao,
+'  asPos/phiPos/nPos, negativos, phiEst/sEst. Saida: posicoes de ferro em
+'  VigPos (VigAddPos), gravaveis como .EDV, tabela de aco e desenho .VET.
+'
+'  RECONSTRUCAO FUNCIONAL (NB-1/78, regras usuais de detalhamento):
+'  - Ancoragem basica lb = (phi/4) fyd / tbu, tbu = 0,42 fcd^(2/3) MPa
+'    (barras nervuradas CA-50, boa aderencia). Barras superiores (negativos)
+'    de vigas com h >= 30 cm estao em zona de ma aderencia: lb x 1,5
+'    (DcAncoragemNeg#).
+'  - Positivo: de face a face de apoio mais 10 phi em cada ponta (forma U).
+'  - Negativo sobre apoio interno: 0,25 do maior vao adjacente para cada
+'    lado mais lb (forma R); em balanco, vao do balanco + lb.
+'  - Negativo de extremidade (engaste "ENG" ou apoio de extremidade com
+'    negativo no .SEC): 0,25 do vao + lb para dentro do vao, lb dentro do
+'    apoio e gancho de 10 phi (forma L). Em balanco de 1 tramo (outra ponta
+'    "-"), vao inteiro + lb no engaste, com gancho na ponta livre.
+'  - Porta-estribos: 2 phi 6,3 corridos no tramo cujos negativos das duas
+'    pontas nao cobrem todo o vao.
+'  - Estribo fechado: perimetro interno (cobrimento) + 2 x 10 phi de ganchos.
+'  Comprimentos em cm; phi em mm.
+' ============================================================================
+
+' Comprimento de ancoragem basico (cm) da barra phi (mm).
+' fck, fyk em tf/cm2; gc, gs coeficientes de minoracao.
+FUNCTION DcAncoragem# (phi AS DOUBLE, fck AS DOUBLE, gc AS DOUBLE, fyk AS DOUBLE, gs AS DOUBLE)
+    DIM fcdMPa AS DOUBLE, tbu AS DOUBLE, fydMPa AS DOUBLE
+    fcdMPa = fck / gc * 98.0665#
+    tbu = 0.42# * fcdMPa ^ (2# / 3#)
+    fydMPa = fyk / gs * 98.0665#
+    DcAncoragem# = (phi / 10#) / 4# * fydMPa / tbu
+END FUNCTION
+
+' Comprimento de ancoragem (cm) de barra superior (negativo) phi (mm) numa
+' viga de altura h (cm). NB-1/78: em pecas com h >= 30 cm as barras
+' horizontais da parte superior ficam em situacao de ma aderencia, com tbu
+' reduzido a 2/3 (lb x 1,5); abaixo de 30 cm, boa aderencia (DcAncoragem#).
+' RECONSTRUCAO: item da NB-1/78 (situacao de aderencia e fator 2/3) nao
+' conferido no texto; com h >= 30 cm toda barra superior conta como ma
+' aderencia, a favor da seguranca.
+FUNCTION DcAncoragemNeg# (phi AS DOUBLE, fck AS DOUBLE, gc AS DOUBLE, fyk AS DOUBLE, gs AS DOUBLE, h AS DOUBLE)
+    IF h >= 30# THEN
+        DcAncoragemNeg# = 1.5# * DcAncoragem#(phi, fck, gc, fyk, gs)
+    ELSE
+        DcAncoragemNeg# = DcAncoragem#(phi, fck, gc, fyk, gs)
+    END IF
+END FUNCTION
+
+' Apoio esquerdo (lado = 0) ou direito (lado = 1) da viga v tem negativo de
+' extremidade: apoio real (nao balanco "-") com barras negativas no .SEC
+' (nNegEsq do 1o tramo ou nNegDir do ultimo). Ex.: engaste "ENG".
+FUNCTION DcNegExtremo% (v AS INTEGER, lado AS INTEGER)
+    DIM nT AS INTEGER, ti AS INTEGER
+    nT = Vig(v).nTramos
+    IF lado = 0 THEN
+        ti = Vig(v).iTra
+        IF RTRIM$(VigApo(Vig(v).iApo).nome) = "-" THEN EXIT FUNCTION
+        DcNegExtremo% = (VigTra(ti).nNegEsq > 0 AND VigTra(ti).phiNegEsq > 0)
+    ELSE
+        ti = Vig(v).iTra + nT - 1
+        IF RTRIM$(VigApo(Vig(v).iApo + nT).nome) = "-" THEN EXIT FUNCTION
+        DcNegExtremo% = (VigTra(ti).nNegDir > 0 AND VigTra(ti).phiNegDir > 0)
+    END IF
+END FUNCTION
+
+' Peso linear (kg/m) da barra de diametro phi (mm): 7850 kg/m3 * area.
+FUNCTION DcPesoMetro# (phi AS DOUBLE)
+    DcPesoMetro# = 7850# * 3.14159265358979# * (phi / 1000#) ^ 2 / 4#
+END FUNCTION
+
+' Comprimento (cm) do estribo fechado de 2 ramos na secao bw x h com
+' cobrimento cob (cm) e ganchos de 10 phi.
+FUNCTION DcComprEstribo# (bw AS DOUBLE, h AS DOUBLE, cob AS DOUBLE, phi AS DOUBLE)
+    DcComprEstribo# = 2# * (bw - 2# * cob) + 2# * (h - 2# * cob) + 2# * 10# * phi / 10#
+END FUNCTION
+
+' Gera as posicoes de ferro da viga v (VigPos, via VigAddPos), tramo a
+' tramo, numerando a partir de pos0. Devolve a ultima posicao usada.
+' Zera as posicoes anteriores da viga (precisa ser a ultima viga a receber
+' posicoes, regra de ordem do VigAddPos).
+' Ordem por tramo: negativo de extremidade esquerda (so no 1o tramo, ver
+' DcNegExtremo%), positivo, negativo do apoio direito ou de extremidade
+' direita (ultimo tramo), porta-estribos, estribos. DcDesenhaViga usa essa
+' ordem para posicionar os negativos de extremidade.
+FUNCTION DcDetalha% (v AS INTEGER, pos0 AS INTEGER, cob AS DOUBLE, fck AS DOUBLE, gc AS DOUBLE, fyk AS DOUBLE, gs AS DOUBLE)
+    DIM t AS INTEGER, ti AS INTEGER, nT AS INTEGER, np AS INTEGER, L AS DOUBLE, lb AS DOUBLE, ladj AS DOUBLE
+    DIM cantE AS INTEGER, cantD AS INTEGER, n AS INTEGER, h AS DOUBLE
+    nT = Vig(v).nTramos: h = Vig(v).h
+    ' cobE(t) / cobD(t): trecho (cm) do tramo t coberto pelo negativo da
+    ' ponta esquerda / direita; decide o porta-estribos
+    DIM cobE(1 TO nT + 1) AS DOUBLE, cobD(1 TO nT) AS DOUBLE
+    cantE = (RTRIM$(VigApo(Vig(v).iApo).nome) = "-")
+    cantD = (RTRIM$(VigApo(Vig(v).iApo + nT).nome) = "-")
+    np = pos0 - 1
+    FOR t = 1 TO nT
+        ti = Vig(v).iTra + t - 1
+        VigTra(ti).nPosFerro = 0
+        L = VigTra(ti).vao * 100#
+        ' negativo de extremidade esquerda (engaste): 0,25 L + lb dentro do
+        ' vao, lb dentro do apoio e gancho de 10 phi (forma L).
+        ' RECONSTRUCAO: o .SEC nao traz a largura do apoio; o lb dentro do
+        ' apoio conta a partir da extremidade do vao e termina em gancho.
+        ' Balanco de 1 tramo (outra ponta "-"): M so zera na ponta livre, entao a
+        ' barra corre o balanco inteiro (gancho na ponta) e ancora lb no engaste.
+        IF t = 1 AND DcNegExtremo%(v, 0) THEN
+            lb = DcAncoragemNeg#(VigTra(ti).phiNegEsq, fck, gc, fyk, gs, h)
+            np = np + 1
+            IF nT = 1 AND cantD THEN
+                VigAddPos ti, np, VigTra(ti).phiNegEsq, VigTra(ti).nNegEsq, L + lb, "L"
+                cobE(1) = L
+            ELSE
+                VigAddPos ti, np, VigTra(ti).phiNegEsq, VigTra(ti).nNegEsq, 0.25# * L + 2# * lb + VigTra(ti).phiNegEsq, "L"
+                cobE(1) = 0.25# * L + lb
+            END IF
+        END IF
+        ' positivo
+        IF VigTra(ti).nPos > 0 AND VigTra(ti).phiPos > 0 THEN
+            np = np + 1
+            VigAddPos ti, np, VigTra(ti).phiPos, VigTra(ti).nPos, L + 2# * VigTra(ti).phiPos, "U"
+        END IF
+        ' negativo no apoio direito (entre t e t+1) ou balanco
+        IF VigTra(ti).nNegDir > 0 AND VigTra(ti).phiNegDir > 0 THEN
+            lb = DcAncoragemNeg#(VigTra(ti).phiNegDir, fck, gc, fyk, gs, h)
+            IF t < nT THEN
+                ladj = VigTra(ti).vao: IF VigTra(ti + 1).vao > ladj THEN ladj = VigTra(ti + 1).vao
+                np = np + 1
+                IF t = 1 AND cantE THEN
+                    ' balanco a esquerda: todo o balanco + 0,25 do vao seguinte + lb
+                    VigAddPos ti, np, VigTra(ti).phiNegDir, VigTra(ti).nNegDir, VigTra(ti).vao * 100# + 0.25# * VigTra(ti + 1).vao * 100# + lb, "L"
+                    cobD(t) = L: cobE(t + 1) = 0.25# * VigTra(ti + 1).vao * 100# + lb
+                ELSEIF t + 1 = nT AND cantD THEN
+                    ' balanco a direita: 0,25 do vao anterior + todo o balanco + lb
+                    VigAddPos ti, np, VigTra(ti).phiNegDir, VigTra(ti).nNegDir, 0.25# * VigTra(ti).vao * 100# + VigTra(ti + 1).vao * 100# + lb, "L"
+                    cobD(t) = 0.25# * L + lb: cobE(t + 1) = VigTra(ti + 1).vao * 100#
+                ELSE
+                    VigAddPos ti, np, VigTra(ti).phiNegDir, VigTra(ti).nNegDir, 2# * (0.25# * ladj * 100# + lb), "R"
+                    cobD(t) = 0.25# * ladj * 100# + lb: cobE(t + 1) = cobD(t)
+                END IF
+            ELSEIF DcNegExtremo%(v, 1) THEN
+                ' negativo de extremidade direita (engaste), como o da esquerda
+                np = np + 1
+                IF nT = 1 AND cantE THEN
+                    VigAddPos ti, np, VigTra(ti).phiNegDir, VigTra(ti).nNegDir, L + lb, "L"
+                    cobD(t) = L
+                ELSE
+                    VigAddPos ti, np, VigTra(ti).phiNegDir, VigTra(ti).nNegDir, 0.25# * L + 2# * lb + VigTra(ti).phiNegDir, "L"
+                    cobD(t) = 0.25# * L + lb
+                END IF
+            END IF
+        END IF
+        ' porta-estribos quando os negativos das pontas nao cobrem o tramo
+        IF cobE(t) + cobD(t) < L THEN
+            np = np + 1
+            VigAddPos ti, np, 6.3#, 2, L, "R"
+        END IF
+        ' estribos
+        IF VigTra(ti).phiEst > 0 AND VigTra(ti).sEst > 0 THEN
+            n = INT(L / VigTra(ti).sEst) + 1
+            np = np + 1
+            VigAddPos ti, np, VigTra(ti).phiEst, n, DcComprEstribo#(Vig(v).bw, Vig(v).h, cob, VigTra(ti).phiEst), "E"
+        END IF
+    NEXT
+    DcDetalha% = np
+END FUNCTION
+
+' Soma o aco das posicoes de todas as vigas por bitola: compr(i) em m e
+' peso(i) em kg para a bitola CcaBitola#(i), i = 1..9. Devolve o peso total.
+FUNCTION DcTabelaAco# (compr() AS DOUBLE, peso() AS DOUBLE)
+    DIM j AS INTEGER, i AS INTEGER, tot AS DOUBLE, m AS DOUBLE, v AS INTEGER, t AS INTEGER, ti AS INTEGER
+    FOR i = 1 TO 9: compr(i) = 0: peso(i) = 0: NEXT
+    ' percorre as posicoes ligadas aos tramos (ignora entradas orfas de VigPos
+    ' deixadas por um DcDetalha% repetido)
+    FOR v = 1 TO VigQtd
+        FOR t = 1 TO Vig(v).nTramos
+            ti = Vig(v).iTra + t - 1
+            FOR j = VigTra(ti).iPosFerro TO VigTra(ti).iPosFerro + VigTra(ti).nPosFerro - 1
+                FOR i = 1 TO 9
+                    IF ABS(CcaBitola#(i) - VigPos(j).phi) < 0.01 THEN
+                        m = VigPos(j).n * VigPos(j).compr / 100#
+                        compr(i) = compr(i) + m
+                        peso(i) = peso(i) + m * DcPesoMetro#(VigPos(j).phi)
+                    END IF
+                NEXT
+            NEXT
+        NEXT
+    NEXT
+    FOR i = 1 TO 9: tot = tot + peso(i): NEXT
+    DcTabelaAco# = tot
+END FUNCTION
+
+' Desenha a elevacao da viga v em .VET sem o .EDX: tipo e inicio de cada
+' barra deduzidos pela forma (DcGeoBarra). Ver DcDesenhaVigaGeo.
+SUB DcDesenhaViga (v AS INTEGER, arq AS STRING, esc AS DOUBLE, obra AS STRING)
+    DIM gT(1 TO 1) AS STRING, gX(1 TO 1) AS DOUBLE
+    DcDesenhaVigaGeo v, arq, esc, obra, gT(), gX(), ""
+END SUB
+
+' Desenha a elevacao da viga v em .VET (escala 1:esc, mm no papel):
+' contorno (pena 1), apoios, barras (pena 2: positivo e grampo embaixo,
+' negativo e porta-estribo em cima, de xi a xi + compr), estribos (pena 2),
+' cotas dos vaos e textos das posicoes (pena 3), titulo (pena 5) e, se
+' nota <> "", a nota acima do titulo (pena 3). Tipo e inicio de cada barra
+' vem de gT/gX (o .EDX lido por DcLeEdx%) ou sao deduzidos (DcGeoBarra).
+SUB DcDesenhaVigaGeo (v AS INTEGER, arq AS STRING, esc AS DOUBLE, obra AS STRING, gT() AS STRING, gX() AS DOUBLE, nota AS STRING)
+    DIM f AS INTEGER, t AS INTEGER, ti AS INTEGER, k AS INTEGER, j AS INTEGER, x0 AS DOUBLE, L AS DOUBLE
+    DIM s AS DOUBLE, hh AS DOUBLE, xa AS DOUBLE, ne AS INTEGER, txt AS STRING, yt AS DOUBLE
+    DIM tipo AS STRING, xi AS DOUBLE, xb AS DOUBLE
+    s = 1000# / esc            ' mm de papel por m
+    hh = Vig(v).h / 100# * s
+    f = VetAbre%(arq, "OBRA - " + obra + "  VIGA - " + RTRIM$(Vig(v).nome))
+    x0 = 0
+    FOR t = 1 TO Vig(v).nTramos
+        ti = Vig(v).iTra + t - 1: L = VigTra(ti).vao * s
+        VetRetangulo f, x0, 0, x0 + L, hh, 1
+        ' apoio
+        IF RTRIM$(VigApo(Vig(v).iApo + t - 1).nome) <> "-" THEN VetRetangulo f, x0 - 2, -6, x0 + 2, 0, 1
+        ' cota
+        VetLinha f, x0, -12, x0 + L, -12, 3
+        VetTexto f, x0 + L / 2 - 6, -18, 2.5, 0, 3, LTRIM$(STR$(VigTra(ti).vao))
+        ' posicoes
+        yt = -26
+        FOR k = 0 TO VigTra(ti).nPosFerro - 1
+            j = VigTra(ti).iPosFerro + k
+            txt = "N" + LTRIM$(STR$(VigPos(j).numPos)) + " " + LTRIM$(STR$(VigPos(j).n)) + " d" + LTRIM$(STR$(VigPos(j).phi)) + " c=" + LTRIM$(STR$(CLNG(VigPos(j).compr)))
+            DcGeoBarra v, t, k, gT(), gX(), tipo, xi
+            xa = xi / 100# * s: xb = (xi + VigPos(j).compr) / 100# * s
+            SELECT CASE tipo
+                CASE "P", "G": VetLinha f, xa, 3, xb, 3, 2
+                CASE "N", "PE": VetLinha f, xa, hh - 3, xb, hh - 3, 2
+                CASE ELSE
+                    ne = VigPos(j).n: IF ne > 40 THEN ne = 40
+                    FOR xa = 1 TO ne
+                        VetLinha f, x0 + L * (xa - 0.5) / ne, 2, x0 + L * (xa - 0.5) / ne, hh - 2, 2
+                    NEXT
+                    txt = txt + " c/" + LTRIM$(STR$(VigTra(ti).sEst))
+            END SELECT
+            VetTexto f, x0 + 2, yt, 2, 0, 3, txt
+            yt = yt - 4
+        NEXT
+        x0 = x0 + L
+    NEXT
+    IF RTRIM$(VigApo(Vig(v).iApo + Vig(v).nTramos).nome) <> "-" THEN VetRetangulo f, x0 - 2, -6, x0 + 2, 0, 1
+    VetTexto f, 0, hh + 8, 3.5, 0, 5, "VIGA " + RTRIM$(Vig(v).nome) + " (" + LTRIM$(STR$(Vig(v).bw)) + "x" + LTRIM$(STR$(Vig(v).h)) + ")  ESCALA 1/" + LTRIM$(STR$(esc))
+    IF nota <> "" THEN VetTexto f, 0, hh + 14, 2.5, 0, 3, nota
+    VetFecha f
+END SUB
+
+' Tipo e inicio da k-esima posicao (k = 0, 1, ...) do tramo t da viga v:
+' tipo P positivo, N negativo, PE porta-estribo, G grampo ou E estribo; xi
+' em cm a partir da ponta esquerda da viga. Usa gT(j)/gX(j) quando o .EDX
+' trouxe a barra (DcLeEdx%); senao deduz como DecGeoInfere (DESEDC.BM): U
+' positivo centrado no vao, R/L ate 6,3 porta-estribo na face esquerda, R/L
+' maiores negativo centrado no apoio direito, salvo o de extremidade, que
+' comeca (esquerda) ou termina (direita) na face do apoio. No balanco de 1
+' tramo o negativo termina na ponta livre e entra lb no engaste.
+SUB DcGeoBarra (v AS INTEGER, t AS INTEGER, k AS INTEGER, gT() AS STRING, gX() AS DOUBLE, tipo AS STRING, xi AS DOUBLE)
+    DIM ti AS INTEGER, j AS INTEGER, i AS INTEGER, nT AS INTEGER, x0 AS DOUBLE, L AS DOUBLE, c AS DOUBLE
+    nT = Vig(v).nTramos: ti = Vig(v).iTra + t - 1: j = VigTra(ti).iPosFerro + k
+    IF j >= LBOUND(gT) AND j <= UBOUND(gT) THEN
+        IF gT(j) <> "" THEN tipo = gT(j): xi = gX(j): EXIT SUB
+    END IF
+    FOR i = 1 TO t - 1: x0 = x0 + VigTra(Vig(v).iTra + i - 1).vao * 100#: NEXT
+    L = VigTra(ti).vao * 100#: c = VigPos(j).compr
+    SELECT CASE VigPos(j).forma
+        CASE "E": tipo = "E": xi = x0
+        CASE "U": tipo = "P": xi = x0 + L / 2# - c / 2#
+        CASE ELSE
+            IF VigPos(j).phi > 6.3 THEN
+                tipo = "N"
+                IF t = 1 AND k = 0 AND DcNegExtremo%(v, 0) THEN
+                    IF nT = 1 AND RTRIM$(VigApo(Vig(v).iApo + 1).nome) = "-" THEN xi = x0 + L - c ELSE xi = x0
+                ELSEIF t = nT AND DcNegExtremo%(v, 1) THEN
+                    IF nT = 1 AND RTRIM$(VigApo(Vig(v).iApo).nome) = "-" THEN xi = x0 ELSE xi = x0 + L - c
+                ELSE
+                    xi = x0 + L - c / 2#
+                END IF
+            ELSE
+                tipo = "PE": xi = x0
+            END IF
+    END SELECT
+END SUB
+
+' Le o .EDX do DESEDCAO (layout no comentario de EdvGravaEdx, DESEDCAO.BAS)
+' para as vigas ja carregadas do .EDV: gT(j) recebe o tipo (P/N/PE/G/E) e
+' gX(j) o inicio (cm da ponta esquerda da viga) de cada barra que ainda bate
+' em bitola, quantidade e comprimento com o .EDV, como no DESEDCAO. As
+' demais ficam com gT(j) = "" (DcGeoBarra deduz). Devolve quantas barras
+' vieram do arquivo; 0 sem o arquivo. Usado por DESIMP e DESGRAF.
+FUNCTION DcLeEdx% (arq AS STRING, gT() AS STRING, gX() AS DOUBLE)
+    DIM f AS INTEGER, k AS INTEGER, q AS INTEGER, j AS INTEGER, lidas AS INTEGER, ob AS STRING
+    DIM nome AS STRING, num AS INTEGER, phi AS DOUBLE, n AS INTEGER, compr AS DOUBLE, tipo AS STRING, xi AS DOUBLE
+    FOR j = LBOUND(gT) TO UBOUND(gT): gT(j) = "": gX(j) = 0: NEXT
+    IF NOT _FILEEXISTS(arq) THEN EXIT FUNCTION
+    f = DadAbreLeitura%(arq, "EDX", ob)
+    IF f = 0 THEN EXIT FUNCTION
+    IF NOT EOF(f) THEN INPUT #f, q
+    FOR k = 1 TO q
+        IF EOF(f) THEN EXIT FOR
+        INPUT #f, nome, num, phi, n, compr, tipo, xi
+        j = DcAchaPos%(nome, num)
+        IF j >= LBOUND(gT) AND j <= UBOUND(gT) THEN
+            IF ABS(VigPos(j).phi - phi) < 0.01 AND VigPos(j).n = n AND ABS(VigPos(j).compr - compr) < 0.01 THEN
+                gT(j) = tipo: gX(j) = xi: lidas = lidas + 1
+            END IF
+        END IF
+    NEXT
+    CLOSE #f
+    DcLeEdx% = lidas
+END FUNCTION
+
+' Indice em VigPos da posicao numero num (n > 0) da viga de nome nome
+' (sem caixa nem espacos nas pontas). 0 = nao achou.
+FUNCTION DcAchaPos% (nome AS STRING, num AS INTEGER)
+    DIM v AS INTEGER, t AS INTEGER, ti AS INTEGER, j AS INTEGER
+    FOR v = 1 TO VigQtd
+        IF UCASE$(RTRIM$(Vig(v).nome)) = UCASE$(LTRIM$(RTRIM$(nome))) THEN
+            FOR t = 1 TO Vig(v).nTramos
+                ti = Vig(v).iTra + t - 1
+                FOR j = VigTra(ti).iPosFerro TO VigTra(ti).iPosFerro + VigTra(ti).nPosFerro - 1
+                    IF VigPos(j).numPos = num AND VigPos(j).n > 0 THEN DcAchaPos% = j: EXIT FUNCTION
+                NEXT
+            NEXT
+            EXIT FUNCTION
+        END IF
+    NEXT
+END FUNCTION
+
+' Aviso de armadura dupla sem detalhe: o .SEC nao tem campo para As' (a
+' VIGA so avisa, ver VcDimensiona em viga/VIGCALC.BM), entao o detalhamento
+' nao sabe quanto aco comprimido por e fica com o porta-estribo. Devolve ""
+' ou o texto com os tramos em que Md = 1,4 Mk passa do limite da armadura
+' simples (CcaAsFlexao# < 0, o criterio de VcAsMin#). fck, fyk em tf/cm2.
+' RECONSTRUCAO: gf = 1,4 fixo; o .SEC nao traz o gf usado na VIGA.
+FUNCTION DcAvisoAsLinha$ (v AS INTEGER, fck AS DOUBLE, gc AS DOUBLE, fyk AS DOUBLE, gs AS DOUBLE)
+    DIM t AS INTEGER, ti AS INTEGER, bw AS DOUBLE, d AS DOUBLE, fcd AS DOUBLE, fyd AS DOUBLE, txt AS STRING, tt AS STRING
+    bw = Vig(v).bw: d = Vig(v).d: fcd = fck / gc: fyd = fyk / gs
+    IF d <= 0 OR bw <= 0 THEN EXIT FUNCTION
+    FOR t = 1 TO Vig(v).nTramos
+        ti = Vig(v).iTra + t - 1: tt = " T" + LTRIM$(STR$(t))
+        IF VigTra(ti).mPos > 0 THEN
+            IF CcaAsFlexao#(1.4# * VigTra(ti).mPos * 100#, bw, d, fcd, fyd) < 0 THEN txt = txt + tt + " M+"
+        END IF
+        IF VigTra(ti).mNegEsq < 0 THEN
+            IF CcaAsFlexao#(-1.4# * VigTra(ti).mNegEsq * 100#, bw, d, fcd, fyd) < 0 THEN txt = txt + tt + " M- esq"
+        END IF
+        IF VigTra(ti).mNegDir < 0 THEN
+            IF CcaAsFlexao#(-1.4# * VigTra(ti).mNegDir * 100#, bw, d, fcd, fyd) < 0 THEN txt = txt + tt + " M- dir"
+        END IF
+    NEXT
+    IF txt <> "" THEN DcAvisoAsLinha$ = "AVISO " + RTRIM$(Vig(v).nome) + ": armadura dupla sem As' no .SEC, detalhar a mao:" + txt
+END FUNCTION
+
+' Le cobrimento (cm), fck, fyk (tf/cm2) e coeficientes do .DSP arq com as
+' linhas de DESINIT: 39 cob, 33 fck, 34 fyk, 36 multiplicador para tf/cm2,
+' 45 gc, 46 gs. Sem o arquivo ou a linha: 2,5, C15, CA-50, 1,4 e 1,15.
+SUB DcLeMateriais (arq AS STRING, cob AS DOUBLE, fck AS DOUBLE, gc AS DOUBLE, fyk AS DOUBLE, gs AS DOUBLE)
+    DIM mult AS DOUBLE
+    cob = DcValorDsp#(arq, 39, 2.5#)
+    mult = DcValorDsp#(arq, 36, 1#)
+    fck = DcValorDsp#(arq, 33, 0#) * mult: IF fck <= 0 THEN fck = 0.15#
+    fyk = DcValorDsp#(arq, 34, 0#) * mult: IF fyk <= 0 THEN fyk = 5#
+    gc = DcValorDsp#(arq, 45, 1.4#)
+    gs = DcValorDsp#(arq, 46, 1.15#)
+END SUB
+
+' Valor numerico (1o campo) da linha "linha" do .DSP arq; padrao se nao ha.
+FUNCTION DcValorDsp# (arq AS STRING, linha AS INTEGER, padrao AS DOUBLE)
+    DIM f AS INTEGER, i AS INTEGER, l AS STRING, p AS INTEGER
+    DcValorDsp# = padrao
+    IF NOT _FILEEXISTS(arq) THEN EXIT FUNCTION
+    f = FREEFILE
+    OPEN arq FOR INPUT AS #f
+    FOR i = 1 TO linha
+        IF EOF(f) THEN l = "": EXIT FOR
+        LINE INPUT #f, l
+    NEXT
+    CLOSE #f
+    l = LTRIM$(RTRIM$(l))
+    p = INSTR(l, " ")
+    IF p > 0 THEN l = LEFT$(l, p - 1)
+    IF VAL(l) > 0 THEN DcValorDsp# = VAL(l)
+END FUNCTION
+
+' Diametro (mm) do pino de dobramento dos ganchos da barra phi (mm), CA-50:
+' 5 phi para phi < 20 e 8 phi para phi >= 20. O raio e a metade.
+' RECONSTRUCAO: valores do CA-50 como na tabela de pinos da NBR 6118, sem
+' conferir no texto da NB-1/78; usados para toda bitola da tabela.
+FUNCTION DcDiamPino# (phi AS DOUBLE)
+    IF phi < 20 THEN DcDiamPino# = 5# * phi ELSE DcDiamPino# = 8# * phi
+END FUNCTION

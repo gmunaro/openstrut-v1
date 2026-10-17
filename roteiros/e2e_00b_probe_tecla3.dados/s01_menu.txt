@@ -1,0 +1,25 @@
+
+                           S I S T R U T
+                        OpenStrut                     
+                        Versao 4.0          Abril 1991
+
+              Escolha o modulo pela letra em intensidade:
+
+       P ) Portico                             I ) Pilar
+       G ) Grelha                              D ) Desenho
+       T ) Trelica / Diagramas                 O ) Plotagem
+       L ) Laje                                M ) Detalhamento & Desenho
+       V ) Viga                                C ) Configuracao
+       A ) Armacao                             E ) Editor
+       F ) Forma
+
+
+       <F1> = Informacoes      <F2> = Fim
+
+       Opcao:
+
+
+
+
+
+

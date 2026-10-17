@@ -1,0 +1,10 @@
+d>=x 0  d=x 0  d<x-1 
+IF 0 
+VAL 0 
+ext>e-1 
+SELECT d 2 
+SELECT x 2 
+FOR# 0 
+FOR! 2 
+WHILE 0 
+DO 0 

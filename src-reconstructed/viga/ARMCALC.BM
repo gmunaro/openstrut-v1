@@ -1,0 +1,59 @@
+' ============================================================================
+'  ARMCALC.BM - armadura dupla de vigas (NB-1/78), funcoes puras.
+'  Usa CcaMdLim#, CcaAsFlexao#, CcaXdLim# e CcaTensaoAco# de common/CALCCA.BM;
+'  sem I/O de tela. Unidades: tf, cm, tf/cm2, tf.cm (ver CALCCA.BM).
+'  Com armadura dupla a linha neutra fica no limite x = xlim d (CcaXdLim#,
+'  depende da classe do aco). A tracionada trabalha com fyd; a comprimida com
+'  a tensao do diagrama da classe para es' = 0,0035 (x - dl) / x, que pode
+'  ser menor que fyd (classe B, ou dl grande em relacao a x).
+'  ArmAsLinha# e ArmAsDupla# devolvem -1 se d <= dl.
+' ============================================================================
+
+' Armadura comprimida As' (cm2): As' = (Md - MdLim) / (s's (d - dl)), com s's
+' a tensao do aco comprimido na linha neutra limite. Zero se Md <= MdLim.
+' Retorna -1 se d <= dl ou se dl esta abaixo da linha neutra (s's <= 0).
+FUNCTION ArmAsLinha# (md AS DOUBLE, bw AS DOUBLE, d AS DOUBLE, dl AS DOUBLE, fcd AS DOUBLE, fyd AS DOUBLE)
+    DIM mdLim AS DOUBLE, xl AS DOUBLE, sl AS DOUBLE
+    IF d <= dl THEN
+        ArmAsLinha# = -1
+    ELSE
+        mdLim = CcaMdLim#(bw, d, fcd, fyd)
+        IF md <= mdLim THEN
+            ArmAsLinha# = 0
+        ELSE
+            xl = CcaXdLim#(fyd) * d
+            sl = CcaTensaoAco#(0.0035# * (xl - dl) / xl, fyd)
+            IF sl <= 0 THEN
+                ArmAsLinha# = -1
+            ELSE
+                ArmAsLinha# = (md - mdLim) / (sl * (d - dl))
+            END IF
+        END IF
+    END IF
+END FUNCTION
+
+' Armadura tracionada total (cm2): As = As1 + As2, onde As1 equilibra o
+' momento limite MdLim e As2 = (Md - MdLim) / (fyd (d - dl)) o excesso.
+' Se Md <= MdLim, e armadura simples (CcaAsFlexao#). Retorna -1 se d <= dl.
+FUNCTION ArmAsDupla# (md AS DOUBLE, bw AS DOUBLE, d AS DOUBLE, dl AS DOUBLE, fcd AS DOUBLE, fyd AS DOUBLE)
+    DIM mdLim AS DOUBLE, xl AS DOUBLE
+    IF d <= dl THEN
+        ArmAsDupla# = -1
+    ELSE
+        mdLim = CcaMdLim#(bw, d, fcd, fyd)
+        IF md <= mdLim * (1# - 0.000000001#) THEN
+            ArmAsDupla# = CcaAsFlexao#(md, bw, d, fcd, fyd)
+        ELSE
+            ' As1 pela formula direta: CcaAsFlexao# devolve -1 exatamente no limite (x = xlim)
+            xl = CcaXdLim#(fyd) * d
+            ArmAsDupla# = mdLim / (fyd * (d - 0.4# * xl)) + (md - mdLim) / (fyd * (d - dl))
+        END IF
+    END IF
+END FUNCTION
+
+' Area maxima (cm2) de As + As' na secao bw x h: 4% de Ac.
+' RECONSTRUCAO: limite de 4% de Ac adotado para vigas (NB-1/78 6.3.1.1 nao
+' conferido no texto); acima dele a secao e tratada como insuficiente.
+FUNCTION ArmAsMax# (bw AS DOUBLE, h AS DOUBLE)
+    ArmAsMax# = 0.04# * bw * h
+END FUNCTION

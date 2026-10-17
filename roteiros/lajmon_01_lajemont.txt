@@ -1,0 +1,5 @@
+# exe: LAJEMONT
+# LAJEMONT, roteiro 01: obra FLUXO (dados em lajmon_01_lajemont.dados).
+# Tabela de reacoes, totais, avisos (nao ha), esquemas de vigas e pilares,
+# F5 invalido na pergunta, relatorio S e gravacao com indexacoes S.
+{TELA lm_reacoes}{ENTER}{TELA lm_totais}{ENTER}{TELA lm_esq_vigas}{ENTER}{TELA lm_esq_pilares}{ENTER}{F5}x{TELA lm_perg_rel}S{TELA lm_perg_idx}{ENTER}{TELA lm_grava}{ENTER}{TELA lm_fim}

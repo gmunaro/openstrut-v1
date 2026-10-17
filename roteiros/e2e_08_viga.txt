@@ -1,0 +1,7 @@
+# exe: SISTRUT
+# Obra E2E (dados do e2e_07). VIGA: menu principal V -> 6 (Gravacao e Leitura) -> 5 (leitura E2E) -> 8 (retorno)
+# -> 2 (processar V1/V2/V3/V4/V5/V6, lista explicita) -> 7 (resumo de cargas nos pilares, gravar .REP com S) -> F2 -> F2.
+# A lista explicita de vigas e de proposito; a faixa ("V1 A V6") e testada no e2e_08b_viga_faixa.txt.
+# Leitura: "E2E" no campo "Nome da Obra" e S para descartar a memoria (vazia).
+# No resumo, o ENTER depois de 7 responderia o prompt do .REP (padrao N); por isso so o S e enviado.
+{TELA s01_menu}V{TELA v01_menu_viga}6{TELA v02_disco}5{TELA v03_leit_nome}E2E{ENTER}{TELA v04_leit_memoria}S{TELA v05_leit_fim}{ENTER}8{TELA v06_menu_pos_leit}2{TELA v07_proc_pede}V1/V2/V3/V4/V5/V6{TELA v07b_proc_digitado}{ENTER}{TELA v08_proc_tela1}{ENTER}{TELA v09_proc_tela2}{ENTER}{TELA v10_proc_fim}{ENTER}{TELA v11_menu_pos_proc}7{TELA v12_resumo_tela}S{TELA v13_resumo_rep}{ENTER}{TELA v14_resumo_fim}{ENTER}{TELA v15_menu_pos_resumo}{F2}{TELA s02_menu}{F2}

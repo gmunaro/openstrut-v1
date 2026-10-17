@@ -1,0 +1,4 @@
+# exe: ARMADURA
+# ARMADURA item 6 (INI sem chave CS do aco): P deve recusar com aviso de INI invalido, sem resultado.
+P{TELA ausente}{ENTER}
+{TELA fim}{F2}

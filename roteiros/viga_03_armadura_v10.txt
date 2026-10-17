@@ -1,0 +1,36 @@
+# exe: ARMADURA
+# ARMADURA com a obra V10OBRA (roteiros/viga_03_armadura_v10.dados: so SISTRUT.OBR = "V10OBRA").
+# Percorre M, A, P, 4, C, V, L e F2. Os valores de A sao a secao retangular B 20, H 50, d 46,
+# Mk 7,03 tf.m (positivo -> M+) e Vk 7,03 tf. A posicao 2 (Mk -7,03 -> M-) cobre o ramo negativo.
+# {BS} apaga o padrao antes de digitar (EntradaTexto$ anexa ao padrao).
+
+# M (materiais): 5 campos (Fck, Fyk, tipo A/B, grandeza, multiplicador) confirmados com Enter; depois uma tecla
+{TELA menu}M{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{TELA materiais}{ENTER}
+
+# A (arquivar): secao 1 (M+) cancelada com N; secao 1 regravada com S; secao 2 (M-) com S;
+# opcao 2 (lacuna): a mensagem "Acione ESC" consome o primeiro ESC; o segundo sai do laco de A e grava POS 1 e POS 2
+A{TELA arquivar}1{BS}20{ENTER}{BS}50{ENTER}{BS}46{ENTER}{BS}7.03{ENTER}{BS}7.03{ENTER}N
+1{BS}20{ENTER}{BS}50{ENTER}{BS}46{ENTER}{BS}7.03{ENTER}{BS}7.03{ENTER}{TELA arquivar_pos1}S
+1{BS}20{ENTER}{BS}50{ENTER}{BS}46{ENTER}{BS}-7.03{ENTER}{BS}7.03{ENTER}{TELA arquivar_pos2}S
+2{TELA arquivar_lacuna}{ESC}{ESC}
+
+# P (processar): I=1 e J=2 (Enter mantem os padroes); uma tecla ao fim
+P{ENTER}{ENTER}{TELA processa}{ENTER}
+
+# 4 (secao avulsa): Fck, Fyk e tipo mantidos (3 Enter); tipo 1; B 20, H 50, d 46, Mk 7,03, Vk 7,03; tecla de continuacao; o item repete os campos Fck, Fyk e tipo (3 Enter) e ESC na escolha de tipo volta ao menu principal
+4{ENTER}{ENTER}{ENTER}1{BS}20{ENTER}{BS}50{ENTER}{BS}46{ENTER}{BS}7.03{ENTER}{BS}7.03{ENTER}{TELA avulso}{ENTER}{ENTER}{ENTER}{ENTER}{ESC}
+
+# C (correcao): posicao 1; item 4 (Mk); novo valor 7.5; posicao 9 (inexistente, aviso de 1 s); posicao 0 (FIM) grava; o aviso "reprocesse com P" aguarda uma tecla (segundo ENTER)
+C{BS}1{ENTER}{BS}4{ENTER}{BS}{BS}{BS}{BS}{BS}{BS}7.5{ENTER}{BS}9{ENTER}{TELA corrige_inexistente}{BS}0{ENTER}{TELA corrige_fim}{ENTER}{ENTER}
+
+# P de novo, para reprocessar a posicao 1 corrigida (I=1, J=2 por Enter)
+P{ENTER}{ENTER}{TELA processa2}{ENTER}
+
+# V (parametros): 9 campos confirmados com Enter; uma tecla ao fim
+V{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}{TELA parametros}{ENTER}
+
+# L (lista): sem imprimir (N); depois gravar o LST (S) e tecla ao fim do aviso
+L{TELA lista}N
+L{TELA lista_rel}S{TELA relatorio}{ENTER}
+
+{TELA fim}{F2}

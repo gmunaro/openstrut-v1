@@ -1,0 +1,7 @@
+# exe: DESIMP
+# Item 8 (LACUNAS-V1): gera o DXF da tabela de ferros da obra FLUXO.
+# Enter em branco abre a TABELA de aco, X grava o DXF (titulos, camadas, FERRO, COTAS).
+{TELA lac08_01_lista}v3{ENTER}
+{TELA lac08_02_v3}{SPACE}{SPACE}
+{TELA lac08_03_lista_fim}{ENTER}
+{TELA lac08_04_tabela}X

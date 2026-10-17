@@ -1,0 +1,4 @@
+# exe: VIGA
+# rev5_viga_inval_leitura: cadastra UMA2 com L 4 e P -1 e, na mesma execucao (a obra e so memoria), le os valores pela correcao 4 e 5 sem alterar.
+3{ENTER}UMA2{ENTER}{ENTER}{ENTER}{ENTER}{ENTER}SN{BS}20{ENTER}{BS}50{ENTER}{BS}4{ENTER}{BS}-1{ENTER}N{TELA f0_antes_P2}P2{ENTER}S{TELA f0_resultado}{ENTER}
+5{TELA f0b_corr}1{ENTER}4{ENTER}{TELA f1_L_lido}{ENTER}{ENTER}5{ENTER}{TELA f2_P_lido}{ENTER}{ENTER}8FIM{ENTER}{TELA f3_fim_pos}{F2}{TELA f4_fim}

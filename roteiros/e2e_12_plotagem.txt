@@ -1,0 +1,7 @@
+# exe: SISTRUT
+# Obra E2E (dados do e2e_11: E2E.EDV, E2E_V1.VET). Plotagem a partir do menu principal (O -> VPLOTA).
+# VPLOTA opcao 2 (MontaFluxo): 2N = nao alterar parametrizacoes; obra E2E (campo pre-preenchido: {BS} antes);
+# ENTER na lista = todas as vigas; S grava .AVF; ENTER nas folhas (ResumoGeral); V = previa (VetMostra, SPACE);
+# S + S = gera DXF e PLT; equipamento 6 (HP DraftPro, PLOTER.INI); ENTER apos plotagem; C + S = cancela resultado.
+# Depois F2 (VPLOTA) e F2 (SISTRUT).
+{TELA s01_menu}O{TELA p01_vplota_menu}2N{TELA p02_obra_pede}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}{BS}E2E{ENTER}{TELA p03_lista}{ENTER}{TELA p04_grava_avf}S{TELA p05_folhas}{ENTER}{TELA p06_resultado}V{TELA p07_previa}{SPACE}{TELA p08_pos_v}S{TELA p09_confirma_seguir}S{TELA p10_equipamento}{BS}6{ENTER}{TELA p11_pos_plot}{ENTER}{TELA p12_resultado_pos_s}C{TELA p13_cancela}S{TELA p14_vplota_menu}{F2}{TELA s02_menu}{F2}
