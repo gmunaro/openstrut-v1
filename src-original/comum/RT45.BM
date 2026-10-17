@@ -1167,6 +1167,11 @@ SUB RT_FILES (espec AS STRING)
         IF RIGHT$(raiz, 1) = "\" THEN raiz = LEFT$(raiz, LEN(raiz) - 1)
         IF UCASE$(LEFT$(cwd, LEN(raiz))) = UCASE$(raiz) THEN dirdos = "C:" + MID$(cwd, LEN(raiz) + 1)
     END IF
+    ' fora do Windows (Linux, macOS, navegador) o _CWD$ vem com "/" (e "/" no fim): forma DOS
+    FOR k = 1 TO LEN(dirdos)
+        IF MID$(dirdos, k, 1) = "/" THEN MID$(dirdos, k, 1) = "\"
+    NEXT
+    k = 0
     ' o FILES do QB4.5 escreve o diretorio sem a barra final, menos na raiz (C:\)
     IF RIGHT$(dirdos, 1) = "\" AND LEN(dirdos) > 3 THEN dirdos = LEFT$(dirdos, LEN(dirdos) - 1)
     IF RIGHT$(dirdos, 1) = ":" THEN dirdos = dirdos + "\"

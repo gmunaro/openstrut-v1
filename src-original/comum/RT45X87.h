@@ -396,12 +396,18 @@ static int16_t rt45_pot_erro(void) { return (int16_t)rt45_pot_err; }
 
 /* FSQRT: raiz em estendido, corretamente arredondada ao par (IEEE: igual em qualquer x87) */
 static long double rt45_fsqrt(long double x) {
+#if defined(__EMSCRIPTEN__)
+    /* build web (web/README.md): o long double vira o qb_f80 (web/runtime/qb_f80.h) e a raiz e a do
+       SoftFloat, tambem corretamente arredondada ao par em 64 bits */
+    return std::sqrt(x);
+#else
     long double r; unsigned short velho, novo = 0x137F;
     __asm__ volatile ("fnstcw %0" : "=m"(velho));
     __asm__ volatile ("fldcw %0" : : "m"(novo));
     __asm__ volatile ("fsqrt" : "=t"(r) : "0"(x));
     __asm__ volatile ("fldcw %0" : : "m"(velho));
     return r;
+#endif
 }
 
 /* para os testes: as duas instrucoes do modelo, de long double para long double */

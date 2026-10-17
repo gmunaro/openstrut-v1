@@ -15,6 +15,9 @@ fi
 trap 'rm -f "$0"' EXIT
 bin="$1"; exe="$2"; rot="$3"; out="$4"; drive_c="$5"; lim="${6:-120}"
 here="$RODA_RETRAD_DIR"
+# V1_WEB=<pasta do site web/dist>: roda a V1 web (wasm) em vez do EXE, com a mesma saida e o drive
+# C: final de volta em <pasta "C:"> (web/tests/roda_retrad_web.sh); <pasta dos EXE> e ignorada.
+if [ -n "${V1_WEB:-}" ]; then rm -f "$0"; exec bash "$here/../web/tests/roda_retrad_web.sh" "$@"; fi
 rm -rf "$out"; mkdir -p "$out"
 win() { cygpath -aw "$1"; }
 python -I "$here/troca_semente.py" "$out/semente.chn" --modulo "$exe" --marca "${V1_MARCA:-openstrut}" >/dev/null
