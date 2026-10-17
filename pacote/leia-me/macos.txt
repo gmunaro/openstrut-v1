@@ -42,6 +42,9 @@ Arraste "OpenStrut V1" de Aplicativos para o Lixo e apague
 configurações, fica até você apagá-la.
 
 PROBLEMAS
+- Na primeira abertura o macOS pode perguntar se "OPENSTRUT.exe" pode usar o
+  microfone. O OpenStrut não usa o microfone: o pedido vem da biblioteca de som
+  que toca os bipes do programa. Pode recusar; o programa continua.
 - "precisa do Rosetta 2": instale-o com o comando de REQUISITOS e abra o app
   de novo.
 - "O app está danificado e não pode ser aberto": o arquivo veio corrompido ou

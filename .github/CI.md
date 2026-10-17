@@ -62,7 +62,14 @@ Jobs:
 2. `pacote` (um job por sistema): baixa o build do sistema, roda `pacote/<so>/empacotar.sh` e depois instala o pacote gerado e roda o `tools/fumaca.sh` na instalação:
    - Windows: `OpenStrut-V1-Setup-windows-x64.exe` (Inno Setup 6 da imagem; se não achar, `choco install innosetup`). Teste: instalação silenciosa numa pasta temporária, fumaça e desinstalação silenciosa.
    - Linux: `OpenStrut-V1-linux-x64.tar.gz`. Teste: extrai, `./instalar.sh`, fumaça em `~/.local/share/openstrut` sob Xvfb, `desinstalar.sh`.
-   - macOS: `OpenStrut-V1-macos-x64.dmg`. Teste: monta o `.dmg`, `codesign --verify` no app e fumaça pelo executável do app (que copia a V1 para `~/Library/Application Support/OpenStrut/V1` e abre o lançador de lá). Depois abre o app pelo LaunchServices (`open -n --env ...`, como o duplo clique) com o mesmo roteiro e espera "LAJE: fim" no log. Esse passo nunca rodou; se falhar, só emite um aviso (`::warning::`) e não derruba a release.
+   - macOS: `OpenStrut-V1-macos-x64.dmg`. Teste: monta o `.dmg`, `codesign --verify` no app e fumaça pelo executável do app (que copia a V1 para `~/Library/Application Support/OpenStrut/V1` e abre o lançador de lá). Depois abre o app pelo LaunchServices (`open -n --env ...`, como o duplo clique) com o mesmo roteiro e exige "LAJE: fim" no log. Isso prova que o app abre o lançador, que as variáveis chegam e que o gerenciador e o CHAIN continuam depois que o processo principal do app termina. Com roteiro não há janela.
+
+### Duplo clique no macOS: o que o CI mostrou (17/10/2026, branch de diagnóstico)
+
+- O primeiro `open -n` (run 38996470674) só avisou porque a checagem não tirava o ``: o RT45 grava o log com CRLF também fora do Windows. O roteiro tinha chegado a "LAJE: fim" pelo LaunchServices.
+- No macOS e no Linux, o `SHELL _DONTWAIT` do QB64 faz `fork()` e `system()`: o lançador sai, e uma cópia dele fica como pai do `SISTRUT.exe` (adotada pelo launchd) até o gerenciador terminar. Sem roteiro, o gerenciador continuou vivo por mais de 60 s depois do `open -n`.
+- O runner não abre janela de programa QB64: qualquer programa com janela, até um `PRINT` mínimo, morre com "Failed to initialize window" (alerta do QB64 por `osascript`). A VM `macos-15-intel` só tem a "Apple Paravirtualized Graphics Device" (Metal), e o QB64 PE usa janela OpenGL pelo GLFW. Com roteiro a V1 não chama `_SCREENSHOW` e não cria janela, por isso a fumaça passa. A janela visível só se confere num Mac de verdade (checagem manual abaixo).
+- Pedido de microfone: aberto como app, todo programa QB64 que usa som (os 28 da V1 usam `BEEP`/`SOUND`) faz o macOS pedir acesso ao microfone (`kTCCServiceMicrophone`, atribuído ao `OPENSTRUT.exe`). Vem do CoreAudio ao abrir a AudioUnit `HALOutput` do miniaudio 0.11.25 do QB64; tirar o listener do dispositivo de entrada ou o `EnableIO` de entrada do miniaudio não mudou nada. O programa não espera a resposta: com o pedido na tela, o som tocou e o programa seguiu. O `LEIA-ME` do macOS diz que dá para recusar.
 3. `publicar` (só em tag): `gh release create` com os três instaladores e notas geradas pelo GitHub. Tag com hífen (`v1.0.0-rc1`) sai como pre-release. Se a release já existir, os arquivos são substituídos.
 
 A versão dos pacotes é a tag sem o `v`. Fora de tag é `0.0.0-dev.<número do run>`.
@@ -90,7 +97,7 @@ A V2 saiu dos pacotes. Ela é web e instalável como PWA em https://gmunaro.gith
 
 O que o CI não prova e precisa de uma pessoa, com os pacotes de um `workflow_dispatch` do `release.yml`:
 
-- **macOS, duplo clique.** Num Mac, abrir o `.dmg`, arrastar o app para Aplicativos, liberar no Gatekeeper (botão direito > Abrir, ou Ajustes > Privacidade e Segurança) e dar duplo clique: a janela do gerenciador tem de aparecer na frente, e F2/Esc e um módulo (L) têm de funcionar. O passo `open -n` do CI só confere o log, e pode ter só avisado.
+- **macOS, duplo clique.** Num Mac, abrir o `.dmg`, arrastar o app para Aplicativos, liberar no Gatekeeper (botão direito > Abrir, ou Ajustes > Privacidade e Segurança) e dar duplo clique: a janela do gerenciador tem de aparecer (o runner não abre janela OpenGL, ver acima), e F2/Esc e um módulo (L) têm de funcionar. Recusar o pedido de microfone e conferir que o programa segue e que o bipe toca. Conferir também com o `.dmg` baixado do navegador (quarentena), o que o CI não reproduz.
 - **Apple Silicon.** Num Mac M1 ou mais novo: sem o Rosetta, o app avisa com o comando `softwareupdate --install-rosetta`; com ele, abre. Ninguém conferiu se o Rosetta 2 reproduz o x87 de 80 bits que o RT45 usa: rode lá o `runtests.sh SONDA` (ou compare uma obra com o Windows) antes de dizer que o Mac M1 dá os mesmos números.
 - **Windows e Linux com tela.** Abrir pelo atalho e ver a janela; o CI roda tudo com roteiro e, no Linux, no Xvfb.
 
