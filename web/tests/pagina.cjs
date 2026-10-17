@@ -22,7 +22,7 @@ serve(dist).then(async (s) => {
     const p = await ctx.newPage();
     const erros = [];
     p.on('pageerror', (e) => erros.push(e.message));
-    const url = 'http://127.0.0.1:' + s.address().port + '/index.html';
+    const url = s.url; // a pasta do site, como o endereco do Pages
     try {
         await p.goto(url);
         await p.waitForFunction(() => document.getElementById('estado').textContent === 'SISTRUT', null, { timeout: 60000 });

@@ -6,21 +6,30 @@ const path = require('path');
 
 const TIPOS = { '.html': 'text/html', '.js': 'text/javascript', '.wasm': 'application/wasm', '.json': 'application/json', '.css': 'text/css' };
 
-// servidor estatico so deste processo (porta livre qualquer em 127.0.0.1); feche com .close()
+// subpasta do site, como no GitHub Pages do repositorio (https://gmunaro.github.io/openstrut-v1/):
+// o que a pagina pedir fora dela da 404, e um caminho absoluto no site aparece no teste
+const BASE = process.env.V1_BASE || '/openstrut-v1/';
+
+// servidor estatico so deste processo (porta livre qualquer em 127.0.0.1), com o site em BASE;
+// s.url e o endereco do site (termina em /). Feche com .close()
 function serve(pasta) {
     const base = path.resolve(pasta);
     return new Promise((ok) => {
         const s = http.createServer((req, res) => {
             const u = decodeURIComponent(new URL(req.url, 'http://x').pathname);
-            const f = path.join(base, u === '/' ? 'index.html' : u);
-            if (!f.startsWith(base) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) {
+            const dentro = u.startsWith(BASE) ? u.substring(BASE.length) : null;
+            const f = dentro === null ? '' : path.join(base, dentro === '' ? 'index.html' : dentro);
+            if (dentro === null || !f.startsWith(base) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) {
                 res.writeHead(404);
                 return res.end();
             }
             res.writeHead(200, { 'Content-Type': TIPOS[path.extname(f)] || 'application/octet-stream' });
             fs.createReadStream(f).pipe(res);
         });
-        s.listen(0, '127.0.0.1', () => ok(s));
+        s.listen(0, '127.0.0.1', () => {
+            s.url = 'http://127.0.0.1:' + s.address().port + BASE;
+            ok(s);
+        });
     });
 }
 

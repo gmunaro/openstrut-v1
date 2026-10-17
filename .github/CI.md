@@ -94,6 +94,14 @@ O que o CI não prova e precisa de uma pessoa, com os pacotes de um `workflow_di
 - **Apple Silicon.** Num Mac M1 ou mais novo: sem o Rosetta, o app avisa com o comando `softwareupdate --install-rosetta`; com ele, abre. Ninguém conferiu se o Rosetta 2 reproduz o x87 de 80 bits que o RT45 usa: rode lá o `runtests.sh SONDA` (ou compare uma obra com o Windows) antes de dizer que o Mac M1 dá os mesmos números.
 - **Windows e Linux com tela.** Abrir pelo atalho e ver a janela; o CI roda tudo com roteiro e, no Linux, no Xvfb.
 
+## pages.yml
+
+Publica a V1 no navegador (`web/`, ver `web/README.md`) em https://gmunaro.github.io/openstrut-v1/. Roda em push na `main` que mexa em `web/`, `src-original/`, `sistrut-game/`, `tests/retraducao/` ou no próprio workflow, e por `workflow_dispatch`. Precisa do Pages ligado com a fonte "GitHub Actions" (Settings > Pages).
+
+1. `libqb`: QB64 PE (cache) e emsdk 6.0.12; compila a libqb web e lista os 28 programas.
+2. `programa`: um job por programa, com cache do `.js`/`.wasm` pela assinatura das fontes.
+3. `site`: junta os módulos, a página e a instalação inicial (de `sistrut-game/`); roda `web/tests/referencia.cjs` (13 casos contra a saída nativa guardada) e `web/tests/pagina.cjs` no Chrome headless, com o site servido em `/openstrut-v1/`; publica.
+
 ## Validação
 
 Feita antes do primeiro run no GitHub (16/10/2026):

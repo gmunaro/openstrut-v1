@@ -11,7 +11,7 @@ serve(dist).then(async (s) => {
     const nav = await chromium.launch({ executablePath: chrome(), headless: true });
     try {
         const p = await nav.newPage();
-        await p.goto('http://127.0.0.1:' + s.address().port + '/index.html?teste=1');
+        await p.goto(s.url + 'index.html?teste=1');
         const c = '/C/' + arq.toUpperCase();
         const r = await p.evaluate((o) => window.V1_TESTE(o), { prog: exe, args: [], arquivos: [{ caminho: '/C', pasta: true }], devolve: [c] });
         const a = r.saida.find((x) => x.caminho === c);

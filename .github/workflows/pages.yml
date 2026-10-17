@@ -1,0 +1,185 @@
+name: pages
+
+# Site estatico da V1 no navegador (web/): os 28 programas em WebAssembly (Asyncify), a pagina e a
+# instalacao inicial (sistrut-game/). A libqb web e compilada uma vez; cada programa num job da
+# matriz, em paralelo, com cache do .js/.wasm pela assinatura das fontes. Antes de publicar, os
+# casos de web/tests/referencia rodam no Chrome headless e sao comparados byte a byte com a saida
+# do nativo guardada no repositorio. Ver web/README.md.
+#
+# Publica em https://gmunaro.github.io/openstrut-v1/ (Settings > Pages > Source: GitHub Actions).
+# O site usa so caminhos relativos; os testes servem o site na mesma subpasta (V1_BASE).
+
+on:
+  push:
+    branches: [main]
+    # tests/retraducao: roteiros e INI dos casos de web/tests/referencia
+    paths: ["web/**", "src-original/**", "sistrut-game/**", "tests/retraducao/**", "tools/troca_semente.py", ".github/workflows/pages.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+env:
+  QB64_VERSAO: 4.7.0-GLFW
+  EMSDK_VERSAO: 6.0.12
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  libqb:
+    name: libqb web
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    outputs:
+      programas: ${{ steps.lista.outputs.programas }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: lista
+        name: Programas
+        run: echo "programas=$(cd src-original && find . -mindepth 2 -maxdepth 2 -name '*.BAS' | sed 's|^\./||' | sort | jq -R . | jq -sc .)" >> "$GITHUB_OUTPUT"
+      - name: Cache do QB64 PE
+        id: cache-qb64
+        uses: actions/cache/restore@v6
+        with:
+          path: ~/qb64pe
+          key: qb64pe-${{ env.QB64_VERSAO }}-ubuntu-24.04
+      - name: Instalar QB64 PE
+        if: steps.cache-qb64.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q --no-install-recommends build-essential mesa-common-dev libglu1-mesa-dev libasound2-dev \
+            libpng-dev libcurl4-openssl-dev libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev
+          curl -fsSL -o "$RUNNER_TEMP/qb64pe.tar.gz" \
+            "https://github.com/QB64-Phoenix-Edition/QB64pe/releases/download/v$QB64_VERSAO/qb64pe_lnx-x64-$QB64_VERSAO.tar.gz"
+          tar -xzf "$RUNNER_TEMP/qb64pe.tar.gz" -C "$HOME"
+          mkdir -p "$HOME/.local/share/applications"
+          bash "$HOME/qb64pe/setup_lnx.sh" nao-abrir || true
+          test -x "$HOME/qb64pe/qb64pe"
+      - name: Salvar cache do QB64 PE
+        if: steps.cache-qb64.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: ~/qb64pe
+          key: ${{ steps.cache-qb64.outputs.cache-primary-key }}
+      - name: Emscripten
+        uses: mymindstorm/setup-emsdk@v16
+        with:
+          version: ${{ env.EMSDK_VERSAO }}
+          actions-cache-folder: emsdk-cache
+      - name: Compilar a libqb web
+        run: |
+          WEB_J="$(nproc)"
+          export QB64_DIR="$HOME/qb64pe" WEB_BUILD="$RUNNER_TEMP/web" WEB_J
+          time bash web/tools/build.sh
+          rm -rf "$WEB_BUILD/obj"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: libqb-web
+          path: ${{ runner.temp }}/web
+          retention-days: 1
+
+  programa:
+    name: ${{ matrix.bas }}
+    needs: libqb
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        bas: ${{ fromJSON(needs.libqb.outputs.programas) }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: nome
+        name: Assinatura
+        run: |
+          exe="$(basename "${{ matrix.bas }}" .BAS)"
+          fam="$(dirname "${{ matrix.bas }}")"
+          echo "exe=$exe" >> "$GITHUB_OUTPUT"
+          # o programa, o COMMON da familia, o RT45/MIXT, a camada web e as versoes das ferramentas
+          h="$(cat "src-original/${{ matrix.bas }}" "src-original/$fam"/COMUM_* src-original/comum/* web/runtime/* \
+               web/third_party/softfloat-3e/source/*.c web/tools/*.py web/tools/*.sh 2>/dev/null | sha256sum | cut -c1-16)"
+          echo "chave=wasm-$exe-$h-$QB64_VERSAO-$EMSDK_VERSAO" >> "$GITHUB_OUTPUT"
+      - name: Cache do modulo
+        id: cache-mod
+        uses: actions/cache@v6
+        with:
+          path: modulo
+          key: ${{ steps.nome.outputs.chave }}
+      - name: Cache do QB64 PE
+        if: steps.cache-mod.outputs.cache-hit != 'true'
+        uses: actions/cache/restore@v6
+        with:
+          path: ~/qb64pe
+          key: qb64pe-${{ env.QB64_VERSAO }}-ubuntu-24.04
+          fail-on-cache-miss: true
+      - name: Emscripten
+        if: steps.cache-mod.outputs.cache-hit != 'true'
+        uses: mymindstorm/setup-emsdk@v16
+        with:
+          version: ${{ env.EMSDK_VERSAO }}
+          actions-cache-folder: emsdk-cache
+      - uses: actions/download-artifact@v8
+        if: steps.cache-mod.outputs.cache-hit != 'true'
+        with:
+          name: libqb-web
+          path: ${{ runner.temp }}/web
+      - name: Compilar ${{ steps.nome.outputs.exe }}
+        if: steps.cache-mod.outputs.cache-hit != 'true'
+        run: |
+          export QB64_DIR="$HOME/qb64pe" WEB_BUILD="$RUNNER_TEMP/web" WEB_DIST="$RUNNER_TEMP/dist" WEB_PJ=1
+          mkdir -p modulo "$WEB_DIST"
+          bash web/tools/build.sh "${{ matrix.bas }}" || { cat "$WEB_BUILD/log/${{ steps.nome.outputs.exe }}.log"; exit 1; }
+          cp "$WEB_DIST/${{ steps.nome.outputs.exe }}".{js,wasm} modulo/
+      - uses: actions/upload-artifact@v7
+        with:
+          name: modulo-${{ steps.nome.outputs.exe }}
+          path: modulo
+          retention-days: 1
+
+  site:
+    needs: programa
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: modulo-*
+          path: site
+          merge-multiple: true
+      - name: Montar o site
+        run: |
+          cp -r web/site/* site/
+          exes="$(for f in site/*.wasm; do basename "$f" .wasm; done)"
+          echo "$(echo "$exes" | wc -l) modulos"
+          echo "[$(for e in $exes; do printf '"%s",' "$e"; done | sed 's/,$//')]" > site/modulos.json
+          # shellcheck disable=SC2086
+          python3 -I web/tools/instalacao.py sistrut-game site $exes
+          du -sh site
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - name: Paridade no Chrome headless (web/tests/referencia)
+        env:
+          V1_BASE: /openstrut-v1/
+        run: |
+          (cd web && npm install --no-save playwright-core@1.64.1)
+          node web/tests/referencia.cjs site
+          node web/tests/pagina.cjs site
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+      - id: deploy
+        uses: actions/deploy-pages@v5

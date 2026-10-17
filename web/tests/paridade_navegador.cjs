@@ -47,7 +47,7 @@ const raiz = path.resolve(__dirname, '../..');
         const pagina = await navegador.newPage();
         pagina.on('pageerror', (e) => console.error('pagina: ' + e.message));
         if (process.env.V1_VERBOSO) pagina.on('console', (m) => console.log(m.text()));
-        await pagina.goto('http://127.0.0.1:' + servidor.address().port + '/index.html?teste=1');
+        await pagina.goto(servidor.url + 'index.html?teste=1');
         const tempo = new Promise((ok) => setTimeout(() => ok(null), lim));
         const r = await Promise.race([
             pagina.evaluate((o) => window.V1_TESTE(o), { prog: exe0, args: ['/CHAIN:/SAIDA/semente.chn'], arquivos, env, devolveC: gravaC }),
