@@ -1,45 +1,50 @@
-OpenStrut V1 e V2 para macOS
+OpenStrut V1 para macOS
 
-O OpenStrut V1 é uma reconstrução independente, por engenharia reversa, do
-SISTRUT 4.0 (1991). O projeto não tem vínculo com os autores do programa
-original.
+O OpenStrut V1 é a retradução, por engenharia reversa, do SISTRUT 4.0 (1991),
+programa DOS de cálculo e detalhamento de estruturas de concreto armado pela
+NB-1/78. O projeto não tem vínculo com os autores do programa original. Os
+resultados exigem conferência de engenheiro responsável.
 
-Requisitos: macOS 13 ou mais novo. Baixe o .dmg do seu Mac: arm64 para Apple
-Silicon (M1 em diante), x64 para Intel. Para a V2, Google Chrome, Microsoft
-Edge ou Chromium; sem nenhum deles, a V2 abre no navegador padrão. Não precisa
-de internet nem de senha de administrador.
+Requisitos: macOS 13 ou mais novo. O app é x64 (Intel): nos Macs com Apple
+Silicon (M1 em diante) ele roda pelo Rosetta 2. O macOS não oferece instalar o
+Rosetta para este app; se ele faltar, o app avisa. Para instalar, abra o
+Terminal e rode:
+  softwareupdate --install-rosetta --agree-to-license
 
 INSTALAR
-Abra o OpenStrut-macos-<arch>.dmg e arraste "OpenStrut V1" e "OpenStrut V2"
-para a pasta Aplicativos.
-Os apps não têm assinatura da Apple, então o macOS bloqueia a primeira
-abertura. Para liberar, clique no app com o botão direito, escolha "Abrir" e
-confirme. Se não aparecer o botão "Abrir" (macOS 15 em diante), tente abrir o
-app uma vez, vá em Ajustes do Sistema > Privacidade e Segurança e clique em
-"Abrir Mesmo Assim". Isso só é preciso uma vez por app.
-Para atualizar, arraste os apps de um .dmg mais novo por cima dos antigos; as
-obras e configurações são mantidas.
+Abra o OpenStrut-V1-macos-x64.dmg e arraste "OpenStrut V1" para a pasta
+Aplicativos.
+O app não tem assinatura da Apple, então o macOS bloqueia a primeira abertura.
+Para liberar, clique no app com o botão direito, escolha "Abrir" e confirme.
+Se não aparecer o botão "Abrir" (macOS 15 em diante), tente abrir o app uma
+vez, vá em Ajustes do Sistema > Privacidade e Segurança e clique em "Abrir
+Mesmo Assim". Isso só é preciso uma vez.
+Para atualizar, arraste o app de um .dmg mais novo por cima do antigo.
 
-OPENSTRUT V1
-Reconstrução do SISTRUT 4.0, pela NB-1/78. Abre numa janela própria e usa só o
-teclado, como o original. Na primeira vez (e a cada versão nova) o app copia
-os programas para ~/Library/Application Support/OpenStrut/V1; as obras, os
-relatórios (.LST) e os desenhos (.DXF, .PLT) ficam nessa pasta. Para chegar
-nela no Finder: Ir > Ir para a Pasta e cole o caminho.
+USAR
+O app abre o gerenciador do SISTRUT, numa janela própria. Usa só o teclado,
+como o original. Na primeira vez (e a cada versão nova) o app copia os
+programas para ~/Library/Application Support/OpenStrut/V1.
+A pasta ~/OpenStrut faz o papel do disco C: do DOS: o que o programa grava em
+C:\... fica nela (obras, relatórios .LST, desenhos .DXF e .PLT). Na primeira
+vez o app copia para ela a instalação do original (C:\SISTRUT\SISTRUT.INI e
+C:\SISTRUT\EXEC40\). A impressora vira o arquivo IMPRESSORA.PRN nessa pasta.
 
 OPENSTRUT V2
-Versão nova, pela NBR 6118:2023 ou pela NB-1/78. Abre numa janela própria do
-navegador. Salve as obras com o botão de salvar (arquivo .sistrut.json); o
-rascunho automático fica só neste computador. Obras da V1 entram por "Importar
-obra da V1". O programa encerra quando o navegador dessa janela fecha (Cmd+Q).
+A V2, reimplementação nova pela NBR 6118:2023 ou pela NB-1/78, roda no
+navegador e pode ser instalada como aplicativo (PWA):
+  https://gmunaro.github.io/openstrut/
+O .dmg traz o atalho "OpenStrut V2 (web)".
 
 DESINSTALAR
-Arraste "OpenStrut V1" e "OpenStrut V2" de Aplicativos para o Lixo. As obras da
-V1 e os dados da V2 continuam em ~/Library/Application Support/OpenStrut até
-você apagar a pasta.
+Arraste "OpenStrut V1" de Aplicativos para o Lixo e apague
+~/Library/Application Support/OpenStrut. A pasta ~/OpenStrut, com as obras e as
+configurações, fica até você apagá-la.
 
 PROBLEMAS
+- "precisa do Rosetta 2": instale-o com o comando de REQUISITOS e abra o app
+  de novo.
 - "O app está danificado e não pode ser aberto": o arquivo veio corrompido ou
   sem a assinatura ad hoc. Baixe o .dmg de novo.
-- A V2 diz que a porta 41780 está ocupada: outro programa usa essa porta.
-  Feche-o ou reinicie o Mac.
+- Para recomeçar com a configuração do original, apague ~/OpenStrut/SISTRUT
+  (as obras fora dela ficam).

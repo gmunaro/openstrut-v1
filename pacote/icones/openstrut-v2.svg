@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
-  <!-- OpenStrut V2: o mesmo perfil I sobre verde-petróleo -->
-  <rect x="8" y="8" width="240" height="240" rx="44" fill="#0b6e63"/>
-  <path d="M52 44h140v30h-55v100h55v30H52v-30h55V74H52z" fill="#ffffff"/>
-  <circle cx="190" cy="190" r="50" fill="#ff7a1a" stroke="#0b6e63" stroke-width="8"/>
-  <path d="M172 178c0-12 8-18 18-18s18 6 18 16c0 8-5 13-12 20l-24 24h37" fill="none" stroke="#ffffff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>

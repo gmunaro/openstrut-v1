@@ -1,19 +1,12 @@
-# Gera os pacotes do OpenStrut (V1 + V2) para Windows, Linux e macOS e, em
-# tag v*, publica numa GitHub Release deste repositorio. Detalhes em .github/CI.md.
-#
-# Os pontos marcados com "# AJUSTAR:" chamam scripts de pacote/ cuja interface
-# ainda nao esta fechada; o comando escrito e o provavel.
+# Gera os instaladores da OpenStrut V1 (Windows, Linux e macOS, x64) e, em tag v*,
+# publica numa GitHub Release deste repositorio. Detalhes em .github/CI.md.
+# A V2 e web (https://gmunaro.github.io/openstrut/): os pacotes so levam um atalho.
 name: release
 
 on:
   push:
     tags: ["v*"]
   workflow_dispatch:
-    inputs:
-      v2_ref:
-        description: "Branch, tag ou commit da V2 (gmunaro/openstrut); vazio = branch padrao"
-        type: string
-        default: ""
 
 permissions:
   contents: read
@@ -23,62 +16,21 @@ defaults:
     shell: bash
 
 jobs:
-  # Mesmo build do CI, com macOS incluido (tag e execucao manual sempre incluem).
+  # O mesmo build do CI (compila, fumaca e testes) nos 3 sistemas.
   build:
     uses: ./.github/workflows/build.yml
-    with:
-      roteiros: false
-
-  v2:
-    name: build da V2
-    runs-on: ubuntu-24.04
-    timeout-minutes: 20
-    steps:
-      # AJUSTAR: se gmunaro/openstrut for privado, passe um token com leitura nele
-      # (ex.: token: ${{ secrets.V2_TOKEN }}); o GITHUB_TOKEN so le este repositorio.
-      - uses: actions/checkout@v7
-        with:
-          repository: gmunaro/openstrut
-          ref: ${{ inputs.v2_ref }}
-          path: v2
-
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version-file: v2/package.json
-
-      - name: Dependencias
-        working-directory: v2
-        run: bun install --frozen-lockfile
-
-      # AJUSTAR: o vite.config.ts da V2 nao define base hoje (padrao "/"). Se
-      # passar a definir (ex.: para GitHub Pages), confirme que --base=/ chega ao
-      # "vite build", que e o ultimo comando do script build.
-      - name: Build (base "/")
-        working-directory: v2
-        run: bun run build --base=/
-
-      - uses: actions/upload-artifact@v7
-        with:
-          name: v2-dist
-          path: v2/dist
-          if-no-files-found: error
-          retention-days: 3
 
   pacote:
     name: pacote (${{ matrix.plat }})
-    needs: [build, v2]
+    needs: build
     strategy:
       fail-fast: false
       matrix:
         include:
-          - { os: windows-latest, plat: windows-x64, arch: x64, alvo: windows-x64, arquivo: OpenStrut-Setup-windows-x64.exe }
-          - { os: ubuntu-24.04, plat: linux-x64, arch: x64, alvo: linux-x64, arquivo: OpenStrut-linux-x64.tar.gz }
-          - { os: ubuntu-24.04-arm, plat: linux-arm64, arch: arm64, alvo: linux-arm64, arquivo: OpenStrut-linux-arm64.tar.gz }
-          - { os: macos-15, plat: macos-arm64, arch: arm64, alvo: darwin-arm64, arquivo: OpenStrut-macos-arm64.dmg }
-          - { os: macos-15-intel, plat: macos-x64, arch: x64, alvo: darwin-x64, arquivo: OpenStrut-macos-x64.dmg }
+          - { os: windows-latest, plat: windows-x64, arquivo: OpenStrut-V1-Setup-windows-x64.exe }
+          - { os: ubuntu-24.04, plat: linux-x64, arquivo: OpenStrut-V1-linux-x64.tar.gz }
+          - { os: macos-15-intel, plat: macos-x64, arquivo: OpenStrut-V1-macos-x64.dmg }
     runs-on: ${{ matrix.os }}
-    # o build de Linux arm64 ainda e experimental (ver build.yml)
-    continue-on-error: ${{ matrix.plat == 'linux-arm64' }}
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
@@ -89,7 +41,6 @@ jobs:
         run: |
           {
             echo "V1_DIR=$PWD/v1-build"
-            echo "V2_DIST=$PWD/v2-dist"
             echo "SAIDA=$PWD/pacote-saida"
           } >> "$GITHUB_ENV"
           if [ "$GITHUB_REF_TYPE" = tag ]; then
@@ -110,17 +61,6 @@ jobs:
           tar -xzf "v1-artifact/v1-build-${{ matrix.plat }}.tar.gz" -C v1-build
           ls -la v1-build
 
-      - uses: actions/download-artifact@v8
-        with:
-          name: v2-dist
-          path: v2-dist
-
-      # AJUSTAR: troque por bun-version-file: pacote/lancador/package.json quando
-      # esse arquivo existir na main (fixa a versao do Bun do lancador).
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
       - name: Inno Setup (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
@@ -134,29 +74,75 @@ jobs:
           # barras normais: o empacotar.sh roda no Git Bash
           "ISCC=$($iscc -replace '\\', '/')" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
-      # AJUSTAR: o rascunho de pacote/<so>/empacotar.sh ja chama
-      # lancador/compilar.sh; se ficar assim, apague este step. Se o lancador
-      # tiver dependencias, rode antes: (cd pacote/lancador && bun install --frozen-lockfile)
-      - name: Lancador da V2
-        run: |
-          mkdir -p lancador-saida
-          bash pacote/lancador/compilar.sh ${{ matrix.alvo }} "$PWD/lancador-saida/OpenStrut-V2${{ runner.os == 'Windows' && '.exe' || '' }}"
+      - name: Pacote
+        run: bash "pacote/$(echo "$RUNNER_OS" | tr '[:upper:]' '[:lower:]')/empacotar.sh"
 
-      # AJUSTAR: interface provavel (opcoes de pacote/comum.sh); le V1_DIR, V2_DIST,
-      # SAIDA e VERSAO do ambiente. Gera $SAIDA/OpenStrut-Setup-windows-x64.exe.
-      - name: Pacote (Windows)
+      # Instala o pacote como o usuario e roda a fumaca (tools/fumaca.sh) na pasta instalada.
+      - name: Instalar e testar (Windows)
         if: runner.os == 'Windows'
-        run: bash pacote/windows/empacotar.sh --arch ${{ matrix.arch }}
+        run: |
+          t="$RUNNER_TEMP/inst"
+          mkdir -p "$t"
+          "$SAIDA/${{ matrix.arquivo }}" //VERYSILENT //SUPPRESSMSGBOXES //NORESTART \
+            "//DIR=$(cygpath -w "$t/OpenStrut")" "//LOG=$(cygpath -w "$t/setup.log")"
+          test -f "$t/OpenStrut/OPENSTRUT.exe"
+          test -f "$t/OpenStrut/OpenStrut V2 (web).url"
+          bash tools/fumaca.sh "$t/OpenStrut"
+          # atalhos do menu Iniciar: so os 4 .lnk, todos validos (cabecalho 4C 00 00 00)
+          g="$(cygpath -u "$APPDATA")/Microsoft/Windows/Start Menu/Programs/OpenStrut"
+          ls -la "$g"
+          for a in "OpenStrut V1" "Pasta das obras (disco C do OpenStrut)" "OpenStrut V2 (web)" "Desinstalar OpenStrut V1"; do
+            [ "$(head -c 4 "$g/$a.lnk" | od -An -tx1 | tr -d ' \n')" = 4c000000 ] || { echo "atalho invalido: $a" >&2; exit 1; }
+          done
+          [ "$(find "$g" -mindepth 1 | wc -l)" -eq 4 ] || { echo "sobra no grupo do menu" >&2; exit 1; }
+          "$t/OpenStrut/unins000.exe" //VERYSILENT //SUPPRESSMSGBOXES //NORESTART
+          # o desinstalador volta antes de terminar: espera o grupo sumir
+          for _ in $(seq 1 60); do [ -e "$g" ] || break; sleep 1; done
+          [ ! -e "$g" ] || { echo "grupo do menu ficou depois de desinstalar" >&2; ls -la "$g"; exit 1; }
+          [ ! -e "$t/OpenStrut/OPENSTRUT.exe" ] || { echo "programas ficaram depois de desinstalar" >&2; exit 1; }
 
-      # AJUSTAR: interface provavel; gera $SAIDA/OpenStrut-linux-<arch>.tar.gz.
-      - name: Pacote (Linux)
+      - name: Instalar e testar (Linux)
         if: runner.os == 'Linux'
-        run: bash pacote/linux/empacotar.sh --arch ${{ matrix.arch }}
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q --no-install-recommends xvfb xauth libglu1-mesa libopengl0
+          mkdir -p "$RUNNER_TEMP/extraido"
+          tar -xzf "$SAIDA/${{ matrix.arquivo }}" -C "$RUNNER_TEMP/extraido"
+          (cd "$RUNNER_TEMP/extraido/OpenStrut" && ./instalar.sh)
+          test -f "$HOME/.local/share/applications/openstrut-v1.desktop"
+          xvfb-run -a bash tools/fumaca.sh "$HOME/.local/share/openstrut"
+          "$HOME/.local/share/openstrut/desinstalar.sh"
 
-      # AJUSTAR: interface provavel; gera $SAIDA/OpenStrut-macos-<arch>.dmg.
-      - name: Pacote (macOS)
+      - name: Instalar e testar (macOS)
         if: runner.os == 'macOS'
-        run: bash pacote/macos/empacotar.sh --arch ${{ matrix.arch }}
+        run: |
+          hdiutil attach -nobrowse -readonly -mountpoint "$RUNNER_TEMP/dmg" "$SAIDA/${{ matrix.arquivo }}"
+          app="$RUNNER_TEMP/dmg/OpenStrut V1.app"
+          codesign --verify --verbose "$app"
+          test -f "$RUNNER_TEMP/dmg/OpenStrut V2 (web).webloc"
+          # pelo executavel do app: copia a V1 para ~/Library/Application Support e abre o lancador
+          bash tools/fumaca.sh "$app"
+
+          # Pelo LaunchServices, como o duplo clique (open -n), com o mesmo roteiro da fumaca.
+          # Ainda nao provado no runner: se falhar, so avisa (checagem manual em .github/CI.md).
+          o="$RUNNER_TEMP/open"
+          mkdir -p "$o/saida"
+          printf '%s\n' "L{ENTER}{TELA laje}" > "$o/roteiro.txt"
+          open -n --env "SISTRUT_ROTEIRO=$o/roteiro.txt" --env "SISTRUT_SAIDA=$o/saida/" \
+            --env "SISTRUT_LOG=$o/saida/log.txt" "$app" || true
+          for _ in $(seq 1 60); do
+            tail -1 "$o/saida/log.txt" 2> /dev/null | grep -q 'LAJE: fim$' && break
+            sleep 1
+          done
+          if tail -1 "$o/saida/log.txt" 2> /dev/null | grep -q 'LAJE: fim$'; then
+            echo "open -n: OK"
+            cat "$o/saida/log.txt"
+          else
+            echo "::warning::open -n do OpenStrut V1.app nao chegou a 'LAJE: fim' em 60 s (ver .github/CI.md, checagem manual)"
+            cat "$o/saida/log.txt" 2> /dev/null || echo "sem log"
+            pkill -f "Application Support/OpenStrut/V1/" || true
+          fi
+          hdiutil detach "$RUNNER_TEMP/dmg" || hdiutil detach -force "$RUNNER_TEMP/dmg"
 
       - uses: actions/upload-artifact@v7
         with:
@@ -178,7 +164,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v8
         with:
-          pattern: OpenStrut-*
+          pattern: OpenStrut-V1-*
           path: pacotes
           merge-multiple: true
 
@@ -195,5 +181,5 @@ jobs:
             pre=()
             # v1.2.0-rc1 e afins saem como pre-release
             case "$TAG" in *-*) pre=(--prerelease) ;; esac
-            gh release create "$TAG" pacotes/* --verify-tag --generate-notes --title "OpenStrut $TAG" "${pre[@]}"
+            gh release create "$TAG" pacotes/* --verify-tag --generate-notes --title "OpenStrut V1 $TAG" "${pre[@]}"
           fi

@@ -1,10 +1,11 @@
 #!/bin/bash
-# Executável do "OpenStrut V1.app". A V1 grava as obras na própria pasta e um .app
-# não deve ser gravado (fica em /Applications e é selado pela assinatura). Então,
-# na primeira execução e a cada versão nova, este script copia os programas e as
-# configurações de Contents/Resources/V1 para
-# ~/Library/Application Support/OpenStrut/V1, sem sobrescrever .INI, parametrizações
-# e obras, tira a quarentena da cópia e roda o OPENSTRUT de lá.
+# Executável do "OpenStrut V1.app". Os programas da V1 são executáveis soltos
+# (não são apps), e o macOS barra os que vieram de um download enquanto têm o
+# atributo de quarentena. Por isso, na primeira execução e a cada versão nova,
+# este script copia Contents/Resources/V1 para
+# ~/Library/Application Support/OpenStrut/V1, tira a quarentena da cópia e roda o
+# lançador OPENSTRUT.exe de lá. As obras ficam em ~/OpenStrut (a pasta C: do
+# lançador), fora do app e dessa cópia.
 set -u
 
 RECURSOS="$(cd "$(dirname "$0")/../Resources" && pwd)"
@@ -16,30 +17,28 @@ avisar() {
 }
 
 versao="$(cat "$RECURSOS/VERSAO")"
-if [ "$(cat "$DESTINO/.versao" 2> /dev/null)" != "$versao" ] || [ ! -x "$DESTINO/OPENSTRUT" ]; then
-    if ! mkdir -p "$DESTINO"; then
-        avisar "Não foi possível criar a pasta $DESTINO."
+if [ "$(cat "$DESTINO/.versao" 2> /dev/null)" != "$versao" ] || [ ! -x "$DESTINO/OPENSTRUT.exe" ]; then
+    # apagar antes de copiar: sobrescrever um executável assinado no mesmo lugar
+    # faz o macOS matá-lo na próxima execução
+    rm -rf "$DESTINO"
+    if ! mkdir -p "$DESTINO" || ! cp -R "$RECURSOS/V1/." "$DESTINO/"; then
+        avisar "Não foi possível copiar os programas para $DESTINO."
         exit 1
     fi
-    for f in "$RECURSOS"/V1/*; do
-        nome="${f##*/}"
-        case "$nome" in
-            *.*)
-                [ -e "$DESTINO/$nome" ] || cp "$f" "$DESTINO/"
-                ;;
-            *)
-                # apagar antes de copiar: sobrescrever um executável assinado no
-                # mesmo lugar faz o macOS matá-lo na próxima execução
-                rm -f "$DESTINO/$nome" && cp "$f" "$DESTINO/" && chmod 755 "$DESTINO/$nome"
-                ;;
-        esac || {
-            avisar "Não foi possível copiar $nome para $DESTINO."
-            exit 1
-        }
-    done
     xattr -dr com.apple.quarantine "$DESTINO" 2> /dev/null || true
     echo "$versao" > "$DESTINO/.versao"
 fi
 
+# Os programas são x64. O executável do app é este script, então o macOS não oferece
+# instalar o Rosetta 2 sozinho nos Macs com Apple Silicon: sem ele o exec falharia mudo.
+if ! arch -x86_64 /usr/bin/true 2> /dev/null; then
+    avisar "O OpenStrut V1 é um programa para Intel (x64) e precisa do Rosetta 2. Instale-o no Terminal com: softwareupdate --install-rosetta --agree-to-license"
+    exit 1
+fi
+
 cd "$DESTINO" || exit 1
-exec ./OPENSTRUT
+# com execfail, um exec que falha volta para o script em vez de encerrá-lo
+shopt -s execfail
+exec "$DESTINO/OPENSTRUT.exe"
+avisar "Não foi possível abrir $DESTINO/OPENSTRUT.exe."
+exit 1
