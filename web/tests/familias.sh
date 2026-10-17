@@ -38,7 +38,7 @@ roda_familia() {  # <familia> <lado>
             env $env bash "$raiz/tests/retraducao/sistema/roda_sistema.sh" "$trab/$lado/sis-bin" "$trab/$lado/sis-bin-sonda" "${SIS_C_BASE:?defina SIS_C_BASE}" "$o" > "$o/resumo.out" 2>&1 ;;
         extras)
             # roteiros soltos de tests/retraducao (piloto LAJEPROC, ON KEY, RUN, EXEC32)
-            : "${LAJE_C_E2E:?defina LAJE_C_E2E}" "${SIS_C_BASE:?defina SIS_C_BASE}"
+            : "${LAJE_C_E2E:?defina LAJE_C_E2E}" "${SIS_C_BASE:?defina SIS_C_BASE}" "${ORACULO:?defina ORACULO}"
             for c in piloto:LAJE:lajeproc_e2e.sufixo.txt:laje onkey:LAJE:onkey_lajeproc.txt:laje \
                      run_sisedit:SISTRUT:run_sisedit.txt:sis exec32:SISTRUT:exec32_laje.txt:sis; do
                 IFS=: read -r nome exe rot base <<< "$c"
@@ -46,7 +46,7 @@ roda_familia() {  # <familia> <lado>
                 rm -rf "$o/c_$nome"; cp -r "$base" "$o/c_$nome"
                 env $env bash "$raiz/tools/roda_retrad.sh" "$natbin" "$exe" "$raiz/tests/retraducao/$rot" "$o/run_$nome" "$o/c_$nome" 300 >/dev/null 2>&1
                 echo "##### $nome"
-                [ "$nome" = piloto ] && python -I "$raiz/tools/compara_retrad.py" "$(ls -d "${ORACULO:?defina ORACULO}"/runs/retrad_lajeproc-* | tail -1)" "$o/run_$nome" | tail -1
+                [ "$nome" = piloto ] && python -I "$raiz/tools/compara_retrad.py" "$(ls -d "$ORACULO"/runs/retrad_lajeproc-* | tail -1)" "$o/run_$nome" | tail -1
             done > "$o/resumo.out" 2>&1 ;;
         *)
             env $env bash "$raiz/tests/retraducao/$f/roda_casos.sh" "$natbin" "$o" > "$o/resumo.out" 2>&1 ;;

@@ -77,7 +77,7 @@ O último passo nunca é exato, então é um quociente ou um produto. Nos dois, 
 
 Medidas por `testa_x87.exe` e `roda_f80.sh` nesta máquina (Ryzen 5 3600). Os números da rodada final estão na seção abaixo, com o comando que os gerou.
 
-Rodada de 16/10/2026 depois do merge no `web` (`roda_f80.sh 30000 1`: o qb_f80 do build web contra o x87 nativo, 30 mil casos por funcao, as funcoes da libm do mingw):
+Rodada de 16/10/2026 (`roda_f80.sh 30000 1`: o qb_f80 do build web contra o x87 nativo, 30 mil casos por funcao, as funcoes da libm do mingw):
 
 | funcao | iguais | diferentes (1 ulp) |
 |---|---|---|
@@ -108,9 +108,4 @@ Os dois usam o clang do QB64 (`QB64_CXX`, padrão `/c/qb64pe/qb64pe/internal/c/c
 - **FYL2X e FYL2XP1.** L difere em cerca de 0,1% a 0,2% (1 ulp de 68 bits); na saída, cerca de 0,01% a 0,03%. Fora do domínio do FYL2XP1 (|x| ≥ 1 − √2/2), o hardware usa outro caminho. Para x grande ele dá o log certo; para x ≤ −1 devolve x. O modelo não cobre esse caso. O `logl` nunca chama FYL2XP1 fora do domínio.
 - **Denormais na saída** (FPATAN com y ou x denormais): às vezes 1 ulp de diferença. É provável que o hardware arredonde duas vezes.
 - **`qb_f80_pow`** continua com a conta antiga em quad. O `powl` do mingw é C (log2l, exp2l, __powil), e o `^` da V1 passa pelo RT45 (`RT45X87.h`), não por ele.
-
-## Pendências fora destes arquivos (para quem cuida do resto do web/)
-
-- O `build.sh` já compila todo `web/runtime/*.cpp`, então o `x87_zen2.cpp` entra sem mudança. O `testa_vetores` precisa de `x87_zen2.cpp` na linha do em++ (o `roda_f80.sh` faz isso).
-- No `qb_f80.cpp` só os corpos das funções mudaram: eles declaram `x87z_f`/`x87z_atan2` localmente. Ficaram sem uso `reduz_x87`, `nan_padrao` e `nan_quieto`, e o comentário do cabeçalho e o do bloco FSIN/FCOS/FPTAN estão desatualizados. O `README.md` (tabela de ponto flutuante) também precisa das taxas novas.
 - O "fsin" de `web/tests/f80` compara o FSIN cru do asm (sem FPREM1) com `std::sin` do qb_f80, que é o `sinl` do mingw. Para |x| ≥ 2^63, ±∞ e NaN eles diferem por definição; não é erro do modelo.

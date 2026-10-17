@@ -81,7 +81,7 @@ node web/tests/referencia.cjs web/dist
 
 1. `libqb`: instala o QB64 PE (cache) e o emsdk, compila a libqb web e lista os programas.
 2. `programa`: matriz com os 28, um por job, em paralelo; cache do `.js`/`.wasm` pela assinatura do programa, do COMMON da família, do RT45/MIXT, da camada web e das versões.
-3. `site`: junta os módulos, a página, `modulos.json` e a instalação; roda `web/tests/referencia.cjs` no Chrome headless contra a saída nativa guardada; publica no Pages.
+3. `site`: junta os módulos, a página, `modulos.json` e a instalação; roda `web/tests/referencia.cjs` (contra a saída nativa guardada) e `web/tests/pagina.cjs` no Chrome headless, com o site em `/openstrut-v1/`; publica no Pages.
 
 ## Resultados (17/10/2026)
 

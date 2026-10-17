@@ -96,7 +96,7 @@ O que o CI não prova e precisa de uma pessoa, com os pacotes de um `workflow_di
 
 ## pages.yml
 
-Publica a V1 no navegador (`web/`, ver `web/README.md`) em https://gmunaro.github.io/openstrut-v1/. Roda em push na `main` que mexa em `web/`, `src-original/`, `sistrut-game/`, `tests/retraducao/` ou no próprio workflow, e por `workflow_dispatch`. Precisa do Pages ligado com a fonte "GitHub Actions" (Settings > Pages).
+Publica a V1 no navegador (`web/`, ver `web/README.md`) em https://gmunaro.github.io/openstrut-v1/. Roda em push na `main` que mexa em `web/`, `src-original/`, `sistrut-game/`, `tests/retraducao/`, `tools/troca_semente.py` ou no próprio workflow, e por `workflow_dispatch`. Precisa do Pages ligado com a fonte "GitHub Actions" (Settings > Pages).
 
 1. `libqb`: QB64 PE (cache) e emsdk 6.0.12; compila a libqb web e lista os 28 programas.
 2. `programa`: um job por programa, com cache do `.js`/`.wasm` pela assinatura das fontes.
