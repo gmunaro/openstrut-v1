@@ -1,0 +1,25 @@
+ออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ
+ Vinculo entre os Elementos Estruturais                                         
+ Painel de Lajes E2E         Vigas E2E           Colunas E2E                    
+ออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ
+                                                                                
+  Viga do Painel     Viga Correspondente        Tramos    Secao                 
+                                                                                
+     V1               V1                           2      12x40                 
+     V2               V2                           2      12x40                 
+     V3               V4                           2      12x40                 
+     V4               V4                           2      12x40                 
+     V5               V5                           2      12x40                 
+     V6               V6                           2      12x40                 
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+     Proxima Viga         Altera Viga Correspondente       <*> Elimina      
+    <F>im  aceita correspondencia       <R>etorna a escolha dos arquivos        
+                                                                                

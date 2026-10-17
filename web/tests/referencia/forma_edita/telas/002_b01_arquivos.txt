@@ -1,0 +1,25 @@
+лллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллл
+   MONTAGEM E DESENHO DE FORMAS                                                 
+   OpenStrut  eng. reversa independente do                                      
+   SISTRUT 4.0 (1991), sem vinculo oficial                                      
+   Versao 4.0   OpenStrut (eng. reversa)                                        
+лллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллл
+                                                                                
+ Forma a ser editada        C:\E2E.FRM                                          
+ Lajes a serem utilizadas   C:\E2E.LAJ                                          
+ Vigas a serem utilizadas   C:\E2E.VIG                                          
+ Colunas a serem utilizadas C:\E2E.COL                                          
+ Continuo com a edicao da forma N/*S*                                           
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                

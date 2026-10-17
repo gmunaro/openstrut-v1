@@ -1,0 +1,25 @@
+лллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллл
+   ARMADURA PARA VIGAS DE CONCRETO SUBMETIDA A FLEXAO SIMPLES                   
+   OpenStrut  eng. reversa independente do                                      
+   SISTRUT 4.0 (1991), sem vinculo oficial                                      
+   Versao 4.0   OpenStrut (eng. reversa)                                        
+лллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллл
+                                                                                
+                   1  -  Materiais, Concreto Aco                                
+                                                                                
+                   2  -  Arquivar Secoes                                        
+                                                                                
+                   3  -  Processar Calculo das Secoes                           
+                                                                                
+                   4  -  Calculo de uma Secao                                   
+                                                                                
+                   5  -  Correcoes dos dados                                    
+                                                                                
+                   6  -  Dimensionamento                                        
+                                                                                
+                   7  -  Visualizar / Alterar Parametrizacoes                   
+                                                                                
+                   8  -  Lista das Secoes Arquivadas                            
+                                                                                
+                   escolha opcao                            <F2> = Fim          
+                                                                                

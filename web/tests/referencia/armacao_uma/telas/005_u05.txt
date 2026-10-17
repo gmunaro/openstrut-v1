@@ -1,0 +1,25 @@
+様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様
+ Processamento de uma Secao                                                     
+様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様
+                                                                                
+ Concreto Fck *.15* t/cm2                    Aco Fyk *5* t/cm2                  
+                                             Tipo de Aco  A/B *B*               
+                                                                                
+ B(cm) , H(cm) , d(cm) *RETORNO* 20,50                                          
+ Bf(cm) , Hf(cm)                                                                
+                                                                                
+ Dentre as Bitolas mostradas abaixo, escolha tres (3)                           
+ para utilizacao no calculo de esforcos de Flexao .                             
+ 3.2 / 4 / 5 / 6.3 / 8 / 10 / 12.5 / 16 / 20 / 22.2 / 25 / 32 / 40 /            
+ Bitolas(mm) *10,12.5,16*                                                       
+                                                                                
+ Dentre as Bitolas mostradas abaixo, escolha tres (3)                           
+ para utilizacao no calculo de esforcos de Cisalhamento.                        
+ 3.2 / 4 / 5 / 6.3 / 8 / 10 / 12.5 / 16 / 20 / 22.2 / 25 / 32 / 40 /            
+ Bitolas(mm) *5,6.3,8*                                                          
+                                                                                
+ Imprimo os resultados S/*N*                                                    
+                                                                                
+                                                                                
+                                                                                
+                                                                                

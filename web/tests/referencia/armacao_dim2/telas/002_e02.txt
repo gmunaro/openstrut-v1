@@ -1,0 +1,25 @@
+様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様
+ Dimensionamento de Secoes                                                      
+様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様
+                                                                                
+ (Secao para Dimensionamento)                                                   
+                                                                                
+ Concreto Fck *.15* t/cm2 0.18                                                  
+ Aco      Fyk *5* t/cm2                                                         
+ Tipo de Aco  A/B *B* X                                                         
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                

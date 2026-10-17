@@ -1,0 +1,25 @@
+様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様
+ Correcao de Parametros                                                         
+様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様
+                                                                                
+                                                                                
+ Limite da posicao da Linha Neutra                                              
+ (1) x/d(lim)= .53                                                              
+ Taxa de Armadura Longitudinal                                                  
+ (2) @1= .0015                                                                  
+                                                                                
+ Coeficientes de Seguranca                                                      
+ (3) Forcas = 1.4                                                               
+ (4) Concreto = 1.4                                                             
+ (5) Aco = 1.15                                                                 
+                                                                                
+ Unidades de trabalho dos esforcos solicitantes                                 
+ (6) Unidade de Forca = t                                                       
+ (7) Coef. multiplicador para transformar em toneladas = 1                      
+ (8) Unidade de Medida = m                                                      
+ (9) Coef. multiplicador para transformar em metros = 1                         
+                                                                                
+ item , Novo Valor  *NAO*                                                       
+                                                                                
+                                                                                
+                                                                                

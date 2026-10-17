@@ -1,0 +1,25 @@
+лллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллл
+   MONTAGEM E DESENHO DE FORMAS                                                 
+   OpenStrut  eng. reversa independente do                                      
+   SISTRUT 4.0 (1991), sem vinculo oficial                                      
+   Versao 4.0   OpenStrut (eng. reversa)                                        
+лллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллл
+                                                                                
+ Lajes a serem utilizadas   C:\E2E.LAJ                                          
+ Vigas a serem utilizadas   C:\E2E.VIG                                          
+ Coloque o Disco de Dados no Drive C:\                                          
+                                                                                
+ Nome do Arquivo de Colunas  *RETORNO*                                          
+                                                                                
+                             Acione  D <Enter>  para alterar Drive e Diretorio  
+                                                                                
+C:\                                                                             
+E2E     .COL                                                                    
+ 2013265920 Bytes free                                                          
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                

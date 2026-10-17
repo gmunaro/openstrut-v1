@@ -1,0 +1,25 @@
+лллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллл
+   MONTAGEM E DESENHO DE FORMAS                                                 
+   OpenStrut  eng. reversa independente do                                      
+   SISTRUT 4.0 (1991), sem vinculo oficial                                      
+   Versao 4.0   OpenStrut (eng. reversa)                                        
+лллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллл
+                                                                                
+ Lajes a serem utilizadas   C:\E2E.LAJ                                          
+                            tracos de arquitetura 4                             
+                            tracos de estrutura 6                               
+                            lajes arquivadas 4                                  
+                            trechos de pilares arquivados 9                     
+                            vigas arquivadas 6                                  
+                                                                                
+ Vigas a serem utilizadas   C:\E2E.VIG                                          
+                            vigas arquivadas 6                                  
+                                                                                
+ Colunas a serem utilizadas C:\E2E.COL                                          
+                            niveis definidos 2                                  
+                            colunas arquivadas 9                                
+                                                                                
+                                                                                
+ Todos os dados de dimensionamento foram lidos.                                 
+ Inicio da reedicao da Forma  N/*S*                                             
+                                                                                

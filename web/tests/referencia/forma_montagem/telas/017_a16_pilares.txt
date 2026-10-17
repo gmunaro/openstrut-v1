@@ -1,0 +1,25 @@
+ออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ
+ Vinculo entre os Elementos Estruturais                                         
+ Painel de Lajes E2E         Vigas E2E           Colunas E2E                    
+ออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ
+                                                                                
+  Pilar do Painel    Pilar Correspondente       Secao    Nivel PAV1             
+                                                                                
+     P1               P   1                       Retangular 20x20              
+     P2               P   2                       Retangular 20x20              
+     P3               P   3                       Retangular 20x20              
+     P4               P   4                       Retangular 20x20              
+     P5               P   5                       Retangular 20x20              
+     P6               P   6                       Retangular 20x20              
+     P7               P   7                       Retangular 20x20              
+     P8               P   8                       Retangular 20x20              
+     P9               P   9                       Retangular 20x20              
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+     Proximo Pilar        Altera Pilar Correspondente      <*> Elimina      
+    <F>im  aceita correspondencia       <R>etorna a escolha do nivel            
+                                                                                

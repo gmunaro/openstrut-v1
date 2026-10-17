@@ -1,0 +1,25 @@
+様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様
+ Dimensionamento de Secoes                                                      
+様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様
+                                                                                
+ (Secao para Dimensionamento)                                                   
+                                                                                
+ Concreto Fck *.18* t/cm2                                                       
+ Aco      Fyk *5* t/cm2                                                         
+ Tipo de Aco  A/B *B*                                                           
+                                                                                
+     1  -  Retangular Te                                                        
+     2  -  Triangular                                                           
+     3  -  Triangular Invertida                                                 
+     4  -  Trapezoidal                                                          
+     5  -  Circular                                                             
+           *Retorno*                                                            
+                                                                                
+     Escolha o tipo de secao                                                    
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                

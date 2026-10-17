@@ -1,0 +1,25 @@
+様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様
+ Correcao de Secoes                                                             
+ posicionada(s) 6 Secao(oes)                                                    
+様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様
+                                                                                
+ Numero da posicao a ser alterada *FIM* 6                                       
+                                                                                
+( Posicao 6 )                                                                   
+                                                                                
+ Secao Circular                                                                 
+                                                                                
+ (1) Diametro = 50 cm                                                           
+                                                                                
+ (3) d = 36 cm                                                                  
+                                                                                
+ Bitolas (mm), para utilizacao no calculo de esforcos de Flexao                 
+ (6) 10     (7) 12.5     (8) 16                                                 
+                                                                                
+ Bitolas (mm), para utilizacao no calculo de esforcos de Cisalhamento           
+ (9) 5     (10) 6.3     (11) 8                                                  
+                                                                                
+ item , Novo Valor  *NAO*                                                       
+                                                                                
+                                                                                
+                                                                                

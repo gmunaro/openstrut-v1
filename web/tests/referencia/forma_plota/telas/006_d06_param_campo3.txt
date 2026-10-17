@@ -1,0 +1,25 @@
+様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様
+ Desenho e Plotagem de Formas                                                   
+ Configuracao do tamanho da folha de Plotagem e Escala                          
+様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様
+ - Area de Plotagem e Bordas                                                    
+                                                                                
+   largura da folha  841 mm            altura da folha  594 mm                  
+   margem esquerda   25 mm             outras margens   10 mm                   
+   largura do carimbo  175 mm          altura do carimbo  287 mm                
+   escala do desenho 1/ 50                                                      
+                                                                                
+ - Drives e Extensoes de arquivos                                               
+                                                                                
+   drive gravacao folha   (.DXF) C:\                                            
+   drive de plotagem      (.PLT) C:\                                            
+                                                                                
+ - Grandezas de Escrita   altura de letra (mm) para :                           
+                                                                                
+    coluna     3.0           vigas      3.0           lajes      3.0            
+    amarracao  2.0           elevacao   2.0           extras     1.5            
+                                                                                
+                                                                                
+                                                                                
+       Acione   <Enter> para manter   ou   <ESC> <Enter> para Retornar          
+                                                                                

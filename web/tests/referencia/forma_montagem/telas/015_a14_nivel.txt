@@ -1,0 +1,25 @@
+様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様
+ Vinculo entre os Elementos Estruturais                                         
+ Painel de Lajes E2E         Vigas E2E           Colunas E2E                    
+様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様
+                                                                                
+ Escolha o Nivel referente as secoes das Colunas                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+     PAV1                 3.000                                                 
+     FUND                 0.000                                                 
+                                                                                
+                                                                                
+     Seleciona proximo Nivel              <F>im aceita nivel escolhido        
+    <R>etorna a correspondencia das vigas                                       
+                                                                                

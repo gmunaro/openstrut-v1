@@ -1,0 +1,25 @@
+様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様
+ Dimensionamento de Secoes                                                      
+様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様
+                                                                                
+                                                                                
+                   1  -  Secao da Viga                                          
+                                                                                
+                   2  -  Momento Fletor                                         
+                                                                                
+                   3  -  Forca Cortante                                         
+                                                                                
+                   4  -  Momento Torcor                                         
+                                                                                
+                   5  -  *Retorno ao Menu Principal*                            
+                                                                                
+                                                                                
+                   escolha opcao                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                

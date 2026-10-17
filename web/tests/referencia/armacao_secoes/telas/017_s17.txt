@@ -1,0 +1,25 @@
+ออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ
+ Arquivo de Secoes para dimensionamento                                         
+ numero maximo de posicoes - 20                                                 
+ออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ
+                                                                                
+ ( POSICAO 7 )                                                                  
+                             ฺฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฟ           
+ B(cm) , H(cm) , d(cm) *RETORณ  Secao Retangular - Te               ณÛ          
+ Bf(cm) , Hf(cm)             ณ                                      ณÛ          
+                             ณ  B= 25       H= 70     d= 66         ณÛ          
+ Dentre as Bitolas mostradas ณ  Bf= 0       Hf= 0                   ณÛ          
+ para utilizacao no calculo dณ                                      ณÛ          
+ 3.2 / 4 / 5 / 6.3 / 8 / 10 /ณ  Bitolas utilizadas na Flexao        ณÛ          
+ Bitolas(mm) *10,12.5,16* 11,ณ   10  12.5  16                       ณÛ          
+                             ณ                                      ณÛ          
+ Dentre as Bitolas mostradas ณ  Bitolas utilizadas no Cisalhamento  ณÛ          
+ para utilizacao no calculo dณ   5  6.3  8                          ณÛ          
+ 3.2 / 4 / 5 / 6.3 / 8 / 10 /ณ                                      ณÛ          
+ Bitolas(mm) *5,6.3,8*       ณ  Dados Corretos  N/*S*               ณÛ          
+                             ภฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤูÛ          
+                               ÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛ          
+                                                                                
+                                                                                
+                                                                                
+                                                                                

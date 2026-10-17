@@ -1,0 +1,25 @@
+様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様
+ Arquivo de Secoes para dimensionamento                                         
+ numero maximo de posicoes - 20                                                 
+様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様
+                                                                                
+ ( POSICAO 1 )                                                                  
+                                                                                
+ B(cm) , H(cm) , d(cm) *RETORNO* 20,50,60                                       
+ Bf(cm) , Hf(cm)                                                                
+                                                                                
+ Dentre as Bitolas mostradas abaixo, escolha tres (3)                           
+ para utilizacao no calculo de esforcos de Flexao .                             
+ 3.2 / 4 / 5 / 6.3 / 8 / 10 / 12.5 / 16 / 20 / 22.2 / 25 / 32 / 40 /            
+ Bitolas(mm) *10,12.5,16*                                                       
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                

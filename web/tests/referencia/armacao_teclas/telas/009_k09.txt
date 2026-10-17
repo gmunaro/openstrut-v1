@@ -1,0 +1,25 @@
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                                  OpenStrut                                   บ
+บ                        Eng. reversa independente do                          บ
+บ                             SISTRUT 4.0 (1991)                               บ
+บ                            sem vinculo oficial                               บ
+บ                                                                              บ
+บ            ฺฤ Portico ๚๚๚๚๚๚๚๚๚๚                                             บ
+บ            ณ                    :                                            บ
+บ            รฤ Grelha ๚๚๚๚๚๚ Diagramas                                        บ
+บ            ณ                    :                                            บ
+บ            รฤ Trelica ๚๚๚๚๚๚๚๚๚๚                                             บ
+บ            ณ                                                                 บ
+บ            รฤ Laje ๚๚๚๚๚๚๚๚๚๚๚๚๚๚๚๚ Desenho ๚๚๚๚๚๚๚๚๚๚๚ Plotagem ๚๚๚๚๚       บ
+บ            ณ                                                          :      บ
+บ            รฤ Viga ๚๚๚๚๚๚๚๚ Detalhamento & Desenho ๚๚๚๚ Plotagem ๚๚๚๚๚       บ
+บ            ณ                                                          :      บ
+บ            รฤ Armacao                                               Forma    บ
+บ            ณ                                                          :      บ
+บ            รฤ Pilar ๚๚๚๚๚๚๚๚๚๚๚๚๚๚๚ Desenho ๚๚๚๚๚๚๚๚๚๚๚ Plotagem ๚๚๚๚๚       บ
+บ            :                                                                 บ
+บ            :                                       <F2> = Fim                บ
+บ            รฤ Configuracao                                                   บ
+บ            ณ                                   <F1> = Informacoes            บ
+บ            ภฤ Editor                           C:\                           บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ

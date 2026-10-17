@@ -1,0 +1,25 @@
+様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様
+ Correcao de Secoes                                                             
+ posicionada(s) 6 Secao(oes)                                                    
+様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様様
+                                                                                
+ Numero da posicao a ser alterada *FIM* 1                                       
+                                                                                
+( Posicao 1 )                                                                   
+                                                                                
+ Secao Retangular - Te                                                          
+                                                                                
+ (1) B = 20 cm                          (4) Bf= 0 cm                            
+ (2) H = 55 cm                          (5) Hf= 0 cm                            
+ (3) d = 46 cm                                                                  
+                                                                                
+ Bitolas (mm), para utilizacao no calculo de esforcos de Flexao                 
+ (6) 10     (7) 12.5     (8) 16                                                 
+                                                                                
+ Bitolas (mm), para utilizacao no calculo de esforcos de Cisalhamento           
+ (9) 5     (10) 6.3     (11) 8                                                  
+                                                                                
+ item , Novo Valor  *NAO*                                                       
+                                                                                
+                                                                                
+                                                                                
