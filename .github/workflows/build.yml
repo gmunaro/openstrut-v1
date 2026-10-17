@@ -1,6 +1,7 @@
-# Compila a V1 (QB64 PE) e roda os testes em Windows, Linux e macOS.
-# Tambem e chamado pelo release.yml (workflow_call) para gerar os executaveis
-# que vao nos pacotes. Detalhes e custo em .github/CI.md.
+# Compila a OpenStrut V1 (os 28 programas de src-original e o lancador) com o QB64 PE
+# e roda os testes que nao dependem do original, em Windows, Linux e macOS (x64).
+# Tambem e chamado pelo release.yml (workflow_call) para gerar os executaveis que vao
+# nos pacotes. Detalhes em .github/CI.md.
 name: build
 
 on:
@@ -11,17 +12,7 @@ on:
   pull_request:
     paths-ignore: ["docs/**", "**/*.md"]
   workflow_dispatch:
-    inputs:
-      roteiros:
-        description: "Rodar os roteiros de teclado tambem no Windows e no macOS (abrem janela)"
-        type: boolean
-        default: false
   workflow_call:
-    inputs:
-      roteiros:
-        description: "Rodar os roteiros de teclado tambem no Windows e no macOS (abrem janela)"
-        type: boolean
-        default: false
 
 permissions:
   contents: read
@@ -35,6 +26,9 @@ concurrency:
 env:
   # Release oficial "4.7.0" do QB64 PE; a tag no GitHub e v4.7.0-GLFW.
   QB64_VERSAO: 4.7.0-GLFW
+  # macOS: binarios para o macOS 13 em diante (o padrao do clang e a versao do runner).
+  # Vale para o QB64 PE e para os programas; esta na chave do cache.
+  MACOSX_DEPLOYMENT_TARGET: "13.0"
 
 defaults:
   run:
@@ -42,32 +36,27 @@ defaults:
 
 jobs:
   build:
-    name: build (${{ matrix.os }})
+    name: build (${{ matrix.plat }})
     strategy:
       fail-fast: false
       matrix:
-        # macOS custa ~10x o Linux: so entra na main, em tag (release) e em execucao manual.
-        # macos-13 ja foi retirado e macos-14 sai em 2/11/2026; macos-15 e o arm64
-        # (M1) e macos-15-intel e o x64.
-        os: ${{ fromJSON((github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch') && '["windows-latest","ubuntu-24.04","ubuntu-24.04-arm","macos-15","macos-15-intel"]' || '["windows-latest","ubuntu-24.04","ubuntu-24.04-arm"]') }}
+        # So x64: o RT45 usa o x87 (src-original/comum/RT45X87.h, assembly inline e
+        # long double de 80 bits). O macOS x64 roda nos Macs Apple Silicon pelo Rosetta 2.
+        include:
+          - { os: windows-latest, plat: windows-x64 }
+          - { os: ubuntu-24.04, plat: linux-x64 }
+          - { os: macos-15-intel, plat: macos-x64 }
     runs-on: ${{ matrix.os }}
-    # Nao ha release do QB64 PE para Linux arm64; o pacote de Linux x64 e fonte
-    # C++ e deve compilar em aarch64, mas isso ainda nao foi provado. Tire esta
-    # linha quando o job ficar verde.
-    continue-on-error: ${{ matrix.os == 'ubuntu-24.04-arm' }}
-    timeout-minutes: 60
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v7
 
-      - name: Plataforma e pasta do QB64
+      - name: Pasta do QB64
         id: plat
         run: |
-          os="$(echo "$RUNNER_OS" | tr '[:upper:]' '[:lower:]')"
-          arch="$(echo "$RUNNER_ARCH" | tr '[:upper:]' '[:lower:]')"
-          echo "plat=$os-$arch" >> "$GITHUB_OUTPUT"
           if [ "$RUNNER_OS" = Windows ]; then
             # o 7z da release tem a pasta qb64pe/ na raiz: fica em C:\qb64pe\qb64pe,
-            # o mesmo lugar que os scripts de tools/ usam por padrao no Windows
+            # o lugar que os scripts de tools/ usam por padrao no Windows
             echo "cache=C:\\qb64pe" >> "$GITHUB_OUTPUT"
             echo "QB64_DIR=/c/qb64pe/qb64pe" >> "$GITHUB_ENV"
           else
@@ -77,7 +66,7 @@ jobs:
 
       # Dependencias de compilacao (lista do setup_lnx.sh da release). Precisam
       # estar presentes em todo build, nao so na instalacao: cada programa QB64
-      # e compilado e ligado contra X11/OpenGL/ALSA.
+      # e compilado e ligado contra X11/OpenGL/ALSA. xvfb: testes sem tela.
       - name: Dependencias (Linux)
         if: runner.os == 'Linux'
         run: |
@@ -92,7 +81,7 @@ jobs:
         uses: actions/cache/restore@v6
         with:
           path: ${{ steps.plat.outputs.cache }}
-          key: qb64pe-${{ env.QB64_VERSAO }}-${{ matrix.os }}
+          key: qb64pe-${{ env.QB64_VERSAO }}-${{ matrix.os }}-mac${{ env.MACOSX_DEPLOYMENT_TARGET }}
 
       - name: Instalar QB64 PE (Windows)
         if: runner.os == 'Windows' && steps.cache-qb64.outputs.cache-hit != 'true'
@@ -137,46 +126,52 @@ jobs:
           path: ${{ steps.plat.outputs.cache }}
           key: ${{ steps.cache-qb64.outputs.cache-primary-key }}
 
-      - name: Compilar
+      - name: Compilar a V1 (28 programas e o lancador)
         run: bash tools/build.sh
 
-      - name: Testes (Linux, sob Xvfb)
+      # o lancador abre o gerenciador, que faz CHAIN para o LAJE (sem o original)
+      - name: Fumaca (Linux, sob Xvfb)
         if: runner.os == 'Linux'
-        run: xvfb-run -a bash tools/runtests.sh
+        run: xvfb-run -a bash tools/fumaca.sh
 
-      - name: Testes
+      - name: Fumaca
         if: runner.os != 'Linux'
+        run: bash tools/fumaca.sh
+
+      # Sonda T20 (RT45 da V1 x bits gravados no original) nos 3 sistemas. Os tests/T_*.BAS
+      # sao da versao anterior (src-reconstructed), que declara a user32 do Windows: so
+      # compilam e passam no Windows.
+      - name: Testes (Windows, T_* e sonda)
+        if: runner.os == 'Windows'
         run: bash tools/runtests.sh
 
-      - name: Roteiros (Linux, sob Xvfb)
+      - name: Sonda T20 (Linux, sob Xvfb)
         if: runner.os == 'Linux'
-        timeout-minutes: 30
-        run: xvfb-run -a -s "-screen 0 1280x1024x24" bash tools/roteiros.sh
+        run: xvfb-run -a bash tools/runtests.sh SONDA
 
-      - name: Roteiros
-        if: runner.os != 'Linux' && inputs.roteiros
-        timeout-minutes: 30
-        run: bash tools/roteiros.sh
+      - name: Sonda T20 (macOS)
+        if: runner.os == 'macOS'
+        run: bash tools/runtests.sh SONDA
 
-      - name: Logs dos roteiros
-        if: failure()
-        uses: actions/upload-artifact@v7
+      # testes do comparador de paridade; os que leem o oraculo pulam sem ORACULO.
+      # TypeScript, igual em todo sistema: roda so no Linux.
+      - uses: oven-sh/setup-bun@v2
+        if: runner.os == 'Linux'
         with:
-          name: roteiros-${{ steps.plat.outputs.plat }}
-          path: |
-            roteiros/saida/**/*.log
-            roteiros/saida/**/*.txt
-          if-no-files-found: ignore
-          retention-days: 3
+          bun-version: "1.4.2"
+
+      - name: Paridade (bun test)
+        if: runner.os == 'Linux'
+        run: bun test paridade/testes
 
       # tar preserva a permissao de execucao (zip do artifact nao preserva)
       - name: Empacotar build
-        run: tar -czf "v1-build-${{ steps.plat.outputs.plat }}.tar.gz" -C build .
+        run: tar -czf "v1-build-${{ matrix.plat }}.tar.gz" -C build .
 
       - name: Enviar build
         uses: actions/upload-artifact@v7
         with:
-          path: v1-build-${{ steps.plat.outputs.plat }}.tar.gz
+          path: v1-build-${{ matrix.plat }}.tar.gz
           archive: false
           if-no-files-found: error
           retention-days: 3

@@ -1,43 +1,48 @@
 #!/usr/bin/env bash
-# Compila src-reconstructed/**/*.BAS (exceto .BI/.BM) com qb64pe.
+# Compila a OpenStrut V1 com o QB64 PE em build/: os 28 programas de
+# src-original/<familia>/*.BAS e o lancador (pacote/lancador/OPENSTRUT.BAS).
 # Uso: tools/build.sh [filtro]   ex.: tools/build.sh laje/
-# O filtro e um padrao de substring sobre o caminho relativo a src-reconstructed/.
-# Compila a partir de uma pasta temporaria (sem espacos no caminho) e copia o .exe para build/.
-# Exit 0 se tudo compilou; exit 1 se algum falhou ou nao havia fontes.
+# O filtro e uma substring do caminho do fonte (src-original/laje/LAJE.BAS,
+# pacote/lancador/OPENSTRUT.BAS).
+#
+# build/ sai pronta para instalar (e o que os pacotes de pacote/ copiam):
+#   <PROGRAMA>.exe  os 28 programas e o OPENSTRUT.exe. Com .exe tambem no Linux e no
+#                   macOS: o CHAIN/RUN do RT45 (RT_ACHA_EXE) procura <nome>.exe na
+#                   pasta do executavel.
+#   sistrut-game/   INI e parametrizacoes da instalacao do original; o lancador os
+#                   copia para a pasta C: do usuario.
+# Compila a partir de uma pasta temporaria (o qb64pe nao aceita espaco no caminho).
+# Exit 0 se tudo compilou; 1 se algum falhou ou nao havia fontes.
 
 DIST="$(cd "$(dirname "$0")/.." && pwd)"
 # staging proprio por execucao, numa pasta temporaria sem espacos (o qb64pe nao aceita):
 # varias execucoes simultaneas nao se apagam
-STAGE="${TMPDIR:-/tmp}/sistrut-build-$$"
+STAGE="${TMPDIR:-/tmp}"
+STAGE="${STAGE%/}/sistrut-build-$$"
 STAGE_WIN="$(cygpath -m "$STAGE" 2>/dev/null || echo "$STAGE")"
 case "$STAGE" in *" "*) echo "pasta temporaria com espaco ($STAGE): defina TMPDIR" >&2; exit 1 ;; esac
 trap 'rm -rf "$STAGE"' EXIT
 FILTER="${1:-}"
 
-# Staging: recopia as fontes para evitar caminhos com espaco no qb64pe.
-mkdir -p "$STAGE" "$STAGE/out" "$DIST/build" || exit 1
-rm -rf "$STAGE/src-reconstructed" "$STAGE/tests" "$STAGE/sistrut-game"
-cp -r "$DIST/src-reconstructed" "$DIST/tests" "$DIST/sistrut-game" "$STAGE/" || exit 1
+mkdir -p "$STAGE/out" "$STAGE/pacote" "$DIST/build" || exit 1
+cp -r "$DIST/src-original" "$STAGE/" || exit 1
+cp -r "$DIST/pacote/lancador" "$STAGE/pacote/" || exit 1
 
-LOGDIR="$STAGE/out"
 ok=0
 fail=0
 total=0
 rows=""
 
-while IFS= read -r src; do
-    rel="${src#"$DIST/src-reconstructed/"}"
+while IFS= read -r rel; do
     if [ -n "$FILTER" ] && [[ "$rel" != *"$FILTER"* ]]; then
         continue
     fi
     total=$((total + 1))
     mod="$(basename "$rel" | sed 's/\.[bB][aA][sS]$//' | tr '[:lower:]' '[:upper:]')"
-    stage_src="$STAGE_WIN/src-reconstructed/$rel"
-    stage_exe="$STAGE_WIN/out/$mod.exe"
-    log="$LOGDIR/$mod.log"
+    log="$STAGE/out/$mod.log"
 
     rm -f "$STAGE/out/$mod.exe"
-    bash "$DIST/tools/qbcompile.sh" "$stage_src" "$stage_exe" > "$log" 2>&1
+    bash "$DIST/tools/qbcompile.sh" "$STAGE_WIN/$rel" "$STAGE_WIN/out/$mod.exe" > "$log" 2>&1
     rc=$?
 
     if [ "$rc" -eq 0 ] && [ -f "$STAGE/out/$mod.exe" ]; then
@@ -53,22 +58,18 @@ while IFS= read -r src; do
         fail=$((fail + 1))
         rows="$rows"$'\n'"FAIL $rel"
         # qb64pe usa \r na barra de progresso; quebra em linhas e mostra so o fim do erro.
-        tail_txt="$(tr '\r' '\n' < "$log" | grep -v '^[[:space:]]*$' | grep -v '\[' | tail -n 12)"
+        tail_txt="$(tr '\r' '\n' < "$log" | grep -v '^[[:space:]]*$' | tr -d '\033' | sed -e 's/\[[0-9;]*[mA]//g' | grep -v '^\[[. ]*\]' | tail -n 12)"
         rows="$rows"$'\n'"$(printf '%s\n' "$tail_txt" | sed 's/^/     | /')"
     fi
-done < <(find "$DIST/src-reconstructed" -type f -iname '*.bas' | sort)
+done < <(cd "$DIST" && { find src-original -mindepth 2 -maxdepth 2 -type f -iname '*.bas' | sort; echo pacote/lancador/OPENSTRUT.BAS; })
 
 printf '%s\n' "$rows"
 echo
 echo "build: $ok OK, $fail FAIL (de $total)"
 
-# Deixa dist/build pronta para rodar: configuracoes e parametrizacoes originais
-# (INI, LAP, PIP, FOP, DSP, PLOTER.INI). Nao sobrescreve as que ja existem,
-# para preservar ajustes feitos pelo usuario.
-for cfg in "$DIST"/sistrut-game/*.INI "$DIST"/sistrut-game/*.LAP "$DIST"/sistrut-game/*.PIP "$DIST"/sistrut-game/*.FOP "$DIST"/sistrut-game/*.DSP; do
-    [ -f "$cfg" ] || continue
-    [ -f "$DIST/build/$(basename "$cfg")" ] || cp "$cfg" "$DIST/build/"
-done
+# INI e parametrizacoes da instalacao do original, ao lado dos programas
+rm -rf "$DIST/build/sistrut-game"
+cp -r "$DIST/sistrut-game" "$DIST/build/sistrut-game" || exit 1
 
 if [ "$total" -eq 0 ]; then
     echo "nenhum .BAS encontrado${FILTER:+ para o filtro '$FILTER'}" >&2
