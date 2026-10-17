@@ -51,12 +51,15 @@ jobs:
         with:
           path: ~/qb64pe
           key: qb64pe-${{ env.QB64_VERSAO }}-ubuntu-24.04
-      - name: Instalar QB64 PE
-        if: steps.cache-qb64.outputs.cache-hit != 'true'
+      - name: Bibliotecas do QB64 PE
+        # o qb64pe vem do cache, mas as bibliotecas do sistema (libGLU etc.) precisam ser instaladas em todo job
         run: |
           sudo apt-get update -q
           sudo apt-get install -y -q --no-install-recommends build-essential mesa-common-dev libglu1-mesa-dev libasound2-dev \
             libpng-dev libcurl4-openssl-dev libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev
+      - name: Instalar QB64 PE
+        if: steps.cache-qb64.outputs.cache-hit != 'true'
+        run: |
           curl -fsSL -o "$RUNNER_TEMP/qb64pe.tar.gz" \
             "https://github.com/QB64-Phoenix-Edition/QB64pe/releases/download/v$QB64_VERSAO/qb64pe_lnx-x64-$QB64_VERSAO.tar.gz"
           tar -xzf "$RUNNER_TEMP/qb64pe.tar.gz" -C "$HOME"
@@ -131,6 +134,12 @@ jobs:
         with:
           name: libqb-web
           path: ${{ runner.temp }}/web
+      - name: Bibliotecas do QB64 PE
+        if: steps.cache-mod.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q --no-install-recommends build-essential mesa-common-dev libglu1-mesa-dev libasound2-dev \
+            libpng-dev libcurl4-openssl-dev libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev
       - name: Compilar ${{ steps.nome.outputs.exe }}
         if: steps.cache-mod.outputs.cache-hit != 'true'
         run: |
