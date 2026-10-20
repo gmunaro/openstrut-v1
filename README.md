@@ -6,11 +6,14 @@
 
 O SISTRUT 4.0 é uma suíte MS-DOS de cálculo e detalhamento de estruturas de concreto armado pela NB-1/78: lajes, vigas, pilares, armação, formas, desenho e plotagem. Foi escrito em QuickBASIC 4.5 e distribuído sem código-fonte. O OpenStrut não é produto da empresa do SISTRUT nem tem vínculo com ela ou com os autores do original.
 
-A V1 é o SISTRUT 4.0 retraduzido para QB64 Phoenix Edition, comando por comando, a partir do código do próprio EXE original: 28 programas, um por EXE (o instalador não entra). Os executáveis do original foram desassemblados, e o tradutor (`tools/retraduz.py`) gera BASIC compilável no QB64 PE. Um runtime próprio (RT45, `src-original/comum/`) reproduz a semântica do runtime do QuickBASIC 4.5 (BRUN45): ponto flutuante do x87, COMMON e CHAIN, teclado, tela e impressora. O critério é ser idêntica ao original, inclusive nos bugs. Ela calcula, mostra as telas, imprime e grava os arquivos como o original, e foi conferida contra ele rodando lado a lado (tela a tela, pixel a pixel e byte a byte). As diferenças em relação ao original são três:
+A V1 é o SISTRUT 4.0 retraduzido para QB64 Phoenix Edition, comando por comando, a partir do código do próprio EXE original: 28 programas, um por EXE (o instalador não entra). Os executáveis do original foram desassemblados, e o tradutor (`tools/retraduz.py`) gera BASIC compilável no QB64 PE. Um runtime próprio (RT45, `src-original/comum/`) reproduz a semântica do runtime do QuickBASIC 4.5 (BRUN45): ponto flutuante do x87, COMMON e CHAIN, teclado, tela e impressora. O critério é ser idêntica ao original, inclusive nos bugs. Ela calcula, mostra as telas, imprime e grava os arquivos como o original, e foi conferida contra ele rodando lado a lado (tela a tela, pixel a pixel e byte a byte). As diferenças em relação ao original são estas (cada uma com o arquivo que a documenta):
 
-- A marca. As telas e os relatórios dizem OpenStrut no lugar da empresa, do autor e do licenciado do original, com o crédito "OpenStrut - engenharia reversa independente do SISTRUT 4.0 (1991)". O texto novo ocupa a mesma largura do antigo, então o leiaute não muda. A tabela das trocas, com o motivo de cada uma, está em [`src-original/marca.json`](src-original/marca.json).
-- Os trechos de verificação de licença do original foram desativados (marcas `PROTECAO` em `src-original/<familia>/correcoes.json` e em `tools/retraduz.py`).
-- O que o DOS e a impressora faziam fica no runtime de apoio (`src-original/comum/RT45.BM`): a impressora vira um arquivo com os mesmos bytes, e o caminho `C:\` pode apontar para uma pasta do Windows.
+- A marca. As telas e os relatórios dizem OpenStrut no lugar da empresa, do autor e do licenciado do original, com o crédito "OpenStrut - engenharia reversa independente do SISTRUT 4.0 (1991)". O texto novo ocupa a mesma largura do antigo, então o leiaute não muda. A tabela das trocas, com o motivo de cada uma, está em [`src-original/marca.json`](src-original/marca.json). Documentada em [`docs/RETRADUCAO.md`](docs/RETRADUCAO.md).
+- Os trechos de verificação de licença do original foram desativados (marcas `PROTECAO` em `src-original/<familia>/correcoes.json` e em `tools/retraduz.py`). Documentada em [`docs/RETRADUCAO.md`](docs/RETRADUCAO.md), trecho sobre PROTECAO.
+- O que o DOS e a impressora faziam fica no runtime de apoio (`src-original/comum/RT45.BM`): a impressora vira um arquivo com os mesmos bytes, e o caminho `C:\` pode apontar para uma pasta do Windows. Documentada em [`docs/RETRADUCAO.md`](docs/RETRADUCAO.md), tabela de comandos (LPRINT).
+- O "Kbytes livres" (FRE) não é reproduzível: a V1 devolve um valor fixo (`RT_FRE&`, `RT_FREN&`). Documentada em [`docs/RETRADUCAO.md`](docs/RETRADUCAO.md), tabela de comandos (B$FRE).
+- Divergências por família: os itens marcados `não` em [`tests/retraducao/<familia>/CHECKLIST.md`](tests/retraducao) descrevem onde a V1 diverge do original.
+- Limites do runtime: o que o RT45 ainda não reproduz igual ao BRUN45 (ON KEY dirigido por roteiro, ON ERROR por módulo, adaptadores de vídeo, impressora) está nas seções de mesmo nome de [`docs/RETRADUCAO.md`](docs/RETRADUCAO.md).
 
 Nomes de arquivo, caminhos (`C:\SISTRUT\EXEC40\`), nomes dos EXE e formatos de arquivo continuam os do original. Uma obra gravada pelo SISTRUT 4.0 abre no OpenStrut V1 e vice-versa. Os arquivos que os programas gravam (`.LAJ`, `.RLP`, `.REP`, `.COL`, `.FRM`, `.AVF`, `SISTRUT.INI`...) mantêm a linha de assinatura do formato que o original grava no cabeçalho, porque o sistema relê esses arquivos e a V2 reconhece o `.LAJ` por ela.
 
@@ -52,7 +55,7 @@ Os arquivos de `sistrut-game/` são os da instalação do original, com os mesmo
 
 ## Compilar
 
-Pré-requisitos: [QB64 Phoenix Edition](https://www.qb64phoenix.com/) 4.7.0 e o bash (no Windows, o do Git for Windows). O QB64 PE fica em `C:\qb64pe\qb64pe\` por padrão; outro lugar vai em `QB64_DIR`. Os scripts rodam no Windows (Git Bash), no Linux e no macOS; o CI compila e testa nos três (`.github/CI.md`).
+Pré-requisitos: [QB64 Phoenix Edition](https://www.qb64phoenix.com/) 4.7.0 e o bash (no Windows, o do Git for Windows). O QB64 PE fica em `C:\qb64pe\qb64pe\` por padrão; outro lugar vai em `QB64_DIR`. Os scripts rodam no Windows (Git Bash), no Linux e no macOS; o CI compila nos três e roda a sonda T20 nos três; os testes `T_*` só no Windows (`.github/CI.md`).
 
 ```sh
 bash tools/build.sh           # os 28 programas e o lançador, em build/
@@ -104,7 +107,7 @@ bash tools/runtests.sh SONDA    # só a sonda T20 (os três sistemas)
 bun test paridade/testes        # comparador de paridade; os casos que leem o oráculo pulam
 ```
 
-No Linux sem tela, rode `fumaca.sh` e `runtests.sh` sob `xvfb-run -a`. O `tools/roteiros.sh` dirige os EXE da versão anterior e não entra no CI (`.github/CI.md`).
+No Linux sem tela, rode `fumaca.sh` e `runtests.sh SONDA` sob `xvfb-run -a`; os `T_*` só compilam no Windows (`.github/CI.md`). O `tools/roteiros.sh` dirige os EXE da versão anterior e não entra no CI (`.github/CI.md`).
 
 Contra o original: os testes de `tests/retraducao/` rodam a V1 com um roteiro de teclas e comparam com o original rodando no "oráculo" (DOSBox-X com a instalação oficial do SISTRUT 4.0, fora do repositório, na pasta de `ORACULO`): cada tela em texto e atributo de cor, cada desenho pixel a pixel, a impressora e os arquivos da obra byte a byte.
 
@@ -116,7 +119,7 @@ ORACULO=<pasta> LAJE_C_E2E=<pasta C: base> bash tests/retraducao/laje/roda_casos
 
 Cada família tem o seu `roda_casos.sh` (o sistema tem `roda_sistema.sh`); o cabeçalho de cada script lista as variáveis que ele pede. O `compara_retrad.py` aplica às telas e à impressora do original a mesma tabela de marca (`--marca openstrut`, o padrão), então a comparação de uma V1 OpenStrut com o original dá igual. Para as trocas guardadas só como hash, ele lê o texto do original de `V1_MARCA_ORIGINAL` (fora do repositório). Para EXE gerados com `--marca original`, use `V1_MARCA=original`.
 
-Resultado por família: `tests/retraducao/<familia>/CHECKLIST.md`. As únicas diferenças conhecidas são o "Kbytes livres" (FRE), que depende da memória do DOS, e os pontos listados em cada checklist.
+Resultado por família: `tests/retraducao/<familia>/CHECKLIST.md`. As diferenças conhecidas estão agrupadas na lista do início deste README, que aponta onde cada grupo é documentado.
 
 ## Documentação
 
