@@ -7,6 +7,8 @@
 #                    (src-original/comum) contra os bits gravados no original
 #                    (QB45_T20.saida.bin); passa se a saida for igual a versionada em
 #                    tests/retraducao/QB64_T20.saida.txt.
+#   SEM_DISQUETE     casos de DESENHO e FORMA por tools/roda_retrad.sh num C: montado so com o
+#                    repositorio; passa se as cadeias terminam sem apontar para A:/B: nem avisar copia.
 # Uso: tools/runtests.sh [filtro]   ex.: tools/runtests.sh ASSERT, tools/runtests.sh SONDA
 # Exit 0 se todos passaram; exit 1 se algum falhou, nao compilou ou nao havia testes.
 
@@ -100,6 +102,60 @@ if [ -z "$FILTER" ] || [[ SONDA_T20 == *"$(echo "$FILTER" | tr '[:lower:]' '[:up
             rows="$rows"$'\n'"FAIL SONDA_T20 (rc=$rrc; saida diferente de tests/retraducao/QB64_T20.saida.txt)"
             rows="$rows"$'\n'"$(head -n 20 "$sd/diff.txt" | sed 's/^/     | /')"
         fi
+    fi
+fi
+
+# SEM_DISQUETE: a V1 roda de um disco rigido, sem o disquete do original. Compila as familias
+# sistema, desenho e forma e roda dois casos da retraducao com tools/roda_retrad.sh (o mesmo
+# executor dos casos do oraculo), com um C: montado so com o repositorio: SISTRUT\SISTRUT.INI e
+# SISTRUT\EXEC40 de sistrut-game/ e, no caso da forma, a obra de tests/retraducao/forma/obra2.
+# Passa se cada cadeia termina ("<EXE>: fim" no log) com telas gravadas e nenhuma tela aponta
+# para os drives A: ou B: nem traz "COPIA ILEGAL" ou "Acesso nao permitido". O pedido
+# "Coloque o Disco de Dados no Drive C:\" e a tela normal do original para o nome da obra.
+if [ -z "$FILTER" ] || [[ SEM_DISQUETE == *"$(echo "$FILTER" | tr '[:lower:]' '[:upper:]')"* ]]; then
+    total=$((total + 1))
+    sq="$STAGE/sem_disquete"
+    sq_win="$STAGE_WIN/sem_disquete"
+    mkdir -p "$sq/build" || exit 1
+    sd_fail=""
+    sd_rows=""
+    sd_info=""
+    for fam in sistema desenho forma; do
+        for bas in "$STAGE/src-original/$fam"/*.BAS; do
+            m="$(basename "$bas" .BAS)"
+            bash "$DIST/tools/qbcompile.sh" "$STAGE_WIN/src-original/$fam/$m.BAS" "$sq_win/build/$m.exe" \
+                > "$sq/$m.compile.log" 2>&1
+            [ -f "$sq/build/$m.exe" ] || { sd_fail="$sd_fail $m"; sd_rows="$sd_rows"$'\n'"     | $m nao compilou"; }
+        done
+    done
+    if [ -z "$sd_fail" ]; then
+        for caso in "DESENHO:desenho/menu:" "FORMA:forma/edita:forma/obra2"; do
+            exe="${caso%%:*}"; resto="${caso#*:}"; suf="${resto%%:*}"; obra="${resto#*:}"
+            c="$sq/c_$exe"; saida="$sq/saida_$exe"
+            rm -rf "$c"; mkdir -p "$c/SISTRUT/EXEC40" || exit 1
+            cp "$DIST/sistrut-game/SISTRUT.INI" "$c/SISTRUT/" || exit 1
+            cp "$DIST/sistrut-game"/* "$c/SISTRUT/EXEC40/" || exit 1
+            [ -n "$obra" ] && { cp "$DIST/tests/retraducao/$obra"/* "$c/" || exit 1; }
+            bash "$DIST/tools/roda_retrad.sh" "$sq/build" "$exe" "$DIST/tests/retraducao/$suf.sufixo.txt" \
+                "$saida" "$c" 150 > "$sq/$exe.roda.log" 2>&1
+            rc=$?
+            telas="$(ls "$saida"/telas/*.txt 2>/dev/null | grep -v -c -E '\.(atr|realce)\.txt$')"
+            fim="$(tail -1 "$saida/log.txt" 2>/dev/null | tr -d '\r' | grep -c ': fim$')"
+            achados="$(LC_ALL=C grep -l -i -E 'COPIA ILEGAL|Acesso n.{1,2}o permitido|Drive [AB]:|em [AB]:' "$saida"/telas/*.txt | xargs -r -n1 basename | tr '\n' ' ')"
+            sd_info="$sd_info; $exe $telas telas"
+            if [ "$rc" -ne 0 ] || [ "$telas" -eq 0 ] || [ "$fim" -eq 0 ] || [ -n "$achados" ]; then
+                sd_fail="$sd_fail $exe"
+                sd_rows="$sd_rows"$'\n'"     | $exe: saida $rc, $telas telas, fim no log: $fim, telas com A:/B: ou copia: ${achados:-nenhuma}"
+            fi
+        done
+    fi
+    if [ -z "$sd_fail" ]; then
+        pass=$((pass + 1))
+        rows="$rows"$'\n'"PASS SEM_DISQUETE  ${sd_info#; }, sem A:/B: nem aviso de copia"
+    else
+        fail=$((fail + 1))
+        rows="$rows"$'\n'"FAIL SEM_DISQUETE (${sd_fail# })"
+        rows="$rows$sd_rows"
     fi
 fi
 

@@ -4,7 +4,7 @@
 
 O SISTRUT 4.0 é uma suíte MS-DOS de cálculo de estruturas de concreto armado (lajes, vigas, pilares, formas, desenho), de 1991. O fonte foi reconstruído em BASIC compatível com QB64 Phoenix Edition, em `dist/src-reconstructed/`.
 
-- **Estado:** os 29 módulos compilam e o cálculo tem testes de console. Ninguém usou as telas de verdade até agora.
+- **Estado:** os 28 módulos de `src-original/` (um por EXE) compilam e o cálculo tem testes de console. O número 29 da versão anterior contava `INSTALAR.BAS`, que está em `src-reconstructed/`. Ninguém usou as telas de verdade até agora.
 - **Sua tarefa:** usar as telas dos seus módulos de ponta a ponta, achar o que não funciona ou não faz sentido e corrigir nos arquivos que são seus.
 
 Raiz do projeto, que é o seu diretório de trabalho: a raiz deste repositório (a pasta que contém `roteiros/`). Use Git Bash e caminhos entre aspas se o caminho tiver espaços.
